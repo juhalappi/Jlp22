@@ -1,0 +1,76 @@
+this=thisfile()
+A=';incl(this)'
+mergex=';incl(this,from->~mergex~)'
+mergex2=';incl(from->~mergex~)'
+inpusum=';incl(this,from->~inpusum~)'
+got=';incl(this,from->~got~)'
+inpudo=';incl(this,from->~inpudo~)'
+findex=';incl(this,from->~findex~)'
+rannex=';incl(this,from->~rannex~)'
+;return
+
+
+;me;inclrgex: ! Merging list
+x1...x3=1,2,3
+mat=matrix(3,values->(4,5,6))
+lis0=list(x2,x1)
+lis2=merge(x1,mat,lis0)
+print(lis2)
+;return
+
+;inpusum: ! sum in input programming
+su=';sum(i,1,4)(a"i"*x"i")'
+print(su)
+prob=problem()
+;sum(i,1,5)(a"i"*x"i")==max
+/
+;return
+
+;got:
+;goto('ohi')
+print('kukuu')
+;return
+;ohi:
+print('tas')
+;return
+
+;inpudo:
+;do(i,1,2)
+x"i"="i"*10
+print('Greetings from iteration "i"')
+;enddo
+print(x1,x2)
+;return
+
+;findex:  
+!* Example of find(), illustrating also rann()
+!* Repeating the example, different results will be obtained
+!Generate random normal variates
+rm=matrix(100)
+m,s=2,3
+rm=rann(m,s)
+print(mean(rm),sd(rm),min(rm),max(rm))
+first=find(rm,filter->($.ge.m+1.96*s))
+large=find(rm,filter->($.ge.m+1.96*s),any->) 
+large2=find(rm,filter->($.ge.m+1.96*s),expand->) 
+print(first,100*nrows(large)/nrows(rm),100*sum(large2)/nrows(rm)) 
+;return
+
+;rannex:
+!* Random normal variates, illustrating also find
+rx=rann()  !Output is REAL
+rm=matrix(100)
+rm=rann()
+print(mean(rm),sd(rm),min(rm),max(rm))
+large=find(rm,filter->($.ge.2),any->)  
+print(100*nrows(large)/nrows(rm))  
+cpu0=cpu()
+rm2=matrix(1000000)
+rm2=rann(10,2)
+;ohi:
+print(cpu()-cpu0)  ! J is reasonable fast
+print(mean(rm2),sd(rm2),min(rm2),max(rm2))
+;return
+large2=find(rm2,filter->($.ge.14),any->)  
+print(100*nrows(large2)/nrows(rm2)) 
+;return
