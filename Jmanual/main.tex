@@ -1,0 +1,119 @@
+%% Overleaf			
+%% Software Manual and Technical Document Template	
+%% 									
+%% This provides an example of a software manual created in Overleaf.
+
+\documentclass{ol-softwaremanual}
+%\usepackage{refman}
+%\documentclass{refrep}
+%\documentclass{refrep}
+%\documentclass[krantz1]{krantz} %See documentation for other class options 
+% Packages used in this example
+\usepackage{graphicx}  % for including images
+\usepackage{microtype} % for typographical enhancements
+%\usepackage{minted}    % for code listings
+\usepackage{listings}
+\usepackage[dvipsnames]{xcolor}
+%\usepackage{longtable}
+%\usepackage{amsthm} aiheuttaa ongelmia
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{ntheorem}
+\usepackage{varioref}
+
+
+% \newtheorem{example}{Example}[section]
+\usepackage{here}
+\usepackage{amsmath}   % for equations and mathematics
+%\setminted{style=friendly,fontsize=\small}
+%\renewcommand{\listoflistingscaption}{List of Code Listings}
+\usepackage{hyperref}  % for hyperlinks
+\usepackage[a4paper,top=3.2cm,bottom=3.2cm,left=1.5cm,right=1.5cm]{geometry} % for setting page size and margins
+\usepackage{changepage}
+%fobt
+\usepackage{amsthm}
+\usepackage{thmtools}
+
+\declaretheoremstyle[headfont=\normalfont]{normalhead}
+\declaretheorem[style=normalhead]{example}
+
+\newtheorem{note}{Note}[subsection]
+\theoremstyle{break}
+
+\usepackage{datetime}
+\usepackage{tgbonum}  %fonts
+\usepackage[bitstream-charter]{mathdesign}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\usepackage{array}  % juuso
+%\usepackage{tabularx}
+\newcolumntype{b}{X}
+\newcolumntype{s}{>{\hsize=.5\hsize}X}
+
+% Custom macros used in this example document
+\newcommand{\doclink}[2]{\href{#1}{#2}\footnote{\url{#1}}}
+\newcommand{\cs}[1]{\texttt{\textbackslash #1}}
+
+% Frontmatter data; appears on title page
+%\title{J User's Guide}
+%\version{3.0\beta}
+%\author{Juha Lappi and Reetta Lempinen}
+% \includegraphics[width=8cm]{juhalappi.jpg}
+%\softwarelogo{\includegraphics[width=8cm]{juhalappi.jpg}}
+\usepackage{array,tabularx,calc}
+
+\usepackage{tabto}
+
+\newlength{\conditionwd}
+\newenvironment{conditions}[1][]
+  {%
+   #1\tabularx{\textwidth-\widthof{#1}}[t]{
+     >{$}l<{$} @{${}{}$} X@{}
+   }%
+  }
+  {\endtabularx\\[\belowdisplayskip]}
+%     >{$}l<{$} @{${}={}$} X@{}
+\begin{document}
+
+\begin{titlepage}
+   \begin{center}
+       \vspace*{1cm}
+\Huge
+\textbf{J}\\
+       \textbf{Users' Guide}
+
+       \vspace{0.5cm}
+       \Large
+        Version 3.0
+            
+       \vspace{1.5cm}
+\huge
+       \textbf{Juha Lappi }\\
+       \textbf{ Reetta Lempinen}\\
+\vspace{1cm}
+ %\vfill
+  %   \Huge \huge \LARGE \Large \large \normalsize (default)
+%\small \footnotesize \scriptsize \tiny       
+      \normalsize
+      @date
+ %     \Date{\today}\\
+ %\today
+     \vspace{1cm}
+       \includegraphics[width=0.4\textwidth,angle=180]{juhalappi.jpg}
+    
+            
+   \end{center}
+\end{titlepage}
+
+%\maketitle
+
+\tableofcontents
+%\listoflistings
+\newpage
+
+
+\input{jmanual}
+
+\end{document}
+
+%jmanual.tex

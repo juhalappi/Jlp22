@@ -1,0 +1,1933 @@
+\section{;incl()}
+\label{incl}
+ Includes lines from a file or from a text object. Using the \textcolor{blue}{from->}
+option the include file can contain sections which start with adresses like
+ ;ad: \\
+and end with \\
+\textcolor{Red}{;return}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ Args & 0|1 & Ch|Tx &  file name. Default: the same file is used as in the previous \textcolor{Red}{;incl}().
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{from} & N|1 & Ch &gives the starting \textcolor{blue}{in}-> address for the inclusion, address is given without starting ';'
+ and ending ':'.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{wait}& N|0 & & \textbf{J} waits until the include file can be opened. Useful in client server applications.
+ See chapter \textbf{J} as a server.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{note}
+Include files can be nested up to 4 levels.levels.
+\end{note}
+\begin{note}
+See Chapter Defining a text object with text function and using it in \textcolor{Red}{;incl} how to includeinclude
+ commands from a text object.
+\end{note}
+\begin{note}
+When editing the include file with Notepad ++, it is reasonable to set the language as Fortran (free form). form).
+\end{note}
+\begin{example}[inpuincl]Example of \textcolor{Red}{;incl}()\\
+\label{inpuincl}
+ \textcolor{Red}{;incl}('file.txt')\\
+ \textcolor{Red}{;incl}('file2.txt',\textcolor{blue}{from->}'ad1')\\
+ \textcolor{Red}{;incl}(\textcolor{blue}{from->}'ad2')
+\end{example}
+\begin{note}
+Using \textcolor{Red}{;incl}() in a projectoject
+When working in a project it is reasonable to organize
+the include file as follows. Put into the beginning of the file section:\\
+this=\textcolor{VioletRed}{thisfile}() \,\textcolor{green}{!There\,can\,different\,versions\,of\,the\,file\,with\,differetn\,names.\\}
+A='\textcolor{Red}{;incl}(this)' \textcolor{green}{!If\,new\,sections\,are\,added\,to\,the\,file,\,new\,shortcuts}
+can be defined by adding those here and writing A at sit> prompt.\\
+R='\textcolor{Red}{;incl}(this,\textcolor{blue}{from->}$\sim$read$\sim$)' \,\,\,\,\textcolor{green}{!\,read\,data\,in\,\\}
+T1='\textcolor{Red}{;incl}(this,\textcolor{blue}{from->}$\sim$task1$\sim$)' \,\,\textcolor{green}{!\,first\,analysis\,\\}
+T2='\textcolor{Red}{;incl}(this,\textcolor{blue}{from->}$\sim$task2$\sim$)' \,\,\textcolor{green}{!\,second\,analysis\,\\}
+\textcolor{Red}{;return} \\
+Now everything what needs to written at sit> after the first
+\textcolor{Red}{;incl}() are the shortcuts. If adding section task3 then
+add the shortcut here, then write shortcuts A and T3 at sit>.
+The file jexamples.inc which comes with the manual and which is generated
+ with the jmanual program shows an examle.
+\end{note}
+\begin{note}
+The adress line can contain comment starting with '!'. '!'.
+\end{note}
+\section{;goto()}
+\label{inpugoto}
+Go to different adress in \textcolor{Red}{;incl}() file.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&1&CHAR& The address from which the reading continues. With \textcolor{Red}{;goto}('adr1')
+ the adress line starts ;adr1:
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{example}[inpugotoex]Example of \textcolor{Red}{;goto}() and \textcolor{Red}{;incl}()\\
+\label{inpugotoex}
+\textcolor{VioletRed}{write}('goto.txt','c','\textcolor{VioletRed}{print}($\sim$Start\,jumping$\sim$)')\\
+\textcolor{VioletRed}{write}('goto.txt','c','\textcolor{Red}{;goto}($\sim$ad2$\sim$)')\\
+\textcolor{VioletRed}{write}('goto.txt','c',';ad1:')\\
+\textcolor{VioletRed}{write}('goto.txt','c','\textcolor{VioletRed}{print}($\sim$Greetings\,from\,ad1$\sim$)')\\
+\textcolor{VioletRed}{write}('goto.txt','c','\textcolor{Red}{;return}')\\
+\textcolor{VioletRed}{write}('goto.txt','c',';ad2:')\\
+\textcolor{VioletRed}{write}('goto.txt','c','\textcolor{VioletRed}{print}($\sim$Greetings\,from\,ad2$\sim$)')\\
+\textcolor{VioletRed}{write}('goto.txt','c','\textcolor{Red}{;goto}($\sim$ad1$\sim$)')\\
+\textcolor{VioletRed}{close}('goto.txt')\\
+\textcolor{Red}{;incl}('goto.txt',\textcolor{blue}{print->})\\
+\textcolor{Red}{;incl}('goto.txt')\\
+\textcolor{Red}{;incl}('goto.txt',\textcolor{blue}{from->}'ad1',\textcolor{blue}{print->})\\
+delete('goto.txt')
+\end{example}
+\section{;return}
+\label{inpureturn}
+ Return from an include file.
+If in an include file entered with \textcolor{Red}{;incl}(file) or \textcolor{Red}{;incl}(file,\textcolor{blue}{from->}'adr')
+ the line \textcolor{Red}{;return} is read, the include file is closed and the control return
+to the upper level include file, and if that does not exist
+the control goes to sit> prompt.
+\section{;do()}
+\label{inpudo}
+Generates new input records and replaces text with other text
+using " "  to generate numbers, @list to generate lists of object names
+ and @\textcolor{VioletRed}{list}(elem) to pick the names of the elements of a list, or
+\textcolor{Red}{;sum}() to generate sums and \textcolor{Red}{;dif}() to generate differences.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&3|4&Var,Num..&Arguments are: iteration index, starting limit,
+ final limit and step. First argument must be a variable name and others
+can be REAL variables or numeric constants.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{example}[inpudoex]Examples of \textcolor{Red}{;do}()\\
+\label{inpudoex}
+\textcolor{Red}{;do}(i,1,2)\\
+x"i"="i"*10\\
+\textcolor{VioletRed}{print}('Greetings from iteration "i"')\\
+\textcolor{Red}{;enddo}\\
+\textcolor{VioletRed}{print}(x1,x2)
+\color{Green}
+\begin{verbatim}
+!After dropping out extra text about the processing we get:
+<print('Greetings from iteration 1')
+'Greetings from iteration 1'
+<print('Greetings from iteration 2')
+'Greetings from iteration 2'
+sit< print(x1,x2)
+<print(x1,x2)
+x1=   10.000000000000000
+x2=   20.000000000000000
+\end{verbatim}
+\color{Black}
+\end{example}
+\section{merge()}
+\label{merge}
+ \textcolor{VioletRed}{merge}() will produce of list consisting of separate objects
+ in argument lists and argument objects.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Output&1&LIST&A list which is produced by first putting all elements of
+argument lists and non-list arguments into a vector, and then duplicate objects are dropped.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&2-&LIST|OBJ& LIST and separate non-list objects.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{example}[mergex]Merging list\\
+\label{mergex}
+ x1...x3=1,2,3\\
+ mat=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{values->}(4,5,6))\\
+ lis0=\textcolor{VioletRed}{list}(x2,x1)\\
+ lis2=\textcolor{VioletRed}{merge}(x1,mat,lis0)\\
+ \textcolor{VioletRed}{print}(lis2)
+\color{Green}
+\begin{verbatim}
+ <print(lis2)
+ lis2 is list with            3  elements:
+ x1 mat x2
+\end{verbatim}
+\color{Black}
+\end{example}
+\section{inverse()}
+\label{inverse}
+ \textcolor{VioletRed}{inverse}(A) computes the inverse of a square MATRIX A. The function utilized dgesv funtion
+ of netlib. If the argument has type REAL, then the reciprocal is computed,
+ and the output will also have type REAL. An error occurs, if A is not
+ a square matrix or REAL, or A is singular according to dgesv.
+\begin{note}
+instead of writing c=\textcolor{VioletRed}{inverse}(a)*b, it is faster and more accurate tote to
+write c=\textcolor{VioletRed}{solve}(a,b)
+\end{note}
+\section{qr()}
+\label{qr}
+ Makes QR decomposition of a MATRIX This can be used to study if columns of a are linearly
+ dependent. \textbf{J} prints a matrix which indicates the structure of the upper diagonal matrix R in the
+ qr decomposition. If column k is linearly dependent on previous columns the k’th diagonal
+ element is zero. If output is given, then it will be the r matrix. Due to rounding errors diagonal
+ elements which are interpreted to be zero are not exactly zero. Explicit r matrix is useful if user
+ thinks that \textbf{J} has not properly interpreted which diagonal elements are zero.
+In \textbf{J}  \textcolor{VioletRed}{qr}() may be useful when it is studied why a matrix which shoudl
+ be nonsingular turns out to be singular in \textcolor{VioletRed}{inverse}() or \textcolor{VioletRed}{solve}().
+\textcolor{VioletRed}{qr}() is using  the subroutine dgeqrf from Netlib.
+An error occurs if the argument is not MATRIX or if dgeqrf produces
+ error code, which is just printed.
+Now the function just shows the linear dependencies, as sho in the examples.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&1&MATRIX&A m-by-n MATRIX.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\section{Input line and input paragraph}
+\label{inpuline}
+\textbf{J} reads input records from the current input channel which may be terminal, file or a text object.
+ When \textbf{J} interprets input lines, spaces between limiters and function or object names are not
+ significant. In input programming, functions start with ';' which is part of the function name (and
+ there can thus be no space immediately after ';'). If a line (record) ends with ',' ,'+', '*´, '-',
+ '(', '=' or with '>', then the next record is interpreted as a continuation record and
+ the continuation character is kept as a part of the input
+ line. If a line ends with '>>', then
+ the nex line is also continuation line, and  '>>' is ignored. All continuation
+ records together form one input line. In previous version input programming functions operated on input lines
+ but now they operate on recors. One input record can contain 4096 characters, and an input line can contain also 4096 characters
+ (this can be increased if needed).
+ The continuation line cannot start with ‘*’ or ‘\textcolor{green}{!’\,because\,these\,are\,reserved}
+ to indicate comments.  Note: '/' (division)cannot be used as last character indicating the continuation of the line because it can
+ be legal last character indicating the end of an input paragraph.
+
+ When entering input lines from the keyboard, the previous lines given from the keyboard can no more be
+ accessed and edited using the arrow keys owing to MSYS2 MSYS environment used to build the exe-file.
+ To copy text from the \textbf{J} window into the clipboard right-click the upper left icon, select Edit,
+ and then select Mark. Next click and drag the cursor to select the text you want to copy and
+ finally press Enter (or right-click the title bar, select Edit, and in the context menu click Copy).
+ To paste text from the clipboard into the \textbf{J} command line right-click the title bar, select Edit,
+ and in the context menu click Paste. Console applications of Intel Fortran do not provide copy
+ and paste using <cntrl>c and <cntrl>v. An annoying feature of the current command window is that it is possible
+ All input lines starting with '*' will be comments, and in each line text starting with '!' will also
+ be interpreted as comment (\textcolor{green}{!debug\,will\,put\,a\,debugging\,mode\,on\,for\,interpretation\,of\,the}
+ line, but this debug information can be understood only by the author). If a comment line starts
+ with '*\textcolor{green}{!',\,it\,will\,be\,printed.}
+
+ Many \textbf{J} functions interpreted and executed at the command level need or can use a group of
+ text lines as input. In these cases the additional input lines are immediately after the function.
+ This group of lines is called input paragraph. The input paragraph ends with '/', except the
+ input paragraph of text function ends with '//' as a text object can contain ordinary input
+ paragraphs. It may be default for the function that there is input paragraph following. When
+ it is not a default, then the existence of the input paragraph is indicated with option \textcolor{blue}{in->}
+ without any value. An input paragraph can contain input programming commands; the
+ resulting text lines are transmitted to the \textbf{J} function which interprets the input paragraph
+\begin{example}[inpuparag]Example of inputparagraph\\
+\label{inpuparag}
+ tr=\textcolor{VioletRed}{trans}()\\
+ a=\textcolor{VioletRed}{log}(b)\\
+ \textcolor{VioletRed}{write}(\$,'($\sim$sinlog\,is=$\sim$,f4.0)',\textcolor{VioletRed}{sin}(a))\\
+ /\\
+ b=\textcolor{VioletRed}{matrix}(2,3,\textcolor{blue}{in->})\\
+ 1,2,3\\
+ 5,6,7\\
+/
+\end{example}
+\section{;sum()}
+\label{inpusum}
+\textbf{J} can generate text of form part1+part2+...partn into input line using
+ input programming function ;isum(). The syntax of the function is as follows:\\
+ \textcolor{Red}{;sum}(i,low,up,step)(text)\\
+or \\
+\textcolor{Red}{;sum}(i,low,up)\\
+Arguments low, up and step must be integers (actually from nonintger values, the
+ integer part is used) or REAL variables. Thus te valuse cannot be obtained
+ from arithmetic operations. Sum is useful at least in \textcolor{VioletRed}{problem}() function.
+\begin{example}[inpusumex]Example of \textcolor{Red}{;sum}()\\
+\label{inpusumex}
+su='\textcolor{Red}{;sum}(i,1,5)(a"i"*x")'\\
+\textcolor{VioletRed}{print}(su)
+\color{Green}
+\begin{verbatim}
+<print(su)
+'a1*x1+a2*x2+a3*x3+a4*x4'
+\end{verbatim}
+\color{Black}
+prob=\textcolor{VioletRed}{problem}()\\
+\textcolor{Red}{;sum}(i,1,5)(a"i"*x"i")==max
+\color{Green}
+\begin{verbatim}
+<prob=problem()
+prob< a1*x1+a2*x2+a3*x3+a4*x4+a5*x5==max
+\end{verbatim}
+\color{Black}
+\end{example}
+\begin{note}
+\textcolor{Red}{;dif}()() works similarly for minusminus
+\end{note}
+\section{;sum()}
+\label{inpudif}
+\textbf{J} can generate text of form part1-part2-...partn into input line using
+ input programming function \textcolor{Red}{;dif}(). The syntax of the function is as follows:\\
+ \textcolor{Red}{;dif}(i,low,up,step)(text)\\
+or \\
+\textcolor{Red}{;dif}(i,low,up)\\
+Arguments low, up and step must be integers (actually from nonintger values, the
+ integer part is used) or REAL variables. Thus te valuse cannot be obtained
+ from arithmetic operations. \textcolor{Red}{;dif}() is useful at least in \textcolor{VioletRed}{problem}() function.
+\begin{note}
+\textcolor{Red}{;sum}()() works similarly for plus. See \textcolor{Red}{;sum}() for examples.ples.
+\end{note}
+\section{Predefined objects}
+\label{pref}
+ The following objects are generated during the initilaization.
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Names& Text& Text object containg the names of named objects
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Pi&Var&The value of Pi (=3.1415926535897931)
+j\_v(j\_ivinf)=10.d300
+j\_v(ivout\_)=-10.d300
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ \$Cursor\$& Trans & The transformation object used to run sit> prompt
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ \$Cursor2\$& Trans & Another transformation object used to run sit> prompt
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Val&Trans& Transformation object used to extract values of mathematical statements, used,
+ e.g., in input programming.
+	 call j\_deflistobject(0,'\$Data\$',ivout\_,nres=1) \textcolor{green}{!\,ivtempdata)}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Round &Var& \textcolor{VioletRed}{jlp}(): The current round through treatment units in \textcolor{VioletRed}{jlp}() function.
+ Can be used to define stopping criterion.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Change&Var& \textcolor{VioletRed}{jlp}(): The change of objective in \textcolor{VioletRed}{jlp}()  in one round before finding feasible and thereafter
+the change in 10 rounds.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Imp&Var& \textcolor{VioletRed}{jlp}(): The number of improvements obtained from schedules outside the current active
+ set when updating the active set.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ \$Data\$ & List& Default data set name for a new data set created by \textcolor{VioletRed}{data}()-function.
+\textcolor{green}{!call\,j\_deflistobject(0,'LastData',ivout\_,nres=1)\,!\,ivlastdata)\,!!}
+call j\_getobject(0,'LastData',j\_ipreal,ivout\_)
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Obs& Var & The default name of variable obtaining the the number of
+ observation in a data set. Given in the \textcolor{VioletRed}{data}() function. Newdata ?
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Maxnamed &Var& The maximum number of named objects. Determined via j.par in
+ initilaization. default is 5000.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Record& Var & The name of variable obtaining the the number of
+ record when reading data in \textcolor{VioletRed}{data}() function. Has the same value as Obs variabel
+ if no records are rejected.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Subecord& Var & The name of variable obtaining the the number of
+ record when reading subdata in \textcolor{VioletRed}{data}() function. Has the same value as obs variable
+ if no records are rejected.
+call j\_getobject(0,'Duplicate',j\_ipreal,ivout\_) \textcolor{green}{!\,ivduplicate)\,!!½!}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Duplicate& Var& A special variable used in \textcolor{VioletRed}{data}() function when duplicating observations
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ LastaData &List&	A list object referring to the last data set made, used as default data set.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ \$Buffer&Char& A special character object used by the \textcolor{VioletRed}{write}() function.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ \$Input\$& Text & Text object used for original input line.
+and endcommnets are removed
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+1\$Input1\$ &Text& Text object for input line after removing blanks and comments.
+call j\_defchar(0,'bis',ivout) \textcolor{green}{!define\,a\,character\,constant\,binary}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Data &List&  List object used to indicate current data setsDat
+call j\_defchar(0,'b',ivout) \textcolor{green}{!define\,a\,character\,constant\,binary}
+call j\_defchar(0,'B',ivout) \textcolor{green}{!define\,a\,character\,constant\,binary}
+call j\_defchar(0,'di',ivout) \textcolor{green}{!define\,a\,character\,constant\,binary}
+call j\_defchar(0,'DI',ivout) \textcolor{green}{!define\,a\,character\,constant\,binary}
+call j\_defchar(0,'dg',ivout) \textcolor{green}{!define\,a\,character\,constant\,binary}
+call j\_defchar(0,'DG',ivout) \textcolor{green}{!define\,a\,character\,constant\,binary}
+call j\_defchar(0,'bn',ivout) \textcolor{green}{!define\,a\,character\,constant\,binary}
+call j\_defchar(0,'BN',ivout) \textcolor{green}{!define\,a\,character\,constant\,binary}
+j\_v(ivout\_)=j\_ipchar
+j\_v(ivout\_)=j\_iplist2
+j\_v(ivout\_)=j\_ipmatrix
+j\_v(ivout\_)=j\_iptrans
+j\_v(ivout\_)=j\_iplist
+j\_v(ivout\_)=j\_iptext
+j\_v(ivout\_)=j\_ipdata
+call j\_getobject(0,'FIGURE',j\_ipreal,ivout\_) \textcolor{green}{!!}
+j\_v(ivout\_)=j\_ipfigure
+j\_v(ivout\_)=j\_ipregr
+call j\_getobject(0,'BITMATRIX',j\_ipreal,ivout\_) \textcolor{green}{!!}
+j\_v(ivout\_)=j\_ipbitmatrix
+call j\_getobject(0,'Data',j\_ipreal,ivout\_) \,\textcolor{green}{!\,ivcurrentdata)\,!!}
+call j\_getobject(0,'Black',j\_ipreal,ivout\_)
+j\_v(j\_ivblack)=j\_1
+call j\_getobject(0,'Red',j\_ipreal,ivout\_)
+j\_v(j\_ivred)=2.d0
+call j\_getobject(0,'Green',j\_ipreal,ivout\_)
+j\_v(j\_ivgreen)=3.d0
+call j\_getobject(0,'Blue',j\_ipreal,ivout\_)
+j\_v(j\_ivblue)=4.d0
+call j\_getobject(0,'Tur',j\_ipreal,ivout\_)
+j\_v(j\_ivblue)=5.d0
+call j\_getobject(0,'Purple',j\_ipreal,ivout\_)
+j\_v(j\_ivblue)=6.d0
+call j\_getobject(0,'Yellow',j\_ipreal,ivout\_)
+j\_v(j\_ivblue)=7.d0
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ \$&Var& Object name used to indicate console and '*' format in reading and writing
+ commands.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+x\#&Var& Variable used when drawing functions.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Selected& Var &Variable used to indicate the simulator selected in simulations
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Printinput& Var& Variable used to specify how input lines are printed. Not properly used.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Prinoutpu& Var& Variable used to indicate how much output is printed. Not properly used.
+ \$Input2\$Text object for input line after interpreting “-sequencies.\$
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ \$Debug&Var& Variable used to put debugging mode on.
+call j\_getobject(0,'Regf',j\_ipreal,ivout\_ )\textcolor{green}{!\,ivdebug)\,!!!free}
+call j\_getobject(0,'Testoptions',j\_ipreal,ivout\_) \,\textcolor{green}{!!!\,\,!unnecessar}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Testoptions&Var& By defining Testoptions=1, a developer can start to trace that
+ options are cleared properly with j\_clearoptions().
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Accepted &Var& The number of accepted observations in functions using data sets.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Arg& Var & The default argument name when using transformation object as a function.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Continue &Var& If Continue has nonzero value then the control does not return to the
+ sit> prompt when an error occurs, but computation proceed from the first \textcolor{Red}{;incl}() file.
+ Used in the manual examples to demonstrate errors.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+ Err&Var& If Continue prevents the control from returning to sit> prompt
+ this variable tells whether an error has occured.
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+ \begin{tabular}{ m{.10\textwidth}  m{.10\textwidth} p{.70\textwidth}}
+Result& ? & The default name of output object.
+   Type varies according to the function
+\end{tabular}
+\end{table}
+\section{classify()}
+\label{classify}
+ Classifies data with respect to one or two variables, get class
+  frequencies,
+   means and standard deviations of
+ argument variables.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ Output& 1&Matrix&
+ A matrix containing class information (details given below)
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ Args&1-&Var&
+ Variables for which class means are computed.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{data} & N|1- & Data &	data sets , see section Common options for default.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{x} &1&Var&The first variable defining classes.
+ minobs minimum number of observation in a class, obtained by merging classes. Does
+ not work if \textcolor{blue}{z->} is given
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{xrange}& -1|0|2&Real& Defines the range of x variable. If \textcolor{blue}{xrange}-> is given without
+ arguments and \textbf{J} variables x\%min and x\%max exist, they are used, and
+ if they do not exist an error occurs. Note that these variables can be
+ generate with \textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->}). Either xtrange-> or \textcolor{blue}{any->} must be presente.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{any}&-1|0& &Indicates that each value of the x-variables foms a separate class.
+  either \textcolor{blue}{xrange->} or nay-> must be present.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{classes}&-1|1&Real& Number of classes, If \textcolor{blue}{dx}-> is not given, the default is that range is
+ divided into 7 classes.
+ \textcolor{blue}{minobs->} minimum number of observations in one class. Classes are merged so that this can
+ be obtained. Does not work if \textcolor{blue}{z->} is present.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{z}&-1|1&Var& The second variable (z variable) defining classes in two dimensional classification.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{zrange} &-1|0|2&Real& Defines the range and class width for a continuous z
+ variable. If \textbf{J} variables x\%min and x\%max exist,
+  provided by \textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->}), they are used.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{dz} &-1|1&Real& Defines the class width for a continuous z variable.
+ mean if z variable is given, class means are stored in a matrix given in the \textcolor{blue}{mean->}
+ option
+ classes number of classes, has effect if dx is not defined in xrangedx->. The default is
+ \textcolor{blue}{classes->}7. If z is given then, there can be a second argument, which gives the
+ number of classes for z, the default being 7.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{trans} &-1 | 1&Trans&	transformation set which is executed for each observation. If there is a transformation set associated with the data set, those transformations are computed first.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{filter} &-1 | 1&Code& logical or arithmetic statement (nonzero value indicating True) describing which observations will be accepted. \textcolor{blue}{trans}-> transformations are computed before using filter.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{reject} &-1 | 1&Code& logical or arithmetic statement (nonzero value indicating True) describing which observations will be rejected. \textcolor{blue}{trans}-> transformations are computed before using \textcolor{blue}{reject}->.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{print}&-1|1&Real& By setting \textcolor{blue}{print}->0, the classification matrix is not printed.
+  The matrix can be utilized directly in \textcolor{VioletRed}{drawclass}() function.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{note}
+If z variable is not given then first column in printed output and the first row in the outpututput
+ matrix (if given) contains class means of the x variable. In the output matrix the last element is
+ zero. Second column an TARKASTA VOISIKO VAIHTAArow shows number of observations in
+ class, and the last element is the total number of observations. Third row shows the class means
+ of the argument variable. The fourth row in the output matrix shows the class standard
+ deviations, and the last element is the overall standard deviation
+\end{note}
+\begin{note}
+Variable Accepted gives the number of accepted obsevations.ions.
+\end{note}
+\section{data()}
+\label{data}
+ Data objects are created with the \textcolor{VioletRed}{data}() function. Two linked data objects can be created with the
+ same function call (using option \textcolor{blue}{subdata->} and options thereafter in the following
+ description). It is recommended that two linked data objects are created with one \textcolor{VioletRed}{data}()
+ function call only in case the data is read from a single file where subdata observations are
+ stored immediately after the upper data observation.  Data objects can be linked also afterwards with the \textcolor{VioletRed}{linkdata}() function.
+ A data object can created by a \textcolor{VioletRed}{data}() function when data are read from files
+ or data are created using transformation objects. New data objects can
+be created with \textcolor{VioletRed}{newdata}() function from previous data objects and/or matrices.
+If data objects can created using transformation objects either with \textcolor{VioletRed}{data}() function
+or by creating first data matrix by transformation and then using \textcolor{VioletRed}{newdata}() to
+ create data object.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ Output &0|1&Data&
+ Data object to be created. If there is no output then the default is \$Data\$.
+ It is recommended that this default is used only when only one data object
+ is used in the analysis.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{read} &0|1-&Var|List& Variables read from the input files or the name of the list containing all variables
+ to be read in. If no arguments are given and there is no readfirst-> option
+ then the variables to read in are stored in the first line of the data file separated
+ with commas.?? Also the … -shortcut can be used to define the varaible list. If no arguments are given and
+ there is readfirst-> option then the variable names are read from the second
+ line.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{in} &0-&Char&input file or list of input files. If no files are given, data is read from the following input
+ paragraph. If either of \textcolor{blue}{read->} or \textcolor{blue}{in->} option is given, then both options must
+ be present.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{form} &-1|1&Char& Format of the data as follows \newline
+ \$  Fortran format '*', the default \newline
+ b    Single precison binary \newline
+bs  Single precison binary opened with access='stream'
+ Needed for Pascal files in Windows. \newline
+ B  Double precison binary.\newline
+ Char giving a Fortran format, e.g. '(4f4.1,1x,f4.3)' \newline
+ d4 Single precison direct access for Gfortran files.\newline
+ d1 Single precison direct acces for Intel Fortran files.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{maketrans}&-1|1&Trans &Transformations computed for each observation when reading the data
+
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{keep}&-1|1-&Var& variables kept in the data object, default: all \textcolor{blue}{read}-> variables plus the output
+ variables of \textcolor{blue}{maketrans->} transformations.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{obs}&-1|1&Var& Variable which gets automatically the observation number when working with the
+ data, variable is not stored in the data matrix, default: Obs. When working with
+ hierarchical data it is reasonable to give obs variable for each data object.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{filter}&-1|1&Code& logical or arithmetic statement (nonzero value indicating True) describing which
+ observations will be accepted to the data object. \textcolor{blue}{maketrans->}-transformations are
+ computed before using filter. Option \textcolor{blue}{filter->} can utilize automatically created
+ variable Record which tells which input record has been just read. If observations
+ are rejected, then the Obs-variable has as its value number of already accepted
+ observations+1.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{reject} &-1|1&Code& Logical or arithmetic statement (nonzero value indicating True) describing which
+ observations will be rejected from the data object. If \textcolor{blue}{filter->} option is given then
+ reject statement is checked for observations which have passed the filter. Option
+ \textcolor{blue}{reject->} can utilize automatically created variable Record which tells which
+ input record has been just read. If observations are rejected, then the Obsvariable has as its value number of already accepted observations+1.
+ subdata the name of the lower level data object to be created. This option is not allowed, if
+ there are multiple input files defined in option \textcolor{blue}{in->}.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+ subread,…,subobs sub data options similar as read->…obs-> for the upper level data.
+ (subform->'bgaya' is the format for the Gaya system). The following options
+ can be used only if subdata-> is present
+
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{nobsw} & -1|1 &Var& A variable in the upper data telling how many subdata observations there is under
+ each upper level observation, necessary if \textcolor{blue}{subdata->} option is present.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{nobswcum}&-1|1&Var& A variable telling the cumulative number of subdata observations up to the
+ current upper data observation but not including it. This is useful when accessing
+ the data matrix one upper level unit by time, i.e., the observation numbers within
+ upper level observation are nobswcum+1,…,nobswcum+nobsw
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{obsw}&-1|1& Var & A variable in the subdata which automatically will get the number of observation
+ within the current upper level observation, i.e. obsw variable gets values from 1
+ to the value of nobsw-variable, default is 'obs\_variable\%obsw'.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{duplicate}&-1|2& Trans &
+ The two transformation object arguments describe how observations in the subdata
+ will be duplicated. The first transformation object should have Duplicates as an
+ output variable so that the value of Duplicates tells how many duplicates ar
+ made (0= no duplication). The second transformation object defines how the values
+ of subdata variables are determined for each duplicate. The number of duplicate
+ is transmitted to the variable Duplicate. These transformations are called also
+ when Duplicate=0. This means that when there is the \textcolor{blue}{duplicate->} option,
+ then all transformations for the subdata can be defined in the duplicate
+ transformation object, and \textcolor{blue}{submaketrans->} is not necessary.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{oldsubobs}&-1|1& Var& If there are duplications of sub-observations, then this option gives the variable
+ into which the original observation number is put. This can be stored in the
+ subdata by putting it into \textcolor{blue}{subkeep->} list, or, if \textcolor{blue}{subkeep->} option is not given
+ then this variable is automatically put into the \textcolor{blue}{keep->} list of the subdata.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{oldobsw}&-1|1&Var& This works similarly with respect to the initial obsw variable as \textcolor{blue}{oldsubobs}->
+ works for initial obs variable.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{nobs}&-1|1&Real& There are two uses of this option. First, a data object can be created without reading
+ from a file or from the following input paragraph by using \textcolor{blue}{nobs->} option and
+ \textcolor{blue}{maketrans->} transformation, which can use Obs variable as argument. Creation
+ of data object this way is indicated by the presence of \textcolor{blue}{nobs->} option and absence
+ of \textcolor{blue}{in->} and \textcolor{blue}{read->} options. Second, if \textcolor{blue}{read->} option is present \textcolor{blue}{nobs->}
+ option can be used to indicate how many records are read from a file and what
+ will be the number of observations. Currently \textcolor{blue}{reject->} or \textcolor{blue}{filter->} can not
+ be used to reject records (consult authors if this would be needed). If there are
+ fewer records in file as given in \textcolor{blue}{nobs->} option, an error occurs. There are three
+ reasons for using \textcolor{blue}{nobs->} option this way. First, one can read a small sample
+ from a large file for testing purposes. Second, the reading is slightly faster as the
+ data can be read directly into proper memory area without using linked buffers.
+ Third, if the data file is so large that a virtual memory overflow occurs, then it may
+ be possible to read data in as linked buffers are not needed.
+ In case \textcolor{blue}{nobs->} option is present and \textcolor{blue}{read->} option is absent either
+ \textcolor{blue}{maketrans->} or \textcolor{blue}{keep->} option (or both) is required.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{buffersize}&-1|1&Real&
+ The number of observations put into one temporary working buffer. The default
+ is 10000. Experimentation with different values of \textcolor{blue}{buffersize->} in huge data
+ objects may result in more efficient \textcolor{blue}{buffersize->} than is the default (or perhaps
+ not). Note that the buffers are not needed if number of observations is given in
+ \textcolor{blue}{nobs->}.
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{par}&-1|1-& Real&additional parameters for reading. If \textcolor{blue}{subform}-> option is 'bgaya' then par
+ option can be given in form \textcolor{blue}{par->}(ngvar,npvar) where ngvar is the number
+ of nonperiodic x-variables and npvar is the number of period specific x-variables
+ for each period. Default values are \textcolor{blue}{par->}(8,93).
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{rfhead} &-1|0& & When reading data from a text file, the first line can contain a header which is
+printed but othewise ignored
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{rfcode} &-1|0& &The data file can contain also J-code which is first executed. Note the code can
+ be like var1,var,x1...x5=1,2,3,4,5,6,7, which give the possibility to
+ define variables which describe the \textcolor{blue}{in->} file.
+
+
+ rfsubhead-> works for subdata similarly as \textcolor{blue}{rfhead->} for data.
+ rfsubcode works for subdata similarly as \textcolor{blue}{rfcode->} for data
+
+ If there are both \textcolor{blue}{rfhead->} and \textcolor{blue}{rfcode->} then \textcolor{blue}{rfhead->} is excuted first.
+ \textcolor{blue}{rfhead->} and \textcolor{blue}{rfcode->} replace readfirst-> option  of previous versions which was too
+ complicated.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{note}
+\textcolor{VioletRed}{data}() function will create a data object object, which is a compound object consistingsisting
+ of links to data matrix, etc. see Data object object. If Data is the output
+ of the function, the function creates the list Data\%keep telling the
+ variables in the data and
+ Data\%matrix containg the data as a single precision matrix. The number of observations can be obtained by \textcolor{VioletRed}{nobs}(Data) or by
+ \textcolor{VioletRed}{nrows}(Data\%matrix).
+\end{note}
+\begin{note}
+See common options section for how data objects used in other \textbf{J} functions will be defined.fined.
+\end{note}
+\begin{note}
+The \textcolor{blue}{in->} and \textcolor{blue}{subin->} can refer to the same file, or if both are without argumentsuments
+ then data are in the following input paragraph. In this case \textcolor{VioletRed}{data}() function read first one
+ upper level record and then \textcolor{blue}{nobsw->} lower level records.
+\end{note}
+\begin{note}
+When reading the data the \textcolor{blue}{obs->}variable (default Obs) can be used in maketrans-etrans-
+ > transformation and in \textcolor{blue}{reject->} option and \textcolor{blue}{filter->} option, and the variable refers to
+ the number of observation in resulting data object. The variable Record gets the number of
+ the read record in the input file, and can be used in \textcolor{blue}{maketrans->} transformations and in
+ \textcolor{blue}{reject->} and \textcolor{blue}{filter->} options. If \textcolor{blue}{subdata->} option is given, variable Subreject gets
+ the number of record in the sub file, and it can be used in \textcolor{blue}{submaketrans->} transformations
+ and in \textcolor{blue}{subreject->} option and in \textcolor{blue}{subfilter->} option.
+\end{note}
+\begin{note}
+Options \textcolor{blue}{nobs->}100, \textcolor{blue}{reject->}(Record.gt.100) and \textcolor{blue}{filter->}ilter->
+ (Record.le.100) result in the same data object, but when reading a large file, the \textcolor{blue}{nobs->}
+ option is faster as the whole input file is not read.
+\end{note}
+\begin{note}
+If no observations are rejected, obs variable and Record variable get the same values.alues.
+\end{note}
+\begin{note}
+If virtual memory overflow occurs, see \textcolor{blue}{nobs->} optio. This should not happen easily with the currrentrrent
+ 64-bit application.
+\end{note}
+\begin{note}
+Earlier versions contained \textcolor{blue}{trans->} and \textcolor{blue}{subtrans->}options which associatediated
+ a permanent transformation object with the data object. This feature is now deleted because
+ it may confuse and is not really needed. If tranformations are needed in functions
+ they can always be included using \textcolor{blue}{trans->} .
+\end{note}
+\section{Structure of general J functions}
+\label{jfuncs}
+ The general (non arithmetic) \textbf{J} functions are used either in statements
+
+ func(arg1,…,argn,opt1->value1,….,optm->valuem)
+
+ or
+
+ output=func(arg1,…,argn,opt1->value1,….,optm->valuem)\\
+ If there is no output for a function in a statement, then there can be three different cases:
+ i) The function does not produce any output (if an output would be given, then \textbf{J} would just
+ ignore it\\
+ ii) The function is producing output, and a default name is used for the output (e.g. Result
+ for arithmetic and matrix operations, Figure in graphic functions).\\
+ iii) The function is a sub expression within a transformation consisting of several parts including
+ other function or arithmetic operations. Then the output is put into a temporary unnamed
+ object which is used by upper level functions as an argument (e.g. a=\textcolor{VioletRed}{inverse}(b)*t(c))
+ If the value of an option is not a single object or numeric constant, then it must be enclosed in
+ parenthesis.\\
+ It is useful to think that options define additional argument sets for a function. Actually
+ an alternative for options would be to have long argument lists where the position of an
+ argument determines its interpretation. Hereafter generic term 'argument' may refer also to
+ the value of an option.
+
+ When \textbf{J} is interpreting a function, it is checking that the option names and the syntax
+ are valid, but it is not checking if an option is used by the function. Also when executing the
+ function, the function is reacting to all options it recognizes but it does not notice if there are
+ extra options, and these are thus just ignored.
+
+ An argument for a \textbf{J} function can be either functional statements producing a \textbf{J} object as its
+ value, or a name of \textbf{J} object. Some options can be without any argument (indicating that the
+ option is on).
+\begin{table}[H]
+\label{hopo}
+\begin{tabularx}{\textwidth}{ c  X }
+ a = \textcolor{VioletRed}{sin}(\textcolor{VioletRed}{cos}(c)+b) &\textcolor{green}{!\,Usual\,arithmetic\,functions\,have\,numeric\,values\,as}
+ arguments
+ \textcolor{green}{!\,here\,the\,value\,of\,the\,argument\,of\,cos\,is\,obtained\,by\,'computing'\,the}
+ value of real variable c.
+\end{tabularx}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\label{hopo2}
+\begin{tabularx}{\textwidth}{ c  X }
+ \textcolor{VioletRed}{stat}(D,H,\textcolor{blue}{min->},\textcolor{blue}{max->}) &\textcolor{green}{!\,Here\,arguments\,must\,be\,variable\,names}
+\end{tabularx}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\label{hopo3}
+\begin{tabularx}{\textwidth}{ c  X }
+ \textcolor{VioletRed}{plotyx}(H,D,\textcolor{blue}{xrange->}(\textcolor{VioletRed}{int}(D\%min,5), \textcolor{VioletRed}{ceiling}(D\%max,5))) &\textcolor{green}{!arguments\,of}
+ the function are variables, arguments of option \textcolor{blue}{xrange->} are numeric
+ values
+\end{tabularx}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\label{hopo4}
+\begin{tabularx}{\textwidth}{ c  X }
+ c = \textcolor{VioletRed}{inverse}(h+\textcolor{VioletRed}{t}(g)) &\textcolor{green}{!\,The\,argument\,can\,be\,intermediate\,result\,from}
+ matrix computations.
+ If it is evident if a function or option should have object names or values as their arguments, it
+ is not indicated with a special notation. If the difference is emphasized, then the values are
+ indicated by val1,…valn, and objects by obj1,…,objn, or the names of real variables are
+ indicated by var1,…,varn.
+ There are some special options which do not refer to object names or values. Some options
+ define a small one-statement transformation to be used to compute something repeatedly.
+\end{tabularx}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\label{hopo4}
+\begin{tabularx}{\textwidth}{ c  X }
+ \textcolor{VioletRed}{stat}(D,H,\textcolor{blue}{filter->}(\textcolor{VioletRed}{sin}(D).gt.\textcolor{VioletRed}{cos}(H+1)) &!
+ only those observations are
+ accepted which pass the filter
+\end{tabularx}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\label{hopo4}
+\begin{tabularx}{\textwidth}{ c  X }
+ \textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(\textcolor{VioletRed}{sin}(\$x)+1),\textcolor{blue}{x->}\$x,\textcolor{blue}{xrange->}(0,10,1)) &\textcolor{green}{!\,the\,\textcolor{blue}{func->}\,option}
+ transmits the function to be drawn not a single value.
+\end{tabularx}
+\end{table}
+\section{Command input and output}
+\label{cominout}
+ \textbf{J} has two programming levels. First level, called input programming, generates text lines which are then
+ transmitted to the interpreter which generates code which is the put into transformations sets or
+excuted directly. Input programming loops make it possible to generate large number of command lines
+ in a compact and short form. This chapter describes input programming commands.
+\subsection{Input line and input paragraph}
+\label{inpuline}
+\textbf{J} reads input records from the current input channel which may be terminal, file or a text object.
+ When \textbf{J} interprets input lines, spaces between limiters and function or object names are not
+ significant. In input programming, functions start with ';' which is part of the function name (and
+ there can thus be no space immediately after ';'). If a line (record) ends with ',' ,'+', '*´, '-',
+ '(', '=' or with '>', then the next record is interpreted as a continuation record and
+ the continuation character is kept as a part of the input
+ line. If a line ends with '>>', then
+ the nex line is also continuation line, and  '>>' is ignored. All continuation
+ records together form one input line. In previous version input programming functions operated on input lines
+ but now they operate on recors. One input record can contain 4096 characters, and an input line can contain also 4096 characters
+ (this can be increased if needed).
+ The continuation line cannot start with ‘*’ or ‘\textcolor{green}{!’\,because\,these\,are\,reserved}
+ to indicate comments.  Note: '/' (division)cannot be used as last character indicating the continuation of the line because it can
+ be legal last character indicating the end of an input paragraph.
+
+ When entering input lines from the keyboard, the previous lines given from the keyboard can no more be
+ accessed and edited using the arrow keys owing to MSYS2 MSYS environment used to build the exe-file.
+ To copy text from the \textbf{J} window into the clipboard right-click the upper left icon, select Edit,
+ and then select Mark. Next click and drag the cursor to select the text you want to copy and
+ finally press Enter (or right-click the title bar, select Edit, and in the context menu click Copy).
+ To paste text from the clipboard into the \textbf{J} command line right-click the title bar, select Edit,
+ and in the context menu click Paste. Console applications of Intel Fortran do not provide copy
+ and paste using <cntrl>c and <cntrl>v. An annoying feature of the current command window is that it is possible
+ All input lines starting with '*' will be comments, and in each line text starting with '!' will also
+ be interpreted as comment (\textcolor{green}{!debug\,will\,put\,a\,debugging\,mode\,on\,for\,interpretation\,of\,the}
+ line, but this debug information can be understood only by the author). If a comment line starts
+ with '*\textcolor{green}{!',\,it\,will\,be\,printed.}
+
+ Many \textbf{J} functions interpreted and executed at the command level need or can use a group of
+ text lines as input. In these cases the additional input lines are immediately after the function.
+ This group of lines is called input paragraph. The input paragraph ends with '/', except the
+ input paragraph of text function ends with '//' as a text object can contain ordinary input
+ paragraphs. It may be default for the function that there is input paragraph following. When
+ it is not a default, then the existence of the input paragraph is indicated with option \textcolor{blue}{in->}
+ without any value. An input paragraph can contain input programming commands; the
+ resulting text lines are transmitted to the \textbf{J} function which interprets the input paragraph
+\begin{example}[inpuparag]Example of inputparagraph\\
+\label{inpuparag}
+ tr=\textcolor{VioletRed}{trans}()\\
+ a=\textcolor{VioletRed}{log}(b)\\
+ \textcolor{VioletRed}{write}(\$,'($\sim$sinlog\,is=$\sim$,f4.0)',\textcolor{VioletRed}{sin}(a))\\
+ /\\
+ b=\textcolor{VioletRed}{matrix}(2,3,\textcolor{blue}{in->})\\
+ 1,2,3\\
+ 5,6,7\\
+/
+\end{example}
+\subsection{Input programming}
+\label{inpuprog}
+ The purpose of the input programming is to read or generate \textbf{J} commands or input lines
+ needed by \textbf{J} functions. The names of input programming commands start with semicolon ';'.
+ There can be no space between ';' and the following input programming function. The syntax
+ of input programming commands is the same as in \textbf{J} functions, but the input programming
+ functions cannot have an out-put. There are also controls structures in the input programming.
+ An input paragraph can contain input programming structures.
+ 3.2.1. Addresses in input programming
+ The included text files can contain addresses. Addresses define possible starting points for the
+ inclusion or jump addresses within an include file. An address starts with semicolon (;) and
+ ends with colon (:). There cannot be other text on the address line. E.g.
+ ;ad1:
+ See: \textcolor{Red}{;incl}, \textcolor{Red}{;goto}
+\begin{note}
+The definition of a transformations set can also contain addresses. These addresses start start
+ with a letter and end also with colon (:).
+\end{note}
+\subsubsection{;incl()}
+\label{incl}
+ Includes lines from a file or from a text object. Using the \textcolor{blue}{from->}
+option the include file can contain sections which start with adresses like
+ ;ad: \\
+and end with \\
+\textcolor{Red}{;return}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ Args & 0|1 & Ch|Tx &  file name. Default: the same file is used as in the previous \textcolor{Red}{;incl}().
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{from} & N|1 & Ch &gives the starting \textcolor{blue}{in}-> address for the inclusion, address is given without starting ';'
+ and ending ':'.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{wait}& N|0 & & \textbf{J} waits until the include file can be opened. Useful in client server applications.
+ See chapter \textbf{J} as a server.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{note}
+Include files can be nested up to 4 levels.levels.
+\end{note}
+\begin{note}
+See Chapter Defining a text object with text function and using it in \textcolor{Red}{;incl} how to includeinclude
+ commands from a text object.
+\end{note}
+\begin{note}
+When editing the include file with Notepad ++, it is reasonable to set the language as Fortran (free form). form).
+\end{note}
+\begin{example}[inpuincl]Example of \textcolor{Red}{;incl}()\\
+\label{inpuincl}
+ \textcolor{Red}{;incl}('file.txt')\\
+ \textcolor{Red}{;incl}('file2.txt',\textcolor{blue}{from->}'ad1')\\
+ \textcolor{Red}{;incl}(\textcolor{blue}{from->}'ad2')
+\end{example}
+\begin{note}
+Using \textcolor{Red}{;incl}() in a projectoject
+When working in a project it is reasonable to organize
+the include file as follows. Put into the beginning of the file section:\\
+this=\textcolor{VioletRed}{thisfile}() \,\textcolor{green}{!There\,can\,different\,versions\,of\,the\,file\,with\,differetn\,names.\\}
+A='\textcolor{Red}{;incl}(this)' \textcolor{green}{!If\,new\,sections\,are\,added\,to\,the\,file,\,new\,shortcuts}
+can be defined by adding those here and writing A at sit> prompt.\\
+R='\textcolor{Red}{;incl}(this,\textcolor{blue}{from->}$\sim$read$\sim$)' \,\,\,\,\textcolor{green}{!\,read\,data\,in\,\\}
+T1='\textcolor{Red}{;incl}(this,\textcolor{blue}{from->}$\sim$task1$\sim$)' \,\,\textcolor{green}{!\,first\,analysis\,\\}
+T2='\textcolor{Red}{;incl}(this,\textcolor{blue}{from->}$\sim$task2$\sim$)' \,\,\textcolor{green}{!\,second\,analysis\,\\}
+\textcolor{Red}{;return} \\
+Now everything what needs to written at sit> after the first
+\textcolor{Red}{;incl}() are the shortcuts. If adding section task3 then
+add the shortcut here, then write shortcuts A and T3 at sit>.
+The file jexamples.inc which comes with the manual and which is generated
+ with the jmanual program shows an examle.
+\end{note}
+\begin{note}
+The adress line can contain comment starting with '!'. '!'.
+\end{note}
+\subsection{Changing “i” sequences}
+\label{inpudots}
+ If an original input line contains text within quotation marks, then the sequence will be replaced
+ as follows. If a character variable is enclosed, then the value of the character variable is
+ substituted: E.g.
+ directory='D:$\backslash$j$\backslash$'
+ name='area1'
+ extension='svs'
+ then
+ \textcolor{blue}{in->}'"directory""name"."extension"'
+ is equivalent to
+ \textcolor{blue}{in->}'D:$\backslash$j$\backslash$area1.svs'
+ If the "-expression is not a character variable then \textbf{J} interprets the sequence as an arithmetic
+ expression and computes its value. Then the value is converted to character string and
+ substituted into the place. E.g. if nper is variable having value 10, then lines
+\color{Green}
+\begin{verbatim}
+ x#"nper+1"#"nper" = 56
+ chv = 'code"nper"'
+\end{verbatim}
+\color{Black}
+ are translated into
+\color{Green}
+\begin{verbatim}
+ x#11#10 = 56
+ chv = 'code10'
+\end{verbatim}
+\color{Black}
+
+ With " " substitution one can define general macros which will get specific interpretation by
+ giving values for character and numeric parameters, and numeric parameters can be utilized in
+ variable names or other character strings. In transformation sets one can shorten computation
+ time by calculating values of expressions in the interpretation time instead of doing
+ computations repeatedly. E.g. if there is in a data set transformation
+ x3 = "\textcolor{VioletRed}{sin}(Pi/4)"*x5
+ Then evaluation of \textcolor{VioletRed}{sin}(Pi/4) is done immediately, and the value is transmitted to the
+ transformation set as a real constant.
+ If value of the expression within a “” sequence is an integer then the value is dropped in the
+ place without the decimal point and without any spaces, otherwise its value is presented in
+ form which is dependent on magnitude of the value. After J3.0 the format can be explicitly
+ specified within [] before the numeric value. Eg. text can be put into a figure as
+ fig =
+ \textcolor{VioletRed}{drawline}(5,5,\textcolor{blue}{mark->}’y=”[f5.2]coef(reg,x1)“*x1+”[f5.2]coef(reg,1)“‘)
+ See file jex.txt and Chapter 8 for an ex
+\section{Data functions}
+\label{Data}
+Data functions can generate data objects by reading data from files, or forming data
+ objects by combing matrices and data objects. An important property of data objects
+ is that they can be linked so that each observation of an upper level data
+ is linked to several observations in lower level data. Each upper level
+observation can contain different number of lower level observations.
+Linear programming in forest management planning is based on linked data sets where each
+stand is connected to number of treatment schedules.
+\subsection{newdata()}
+\label{newdata}
+Function \textcolor{VioletRed}{newdata}() generates a new data object from existing data objects and/or
+matrices possibly using transformations to generate new variables.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Output&1&Data&The data object generated.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&1-&Data|Matrix& Input matrices and data objects.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{read}&N|1-&Var& Variable names for columns of matrices in the order of
+matrices.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{maketrans}&N|1& Trans & A predefined ransformation object computed for each observation.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{note}
+It is not yet possible to drop variables.bles.
+\end{note}
+\begin{note}
+An error occurs if the same variable is several times in the variable list obtainedained
+by combining variables in data sets and \textcolor{blue}{read->} variables.
+\end{note}
+\begin{note}
+An error occurs if the numbers of rows of matrices and observations in data sets sets
+ are not compatible.
+\end{note}
+\begin{note}
+Output variables in \textcolor{blue}{maketrans->} transformations whose name start with \$ are not put into the new data object.ject.
+\end{note}
+\begin{example}[newdataex]newdata() generates a new data object.\\
+\label{newdataex}
+data1=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(x1...x3),\textcolor{blue}{in->})\\
+1,2,3\\
+4,5,6\\
+7,8,9\\
+/\\
+matrix1=\textcolor{VioletRed}{matrix}(3,2,\textcolor{blue}{in->})\\
+10,20\\
+30,40\\
+50,60\\
+/\\
+ newtr=\textcolor{VioletRed}{trans}()\\
+ \textcolor{Red}{;do}(i,1,3)\\
+ \textcolor{Red}{;do}(j,1,2)\\
+ x"i"\#z"j"=x"i"*z"j"\\
+ \textcolor{Red}{;enddo}\\
+ \textcolor{Red}{;enddo}\\
+ /\\
+new=\textcolor{VioletRed}{newdata}(data1,matrix1,\textcolor{blue}{read->}(z1,z2),\textcolor{blue}{maketrans->}newtr)\\
+\textcolor{VioletRed}{print}(new)
+\end{example}
+\subsection{exceldata()}
+\label{exceldata}
+Generates data object from csv data generated with excel. It is assumed that ';' is used as column separator,
+ and first is the header line generated with excel and containing column names.
+The second line contains information for \textbf{J} how to read the data.
+First the first line is copied and pasted as the second line. To the beginning of the second line is put
+ '@\#'. Then each entry separated by ';' is edited as follows. If the column is just ignored, then
+ put '!' to the beginning of the entry. If all characters in the column are read in as
+ a numeric variable, change the name to accpetable variable name in J.
+ If the column is read in but it is just used as an input variable fot
+\textcolor{blue}{maketrans->} trasformations, then start the name with '\$' so the variable is not put to
+ the list of \textcolor{blue}{keep->} variables. If a contains only character values then it must
+ be ignored using '!'. If the contains numeric values surrounded by characters, the the numeric value can be picked
+ as follows. Put '?' to the end of entry. Put the variable name to the beginning of the entry.
+ then put the the number of characters to be ignored by two digits, inserting
+ aleading zero if needed. The given the length of the numeric field to be read in as a numeric value.
+ For instance, if the header line in the excel file is
+\color{Green}
+\begin{verbatim}
+Block;Contract;Starting time;Name of municipality;Number of stem;Species code
+\end{verbatim}
+\color{Black}
+ and the first data line could be
+\color{Green}
+\begin{verbatim}
+MG_H100097362501;20111001;7.5.2021 9:37;Akaa;20;103;1;FI2_Spruce
+\end{verbatim}
+\color{Black}
+ then the second line before the first data line could be
+\color{Green}
+\begin{verbatim}
+##block0808?;!Contract;!Starting time;!Name of municipality;stem;species0201?
+\end{verbatim}
+\color{Black}
+ therafter the first observation would get values block=97362501,stem=1, and
+species=2.
+
+If there are several input files, the header line of later input lines is ignored, and
+ also if the second line of later files starts with '\#\#', then it is ignored.
+ if any later lines in any input files start with 'jcode:', then the code is computed.
+This way variables decribing the whole input file can be transmitted to the data.
+ Currently jcode-output variables can be transmitted to data matrix only by using the as pseudo
+outputvariables in maketrans-transformations, e.g., filevar1=filevar1, if
+filevar1 is generated in jcode transformation.
+ If there are several input files the file number is put into variable In before computing maketrans transformations
+ and this variable is automatically stored in the data matrix.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Output&1&Data& Data object generated
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{in}&1-&Char&Files to read in.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{maketrans}&N|1&trans& Transformations used to compute new variables to be stored
+ in the data.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\section{classvector()}
+\label{classvector}
+Function classvector computes vectors from data which extract information from grouped
+data. These vectors can be used to generate new data object using \textcolor{VioletRed}{newdata}() function or
+new matrices from submatrices using \textcolor{VioletRed}{matrix}() function with \textcolor{blue}{matrix->} option or
+ they can be used in transformation objects to compute class related things.
+There is no explicit output for the function, but several output vectors can
+ be generated depending on the arguments and \textcolor{blue}{first->}, \textcolor{blue}{last->} and
+ \textcolor{blue}{expand->} options. The function prints the names of the output vectors generated.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&0-&Var& The variables whose class information is computed. Arguments
+ are not necessary if \textcolor{blue}{first->} and/or \textcolor{blue}{last->} are present.
+Let §Arg be the generic name for arguments.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{class}&1&Var& .
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{class}&1&Var&The variable indicating the class. The class variable which must be present in the data object or which is
+an output variable of the \textcolor{blue}{trans->} transformations.
+When the \textcolor{blue}{class->} variable, denoted as
+as §Class changes,
+the class changes.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{data}&0|1&Data&Data object used. Only one data object used; extra \textcolor{blue}{data}-> objects just ignored. The default is the last
+ data object generated.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{expand}&-1|0& &If \textcolor{blue}{expand}-> is present then the lengths output vectors are equal
+to the number of observations in the data object and the values of the class variables
+ are repeated as many times as there are observations in each class. If
+\textcolor{blue}{expand->} is not present, the lengths of the output vectors are.
+ equal to the number of classes.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{first}&0& &The the number of first observation in class is stored in vector
+ §Class\%first if \textcolor{blue}{expand->} is present and §Class\%\%first if \textcolor{blue}{expand->} is not present.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{last}&0& &The the number of lastt observation in class is stored in vector
+ §Class\%\%last if \textcolor{blue}{expand->} is present and §Class\%last if \textcolor{blue}{expand->} is not present.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{ext}&-1|1&Char&The extension to the names of vectors generated for arguments. Let
+ Ext be denote the extension.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{mean}&-1|0& &The class means are stored in the vectors \newline
+ §Arg\#Class\%\%mean with \textcolor{blue}{expand->} and without \textcolor{blue}{ext->}\newline
+ §Arg\#Class\%\%meanExt with \textcolor{blue}{expand->} and with \textcolor{blue}{ext->} are \newline
+ §Arg\#Class\%mean without \textcolor{blue}{expand->} and without \textcolor{blue}{ext->} \newline
+ §Arg\#Class\%meanExt without \textcolor{blue}{expand->} and with \textcolor{blue}{ext->}
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{sd}&-1|0& & Class standard deviations are computed to sd vectors
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{var}&-1|0& & Class variances are computed to var vectors
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{min}&-1|0& & Class minimums are computed to min vectors
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{max}&-1|0& & Class maximums are computed to max vectors.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{note}
+Numbers of observations in each class can be obtained by \\by \\
+Class\%nobs=Class\%\%last-Class\%\%first+1 when \textcolor{blue}{expand->} is present, and \\
+Class\%nobs=Class\%\%last-Class\%\%first+1
+\end{note}
+\begin{example}[newclassdata]Making class level data object\\
+\label{newclassdata}
+\textcolor{VioletRed}{classvector}(x1,x2,\textcolor{blue}{class->}stand,\textcolor{blue}{data->}treedata,\textcolor{blue}{mean->},\textcolor{blue}{min->})\\
+standdata=\textcolor{VioletRed}{newdata}(x1\#stand\%mean,x2\#stand\%mean,x1\#stand\%min,x2\#stand\%min,\\
+\textcolor{blue}{read->}(x1,x2,x1min,x2min))
+\end{example}
+\begin{example}[addingclass]Adding class means and deviations from class means\\
+\label{addingclass}
+\textcolor{VioletRed}{classvector}(x1,x2,\textcolor{blue}{class->}stand,\textcolor{blue}{data->}treedata,\textcolor{blue}{mean->},\textcolor{blue}{expand->})\\
+tr=\textcolor{VioletRed}{trans}()\\
+relx1=x1-x1mean\\
+relx2=x2-x2mean\\
+/\\
+treedata=\textcolor{VioletRed}{newdata}(treedata,x1\#stand\%mean,x2\#stand\%mean,\textcolor{blue}{read->}(x1mean,x2mean),\\
+\textcolor{blue}{maketrans->}tr)
+\end{example}
+\section{J transformations}
+\label{jtrans}
+ Most operation commands affecting \textbf{J} objects can be entered directly at the command level or
+ packed into transformation object. In both cases the syntax and working is the same. A
+ command line can define arithmetic operations for real variables or matrices, or they can
+ include functions which operate on other \textbf{J} objects. General \textbf{J} functions can have arithmetic
+ statements in their arguments or in the option values. In some cases the arguments must be
+ object names. In principle it is possible to combine several general \textbf{J} functions in the same
+ operation command line, but there may not be any useful applications yet, and possibly some
+ error conditions would be generated.
+ Definition: A numeric function is a \textbf{J} function which returns a single real value. These functions
+ can be used within other transformations similarly as ordinary arithmetic functions. E.g.
+ \textcolor{VioletRed}{weights}() is a numeric function returning the number of schedules having nonzero weight
+ in a JLP-solution. Then \textcolor{VioletRed}{print}(\textcolor{VioletRed}{sqrt}(\textcolor{VioletRed}{weights}())+Pi) is a legal transformation.
+\section{Statistical functions}
+\label{statistics}
+ There are several statistical functions which can be used to compute basic statistics
+linear and and nonlinear regression, class means, standard deviations and standard errors
+ in one or two dimensional tables using data sets. There are also functions
+ which can be used to compute statistics from matrices, but these are described
+ in Section  \ref{matrix}
+\subsection{stat()}
+\label{stat}
+ Computes and prints basic statistics from data objects.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Output&0-1&Var& kokopo
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ Args & 0-99&Var&variables for which the statistics are computed,
+ the default is all variables in the data (all variables in the data matrix plus the output variables of the associated transformation object) and all output variables of the tran
+
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{data} & N|1- & Data &	data sets , see section Common options for default.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{data} & -1,99 & Data &	data objects , see section Common options for default\textcolor{green}{!\,weight\,	gives\,the\,weight\,of\,each\,observations\,if\,weighted\,means\,and\,variances\,are\,computed.\,The\,weigh}
+ transformation or it can be a variable in the data object
+See \vref{comoptions} for more details.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{min} & -1,99&Var&	defines to which variables the minima are stored.
+   If the value is character constant or character variable,
+   then the name is formed by concatenating the character with the name of the argument
+ variable. E.g. \textcolor{VioletRed}{stat}(x1,x2,\textcolor{blue}{min->}'\%pien') stores minimums into variables
+ x1\%pien and x2\%pien. The default value for min  is '\%min'.
+If the values of the \textcolor{blue}{min->} option are variables,
+ then the minima are stored into these variables.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{max} &-1,99&Var& maxima are stored, works as \textcolor{blue}{min}->
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{mean} &-1,99&Var & means are stored
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{var} &-1,99&Var& variances are stored
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{sd} &-1,99&Var& standard deviations are stored
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{sum} &-1,99&Var&	sums are stored, (note that sums are not printed automatically)
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{nobs} &-1 | 1&Var&	gives variable which will get the number of accepted observations, default is variable 'Nnobs'. If all observations are rejected due to \textcolor{blue}{filter}-> or \textcolor{blue}{reject}-> opt
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{trans} &-1 | 1&Trans&	transformation object which is executed for each observation. If there is a transformation object associated with the data object, those transformations are
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{filter} &-1 | 1&Code& logical or arithmetic statement (nonzero value indicating True) describing which observations will be accepted. \textcolor{blue}{trans}-> transformations are computed before u
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ \textcolor{blue}{reject} &-1 | 1&Code& @
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+ transafter &-1 | 1& Trans& transformation object which is executed for each observation which has passed the filter and is not rejected by the \textcolor{blue}{reject}->-option.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{note}
+1: \textcolor{VioletRed}{stat}() function prints min, max, means, sd and sd of the mean computedmputed
+ as sd/\textcolor{VioletRed}{sqrt}(number of observations)
+\end{note}
+\begin{note}
+2: If the value of a variable is greater than or equal to 1.7e19,.7e19,
+ then that observation is rejected when computing statistics for that variable.
+\end{note}
+\begin{example}[statex]\\
+\label{statex}
+ \textcolor{VioletRed}{stat}(area,\textcolor{blue}{data->}cd,\textcolor{blue}{sum->}bon20,\textcolor{blue}{filter->}(site.ge.18.5))\\
+ \textcolor{VioletRed}{stat}(ba,\textcolor{blue}{data->}cd,\textcolor{blue}{weight->}area)\\
+ \textcolor{VioletRed}{stat}(vol,\textcolor{blue}{weight->}(1/dbh***2))
+\end{example}
+\section{Analyzing classified data}
+\label{classes}
+The are several functions which can be used to analyze classified data.
+All these functions are described here, even if they belong Figure functions and
+ statistical functions.
+\subsection{class()}
+\label{class}
+Function \textcolor{VioletRed}{class}() computes the the class of given value when classifying values
+similarly as done in \textcolor{VioletRed}{classify}().
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Output&1&Var&The class number.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&1&Real&The value whose class is determined.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{xrange}&2&Real&The range of values.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{dx}&N|1&Real&The class width.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{classes}&N|1&Real&The number of classes.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{note}
+Either \textcolor{blue}{dx->} or \textcolor{blue}{classes->} must be given. If both are given, \textcolor{blue}{dx->} dominates.ates.
+\end{note}
+\begin{note}
+If \textcolor{VioletRed}{stat}() is used earlier for variables including Var1 and1 and
+ options \textcolor{blue}{min->} and \textcolor{blue}{max->} are present, then
+\textcolor{blue}{xrange->}(Var1\%min,Var1\%max) is assumed.
+\end{note}
+\section{Common options}
+\label{comoptions}
+ There are some options which are used in many \textbf{J} functions. Such options are e.g.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{in}&0|1-&Char&Indicates from where the data are read in. If there are no arguments,
+then the data are in the following input paragraph. If the values are
+character constants or a character variables, then data are read in from files those names.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{data} & N|1- & Data &	data sets , see section Common options for default.
+All data sets will be
+ treated logically as a single data set.
+ If the function is using data sets, the daenta sets are given in \textcolor{blue}{data->} option. All data sets will be
+ treated logically as a single data set. If a \textbf{J} function needs to access data, and the \textcolor{blue}{data->}
+ option is not given then \textbf{J} uses default data which is determined as follows.
+ If the user has defined an object list Data consisting of one or more data sets, then these will
+ be used as the default data set. E.g.
+ Data=\textcolor{VioletRed}{list}(dataa,datab)
+ When a data set is created, it will automatically become the only element in LastData list. If
+ the Data list has not been defined and there is no \textcolor{blue}{data->} option, then the LastData dataset
+ will be used.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{trans} &-1 | 1&Trans&	transformation set which is executed for each observation. If there is a transformation set associated with the data set, those transformations are computed first.
+ In all functions which are using data sets, \textcolor{blue}{trans->} option defines a
+ transformation set which is used in this function.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{filter} &-1 | 1&Code& logical or arithmetic statement (nonzero value indicating True) describing which observations will be accepted. \textcolor{blue}{trans}-> transformations are computed before using filter.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{example}[comopt]data1\\
+\label{comopt}
+ tr=\textcolor{VioletRed}{trans}()\\
+ xy=x*y\\
+/\\
+ \textcolor{VioletRed}{stat}(xy,\textcolor{blue}{trans->}tr)
+\end{example}
+\subsection{Matrix functions}
+\label{matrix}
+ There are matrix function which can create matrices (objects with type Matrix), take submatrices from larger matrices,
+ make matrices from submatrices, compute statitics from matrices, solve linear equations,
+ compute inverse and transpose of a matrix.
+ Sums, differences and products of matrices are defined using ordinary arithmetic
+ operations +,- and *. Arithmetic operations can combine scalars and matrices in the normal way.
+ Now all matrices are in double precision. The data functions store data single precision
+ matrices (type Matrix0) which cannot be used in matrix computations. Single precison data matrices can
+ can be changed to double precision matrices simply by xmat=data1\%matrix, where data1 is a data object.
+\subsection{inverse()}
+\label{inverse}
+ \textcolor{VioletRed}{inverse}(A) computes the inverse of a square MATRIX A. The function utilized dgesv funtion
+ of netlib. If the argument has type REAL, then the reciprocal is computed,
+ and the output will also have type REAL. An error occurs, if A is not
+ a square matrix or REAL, or A is singular according to dgesv.
+\begin{note}
+instead of writing c=\textcolor{VioletRed}{inverse}(a)*b, it is faster and more accurate tote to
+write c=\textcolor{VioletRed}{solve}(a,b)
+\end{note}
+\subsection{find()}
+\label{find}
+Function \textcolor{VioletRed}{find}() can be used to find the first matrix element satisfying a given condition, or
+ all matrix elements satifying the conditon, and in that case the found
+ elements can be put to a vector containg element numbers or to a
+vector which has equal size as the input matrix and where 1 indicates that
+ the element satifies the condition..
+Remember that matrices are stored in row order. If a given column or row should be seaeched,
+ use submatrix() to extract that row or column.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Output& 1& REAL|MATRIX&Without \textcolor{blue}{any}-> or \textcolor{blue}{expand}-> the first element found in row order.
+With \textcolor{blue}{any->}, the vector of element numbers satisfying the conditon. If nothing found
+ the output will be REAL with value zero.
+With \textcolor{blue}{expand->}, the matrix of the same dimensions as the input matrix where
+ hits are marked with 1.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&1&Matrix& The matrix searched.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{filter}&1&Code&Gives the condition which the matrix element should be satisfied. The
+ values of the matrix elements are put to the variable \$.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{any}&-1|0& & The filtered element numbers are put to the output vector.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+\textcolor{blue}{expand}&-1|0&& The filtered elements are put the output matrix
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{example}[findex]Example of find, illustrating also \textcolor{VioletRed}{rann}()\\
+\label{findex}
+\textcolor{green}{!Repeating\,the\,example,\,different\,results\,will\,be\,obtained}\\
+ rm=\textcolor{VioletRed}{matrix}(100)\\
+ m,s=2,3\\
+ rm=\textcolor{VioletRed}{rann}(m,s)\\
+ \textcolor{VioletRed}{print}(\textcolor{VioletRed}{mean}(rm),\textcolor{VioletRed}{sd}(rm),\textcolor{VioletRed}{min}(rm),\textcolor{VioletRed}{max}(rm))
+\color{Green}
+\begin{verbatim}
+ =   2.4564691829681395
+ =   3.2549002852383477
+ =  -5.6481685638427734
+ =   10.714715003967285
+\end{verbatim}
+\color{Black}
+ first=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.m+1.96*s))\\
+ large=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.m+1.96*s),\textcolor{blue}{any->})\\
+ large2=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.m+1.96*s),\textcolor{blue}{expand->})\\
+ \textcolor{VioletRed}{print}(first,100*nrows(large)/\textcolor{VioletRed}{nrows}(rm),100*sum(large2)/\textcolor{VioletRed}{nrows}(rm))
+\color{Green}
+\begin{verbatim}
+ first=   12.000000000000000
+  =   4.0000000000000000
+  =   4.0000000000000000
+\end{verbatim}
+\color{Black}
+\end{example}
+\subsection{Generating object lists with ... -constr}
+\label{dots}
+Indexed objects are indexed
+
+\subsection{Random number generators}
+\label{random}
+Random number generators are taken from Ranlib library of Netlib.
+They can produce single REAL variables or random MATRIX objects.
+Random matrices are produced by defining first a matrix with \textcolor{VioletRed}{matrix}()
+funtion and putting that as the output.
+\subsection{rann()}
+\label{rann}
+Computes normally distributed pseudo random numbers into a REAL variable or
+into MATRIX.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Output&1&REAL|MATRIX&The matrix to be generated bus be defined earlier with \textcolor{VioletRed}{matrix}().
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\vspace{-1.51em}
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&0-2&num& rannn() produces N(0,1) variables, \textcolor{VioletRed}{rann}(mean) will produce
+N(mean,1) variables and \textcolor{VioletRed}{rann}(mean,sd) procuses N(mean,sd) variables.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}
+\begin{example}[rannex]Random normal variates, illustrating also find\\
+\label{rannex}
+rx=\textcolor{VioletRed}{rann}() \,\textcolor{green}{!Output\,is\,REAL}\\
+rm=\textcolor{VioletRed}{matrix}(100)\\
+\textcolor{VioletRed}{print}(\textcolor{VioletRed}{mean}(rm),\textcolor{VioletRed}{sd}(rm),\textcolor{VioletRed}{min}(rm),\textcolor{VioletRed}{max}(rm))\\
+large=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.2),any)\\
+\textcolor{VioletRed}{print}(100*nrows(large)/\textcolor{VioletRed}{nrows}(rm))\\
+cpu0=\textcolor{VioletRed}{cpu}()\\
+rm2=\textcolor{VioletRed}{matrix}(1000000)\\
+rm2=\textcolor{VioletRed}{rann}(10,2)\\
+\textcolor{VioletRed}{print}(\textcolor{VioletRed}{cpu}()-cpu0)\\
+\textcolor{VioletRed}{print}(\textcolor{VioletRed}{mean}(rm2),\textcolor{VioletRed}{sd}(rm2),\textcolor{VioletRed}{min}(rm2),\textcolor{VioletRed}{max}(rm2))\\
+large=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.14),any)\\
+\textcolor{VioletRed}{print}(100*nrows(large)/\textcolor{VioletRed}{nrows}(rm))
+\end{example}
+\subsection{eigen()}
+\label{eigen}
+Computes eigenvectors and eigenvalues of a square matrix. The eigenvectors are stored as
+columns in matrix output\%matrix and the eigenvalues are stored as a row vector
+ output\%values. The eigenvalues and eigenvectors are sorted from smallest to larges eigenvalue.
+Netlib subroutines DLASCL, DORGTR, DSCAL, DSTEQR, DSTERF, DSYTRD,
+XERBLA, DLANSY and DLASCL are used.
+\begin{table}[H]
+\begin{tabular}{ m{.10\textwidth}  m{.05\textwidth}m{.10\textwidth}p{.60\textwidth}}
+Args&1&MAT& A square MATRIX.
+\\ \cline{1-4}
+\end{tabular}
+\end{table}

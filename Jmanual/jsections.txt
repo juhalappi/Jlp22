@@ -1,0 +1,336 @@
+!Inpuf ;incl
+!Inpuf ;goto
+!Inpuf ;return
+!Inpuf ;do
+!Inpuf ;enddo
+!Inpuf ;sum
+!Inpuf ;dif
+
+!Macro seecom
+!See \vref{comoptions} for more details. 
+!endmacro
+
+!Macro data
+! data & N|1- & Data &	data sets , see section Common options for default.
+!endmacro
+
+!Macro in1 
+! in&0|1&Char&Indicates from where the data are read in. If there are no arguments, 
+! then the data are in the following input paragraph. If the value is a
+!character constant or a character variable, then the source is the file with that name.
+!endmacro
+
+!Macro in2 
+! in&0|1-&Char&Indicates from where the data are read in. If there are no arguments, 
+! then the data are in the following input paragraph. If the values are
+!character constants or a character variables, then data are read in from files those names.
+!endmacro
+
+
+
+
+
+
+
+!Macro trans
+! trans &-1 | 1&Trans&	transformation set which is executed for each observation. If there is a transformation set associated with the data set, those transformations are computed first.
+!endmacro
+
+!Macro filter
+! filter &-1 | 1&Code& logical or arithmetic statement (nonzero value indicating True) describing which observations will be accepted. trans-> transformations are computed before using filter.
+!endmacro
+
+!Macro reject
+! reject &-1 | 1&Code& logical or arithmetic statement (nonzero value indicating True) describing which observations will be rejected. trans-> transformations are computed before using reject->.
+!endmacro
+
+
+
+
+
+!Section cominout Command input and output
+! J has two programming levels. First level, called input programming, generates text lines which are then
+! transmitted to the interpreter which generates code which is the put into transformations sets or 
+!excuted directly. Input programming loops make it possible to generate large number of command lines 
+! in a compact and short form. This chapter describes input programming commands.
+!endheader
+!endsection
+! Section inpuline Input line and input paragraph
+!J reads input records from the current input channel which may be terminal, file or a text object.
+! When J interprets input lines, spaces between limiters and function or object names are not
+! significant. In input programming, functions start with ';' which is part of the function name (and
+! there can thus be no space immediately after ';'). If a line (record) ends with ',' ,'+', '*´, '-',
+! '(', '=' or with '>', then the next record is interpreted as a continuation record and
+! the continuation character is kept as a part of the input
+! line. If a line ends with '>>', then
+! the nex line is also continuation line, and  '>>' is ignored. All continuation
+! records together form one input line. In previous version input programming functions operated on input lines
+! but now they operate on recors. One input record can contain 4096 characters, and an input line can contain also 4096 characters
+! (this can be increased if needed).
+! The continuation line cannot start with ‘*’ or ‘!’ because these are reserved
+! to indicate comments.  Note: '/' (division)cannot be used as last character indicating the continuation of the line because it can
+! be legal last character indicating the end of an input paragraph.
+
+! When entering input lines from the keyboard, the previous lines given from the keyboard can no more be
+! accessed and edited using the arrow keys owing to MSYS2 MSYS environment used to build the exe-file.
+! To copy text from the J window into the clipboard right-click the upper left icon, select Edit,
+! and then select Mark. Next click and drag the cursor to select the text you want to copy and
+! finally press Enter (or right-click the title bar, select Edit, and in the context menu click Copy).
+! To paste text from the clipboard into the J command line right-click the title bar, select Edit,
+! and in the context menu click Paste. Console applications of Intel Fortran do not provide copy
+! and paste using <cntrl>c and <cntrl>v. An annoying feature of the current command window is that it is possible 
+! All input lines starting with '*' will be comments, and in each line text starting with '!' will also
+! be interpreted as comment (!debug will put a debugging mode on for interpretation of the
+! line, but this debug information can be understood only by the author). If a comment line starts
+! with '*!', it will be printed.
+
+! Many J functions interpreted and executed at the command level need or can use a group of
+! text lines as input. In these cases the additional input lines are immediately after the function.
+! This group of lines is called input paragraph. The input paragraph ends with '/', except the
+! input paragraph of text function ends with '//' as a text object can contain ordinary input
+! paragraphs. It may be default for the function that there is input paragraph following. When
+! it is not a default, then the existence of the input paragraph is indicated with option in->
+! without any value. An input paragraph can contain input programming commands; the
+! resulting text lines are transmitted to the J function which interprets the input paragraph
+!endheader
+! Ex inpuparag Example of inputparagraph
+! tr=trans()
+! a=log(b)
+! write($,'(~sinlog is=~,f4.0)',sin(a))
+! /
+! b=matrix(2,3,in->)
+! 1,2,3
+! 5,6,7
+!/
+!endex
+!endsection
+
+! Section inpuprog Input programming
+! The purpose of the input programming is to read or generate J commands or input lines
+! needed by J functions. The names of input programming commands start with semicolon ';'.
+! There can be no space between ';' and the following input programming function. The syntax
+! of input programming commands is the same as in J functions, but the input programming
+! functions cannot have an out-put. There are also controls structures in the input programming.
+! An input paragraph can contain input programming structures.
+! 3.2.1. Addresses in input programming
+! The included text files can contain addresses. Addresses define possible starting points for the
+! inclusion or jump addresses within an include file. An address starts with semicolon (;) and
+! ends with colon (:). There cannot be other text on the address line. E.g.
+! ;ad1:
+! See: ;incl, ;goto
+!endheader
+! Note The definition of a transformations set can also contain addresses. These addresses start
+! with a letter and end also with colon (:).
+!endnote
+!endsection
+
+! Section inpudots Changing “i” sequences
+! If an original input line contains text within quotation marks, then the sequence will be replaced
+! as follows. If a character variable is enclosed, then the value of the character variable is
+! substituted: E.g.
+! directory='D:/\j/\'
+! name='area1'
+! extension='svs'
+! then
+! in->'"directory""name"."extension"'
+! is equivalent to
+! in->'D:/\j/\area1.svs'
+! If the "-expression is not a character variable then J interprets the sequence as an arithmetic
+! expression and computes its value. Then the value is converted to character string and
+! substituted into the place. E.g. if nper is variable having value 10, then lines
+!Listing
+! x#"nper+1"#"nper" = 56
+! chv = 'code"nper"'
+!endlisting
+! are translated into
+!Listing
+! x#11#10 = 56
+! chv = 'code10'
+!endlisting
+
+! With " " substitution one can define general macros which will get specific interpretation by
+! giving values for character and numeric parameters, and numeric parameters can be utilized in
+! variable names or other character strings. In transformation sets one can shorten computation
+! time by calculating values of expressions in the interpretation time instead of doing
+! computations repeatedly. E.g. if there is in a data set transformation
+! x3 = "sin(Pi/4)"*x5
+! Then evaluation of sin(Pi/4) is done immediately, and the value is transmitted to the
+! transformation set as a real constant.
+! If value of the expression within a “” sequence is an integer then the value is dropped in the
+! place without the decimal point and without any spaces, otherwise its value is presented in
+! form which is dependent on magnitude of the value. After J3.0 the format can be explicitly
+! specified within [] before the numeric value. Eg. text can be put into a figure as
+! fig =
+! drawline(5,5,mark->’y=”[f5.2]coef(reg,x1)“*x1+”[f5.2]coef(reg,1)“‘)
+! See file jex.txt and Chapter 8 for an ex
+!endheader
+! endsection
+
+!Section dots Generating object lists with ... -construct
+!Indexed objects are indexed
+
+!endsection
+
+! Section jtrans J transformations
+! Most operation commands affecting J objects can be entered directly at the command level or
+! packed into transformation object. In both cases the syntax and working is the same. A
+! command line can define arithmetic operations for real variables or matrices, or they can
+! include functions which operate on other J objects. General J functions can have arithmetic
+! statements in their arguments or in the option values. In some cases the arguments must be
+! object names. In principle it is possible to combine several general J functions in the same
+! operation command line, but there may not be any useful applications yet, and possibly some
+! error conditions would be generated.
+! Definition: A numeric function is a J function which returns a single real value. These functions
+! can be used within other transformations similarly as ordinary arithmetic functions. E.g.
+! weights() is a numeric function returning the number of schedules having nonzero weight
+! in a JLP-solution. Then print(sqrt(weights())+Pi) is a legal transformation.
+!endheader
+!endsection
+
+!Section jfuncs Structure of general J functions
+! The general (non arithmetic) J functions are used either in statements
+
+! func(arg1,…,argn,opt1->value1,….,optm->valuem)
+
+! or
+
+! output=func(arg1,…,argn,opt1->value1,….,optm->valuem)\\
+! If there is no output for a function in a statement, then there can be three different cases:
+! i) The function does not produce any output (if an output would be given, then J would just
+! ignore it\\
+! ii) The function is producing output, and a default name is used for the output (e.g. Result
+! for arithmetic and matrix operations, Figure in graphic functions).\\
+! iii) The function is a sub expression within a transformation consisting of several parts including
+! other function or arithmetic operations. Then the output is put into a temporary unnamed
+! object which is used by upper level functions as an argument (e.g. a=inverse(b)*t(c))
+! If the value of an option is not a single object or numeric constant, then it must be enclosed in
+! parenthesis.\\
+! It is useful to think that options define additional argument sets for a function. Actually
+! an alternative for options would be to have long argument lists where the position of an
+! argument determines its interpretation. Hereafter generic term 'argument' may refer also to
+! the value of an option.
+
+! When J is interpreting a function, it is checking that the option names and the syntax
+! are valid, but it is not checking if an option is used by the function. Also when executing the
+! function, the function is reacting to all options it recognizes but it does not notice if there are
+! extra options, and these are thus just ignored.
+
+! An argument for a J function can be either functional statements producing a J object as its
+! value, or a name of J object. Some options can be without any argument (indicating that the
+! option is on). 
+!endheader
+!Ex2 hopo
+! a = sin(cos(c)+b) &! Usual arithmetic functions have numeric values as
+! arguments
+! ! here the value of the argument of cos is obtained by 'computing' the
+! value of real variable c. 
+!endex2
+!Ex2 hopo2
+! stat(D,H,min->,max->) &! Here arguments must be variable names
+!endex2
+!Ex2 hopo3
+! plotyx(H,D,xrange->(int(D%min,5), ceiling(D%max,5))) &!arguments of
+! the function are variables, arguments of option xrange-> are numeric
+! values 
+!endex2
+!Ex2 hopo4
+! c = inverse(h+t(g)) &! The argument can be intermediate result from
+! matrix computations.
+! If it is evident if a function or option should have object names or values as their arguments, it
+! is not indicated with a special notation. If the difference is emphasized, then the values are
+! indicated by val1,…valn, and objects by obj1,…,objn, or the names of real variables are
+! indicated by var1,…,varn.
+! There are some special options which do not refer to object names or values. Some options
+! define a small one-statement transformation to be used to compute something repeatedly.
+!endex2
+!Ex2 hopo4
+! stat(D,H,filter->(sin(D).gt.cos(H+1)) &!
+! only those observations are
+! accepted which pass the filter
+!endex2
+!Ex2 hopo4
+! draw(func->(sin($x)+1),x->$x,xrange->(0,10,1)) &! the func-> option
+! transmits the function to be drawn not a single value.
+!endex2
+!endsection
+
+!Section classes Analyzing classified data
+!The are several functions which can be used to analyze classified data.
+!All these functions are described here, even if they belong Figure functions and
+! statistical functions.  
+!endheader
+!endsection
+
+!Section Data Data functions 
+!Data functions can generate data objects by reading data from files, or forming data
+! objects by combing matrices and data objects. An important property of data objects
+! is that they can be linked so that each observation of an upper level data
+! is linked to several observations in lower level data. Each upper level 
+!observation can contain different number of lower level observations.
+!Linear programming in forest management planning is based on linked data sets where each
+!stand is connected to number of treatment schedules.
+!endheader
+!endsection
+
+
+
+
+!Section comoptions Common options
+! There are some options which are used in many J functions. Such options are e.g.
+!endheader
+!Option
+!@in2 
+!@data
+!All data sets will be
+! treated logically as a single data set. 
+! If the function is using data sets, the daenta sets are given in data-> option. All data sets will be
+! treated logically as a single data set. If a J function needs to access data, and the data->
+! option is not given then J uses default data which is determined as follows.
+! If the user has defined an object list Data consisting of one or more data sets, then these will
+! be used as the default data set. E.g.
+! Data=list(dataa,datab)
+! When a data set is created, it will automatically become the only element in LastData list. If
+! the Data list has not been defined and there is no data-> option, then the LastData dataset
+! will be used.
+!@trans
+! In all functions which are using data sets, trans-> option defines a
+! transformation set which is used in this function. 
+!@filter
+!endoption
+!Ex comopt data1 
+! tr=trans()
+! xy=x*y
+!/
+! stat(xy,trans->tr)
+!endex
+!endsection
+
+
+
+
+! Section statistics Statistical functions
+! There are several statistical functions which can be used to compute basic statistics
+!linear and and nonlinear regression, class means, standard deviations and standard errors 
+! in one or two dimensional tables using data sets. There are also functions
+! which can be used to compute statistics from matrices, but these are described 
+! in Section  \ref{matrix}
+! endsection
+
+! Section matrix  Matrix functions
+! There are matrix function which can create matrices (objects with type Matrix), take submatrices from larger matrices,
+! make matrices from submatrices, compute statitics from matrices, solve linear equations,
+! compute inverse and transpose of a matrix.
+! Sums, differences and products of matrices are defined using ordinary arithmetic
+! operations +,- and *. Arithmetic operations can combine scalars and matrices in the normal way.
+! Now all matrices are in double precision. The data functions store data single precision 
+! matrices (type Matrix0) which cannot be used in matrix computations. Single precison data matrices can
+! can be changed to double precision matrices simply by xmat=data1%matrix, where data1 is a data object.
+! endsection
+
+!Section random Random number generators
+!Random number generators are taken from Ranlib library of Netlib. 
+!They can produce single REAL variables or random MATRIX objects.
+!Random matrices are produced by defining first a matrix with matrix()
+!funtion and putting that as the output.
+!endheader
+!endsection
