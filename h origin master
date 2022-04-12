@@ -1,0 +1,103 @@
+[33mcommit f7474d11453a1cfa64d1ee6bf3a9d2dca9aa2e10[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: juhalappi <51433619+juhalappi@users.noreply.github.com>
+Date:   Thu Mar 3 10:48:38 2022 +0200
+
+    Create README.md
+
+ README.md | 3 [32m+++[m
+ 1 file changed, 3 insertions(+)
+
+[33mcommit 9f42a176fb296fd4bcde1ad8f77f46e253d706b6[m
+Author: Juha Lappi <juha.lappi.sjk.gmail.com>
+Date:   Thu Mar 3 10:35:45 2022 +0200
+
+    makefile korvattu
+
+ Jpre/{jpreMakefile_debug => Makefile_debug} | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+[33mcommit 538983787ba691750a76ce08307bf9f55f77ae3d[m
+Author: Juha Lappi <juha.lappi.sjk.gmail.com>
+Date:   Thu Mar 3 10:16:45 2022 +0200
+
+    turhia exejä poistettu
+
+ Jsource/jmanual.f90 | 1518 [31m---------------------------------------------------[m
+ Jsource/jpre.f90    |  953 [31m--------------------------------[m
+ 2 files changed, 2471 deletions(-)
+
+[33mcommit 7159b9c875c74eed9b62ec1a61b2dfdd9a143878[m
+Author: Juha Lappi <juha.lappi.sjk.gmail.com>
+Date:   Thu Mar 3 10:11:37 2022 +0200
+
+    uusi alku
+
+ Jbin/j3.0.exe                         |  Bin [31m0[m -> [32m5552477[m bytes
+ Jbin/j3.0_debug.exe                   |  Bin [31m0[m -> [32m9181350[m bytes
+ Jbin/j_manual.exe                     |  Bin [31m0[m -> [32m293592[m bytes
+ Jbin/msys-2.0.dll                     |  Bin [31m0[m -> [32m3604888[m bytes
+ Jbin/msys-gcc_s-seh-1.dll             |  Bin [31m0[m -> [32m72966[m bytes
+ Jbin/msys-gfortran-5.dll              |  Bin [31m0[m -> [32m2853674[m bytes
+ Jbin/msys-quadmath-0.dll              |  Bin [31m0[m -> [32m338206[m bytes
+ Jdoc_demo/J.pdf                       |  Bin [31m0[m -> [32m6352595[m bytes
+ Jdoc_demo/J3.0_setup_development.docx |  Bin [31m0[m -> [32m79641[m bytes
+ Jmanual/j_manual.f90                  | 1540 [32m+++++++++++++++++++++++[m
+ {J => Jmanual}/jmanual.f90            |    0
+ Jmanual/jmanual.tex                   | 1933 [32m+++++++++++++++++++++++++++++[m
+ Jmanual/jmanualMakefile_debug         |   60 [32m+[m
+ {J => Jmanual}/jsections.txt          |    0
+ {J => Jmanual}/jsections2.txt         |    0
+ {J => Jmanual}/main.tex               |    0
+ {J => Jmanual}/manex.txt              |    0
+ Jpre/jindent.f90                      | 2157 [32m+++++++++++++++++++++++++++++++++[m
+ Jpre/jindent.txt                      |    1 [32m+[m
+ {J => Jpre}/jpre.f90                  |    0
+ Jpre/jpre.txt                         |   10 [32m+[m
+ Jpre/jpreMakefile_debug               |   48 [32m+[m
+ {J => Jsource}/fletcherd.for          |    0
+ {J => Jsource}/j.f90                  |  318 [32m++++[m[31m-[m
+ {J => Jsource}/jlp.f90                |    0
+ Jsource/jmanual.f90                   | 1518 [32m+++++++++++++++++++++++[m
+ {J => Jsource}/jmodules.f90           |   40 [32m+[m[31m-[m
+ {J => Jsource}/jownmod.f90            |    0
+ Jsource/jpre.f90                      |  953 [32m+++++++++++++++[m
+ {J => Jsource}/jsysdep_gfortran.f90   |    0
+ {J => Jsource}/jsysdep_intel.f90      |    0
+ {J => Jsource}/jutilities.f90         |  100 [32m+[m[31m-[m
+ {J => Jsource}/matsub.f               |    0
+ {J => Jsource}/own1.f90               |    0
+ {J => Jsource}/own1mod.f90            |    0
+ {J => Jsource}/own2.f90               |    0
+ {J => Jsource}/own2mod.f90            |    0
+ {J => Jsource}/own3.f90               |    0
+ {J => Jsource}/own3mod.f90            |    0
+ 39 files changed, 8607 insertions(+), 71 deletions(-)
+
+[33mcommit 3d2275a866011c6b5a869cd4f09e1affb816544a[m
+Author: Juha Lappi <juha.lappi.sjk.gmail.com>
+Date:   Fri Feb 25 10:38:11 2022 +0200
+
+    J initial source
+
+ J/fletcherd.for        |  6198 [32m+++++++++++++++[m
+ J/j.f90                | 19753 [32m+++++++++++++++++++++++++++++++++++++++++++++++[m
+ J/jlp.f90              | 12245 [32m+++++++++++++++++++++++++++++[m
+ J/jmanual.f90          |  1518 [32m++++[m
+ J/jmodules.f90         |  3141 [32m++++++++[m
+ J/jownmod.f90          |    93 [32m+[m
+ J/jpre.f90             |   953 [32m+++[m
+ J/jsections.txt        |   336 [32m+[m
+ J/jsections2.txt       |    75 [32m+[m
+ J/jsysdep_gfortran.f90 |    69 [32m+[m
+ J/jsysdep_intel.f90    |    73 [32m+[m
+ J/jutilities.f90       | 15905 [32m++++++++++++++++++++++++++++++++++++++[m
+ J/main.tex             |   119 [32m+[m
+ J/manex.txt            |    76 [32m+[m
+ J/matsub.f             | 19223 [32m+++++++++++++++++++++++++++++++++++++++++++++[m
+ J/own1.f90             |    72 [32m+[m
+ J/own1mod.f90          |   104 [32m+[m
+ J/own2.f90             |   111 [32m+[m
+ J/own2mod.f90          |   108 [32m+[m
+ J/own3.f90             |    74 [32m+[m
+ J/own3mod.f90          |   105 [32m+[m
+ 21 files changed, 80351 insertions(+)

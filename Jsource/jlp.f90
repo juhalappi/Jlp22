@@ -236,11 +236,13 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	newprice=.true.
 	newc=0
 	inprint=0
-	if(j_linkopt(j_mprint).gt.0.or.j_v(j_ivprintinput).ge.3)inprint=1
+!	write(6,*)'PROBLEM'
+!	j_linkoption(iob,io,j_mdiag,clear=.true.).ge.0
+	if(j_linkoption(iob,io,j_mprint).ge.0.or.j_v(j_ivprintinput).ge.3)inprint=1
 	isperiod=.false.  !tree
 	! ivtitle_ = 0
 	! if(j_nargopt(iob,j_mtitle).eq.1)then
-		! ivtitle_ = j_o(iob)%i(j_linkopt(j_mtitle)+1)
+		! ivtitle_ = j_o(iob)%i(j_linkoption(iob,io,j_mtitle)+1)
 		! if(j_otype(ivtitle_).ne.j_ipchar) then
 			! j_err=.true.
 			! write(6,*)'***problem: title not character variable or character constant'
@@ -248,7 +250,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 		! endif !if(j_otype(ivtitle_).ne.j_ipchar) then
 	! endif !if(j_nargopt(iob,j_mtitle).eq.1)then
 
-	repeatdom=j_linkopt(j_mrepeatdomains).gt.0
+	repeatdom=j_linkoption(iob,io,j_mrepeatdomains).ge.0
 	call j_clearoption(iob,io)  ! subroutine
 	!how many domains are in one set, or in one row set
 	iout=j_o(iob)%i(io+2+j_o(iob)%i(io+1))
@@ -285,9 +287,10 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	nval0=0
 	irowobj=0 !row where objective is
 	iall=0
-	1 call j_getinput('prob>',inprint)
-!write(6,*)'<77inp:',j_inp(1:j_linp)
+	1 call j_getinput('prob>',78) !)  !nprint)
+!write(6,*)'<77inp:',j_linp,j_inp(1:j_linp)
 	ip=j_nextlim0(j_inp,1,j_linp,':')  !Mela
+	!if(index(j_inp(1:j_linp),'/').gt.0)write(6,*)'****/',j_linp,j_inp(1:j_linp),nset
 	if(nset.gt.0)then
 		if((ip.gt.0.or.j_inp(1:j_linp).eq.'/').and.nsetd(nset).gt.1)then   !domains change or end of problem
 			!problem2
@@ -358,6 +361,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 				goto 17
 			else !if(ip.gt.ial)then
 				write(*,*)'not legal domainrow:',j_inp(1:j_linp)
+				j_err=.true.
 				goto 900
 			end if !if(ip.gt.ial)then
 		else !if(ip.gt.0)then
@@ -402,7 +406,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 						lu=j_linp;if(ipg.gt.ipl)lu=ipg-1
 
 						call j_putd(rhs2_,irow,j_val(j_inp(ipl+1:lu)) )
-						write(6,*)'<rhs2',ipl,ipg,j_inp(ipl+1:lu),j_val(j_inp(ipl+1:lu))
+				!		write(6,*)'<rhs2',ipl,ipg,j_inp(ipl+1:lu),j_val(j_inp(ipl+1:lu))
 						if(j_err)then  ! j_err coming from val
 							write(6,*)'*problem: error in interpreting rhs2 ',j_inp(ipl+1:lu)
 							return
@@ -427,7 +431,10 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 					else !if(ipmin.gt.0)then
 						ipmax=index(j_inp(1:j_linp+1),'==max')
 						if(ipmax.le.0)then
-							write(*,*)'not legal row:',j_inp(1:j_linp)
+						write(6,*)
+							write(*,*)'***not legal row, < > or = missing '
+							write(6,*)j_inp(1:j_linp)
+							j_err=.true.
 							goto 900
 						end if !if(ipmax.le.0)then
 						call j_putd( rhs2_,irow,0.d0)
@@ -439,6 +446,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 				end if !if(ipg+ipl.gt.0)then
 			end if !if(ipe.gt.0)then
 			66    call j_clean(j_inp(1:ip-1),le)   !remove blanks etc.
+			if(j_err)write(6,*)'<36366ertas'
 			if(j_err)return
 			!tree
 			if(j_inp(1:1).eq.'#')then
@@ -506,7 +514,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 					write(6,*)'<444>',j_inp(ial1:ine-1)
 					coe=j_val(j_inp(ial1:ine-1))
 					if(j_err)then
-						write(6,*)'*problem, error in interpreting coefficient: ',j_inp(ial1+1:ine-1)
+						write(6,*)'*problem, error in interpreting coefficient: ',j_inp(ial1:ine-1)
 						return
 					endif !if(j_err)then
 				endif !if(ivcoe_.gt.0)then
@@ -542,7 +550,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 
 						coe=j_val(j_inp(ial1:ine-1))
 						if(j_err)then
-							write(6,*)'*problem, error in interpreting coefficient: ',j_inp(ial1+1:ine-1)
+							write(6,*)'*problem, error in interpreting coefficient: ',j_inp(ial1:ine-1)
 							return
 						endif !if(j_err)then
 					endif !if(ivcoe_.gt.0)then
@@ -699,6 +707,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	!now each set contains only one domain
 
 	write(6,*)'total number of rows',nrow
+	write(6,*)' '
 
 	900 continue  !after rhs
 
@@ -707,7 +716,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	deallocate(rhs2_,stat=istat)
 !	io=io+j_o(iob)%i(io+1)+3
 	call j_clearoption(iob,io)  ! subroutine
-
+!	write(6,*)'proble,ret*******************'
 	return
 end subroutine !subroutine problem(iob,io)
  
@@ -1386,7 +1395,7 @@ subroutine weightschedcum(iob,io)   !!!!
 	endif !if(isc.le.j_ibaunit(iunit0))then
 	is=isc-jlp_ibaunit(iunit)
 
-	if(j_linkopt(j_minteger).gt.0)then
+	if(j_linkoption(iob,io,j_minteger).ge.0)then
 		call j_clearoption(iob,io)  ! subroutine
 		do j=1,jlp_ndiv
 			! ib=jlp_nunits before
@@ -1405,7 +1414,7 @@ subroutine weightschedcum(iob,io)   !!!!
 			endif !if(j_iunitdiv(j).eq.iunit)then
 		enddo !do j=1,j_ndiv
 
-	else !if(j_linkopt(j_minteger).gt.0)then
+	else !if(j_linkoption(iob,io,j_minteger).gt.0)then
 
 		do j=1,jlp_ndiv
 			! ib=jlp_nunits before
@@ -1421,7 +1430,7 @@ subroutine weightschedcum(iob,io)   !!!!
 				goto 90
 			endif !if(j_iunitdiv(j).eq.iunit)then
 		enddo !do j=1,j_ndiv
-	endif !if(j_linkopt(j_minteger).gt.0)then
+	endif !if(j_linkoption(iob,io,j_minteger).gt.0)then
 
 	if(is.eq.jlp_keys(iunit))then
 		wei=1.
@@ -1497,7 +1506,7 @@ subroutine weightschedw(iob,io)  !!!!
 		return
 	endif !if(is.le.0.or.is.gt.j_nsch(iunit))then
 
-	if(j_linkopt(j_minteger).gt.0)then
+	if(j_linkoption(iob,io,j_minteger).ge.0)then
 		call j_clearoption(iob,io)  ! subroutine
 		do j=1,jlp_ndiv
 			! ib=jlp_nunits before
@@ -1516,7 +1525,7 @@ subroutine weightschedw(iob,io)  !!!!
 			endif !if(j_iunitdiv(j).eq.iunit)then
 		enddo !do j=1,j_ndiv
 
-	else !if(j_linkopt(j_minteger).gt.0)then
+	else !if(j_linkoption(iob,io,j_minteger).gt.0)then
 
 		do j=1,jlp_ndiv
 			! ib=jlp_nunits before
@@ -1533,7 +1542,7 @@ subroutine weightschedw(iob,io)  !!!!
 			endif !if(j_iunitdiv(j).eq.iunit)then
 		enddo !do j=1,j_ndiv
 
-	endif !if(j_linkopt(j_minteger).gt.0)then
+	endif !if(j_linkoption(iob,io,j_minteger).gt.0)then
 
 	if(is.eq.jlp_keys(iunit))then
 		wei=1.
@@ -2122,6 +2131,252 @@ subroutine pack2(itarget, is, n)    !!!!
 end subroutine !subroutine pack2(itarget, is, n)
  
 subroutine jlp(iob,io)   ! %%jlp  !!!!****************************************************
+! Section jlpintro Linear programming functions
+! The linear programming (LP) functions are called jlp-functions. The jlp-functions can be used to define
+! linear programming problems, solve them and access the results.
+! The jlp-problems are defined using problem() function, and the problems can be solved using
+! jlp() function. There are several ways to access the results. 
+! The main interest in jlp-functions may be in the forest planning problems, where
+! a simualator has generate treatment schedules.
+! There are four different applications of jlp() function. 
+! \begin{itemize}
+! \item[\textbf{J}] Small ordinary LP problems with text input.
+! \item[\textbf{J}] Large ordinary LP problems with MATRIX input.
+! \item[\textbf{J}] Forest planning problems without factories.
+! \item[\textbf{J}] Forest palnning problems with factories.
+! \end{itemize}
+!The problem definition for each case is generated with problem() function.
+! These applications are presented in different subsections
+! endsection
+
+
+! Section jlpzp Problem definition for small ordinary LP problems with text input: problem()
+! endheader
+! The problem is defined in the input paragraph following 
+! !Option
+!Output& 1& PROBLEM &The generated PROBLEM object.
+!Args& 0- &  & named objects or constants. If an argument is LIST it is ex+panded
+!first.
+!endoption
+
+
+!endsection
+!Section jlpzs Small ordinary LP problems with text input: jlp()
+
+
+
+
+
+
+
+!ndsection
+
+
+! Section jlp Solving large problems without schedule data. 
+! When solving problems including only a large number of z-variables, it is possible to feed the
+! coefficients as a matrix with zmatrix-> option. Unit and schedule data (c- and x-variables)
+! are not allowed when zmatrix-> is used.
+! =jlp(zmatrix->,max->|min->[,rhs->][,rhs2->][,tole->]
+! [,print->][,maxiter->][,test->][,debug->])
+! Output:
+! Function jlp() generates output row vectors output%zvalues, output%redcost and
+! output column vectors output%rows, output%shprice output is the name of the output.
+! Options:
+! zmatrix Matrix containing coefficients of z-variables for each constraint row.
+! max Vector containing coefficients of z-variables for the objective row of a
+! maximization problem. Either max-> or min-> option has to be defined but not
+! both.
+! min Vector containing coefficients of z-variables for the objective row of a
+! minimization problem. Either max-> or min-> option has to be defined but not
+! both.
+! rhs Vector containing lower bound for each constraint row. Value 1.7e37 is used to
+! indicate the absence of the lower bound in a row. Either or both of the bound
+! options (rhs->, rhs2->) has to be defined.
+! rhs2 Vector containing upper bound for each constraint row. Value 1.7e37 is used to
+! indicate the absence of the upper bound in a row. Either or both of the bound
+! options (rhs->, rhs2->) has to be defined.
+! Other options described above in chapter Solving a problem: jlp( ).
+! Note. When zmatrix-> option is used, the solution is not automatically printed. Use jlp
+! solution objects to access solution. For more information see chapter 11.10 Objects for the JL
+
+
+
+! There are two versions of jlp() function call: one with problems-> option for problems
+! defined by problem() function and the other with zmatrix-> option for large ordinary
+! linear programming problems with z-variable coefficients defined by matrix.
+! A lp problem defined by problem() function can be solved using jlp() function:
+! [=]jlp(problem->[,data->][,z->][,trans->][,subtrans->]
+! [,tole->][,subfilter->][,subreject->][,class->]
+! [,area->][,notareavars->][,print->][,report->]
+! [,maxiter->][,refac->][,slow->][,warm->][,finterval->]
+! [,fastrounds->][fastpercent->][,swap->][,test->][,debug->]
+! [,memory->])
+! Output:
+! Necessary for factory problems, otherwise optional. If output is given then function generates
+! several matrices and lists associated with the solution (e.g. the values of the constraint rows,
+! the shadow prices of the rows, the values of the z-variables, the reduced costs of z-variables,
+! the sums of all x-variables of the data in all domains and their shadow prices, lists telling how
+! problem variables are interpreted. See Objects for the JLP solution for more detailed
+! description.
+! Options:
+! problem problem definition generated by problem() function
+! data data set describing the stand (management unit) data or the schedules data. The
+! unit data set must be linked to schedule data either using sub-options in the
+! data() function or using linkdata() function. Following the JLP terminology,
+! the unit data is called cdata, and the schedule data is called xdata. The jlp()
+! function tries if it can find a subdata for the data set given. If it finds, it will assume
+! that the data set is the unitdata. If subdata is not found, it tries to find the upper
+! level data. If it finds it, then it assumes that the data set given is the schedules
+! data. If data-> is not given, then the problem describes an ordinary lp-problem,
+! and all variables are z-variables. If data-> option is given but no variable found
+! in problem is in the schedules data set, then an error occurs.
+! z If the data-> option is given then the default is that there are no z-variables in
+! the problem. The existence of z-variables must be indicated with z-> option
+! (later the user can specify exactly what are the z variables, but now it is not
+! possible). The reason for having this option is that the most jlp-problems do not
+! have z variables, and variables which J interprets as z-variables are just
+! accidentally missing from the data sets.
+! trans transformation set which is executed for each unit.
+! subtrans transformation set which is executed for each schedule.
+! Note: the subtrans transformations can utilize the variables in the unit data and
+! the output variables of trans-> transformations.
+! Note: transformations already associated with cdata and xdata are taken
+! automatically into account and they are executed before transformations defined
+! in trans-> or subtrans-> options.
+! *** Later we may add the possibility to have several data sets (note that several files can be
+! read into one data object in the data()function)
+! tole the default tolerances are multiplied with the value of the tole-> option (default
+! is thus one). Smaller tolerances mean that smaller numerical differences are
+! interpreted as significant. If it is suspected that jlp() has not found the
+! optimum, use e.g. tole->0.1 ,tole->0.01 or tole->10.
+! subfilter logical or arithmetic statement (nonzero value indicating True) describing which
+! schedules will be included in the optimization. If all schedules are rejected, an
+! error occurs. Examples: filter->(.not.clearcut) , filter-
+! >(ncuts.ge.5), filter->harvest (which is equivalent to: filter-
+! >(harvest.ne.0)). If the subfilter statement cannot be defined nicely using
+! one statement, the procedure can be put into a transformation set which can be
+! then executed using value() function.
+! subreject logical or arithmetic statement (nonzero value indicating True) describing which
+! schedules will not be included in the optimization. If subfilter-> is given then
+! test applied only for such schedules which pass the subfilter test. If the subreject
+! statement cannot be defined nicely using one statement, the procedure can be
+! put into a transformation set which can be then executed using value()
+! function.
+! Kommentoinut [LR(46]: Repon puolelle
+! Kommentoinut [LR(47]: Repon puolelle[Natural resources and bioeconomy studies XX/20XX]
+! 95
+! class class->(cvar, cval) Only those treatment units where the variable cvar gets
+! value cval are accepted into the optimization. The units within the same class
+! must be consecutive.
+! area gives the variable in cdata which tells for each stand the area of the stand. It is
+! then assumed that all variables of cdata or xdata used in the problem rows are
+! expressed as per are values. In optimization the proper values of variables are
+! obtained by multiplying area and per area values. Variables of cdata used in
+! domain definitions are used as they are, i.e. without multiplying with area.
+! Variables which are not treated as per area values are given with the
+! notareavars-> option.
+! notareavars
+! If area-> option is given then this option gives variables which will not be
+! multiplied with area.
+! print of output printed, 1 => summary of optimization steps, 2=> also the problem
+! rows are printed, 3=> also the values of x-variables are printed, 9= the pivot
+! steps and the point of code where pivoting is done and the value of objective
+! function are written to fort.16 file (or similar file depending on the operating
+! system). The value 9 can be used in the case where jlp seems to be stuck. From
+! fort.16 file one can then infer at what point debugging should be put on. Some
+! cycling situations are now detected, so it should be rather unlikely that jlp is stuck.
+! report the standard written output is written into the file given in report-> option
+! (.e.g. report->'result.txt'). The file remain open and can be written by
+! several jlp-functions or by additional write() functions. Use close() function
+! to close it explicitly if you want to open it with other program.
+! maxiter maximum number of rounds through all units (default 10000).
+! refac after refac pivot steps the basis matrix is refactorized. The default value is 1000.
+! New option since J3.0. Actually refactorization was present in the first version of
+! J but it had to be dropped because the refactorization corrupted some times the
+! factors of the basis matrix. The reason was found and corrected for J3.0. The
+! reason for misbehavior of the refactorization algorithm of Fletcher was such that
+! it never caused problems in ordinary linear programming problems for which
+! Fletcher designed his algorithms.
+! slow if improvement of the solution in one round through all units is smaller than value
+! given in slow-> option, then J terminates under condition ‘slow improvement’.
+! New option since J3.0. Earlier slow improvement is computed from the tolerances
+! of the problem, and if the slow-> option is not present these tolerances are still
+! used. If slow-> option gives negative value, then the absolute value of the
+! option indicates per cent change. Note that in large problems the solution is
+! often very long time quite close the actual optimum, and hence the optimization
+! time can be decreased with rather low loss in accuracy using the slow-> option.
+! If slow-> option is give value zero it is equivalent to omitting the option and
+! hence the slow improvement is determined from the tolerances.
+! warm If option is present in ordinary problems with x-variables then the key schedules
+! of previous solution are used as the starting values of the key schedules. In factory[Natural resources and bioeconomy studies XX/20XX]
+! 96
+! problems also the previous key factories are used as starting values. If there is no
+! previous solution available or the dimension of the key schedules vector (number
+! of treatment units) or the dimensions of the key factories matrix (number of
+! treatment units and number of factories) do not agree with the current problem,
+! warm option is ignored. Thus it is usually safe to use the option always, the only
+! exception is that the factories and number of units do agree with the previous
+! problem even if factories or schedule data are changes. The warm start may
+! reduce solution time perhaps 40-80%.
+! finterval In factory problems the transportations to new factories are checked if the round
+! number is divisible with finterval. The default value is 3. When there have not
+! been improvements during the last round, the value is changed into 1.
+! fastrounds
+! The shadow prices are used to select an active set of schedules which are
+! considered as entering schedules. fastrounds gives the number of rounds using
+! the same active set. The default is 10. When there have not been improvements
+! during the last round, all schedules are used as the active set.
+! fastpercent
+! A schedule belongs to the active set if its shadow price is at least fastpercent %
+! of the shadow price of the best schedule. The default is 90.
+! swap If option is present, the schedules data matrix is written to a direct access binary
+! file. This option may help if virtual memory overflow occurs. The data needs to
+! be used from the file until all inquiry function calls are computed. Thereafter the
+! data can be loaded again into memory using function unswap(). If this does not
+! happen ordinary functions using this data object work a little slower. If a new
+! problem is solved with the swap-> option, there is no need to unswap() before
+! that. In an Intel Fortran application the swap-> option is given without
+! arguments. In a Gfortran application the option must be given in form swap->4.
+! If there is shortage of virtual memory, read note 5 for problem() function before
+! starting to use swap->.
+! test If option is present then jlp() is checking the consistency of the intermediate
+! results after each pivot step of the algorithm. Takes time but helps in debugging.
+! debug determines after which pivot steps jlp() starts and stops to print debugging
+! information to fort.16 file. If no value given, the debugging starts immediately
+! (produces much output, so it may be good to use step number which is close to
+! the step where problems started (print variable Pivots at the error return).
+! debug->(ip1,ip2,ip3) indicates that debugging is put on at pivot step ip1,
+! off at pivot ip2 and the again on at pivot ip3.
+! memory gives the amount of memory in millions of real numbers that can be used to store
+! data needed in solving the problem. In factory problems also the xdata stored in
+! a direct access file are loaded into memory as much as possible. It is not possible
+! to figure out how large number memory option can give, so it must be
+! determined with experimentation. Using disk-> option in data() function and
+! memory-> option in jlp() function makes it in principle possible to solve
+! arbitrary large problems. In practise the ability of double precision numbers
+! cannot store accurately the needed quantities in very huge problems.
+! Kommentoinut [LR(48]: Vain gfortran käännös?
+! Kommentoinut [LR(49]: Lisätty. Oliko tämä mukana
+! julkaistavassa versiossa?[Natural resources and bioeconomy studies XX/20XX]
+! 97
+! Function jlp() is generating output (amount is dependent on the print-> option) plus a
+! JLP-solution stored in special data structures which can be accessed with special J functions
+! described below and if output is given then several output objects are created (see Objects for
+! the JLP solution).
+! Note 1: a feasible solution (without an objective) can be found by minimizing a z-variable
+! (remember z-> option), or by maximizing a unit variable (which is constant for all schedules in
+! a unit).
+! Note 2: If virtual memory overflow occurs, see first Note 5 for problem() function and then
+
+
+
+
+
+
+
+
+
+
  
 	use fletdmod !nopre!   !file jlpd.f90
 	use fletdmod2 !nopre!
@@ -2143,6 +2398,8 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	integer ileavedi_,jcurix_,newf,lf01
 	integer ivoutsubtrans
 	integer ipivot9,iunitprev
+	
+	integer ::ivobjective2,ivoutresult
 
 !	integer iperke
 
@@ -2156,7 +2413,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 
 	logical ::pp=.false.
 
-	logical ::p=.false.
+	logical ::p=.true.
 	real*8 val_
 
 	real*8  rcur
@@ -2266,7 +2523,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!logical readit,deleted
 	logical rz,e1234,w222,doresid
 	integer xdatiba
-
+	logical ::isunit
 
 
 
@@ -2322,6 +2579,10 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	fastusesame = 10
 	i = j_igetopt(iob,io,j_mfastrounds)
 	if(i > 0) fastusesame = j_v(i)
+	
+	ivunit=j_igetopt(iob,io,j_munit)
+	isunit=ivunit.gt.0
+	write(6,*)'ivunit ',ivunit
 
 	fastpros = 90
 	i = j_igetopt(iob,io,j_mfastpercent)
@@ -2436,7 +2697,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 !	endif
 	jlp_feasible=.false.
 	zopt=.false.
-	if(j_linkopt(j_mz).gt.0.or.j_linkopt(j_mdata).le.0)zopt=.true.
+	if(j_linkoption(iob,io,j_mz).ge.0.or.j_linkoption(iob,io,j_mdata).lt.0)zopt=.true.
 
 	niter=0
 	ncover=0
@@ -2473,9 +2734,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			return
 		endif !if(ivarea.le.0)then
 	endif !if(ivarea.eq.0)then
-	notareav=j_nargopt(iob,j_mnotareavars) !number of notareavars-> -variables
+	notareav=j_nargopt(iob,io,j_mnotareavars) !number of notareavars-> -variables
 	if(notareav.gt.0)then
-		linknotarea=j_linkopt(j_mnotareavars)
+		linknotarea=j_linkoption(iob,io,j_mnotareavars)
 		if(ivarea.lt.0)then
 			write(6,*)'**simulate, cannot have notareavars-> without area->'
 			j_err=.true.
@@ -2485,10 +2746,12 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! outputobject, not used now
 
 	! report->
-	if(j_nargopt(iob,j_mreport).eq.1)then
-		ivreport=j_o(iob)%i(j_linkopt(j_mreport)+1)
+	call j_getoption(iob,io,j_mreport,-1,1,j_ipchar,.false.,.true.,noptarg,j_optarg0) 
+	if(j_err)return
+	if(noptarg.eq.1)then
+		ivreport=j_optarg0(1) ! j_o(iob)%i(j_linkoption(iob,io,j_mreport)+1)
 
-		if(j_otype(ivreport).eq.j_ipchar)then
+	!	if(j_otype(ivreport).eq.j_ipchar)then
 			nureport=j_iounit(ivreport) !j_o(ivreport)%i(4)  ! file unit when character object is a file name
 			if(nureport.le.0)then
 				!subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout)
@@ -2498,13 +2761,10 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				if(j_err)return
 				nureport=nuu  !j_iounit(ivreport) !j_o(ivreport)%i(4)
 			endif !if(nureport.le.0)then
-		else !if(j_otype(ivreport).eq.j_ipchar)then
-			write(6,*)'**illegal report-> in jlp()'
-			j_err=.true. ; return
-		endif !if(j_otype(ivreport).eq.j_ipchar)then
-	else !if(j_nargopt(iob,j_mreport).eq.1)then
+		
+	else !if(j_nargopt(iob,io,j_mreport).eq.1)then
 		nureport=6
-	endif !if(j_nargopt(iob,j_mreport).eq.1)then
+	endif !if(j_nargopt(iob,io,j_mreport).eq.1)then
 
 	nureports=19   !units for writing additional reports
 	ivprint=j_igetopt(iob,io,j_mprint)
@@ -2518,41 +2778,41 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	p9=iprint.eq.9
 	sparse=.false.
 	! sparse-option disabled
-	!if(j_linkopt(j_msparse).gt.0) sparse=.true.
-	if(j_linkopt(j_msparse).gt.0) &
+	!if(j_linkoption(iob,io,j_msparse).gt.0) sparse=.true.
+	if(j_linkoption(iob,io,j_msparse).ge.0) &
 		write(6,*) '*jlp: sparse->  not available in current version of J'
 
-	if(j_linkopt(j_mtest).gt.0)then
-		if(j_o(iob)%i(j_linkopt(j_mtest)).eq.0)then   ! test->
+	if(j_linkoption(iob,io,j_mtest).ge.0)then
+		if(j_o(iob)%i(j_linkoption(iob,io,j_mtest)).eq.0)then   ! test->
 			jlp_testl=.true.
-		else if( j_v(j_o(iob)%i(j_linkopt(j_mtest+1))).gt.0)then !if(j_o(iob)%i(j_linkopt(j_mtest)).eq.0)then
+		else if( j_v(j_o(iob)%i(j_linkoption(iob,io,j_mtest+1))).gt.0)then !if(j_o(iob)%i(j_linkoption(iob,io,j_mtest)).eq.0)then
 			jlp_testl=.true.
-		else !if(j_o(iob)%i(j_linkopt(j_mtest)).eq.0)then
+		else !if(j_o(iob)%i(j_linkoption(iob,io,j_mtest)).eq.0)then
 			jlp_testl=.false.   ! test->0
-		end if !if(j_o(iob)%i(j_linkopt(j_mtest)).eq.0)then
-	else !if(j_linkopt(j_mtest).gt.0)then
+		end if !if(j_o(iob)%i(j_linkoption(iob,io,j_mtest)).eq.0)then
+	else !if(j_linkoption(iob,io,j_mtest).gt.0)then
 		jlp_testl=.false.
-	end if !if(j_linkopt(j_mtest).gt.0)then
+	end if !if(j_linkoption(iob,io,j_mtest).gt.0)then
 	!debug
 	p=.false.
 	p2=.false.
-	ivclass=0
-	jlp_ibasclass=0
-	if(j_linkopt(j_mclass).gt.0)then
-		! class-> option
-		if(j_o(iob)%i(j_linkopt(j_mclass)).ne.2)then
-			write(6,*)'**should be: class->(var,value)';j_err=.true.;return
-		endif !if(j_o(iob)%i(j_linkopt(j_mclass)).ne.2)then
-		ivclass=j_o(iob)%i(j_linkopt(j_mclass)+1)
-		class=j_v(j_o(iob)%i(j_linkopt(j_mclass)+2))
-		call j_printname('obtained classs ',ivclass,' ')
-	endif !if(j_linkopt(j_mclass).gt.0)then
+!	ivclass=0
+	! jlp_ibasclass=0
+	! if(j_linkoption(iob,io,j_mclass).gt.0)then
+		! ! class-> option
+		! if(j_o(iob)%i(j_linkoption(iob,io,j_mclass)).ne.2)then
+			! write(6,*)'**should be: class->(var,value)';j_err=.true.;return
+		! endif !if(j_o(iob)%i(j_linkoption(iob,io,j_mclass)).ne.2)then
+		! !ivclass=j_o(iob)%i(j_linkoption(iob,io,j_mclass)+1)
+		! !class=j_v(j_o(iob)%i(j_linkoption(iob,io,j_mclass)+2))
+		! call j_printname('obtained classs ',ivclass,' ')
+	! endif !if(j_linkoption(iob,io,j_mclass).gt.0)then
 
 	! debug->
 	! the 'clock' in debugging is the number of pivot operation stored in variable ipivot
-	if(j_linkopt(j_mdebug).gt.0)then
-		ndebug=j_o(iob)%i(j_linkopt(j_mdebug))  !number of arguments
-		ibasdebug=j_linkopt(j_mdebug)   ! basis for arguments
+	if(j_linkoption(iob,io,j_mdebug).ge.0)then
+		ndebug=j_o(iob)%i(j_linkoption(iob,io,j_mdebug))  !number of arguments
+		ibasdebug=j_linkoption(iob,io,j_mdebug)   ! basis for arguments
 		jdebug=1     ! number of current debugging limit
 		if(ndebug.eq.0)then
 			p=.true.;idebug=0
@@ -2574,49 +2834,49 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		write(6,*)'start debugging at Pivot=',idebug
 
 		if(p)write(n16,*)'start debugging at start'
-	else !if(j_linkopt(j_mdebug).gt.0)then
+	else !if(j_linkoption(iob,io,j_mdebug).gt.0)then
 		idebug=huge(1)
-	endif !if(j_linkopt(j_mdebug).gt.0)then
+	endif !if(j_linkoption(iob,io,j_mdebug).gt.0)then
 	ipivot=0
 
 	! zmatrix, zobj optiot
-	if(j_linkopt(j_mzmatrix).gt.0)then
-		if(j_nargopt(iob,j_mzmatrix).le.0)then
+	if(j_linkoption(iob,io,j_mzmatrix).gt.0)then
+		if(j_nargopt(iob,io,j_mzmatrix).le.0)then
 			write(6,*)'*jlp: zmatrix-> should have argument'
 			j_err=.true.;goto 990
-		endif !if(j_nargopt(iob,j_mzmatrix).le.0)then
+		endif !if(j_nargopt(iob,io,j_mzmatrix).le.0)then
 		zmatrix=.true.
-		if(j_linkopt(j_mdata).gt.0.or.j_linkopt(j_mproblem).gt.0.or. &
-			j_linkopt(j_mtrans).gt.0.or.j_linkopt(j_msubtrans).gt.0) then
+		if(j_linkoption(iob,io,j_mdata).gt.0.or.j_linkoption(iob,io,j_mproblem).gt.0.or. &
+			j_linkoption(iob,io,j_mtrans).gt.0.or.j_linkoption(iob,io,j_msubtrans).gt.0) then
 			write(6,*)'*jlp: illegal options with zmatrix->'
 			j_err=.true.;goto 990
-		endif !j_linkopt(j_mtrans).gt.0.or.j_linkopt(j_msubtrans).gt.0) then
-		ivzmatrix=j_o(iob)%i(j_linkopt(j_mzmatrix)+1)
+		endif !j_linkoption(iob,io,j_mtrans).gt.0.or.j_linkoption(iob,io,j_msubtrans).gt.0) then
+		ivzmatrix=j_o(iob)%i(j_linkoption(iob,io,j_mzmatrix)+1)
 		if(j_otype(ivzmatrix).ne.j_ipmatrix) then
 			call j_printname('*jlp: zmatrix ',ivzmatrix,' is not valid matrix')
 			j_err=.true.;goto 990
 		endif !if(j_otype(ivzmatrix).ne.j_ipmatrix) then
 		jlp_nrow=j_o(ivzmatrix)%i(1);nz =j_o(ivzmatrix)%i(2)
-	else !if(j_linkopt(j_mzmatrix).gt.0)then
+	else !if(j_linkoption(iob,io,j_mzmatrix).gt.0)then
 		zmatrix=.false.
-	endif !if(j_linkopt(j_mzmatrix).gt.0)then
+	endif !if(j_linkoption(iob,io,j_mzmatrix).gt.0)then
 
 	zobj=.false.
-	if(j_linkopt(j_mmax).gt.0)then
+	if(j_linkoption(iob,io,j_mmax).gt.0)then
 		if(.not.zmatrix)then
 			write(6,*)'*jlp: zmatrix-> missing'
 			j_err=.true.;goto 990
 		endif !if(.not.zmatrix)then
-		if(j_nargopt(iob,j_mmax).le.0)then
+		if(j_nargopt(iob,io,j_mmax).le.0)then
 			write(6,*)'*jlp: max-> should have argument'
 			j_err=.true.;goto 990
-		endif !if(j_nargopt(iob,j_mmax).le.0)then
+		endif !if(j_nargopt(iob,io,j_mmax).le.0)then
 		jlp_maxo =.true.
 		zobj=.true.
-		ivzobj=j_o(iob)%i(j_linkopt(j_mmax)+1)
-	endif !if(j_linkopt(j_mmax).gt.0)then
+		ivzobj=j_o(iob)%i(j_linkoption(iob,io,j_mmax)+1)
+	endif !if(j_linkoption(iob,io,j_mmax).gt.0)then
 
-	if(j_linkopt(j_mmin).gt.0)then
+	if(j_linkoption(iob,io,j_mmin).gt.0)then
 		if(.not.zmatrix)then
 			write(6,*)'*jlp: zmatrix-> missing'
 			j_err=.true.;goto 990
@@ -2625,14 +2885,14 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			write(6,*)'*jlp: min'
 			j_err=.true.;goto 990
 		endif !if(zobj)then
-		if(j_nargopt(iob,j_mmin).le.0)then
+		if(j_nargopt(iob,io,j_mmin).le.0)then
 			write(6,*)'*jlp: min-> should have argument'
 			j_err=.true.;goto 990
-		endif !if(j_nargopt(iob,j_mmin).le.0)then
+		endif !if(j_nargopt(iob,io,j_mmin).le.0)then
 		jlp_maxo=.false.
 		zobj=.true.
-		ivzobj=j_o(iob)%i(j_linkopt(j_mmin)+1)
-	endif !if(j_linkopt(j_mmin).gt.0)then
+		ivzobj=j_o(iob)%i(j_linkoption(iob,io,j_mmin)+1)
+	endif !if(j_linkoption(iob,io,j_mmin).gt.0)then
 
 	if (zobj) then
 		if(j_otype(ivzobj).ne.j_ipmatrix) then
@@ -2648,17 +2908,17 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		endif !if((nzodim1*nzodim2).ne.nz) then
 	endif !if (zobj) then
 
-	if(j_linkopt(j_mrhs).gt.0)then
+	if(j_linkoption(iob,io,j_mrhs).gt.0)then
 		if(.not.zmatrix)then
 			write(6,*)'*jlp: zmatrix-option missing'
 			j_err=.true.;goto 990
 		endif !if(.not.zmatrix)then
-		if(j_nargopt(iob,j_mrhs).le.0)then
+		if(j_nargopt(iob,io,j_mrhs).le.0)then
 			write(6,*)'*jlp: rhs-> should have argument'
 			j_err=.true.;goto 990
-		endif !if(j_nargopt(iob,j_mrhs).le.0)then
+		endif !if(j_nargopt(iob,io,j_mrhs).le.0)then
 		rhsopt=.true.
-		ivrhs=j_o(iob)%i(j_linkopt(j_mrhs)+1)
+		ivrhs=j_o(iob)%i(j_linkoption(iob,io,j_mrhs)+1)
 		if(j_otype(ivrhs).ne.j_ipmatrix) then
 			call j_printname('*jlp: rhs ',ivrhs,' is not valid vector')
 			j_err=.true.;goto 990
@@ -2670,21 +2930,21 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			write(6,*)'Elements in rhs->:',nrhsoptdim1*nrhsoptdim2
 			j_err=.true.;goto 990
 		endif !if((nrhsoptdim1*nrhsoptdim2).ne.j_nrow) then
-	else !if(j_linkopt(j_mrhs).gt.0)then
+	else !if(j_linkoption(iob,io,j_mrhs).gt.0)then
 		rhsopt=.false.
-	endif !if(j_linkopt(j_mrhs).gt.0)then
+	endif !if(j_linkoption(iob,io,j_mrhs).gt.0)then
 
-	if(j_linkopt(j_mrhs2).gt.0)then
+	if(j_linkoption(iob,io,j_mrhs2).gt.0)then
 		if(.not.zmatrix)then
 			write(6,*)'*jlp: zmatrix-option missing'
 			j_err=.true.;goto 990
 		endif !if(.not.zmatrix)then
-		if(j_nargopt(iob,j_mrhs2).le.0)then
+		if(j_nargopt(iob,io,j_mrhs2).le.0)then
 			write(6,*)'*jlp: rhs-> should have argument'
 			j_err=.true.;goto 990
-		endif !if(j_nargopt(iob,j_mrhs2).le.0)then
+		endif !if(j_nargopt(iob,io,j_mrhs2).le.0)then
 		rhs2opt=.true.
-		ivrhs2=j_o(iob)%i(j_linkopt(j_mrhs2)+1)
+		ivrhs2=j_o(iob)%i(j_linkoption(iob,io,j_mrhs2)+1)
 		if(j_otype(ivrhs2).ne.j_ipmatrix) then
 			call j_printname('*jlp: rhs2 ',ivrhs2,' is not valid vector')
 			j_err=.true.;goto 990
@@ -2696,22 +2956,22 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			write(6,*)'Elements in rhs->:',nrhsoptdim1*nrhsoptdim2
 			j_err=.true.;goto 990
 		endif !if((nrhs2optdim1*nrhs2optdim2).ne.j_nrow) then
-	else !if(j_linkopt(j_mrhs2).gt.0)then
+	else !if(j_linkoption(iob,io,j_mrhs2).gt.0)then
 		rhs2opt=.false.
-	endif !if(j_linkopt(j_mrhs2).gt.0)then
+	endif !if(j_linkoption(iob,io,j_mrhs2).gt.0)then
 
 	ivoutresult =j_o(iob)%i(io+2+j_o(iob)%i(io+1))
 	if(j_otype(ivoutresult).ne.j_ipreal)call j_del(ivoutresult)
-	if(ivoutresult.ne.j_ivresult) then
-		call j_getobject(ivoutresult,'%xvars',j_ipreal,ivout); j_v(ivout)=0.
-		call j_getobject(ivoutresult,'%xsum',j_ipreal,ivout); j_v(ivout)=0.
-		call j_getobject(ivoutresult,'%xprice',j_ipreal,ivout); j_v(ivout)=0.
-		call j_getobject(ivoutresult,'%xvarsproblem',j_ipreal,ivout); j_v(ivout)=0.
-		call j_getobject(ivoutresult,'%domains',j_ipreal,ivout); j_v(ivout)=0.
-		call j_getobject(ivoutresult,'%problemrows',j_ipreal,ivout); j_v(ivout)=0.
-		call j_getobject(ivoutresult,'%rhs',j_ipreal,ivout); j_v(ivout)=0.
-		call j_getobject(ivoutresult,'%rhs2',j_ipreal,ivout); j_v(ivout)=0.
-	endif !if(ivoutresult.ne.j_ivresult) then
+	! if(ivoutresult.ne.j_ivresult) then
+		! call j_getobject(ivoutresult,'%xvars',j_ipreal,ivout); j_v(ivout)=0.
+		! call j_getobject(ivoutresult,'%xsum',j_ipreal,ivout); j_v(ivout)=0.
+		! call j_getobject(ivoutresult,'%xprice',j_ipreal,ivout); j_v(ivout)=0.
+		! call j_getobject(ivoutresult,'%xvarsproblem',j_ipreal,ivout); j_v(ivout)=0.
+		! call j_getobject(ivoutresult,'%domains',j_ipreal,ivout); j_v(ivout)=0.
+		! call j_getobject(ivoutresult,'%problemrows',j_ipreal,ivout); j_v(ivout)=0.
+		! call j_getobject(ivoutresult,'%rhs',j_ipreal,ivout); j_v(ivout)=0.
+		! call j_getobject(ivoutresult,'%rhs2',j_ipreal,ivout); j_v(ivout)=0.
+	! endif !if(ivoutresult.ne.j_ivresult) then
 	!write(6,*)'<568'
 	if (zmatrix) then
 		if(ivoutresult.eq.j_ivresult)then
@@ -2754,6 +3014,19 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			enddo !do i_=1,j_nrow
 		endif !if(rhs2opt) then
 	endif !if (zmatrix) then
+	
+	! if(ivoutresult.ne.j_ivresult)then
+	! !	call j_deflistobject(ivoutresult,'%factories',jlp_ivfact,nres=40)
+		! call j_defmatrix(iout,'%rhs',jlp_nrow,1,j_matreg,ivoutrhs)
+		! call j_defmatrix(iout,'%rhs2',jlp_nrow,1,j_matreg,ivoutrhs2)
+		! j_o(ivoutrhs)%d(1:jlp_nrow)= jlp_rhs(1:jlp_nrow)
+			! j_o(ivoutrhs2)%d(1:jlp_nrow)=jlp_rhs2(1:jlp_nrow)
+		! call j_defmatrix(iout,'%rows',jlp_nrow,1,j_matreg,ivoutrows)
+		! call j_defmatrix(iout,'%shprice',jlp_nrow,1,j_matreg,ivoutshprice)
+	! endif
+	
+	
+	
 !write(6,*)'<569'
 	! problem->
 	jlp_ivprob=j_igetopt(iob,io,j_mproblem)
@@ -2770,41 +3043,56 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	endif !if(j_ivprob.gt.0)then
 
 	! data-> can refer to either x-data or c-data
-	if(j_linkopt(j_mdata).gt.0)then   !
+	
+	call j_getdataobject(iob,io)
+	if(j_err)return
+	jlp_xpresent=j_divdata.ne.0
+	
 
-		ivcdata=j_o(iob)%i(j_linkopt(j_mdata)+1)
-		ivdata=ivcdata
-		if(j_otype(ivcdata).ne.j_ipdata)then
-			call  j_printname('** ',ivcdata,' is not a data set');j_err=.true.;goto 990
-		endif !if(j_otype(ivcdata).ne.j_ipdata)then
-		!tähän tarkistusta
-		ivxdata= j_o(ivcdata)%i(3)                 !o(ivout)%i(9)=ivsub :check subdata
-		if(ivxdata.le.0.or.j_otype(max(1,ivxdata)).ne.j_ipdata)then
-			if(j_o(ivcdata)%i(5).ne.0.)then
-				! there is up-data
-				if(j_otype(j_o(ivcdata)%i(11)).ne.j_ipdata)then
-					call  j_printname('**jlp: up-data  ',j_o(ivcdata)%i(11),' is not a data set');j_err=.true.;goto 990
-				endif !if(j_otype(j_o(ivcdata)%i(11)).ne.j_ipdata)then
-				ivxdata=ivcdata
-				ivcdata=j_o(ivcdata)%i(5)
+	if(jlp_xpresent)then
+		if(isunit)then
+			ivxdata=j_divdata
+			
+			ivcdata=j_divdata
+			jlp_ivunit=ivunit
+		!	ivxmat=
+		else
+			
+			ivcdata=j_divdata
+			
+			!tähän tarkistusta
+			ivxdata= j_o(ivcdata)%i(3)                 !o(ivout)%i(9)=ivsub :check subdata
+			if(ivxdata.le.0.or.j_otype(max(1,ivxdata)).ne.j_ipdata)then
+				if(j_o(ivcdata)%i(5).ne.0.)then
+					! there is up-data
+					if(j_otype(j_o(ivcdata)%i(11)).ne.j_ipdata)then
+						call  j_printname('**jlp: up-data  ',j_o(ivcdata)%i(11),' is not a data set');j_err=.true.;goto 990
+					endif !if(j_otype(j_o(ivcdata)%i(11)).ne.j_ipdata)then
+					ivxdata=ivcdata
+					ivcdata=j_o(ivcdata)%i(5)
 
-			else !if(j_o(ivcdata)%i(5).ne.0.)then
-				call j_printname('**no legal data linked to data',ivcdata,' ');j_err=.true.;return
-			endif !if(j_o(ivcdata)%i(5).ne.0.)then
-		endif !if(ivxdata.le.0.or.j_otype(max(1,ivxdata)).ne.j_ipdata)then
-		!xdisk testaus
-		! ivtestmat=0
-		! if(j_linkopt(j_msubdata).gt.0)then   !
+				else !if(j_o(ivcdata)%i(5).ne.0.)then
+					call j_printname('**no legal data linked to data',ivcdata,' ');j_err=.true.;return
+				endif !if(j_o(ivcdata)%i(5).ne.0.)then
+			endif !if(ivxdata.le.0.or.j_otype(max(1,ivxdata)).ne.j_ipdata)then
+			!xdisk testaus
+			! ivtestmat=0
+			! if(j_linkoption(iob,io,j_msubdata).gt.0)then   !
 
-		! ivtest=j_o(iob)%i(j_linkopt(j_msubdata)+1)
-		! ivtestmat=j_o(ivtest)%i(1)
-		! endif
-!write(6,*)'<578'
+			! ivtest=j_o(iob)%i(j_linkoption(iob,io,j_msubdata)+1)
+			! ivtestmat=j_o(ivtest)%i(1)
+			! endif
+	!write(6,*)'<578'
 
 
-		jlp_ivunit=j_o(ivcdata)%i(6)  ! index of unit variable
-		ivs=j_o(ivxdata)%i(6)     ! index of schedule variable
-		ivxmat=j_o(ivxdata)%i(1)
+			jlp_ivunit=j_o(ivcdata)%i(6)  ! index of unit variable
+		
+			ivs=j_o(ivxdata)%i(6)     ! index of schedule variable
+		
+		
+		endif
+		
+			ivxmat=j_o(ivxdata)%i(1)
 	!	j_xdatinmemory=j_o(ivxmat)%i(4).gt.0
 
 	!	j_xdatnu=-j_o(ivxmat)%i(4) !if xdat is not in file this is not used
@@ -2813,79 +3101,81 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		keepx=j_o(jlp_ivkeepx)%i(1)
 		ivcmat=j_o(ivcdata)%i(1)
 		jlp_ivkeepc=j_o(ivcdata)%i(2)
+		keepc=j_o(jlp_ivkeepc)%i(1)
+		write(6,*)'dgdgu',ivxmat,jlp_ivkeepx,keepx,ivcmat,jlp_ivkeepc,keepc
 
-	else !if(j_linkopt(j_mdata).gt.0)then
+	else !if(j_linkoption(iob,io,j_mdata).gt.0)then
 		ivcdata=0
-	endif !if(j_linkopt(j_mdata).gt.0)then
+	endif !if(j_linkoption(iob,io,j_mdata).gt.0)then
 
 
-	jlp_xpresent=ivcdata.ne.0
+	
 
 	! maxiter->
-	if(j_linkopt(j_mmaxiter).gt.0)then
-		mxiter=j_v(j_o(iob)%i(j_linkopt(j_mmaxiter)+1))
+	if(j_linkoption(iob,io,j_mmaxiter).gt.0)then
+		mxiter=j_v(j_o(iob)%i(j_linkoption(iob,io,j_mmaxiter)+1))
 
-	else !if(j_linkopt(j_mmaxiter).gt.0)then
+	else !if(j_linkoption(iob,io,j_mmaxiter).gt.0)then
 		mxiter=2000
-	endif !if(j_linkopt(j_mmaxiter).gt.0)then
+	endif !if(j_linkoption(iob,io,j_mmaxiter).gt.0)then
 
 
-	if(j_linkopt(j_mrefac).gt.0)then
-		nrefac=j_v(j_o(iob)%i(j_linkopt(j_mrefac)+1))
-	else !if(j_linkopt(j_mrefac).gt.0)then
+	if(j_linkoption(iob,io,j_mrefac).gt.0)then
+		nrefac=j_v(j_o(iob)%i(j_linkoption(iob,io,j_mrefac)+1))
+	else !if(j_linkoption(iob,io,j_mrefac).gt.0)then
 		nrefac=1000  !
-	endif !if(j_linkopt(j_mrefac).gt.0)then
+	endif !if(j_linkoption(iob,io,j_mrefac).gt.0)then
 !	write(6,*)'refac=',nrefac
 
 	! tole->
-	if(j_linkopt(j_mtole).gt.0)then
-		if(j_nargopt(iob,j_mtole).le.0)then
+	if(j_linkoption(iob,io,j_mtole).gt.0)then
+		if(j_nargopt(iob,io,j_mtole).le.0)then
 			write(6,*)'*jlp: tole-> should have argument'
 			j_err=.true.;goto 990
-		endif !if(j_nargopt(iob,j_mtole).le.0)then
-		jlp_tolep=j_v(j_o(iob)%i(j_linkopt(j_mtole)+1))
-	else !if(j_linkopt(j_mtole).gt.0)then
+		endif !if(j_nargopt(iob,io,j_mtole).le.0)then
+		jlp_tolep=j_v(j_o(iob)%i(j_linkoption(iob,io,j_mtole)+1))
+	else !if(j_linkoption(iob,io,j_mtole).gt.0)then
 		jlp_tolep=jlp_one
-	endif !if(j_linkopt(j_mtole).gt.0)then
+	endif !if(j_linkoption(iob,io,j_mtole).gt.0)then
 	!write(6,*)'tole=',j_tolep
 	! subfilter->
-	j_subfilterlink=j_codelink(j_msubfilter)
+	j_subfilterlink=j_codelink(iob,io,j_msubfilter)
 	subfilter_=j_subfilterlink.ne.0
-	! if(j_linkopt(j_msubfilter).gt.0)then
+	! if(j_linkoption(iob,io,j_msubfilter).gt.0)then
 		! subfilter_=.true.
 		! j_iosubfilter=j_linkopt2(j_msubfilter) !place of the filter inline function
-		! j_ivsubfilter=j_o(iob)%i(j_linkopt(j_msubfilter)+1)
-	! else !if(j_linkopt(j_msubfilter).gt.0)then
+		! j_ivsubfilter=j_o(iob)%i(j_linkoption(iob,io,j_msubfilter)+1)
+	! else !if(j_linkoption(iob,io,j_msubfilter).gt.0)then
 		! subfilter_=.false.
-	! endif !if(j_linkopt(j_msubfilter).gt.0)then
+	! endif !if(j_linkoption(iob,io,j_msubfilter).gt.0)then
 
 	!subreject_->
-	j_subrejectlink=j_codelink(j_msubreject)
+	j_subrejectlink=j_codelink(iob,io,j_msubreject)
 	subreject_=j_subrejectlink.ne.0
-	! if(j_linkopt(j_msubreject).gt.0)then
+	! if(j_linkoption(iob,io,j_msubreject).gt.0)then
 		! subreject_=.true.
 		! j_iosubreject=j_linkopt2(j_msubreject)
-		! j_ivsubreject=j_o(iob)%i(j_linkopt(j_msubreject)+1)
-	! else !if(j_linkopt(j_msubreject).gt.0)then
+		! j_ivsubreject=j_o(iob)%i(j_linkoption(iob,io,j_msubreject)+1)
+	! else !if(j_linkoption(iob,io,j_msubreject).gt.0)then
 		! subreject_=.false.
-	! endif !if(j_linkopt(j_msubreject).gt.0)then
-	jlp_stoplink=j_codelink(j_mstop)
+	! endif !if(j_linkoption(iob,io,j_msubreject).gt.0)then
+	jlp_stoplink=j_codelink(iob,io,j_mstop)
 	isstop=jlp_stoplink.ne.0
-	! if(j_linkopt(j_mstop).gt.0)then
+	! if(j_linkoption(iob,io,j_mstop).gt.0)then
 		! isstop=.true.
 		! jlp_iostop=j_linkopt2(j_mstop)
-		! jlp_ivstop=j_o(iob)%i(j_linkopt(j_mstop)+1)
-	! else !if(j_linkopt(j_mstop).gt.0)then
+		! jlp_ivstop=j_o(iob)%i(j_linkoption(iob,io,j_mstop)+1)
+	! else !if(j_linkoption(iob,io,j_mstop).gt.0)then
 		! isstop=.false.
-	! endif !if(j_linkopt(j_mstop).gt.0)then
+	! endif !if(j_linkoption(iob,io,j_mstop).gt.0)then
 	!write(6,*)'<598'
 
 	subfilre=subfilter_.or.subreject_
 
 
 	!notareavars->    tsekattava mitä yllä on tehty näiden kanssa
-	notareavars=j_nargopt(iob,j_mnotareavars)
-	linknotareavars=j_linkopt(j_mnotareavars)
+	notareavars=j_nargopt(iob,io,j_mnotareavars)
+	linknotareavars=j_linkoption(iob,io,j_mnotareavars)
 
 	call j_clearoption(iob,io)  ! subroutine   !!!! options checked
 
@@ -2929,7 +3219,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 
 		! nrow tell the total number of rows when domain sets are expanded
 7777 format(a16,i5)
-		write(6,7777)'domains',max(jlp_ndom,1)
+		if(jlp_xpresent)write(6,7777)'domains',max(jlp_ndom,1)
 		if(max(jlp_ndom,1).ne.ndoms) write(6,*)'number of domain occurences =',ndoms
 
 		if(irowobj.gt.0)jlp_nrow=jlp_nrow-1
@@ -3600,20 +3890,25 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		!! commented. March 2011  if(iout.ne.ivresult)then
 		! jlp-function has output iout
 		if(.not.zmatrix) then
-			if(ivoutresult.ne.j_ivresult) then
-				call j_deflistobject(ivoutresult,'%zvars',ivzvar,nres=nz)
-				jlp_zvarl=>j_o(ivzvar)%i2
-			else !if(ivoutresult.ne.j_ivresult) then
-				if(associated(jlp_zvarl))deallocate(jlp_zvarl)
+			!if(ivoutresult.ne.j_ivresult) then
+			!	call j_deflistobject(ivoutresult,'%zvars',ivzvar,nres=nz)
+			!	jlp_zvarl=>j_o(ivzvar)%i2
+		!		write(6,*)'jlpzv ',jlp_zvarl
+			!else !if(ivoutresult.ne.j_ivresult) then
+				if(allocated(jlp_zvarl))deallocate(jlp_zvarl)
 				allocate(jlp_zvarl(1:nz))
-			endif !if(ivoutresult.ne.j_ivresult) then
+			!endif !if(ivoutresult.ne.j_ivresult) then
 			! no output for the jlp-function
 			! z-variables: not z-variable, not factory´xvariables or factory y-variables
 			if (jlp_fpresent) then
 				jlp_zvarl(1:nz)=pack(j_o(ivvars)%i2(1:nvartot),.not.jlp_isx.and..not.jlp_isfx.and..not.jlp_isfy)
 			else !if (j_fpresent) then
 				jlp_zvarl(1:nz)=pack(j_o(ivvars)%i2(1:nvartot),.not.jlp_isx)
+				
+		!		write(6,*)'zvr2',jlp_zvarl(1:nz)
 			endif !if (j_fpresent) then
+			call j_deflistobject(ivoutresult,'%zvars',ivzvar,list0=nz,list=jlp_zvarl(1:nz))
+			
 			jlp_zvarl0=nz
 			! nval= number of coefficients in the
 			nzval=nval-nxval   !muuta kun fact
@@ -4050,7 +4345,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 
 	!		write(6,*)'**********ivxmat,j_ivmatx',j_ivmatx,ivxmat,j_lopp
 
-
+		if(.not.isunit)then
 		j_ivns=j_o(ivcdata)%i(4)   !variable 'Ns' telling the number of schedules in each unit (nobsw variable)
 		iiv=j_inlistobject(j_ivns,jlp_ivkeepc)
 		if(iiv.le.0)then
@@ -4058,7 +4353,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			j_err=.true.
 			goto 940
 		endif !if(iiv.le.0)then
-
+	endif
 
 
 	!!!!???????????  is it really possible that obsw variable is not in cdata
@@ -4136,7 +4431,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 						endif !if(j_nxrow(iro).eq.j_nxrow(irow0))then
 					194    iba2=iba2+jlp_nxrow(iro)
 					enddo !do iro=1,irow0-1
-					itemp=itemp+1;itemp0=itemp;jlp_ibatemp(itemp)=iba
+					itemp=itemp+1
+					itemp0=itemp
+					jlp_ibatemp(itemp)=iba
 					jlp_nxrowtemp(itemp)=jlp_nxrow(irow0)
 				! ibatemp is the basis for accesing irowvars and coefx for temporary variables
 				! nxrowtemp is the number of variables/coefficients
@@ -4238,7 +4535,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					jlp_domdef=jlp_domname(1:led)//jlp_domdef
 					if(itran.le.0)then
 					! make transformation object for domain transformations !!!!
-						call j_deftrans(0,'$DomainTrans$',ivdomtrans,30*jlp_ndom,0,0,iii,iii,0)
+						call j_deftrans(0,'$DomainTrans$',ivdomtrans,30*jlp_ndom,0,0,iii,iii,iii,0)
 
 						itran=1
 					endif !if(itran.le.0)then
@@ -4275,178 +4572,17 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!j_xmatlast2=0  ! there is nothing in upper buffer
 
 
-		maxnsch=j_o(ivcdata)%i(9)
-!	write(6,*)'<37>maxns',maxnsch,j_ntemp0,j_lopp
-	!		j_inmemory=.true.
-	!readit=.false.
-	!		memoryleft=0
-	!idofa=0   ! ivxdat neede all the time in factory problems
-	!if(allocated(j_memobs))deallocate(j_memobs);allocate(j_memobs(1:j_lopp))
-!	j_memobs=[(j,j=1,j_lopp)]
-!	j_xmatinmemory=.false.
+		if(ivunit.le.0)maxnsch=j_o(ivcdata)%i(9)
 
-!	if(j_o(ivxmat)%i(4).lt.0.and.j_fpresent)idofa=1  ! xdata needed all the time in factory problems
-!	idofa2=idofa
-!	if(j_xdatinmemory)idofa2=0  !if xdatinmemory xdatmemory is not part of the disk/file show
-	! this happens when xdat is not stored in file before jlp
-	! if(memory.ne.0)then
-		! if(j_xdatinmemory.and.idofa2.ne.0)memory=memory-keepx*j_lopp !memory left for xmat
-
-		! if(memory.lt.2.*j_ntemp0*maxnsch)then
-			! ! j_xmat used from disk and memory
-			! !if .not.xdatinmemory also xdat used from both memory and
-			! ime=j_v(ivmemory)
-			! write(6,*)'memory->',ime, &
-			! 'indicates that only ',memory*1000000/j_ntemp0, &
-			! 'scheds stored in memory in addition to xdata'
-			! !(memory-keepx*j_lopp)/j_ntemp0=2*maxnsch ->memory=j_ntemp0*2*maxnsch+keepx*j_lopp
-			! iime=(j_ntemp0*(2*maxnsch+2)+keepx*j_lopp)/1000000
-		! !	iime=j_ntemp0*(2*maxnsch+2)+keepx*j_lopp/1000000
-			! write(6,*)'J tries to put at least ',2*maxnsch, 'mill corresponding to memory->' ,iime
-			! memory=j_ntemp0*(2*maxnsch+2)+keepx*j_lopp
-		! endif
-
-		! if(istree)then
-			! write(6,*)'*tree structure does not work with memory->'
-			! j_err=.true.
-			! return
-		! endif
-		! loppxmat0=memory/(j_ntemp0+idofa2*keepx) !how many obs the memory can keep
-		! loppxmat0=min(loppxmat0,j_lopp)
 
 	! else !if(memory.ne.0)then
 		! j_lopp=j_lopp
 	! endif
 
-		write(6,*)'allocate xmat,',jlp_ntemp0*jlp_lopp/1.e6,' million'
+		!write(6,*)'allocate xmat,',jlp_ntemp0*jlp_lopp/1.e6,' million'
 		if(allocated(jlp_xmat))deallocate(jlp_xmat)
 		allocate(jlp_xmat(1:jlp_ntemp0*jlp_lopp))
 
-!allocating and possibly opning xmatfile
-	! if(loppxmat0.eq.j_lopp)then
-		! j_xmatinmemory=.true.
-		! j_xmatlast=j_lopp
-		! j_xmatlopp=j_lopp !xmatlopp is the end of the intial part xdatlast is different tha xlopp
-		! ! when fillin the active set
-	! else !if(loppxmat0.eq.j_lopp)then
-		! j_xmatinmemory=.false.
-		! j_xmatlast=loppxmat0-maxnsch-2
-		! j_xmatlopp=j_xmatlast
-
-		! call j_getline(j_ivnames,ivdata,j_tempchar3,lefi)
-		! !			write(6,*)'<33',j_filename(1:lefi)
-		! call j_getfile(nuno,'w',ivfile=j_ivprob,ext='%'//j_tempchar3(1:lefi)//'%info.txt', &
-			! readit=readit,deleted=deleted)  !is there xmat in disk
-		! if(j_err)return
-		! if(readit)then
-			! goto 4251
-			! 4250	write(6,*)'*error reading xmat'
-			! j_err=.true.
-			! return
-			! 4251	read(nuno,*,err=4250)nobi,nvarsi
-			! call j_closeunit(nuno)
-			! if(nobi.ne.j_lopp.or.nvarsi.ne.j_ntemp0)then
-				! write(6,*)'*info.txt does not agree, files, decide now are old files be deleted'
-				! call j_getfile(nuno,'w',ivfile=j_ivprob,ext='%'//j_tempchar3(1:lefi)//'%info.txt', &
-					! deleted=deleted)
-				! call j_getfile(j_xmatnu,'w',forma='d',irecl=j_ntemp0,ivfile=j_ivprob,replace=.true.,&
-					! ext='%'//j_tempchar3(1:lefi)//'.bin')
-				! if(j_err)return
-			! endif ! if nobi
-			! call j_getfile(j_xmatnu,'r',forma='d',irecl=nvarsi,ivfile=j_ivprob,&
-				! ext='%'//j_tempchar3(1:lefi)//'.bin')
-			! if(j_err)return
-		! else  !readit
-			! call j_getfile(j_xmatnu,'w',forma='d',irecl=j_ntemp0,ivfile=j_ivprob,replace=.true.,&
-				! ext='%'//j_tempchar3(1:lefi)//'.bin')
-			! if(j_err)return
-			! write(nuno,*)j_lopp,j_ntemp0
-			! call j_closeunit(nuno)
-		! endif
-
-	! !	j_xmatlopp1=j_xmatlopp-1
-		! j_xmatibas2=j_xmatlopp*j_ntemp0
-
-
-		! !			j_xmatfirst=1
-		! j_xmatekaobs=0
-		! j_xmattokaobs=0
-		! j_xmatlast2=0
-		! j_xmatibas2=j_xmatlast*j_ntemp0
-		! j_xmatekabas=j_xmatibas2+maxnsch*j_ntemp0
-		! j_xmattokabas=j_xmatekabas+j_ntemp0
-
-
-
-	! endif !if(loppxmat0.eq.j_lopp)then
-
-	! if(j_xdatinmemory)then
-		! j_xdatlast=j_lopp
-		! j_xdatlopp=j_lopp
-	! endif
-!	write(6,*)'xmat-schedules in memory ',j_xmatlast, ' allocating ',loppxmat0*j_ntemp0/1.e6, ' mill for them'
-!xdat allocation
-!xdat allocated only in factory problems and when meomory is given and xdata is in file
-	! if(idofa2.ne.0.and.memory.ne.0)then
-		! write(6,*)'allocating memory ', loppxmat0*keepx/1.e6, 'mill for xdata stored in disk'
-		! if(allocated(j_o(ivxmat)%r))deallocate(j_o(ivxmat)%r)
-		! write(6,*)'xdata schedules stored in memory',loppxmat0, ' allocating ',loppxmat0*keepx0/1.e6, 'for them'
-		! allocate(j_o(ivxmat)%r(1:loppxmat0*keepx))
-		! j_xdatinmemory=.false.
-		! if(loppxmat0.eq.j_lopp)then
-			! j_xdatlast=j_lopp
-			! j_xdatlopp=j_lopp
-			! j_xdatinmemory=.true.
-
-		! else
-			! j_xdatlast=loppxmat0-maxnsch-2
-			! j_xdatnu=-j_o(ivxmat)%i(4)
-			! j_xdatlopp=j_xdatlast
-			! j_xdatlast2=0
-			! j_xdatfirst2=0
-			! j_xdatibas2=j_xdatlopp*keepx
-			! j_xdatekabas=(j_xdatlopp+maxnsch)*keepx
-			! j_xdattokabas=j_xdatekabas+keepx
-			! j_xdatekaobs=0
-			! j_xdattokaobs=0
-		! endif
-		! iba=0
-
-		! do iobs=1,j_xdatlast
-			! read(j_xdatnu,rec=iobs)j_o(ivxmat)%r(iba+1:iba+keepx)
-			! if(iobs.eq.10261)write(16,*)j_o(ivxmat)%r(iba+1:iba+keepx)
-			! iba=iba+keepx
-		! enddo
-
-! ! iba=xdatiba(6841,1)
-! ! iba2=jxmatiba(6842,2)
-! ! write(18,*)'<122>'
-! ! write(18,*)6841,j_o(ivxmat)%r(iba+1:iba+keepx)
-! ! write(18,*)6842,j_o(ivxmat)%r(iba2+1:iba2+keepx)
-
-
-	! endif
-
-	! if(idofa2.ne.0.and.memory.eq.0)then
-		! j_xdatlast=0
-		! j_xdatlopp=0
-		! j_xdatibas2=0
-! !		j_xdatlopp1
-		! j_xdatfirst2=0
-		! j_xdatlast2=0  !currently there is nothin
-		! if(allocated(j_o(ivxmat)%r))deallocate(j_o(ivxmat)%r)
-		! allocate(j_o(ivxmat)%r(1:(maxnsch+2)*keepx))
-		! j_xdatekabas=maxnsch*keepx
-		! j_xdattokabas=j_xdatekabas+keepx
-		! j_xdatekaobs=0
-		! j_xdattokaobs=0
-		! j_xdatfromdisk=.true.
-
-	! endif
-
-! !idofa2=1 if xdata is in file and is needed all the time
-	! if(j_lopp.ne.loppxmat0)then
-	! ipe=((j_lopp-j_xdatlast*ifa2)*keepx+(j_lopp-j_xmatlast)*j_ntemp0)/1000000
 	  ! write(6,*)'data used from disk would need additional ',&
 		! ipe, ' million'
 	! endif
@@ -4604,15 +4740,51 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		iwar=0   ! number of units where all schedules are rejected
 	!!!!!**************setting up xdata
 	!write(6,*)'<147 hui',size(j_xmat),allocated(j_xmat)
-
+	if(isunit)then
+		inde=j_inlistobject(ivunit,jlp_ivkeepx)
+		
+		jlp_nunits=1
+		old=j_o(ivxmat)%d(inde)
+		ibas=keepx
+		iprev=1
+		maxnsch=1
+	!	write(6,*)'indet',inde,old
+		do i=2,j_o(ivxmat)%i(1)
+	!	if(i.lt.200)write(6,*)i,j_o(ivxmat)%d(ibas+inde),old,ibas
+			if(j_o(ivxmat)%d(ibas+inde).ne.old)then
+					jlp_nsch(jlp_nunits)=i-iprev
+					maxnsch=max(maxnch,jlp_nsch(jlp_nunits))
+					jlp_nunits=jlp_nunits+1
+					old=j_o(ivxmat)%d(ibas+inde)
+				
+					iprev=i
+			endif
+				ibas=ibas+keepx		
+		enddo
+		jlp_nsch(jlp_nunits)=j_o(ivxmat)%i(1)-iprev
+		maxnsch=max(maxnch,jlp_nsch(jlp_nunits))
+!	write(6,*)'shed',jlp_nsch(1:jlp_nunits)
+	
+	endif
+		ibasc=0
+	!	write(6,*)'jlp_nunits',jlp_nunits,jlp_ntemp0,jlp_ibatemp
+		
+		
+				ibas=0
 		do iunit=1,jlp_nunits
-	!if(iunit.le.10)write(6,*)
-			call j_getobsiv(iunit,jlp_ivmatc,jlp_ivkeepc,jlp_ivunit)
+	
+			if(ivunit.gt.0)then
+			
+				j_v(j_o(jlp_ivkeepx)%i2(1:keepx))=j_o(ivxmat)%d(ibas+1:ibas+keepx)
+				ibas=ibas+keepx
+			else
+			!	write(6,*)'sh',jlp_ivkeepc,keepc,ivcmat
+				j_v(j_o(jlp_ivkeepc)%i2(1:keepc))=j_o(ivcmat)%d(ibasc+1:ibasc+keepc)
+				ibasc=ibasc+keepc
+	!		call j_getobsiv(iunit,jlp_ivmatc,jlp_ivkeepc,jlp_ivunit)
 
-			if(j_err)then
-				write(6,*)'error for unit ',iunit
-				stop 864
-			endif !if(j_err)then
+			endif
+
 			if(jlp_ivtrans.gt.0)then
 				call dotrans(jlp_ivtrans,1)  ! trans option given
 				if(j_err)then
@@ -4629,60 +4801,37 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				endif !if(j_err)then
 			endif !if(itran.gt.0)then
 			if(needc.gt.0)jlp_cvar=j_v(jlp_cvarl(1:ncvar))
-		!  class->(group,value)
-		! ivclass is the group variable
-		! class is the value
-			if(ivclass.ne.0)then
-				if(j_v(ivclass).eq.class)then
-					if(isc.eq.0)then
-						jlp_ibasclass=iunit-1  ! first time in class  ibasclass is the basis for units
-						isc=1
-					endif !if(isc.eq.0)then
-					iunit2=iunit-jlp_ibasclass
-				else !if(j_v(ivclass).eq.class)then
-					if(isc.eq.0)then
-						jlp_ibaunitbas=jlp_ibaunitbas+j_v(j_ivns)  ! basis for schedules
-						cycle
-					else !if(isc.eq.0)then
-					!class has changed
-						nunits2=iunit-jlp_ibasclass-1
-						exit
-					endif !if(isc.eq.0)then
-				endif !if(j_v(ivclass).eq.class)then
-			else !if(ivclass.ne.0)then
-
-			! no class->
-				iunit2=iunit
-
-			endif !if(ivclass.ne.0)then
-
-		! done earlier: if(itran.gt.0)call dotrans(ivdomtrans,1)
+	
 			if(jlp_ndom.ne.0)then  ! ndom is number of domains
 			!domainbits(1:ndomv,iunit)=0 done at allocation
 				do j=1,jlp_ndom
 					ii=(j-1)/32+1
 					ibit=j-(ii-1)*32-1  ! bit numbering starts from zero
 					if(j_v(jlp_ivdomains(j)).ne.0. )then
-						jlp_domainbits(ii,iunit2)= ibset(jlp_domainbits(ii,iunit2),ibit)
+						jlp_domainbits(ii,iunit)= ibset(jlp_domainbits(ii,iunit),ibit)
 					! domainunits tells the number of units in each domain
 						jlp_domainunits(j)=jlp_domainunits(j)+1
 					endif !if(j_v(j_ivdomains(j)).ne.0. )then
 				enddo !do j=1,j_ndom
 			endif !if(j_ndom.ne.0)then
-			jlp_nsch(iunit2)=j_v(j_ivns)   ! number of schedules
+			if(.not.isunit)jlp_nsch(iunit)=j_v(j_ivns)   ! number of schedules
 			nrej=0   ! number of rejected schedules in this unit
-			do is=1,jlp_nsch(iunit2)
+			do is=1,jlp_nsch(iunit)
 			!			write(6,*)'<6565'
 				nstot=nstot+1
-				j_v(ivs)=is         ! ivs index of schedule variable
+				       ! ivs index of schedule variable
 			! get observation from x-data
-				call j_getobsiv(jlp_ibaunitbas+nstot,jlp_ivmatx,jlp_ivkeepx,0) !,jlp_ivtransx,0) !making			xmat
+				if(.not.isunit.or.is.gt.1)then
+			!		write(6,*)jlp_ivkeepx,j_o(jlp_ivkeepx)%i2,keepx,ivxmat,ibas
+				j_v(j_o(jlp_ivkeepx)%i2(1:keepx))=j_o(ivxmat)%d(ibas+1:ibas+keepx)
+				ibas=ibas+keepx
+				
+				endif
+	!			call j_getobsiv(jlp_ibaunitbas+nstot,jlp_ivmatx,jlp_ivkeepx,0) !,jlp_ivtransx,0) !making			xmat
 
-				if(j_err)then
-					write(6,*)'error for schedule ',jlp_ibaunitbas+nstot
-					stop 441
-				endif !if(j_err)then
+				
 				if(jlp_ivsubtrans.gt.0)then
+				j_v(ivs)=is  
 					call dotrans(jlp_ivsubtrans,1)  ! subtrans-> was given
 					if(j_err)then
 						write(6,*)'error for schedule ',nstot
@@ -4719,28 +4868,14 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			!		write(6,*)'<8767'
 		!	if(j_xmatinmemory)then
 				ibax=(nstot-1)*jlp_ntemp0
-		!	elseif(nstot.le.j_xmatlast)then
-			!	ibax=(nstot-1)*j_ntemp0
-			!else
-			!	ibax=j_xmatekabas
-			!endif
-			!			else
-			!			ibax=0
-			!			endif
-			!			write(6,*)'jjdjd',readit,j_xmatlopp,size(j_xmat),nstot,j_xmatnu,j_xmatinmemory,ibax,j_xmatekaobs
-
-			!if(readit)then
-
-			!	if(nstot.le.j_xmatlopp)read(j_xmatnu,rec=nstot)j_xmat(ibax+1:ibax+j_ntemp0)
-
-		!	else
-				!if(nstot.gt.j_xmatlopp)ibax=j_xmateka
+	
 				if(nxvararea.gt.0)then
 					! xvarlarea is a vector
 					j_v(jlp_xvarlarea)=j_v(ivarea)*j_v(jlp_xvarlarea)   ! multiply area-variables by area
 				endif !if(nxvararea.gt.0)then
 				do i=1,jlp_ntemp0
 					iba=jlp_ibatemp(i)
+				!	if(iunit.lt.10)write(6,*)iba,jlp_ntemp0,iba,ibax,jlp_nxrowtemp(i),iba+jlp_nxrowtemp(i)
 
 					jlp_xmat(i+ibax)= &       ! make temporary variables
 						dot_product(jlp_coefx(iba+1:iba+jlp_nxrowtemp(i)), &
@@ -4752,14 +4887,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				!j_ix(0),j_ntemp0
 				if(.not.jlp_maxo.and.jlp_ix(0).ne.0) &
 				jlp_xmat(jlp_ix(0)+ibax)=-jlp_xmat(jlp_ix(0)+ibax)
-
-			!	if(.not.j_xmatinmemory)write(j_xmatnu,rec=nstot)j_xmat(ibax+1:ibax+j_ntemp0)
-			!endif
-			! do k=1,j_lopp
-			! ibax=jxmatiba(k) !!tämä jo aiemmin
-			! j_xmat(j_ix(0),k)=-j_xmat(j_ix(0),k)  !minimization: maximize -objective
-			! enddo !do k=1,j_lopp
-			! endif !if
+		
 
 				if(istree)then
 					if(is.eq.1)then
@@ -4788,13 +4916,25 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				if(needc.gt.0)j_v(jlp_cvarl(1:ncvar))=jlp_cvar
 			enddo !do is=1,j_nsch(iunit2)
 			if(subfilre)then
-				if(nrej.ge.jlp_nsch(iunit2))then
+				if(nrej.ge.jlp_nsch(iunit))then
 					iwar=iwar+1
 					if(iwar.le.10)write(6,*)'*err all schedules were rejected for unit ',iunit
-				endif !if(nrej.ge.j_nsch(iunit2))then
+				endif !if(nrej.ge.j_nsch(iunit))then
 			endif !if(subfilre)then
 			if(j_err)return
+		!		write(6,*)'nuni ',jlp_nunits,iunit,ibax
 		enddo !do iunit=1,jlp_nunits
+	!	write(6,*)'nunits ',jlp_nunits,jlp_ntemp0
+	!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+	! iba=0
+	! do i=1,20
+	! write(6,*)jlp_xmat(iba+1:iba+jlp_ntemp0)
+	! iba=iba+jlp_ntemp0
+	! enddo
+	
+	
+	
+	!	write(6,*)'shed2',jlp_nsch(1:jlp_nunits)
 		if(fast)then
 		!	maxnsch2=maxval(j_nsch)
 		!	write(6,*)'maxns',maxnsch,maxnsch2
@@ -4815,42 +4955,17 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		endif !if(iwar.gt.0)then
 
 
-		if(ivclass.ne.0)then
-			if(isc.eq.0)then
-				write(6,*)'**did not find class ',class;j_err=.true.
-				return
-			endif !if(isc.eq.0)then
-			write(6,*)'**found ', nunits2, ' units and ',nstot,'schedules in class ',class
-			write(6,*)'**bypassing ',jlp_ibasclass, ' units'
-			call j_getobject(0,'Classbasis',j_ipreal,ivclassbasis)
-			j_v(ivclassbasis)=jlp_ibasclass
-			call j_printname('**this number is put into ',ivclassbasis,' ')
-			call j_getobject(0,'Schedbasis',j_ipreal,ivschedbasis)
-			j_v(ivschedbasis)=jlp_ibaunitbas
-			write(6,*)'**bypassing ',jlp_ibaunitbas, ' schedules'
-			call j_printname('this number is put into ',ivschedbasis,' ')
-			jlp_nunits=nunits2
-		endif !if(ivclass.ne.0)then
-
-	!!!!maxo
-	! if(.not.j_maxo.and.j_ix(0).ne.0)then
-
-	! do k=1,j_lopp
-	! ibax=jxmatiba(k) !!tämä jo aiemmin
-	! j_xmat(j_ix(0),k)=-j_xmat(j_ix(0),k)  !minimization: maximize -objective
-	! enddo !do k=1,j_lopp
-	! endif !if(.not.j_maxo.and.j_ix(0).ne.0)then
 
 		if(allocated(jlp_solx))deallocate(jlp_solx)
 		if(nz.le.0)allocate(jlp_solx(0:jlp_nrow))
 	!nstot adds up the 'ns' variables, lopp is the number of observations in xdata
-		if(nstot.ne.jlp_lopp.and.ivclass.eq.0)then
+		if(ivunit.le.0.and.nstot.ne.jlp_lopp)then
 			write(6,*)'**number of sched in cdat, and xdat do not match',nstot,jlp_lopp
 			j_err=.true.
 			return
 		endif !if(nstot.ne.j_lopp.and.ivclass.eq.0)then
 
-		if(jlp_xpresent.and.ivclass.eq.0)then
+		if(jlp_xpresent)then
 			write(*,*)'found ',jlp_nunits,' units, ',jlp_lopp,' schedules, filling xmat'
 			call cpu_time(time00)
 			if(subfilre)write(6,*)'from which ',nrejtot,' schedules were rejected'
@@ -5027,7 +5142,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					endif !if (j_ix(j)==0) then
 				enddo !do j=0, j_nrow
 
-				if(p.and.i.eq.jlp_nunits) then
+				if(i.eq.jlp_nunits) then
 					write(n16,*)'nfxrow',jlp_nfxrow
 					write(n16,*)'irowfxvars: ',jlp_irowfxvars
 					write(n16,*)'irowffact: ',jlp_irowffact
@@ -5903,9 +6018,10 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 
 	!if(memory.eq.0.and..not.j_xdatfromdisk)write(6,*)'without memory-> all data is in memory'
 	if(jlp_xpresent2)then
-		write(6,*)'** Resid, z, sched and xkf are numbers of basic'
-		write(6,*)&
-		'residuals, z-variables, explicit basic schedules and factory trasportations. NF-rows are nonfeasible'
+		write(6,*)'** Resid = # of residuals                z = # of basic z-variables'
+		write(6,*)'   sched = # of explicit basic scheds  xkf = # of basic factory transportations'
+		write(6,*)'      NF = # of nonfeafible rows'
+
 
 	endif !if(j_xpresent2)then
 	iobs=0
@@ -6333,8 +6449,8 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		if(allocated(jlp_lzi)) deallocate(jlp_lzi)
 		if(allocated(jlp_redcost)) deallocate(jlp_redcost)
 !zvarl deallocate, jos ei osoita o-vektoriin
-		if(ivoutresult.eq.j_ivresult) deallocate(jlp_zvarl)
-		nullify(jlp_zvarl)
+	!	if(ivoutresult.eq.j_ivresult) deallocate(jlp_zvarl)
+	!	nullify(jlp_zvarl)
 	end if !if(nz.gt.0)then
 	if(allocated(jlp_vc)) deallocate(jlp_vc)
 	if(allocated(jlp_lr)) deallocate(jlp_lr)
@@ -6362,6 +6478,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		jlp_buf='jlp normal exit'
 	endif !if(j_err) then
 	write(nureport,'(a)')jlp_buf(1:79)
+	write(nureport,*)' '
 ! write(6,*)'hep'
 ! close(16)
 ! write(6,*)'ivpivots',ivpivots,'io ',io
@@ -6979,7 +7096,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		else !if(j_maxo) then
 			j_v(ivobjective)=-jlp_objf
 		endif !if(j_maxo) then
-
+		if(ivoutresult.ne.j_ivresult) then
+		call j_getobject(ivoutresult,'%objective',j_ipreal,ivobjective2)
+		j_v(ivobjective2)=j_v(ivobjective)
+		write(6,*)'OBJECTIVE ',jlp_objf,j_v(ivobjective2)
+		endif
 901	continue
 
 		jlp_issolution=.true.
@@ -7284,9 +7405,13 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				call j_defmatrix(ivoutresult,'%domains',jlp_nrow,1,j_matreg,ivout)
 
 				j_o(ivout)%d = jlp_irowdomain(1:jlp_nrow)
-				call j_defmatrix(ivoutresult,'%problemrows',jlp_nrow,1,j_matreg,ivout)
+				
+			endif !if(j_nrow.gt.0)then
+		endif
+		if(ivoutresult.ne.j_ivresult)then
+			!call j_defmatrix(ivoutresult,'%problemrows',jlp_nrow,1,j_matreg,ivout)
 
-				j_o(ivout)%d = jlp_irowrow(1:jlp_nrow)
+			!	j_o(ivout)%d = jlp_irowrow(1:jlp_nrow)
 				call j_defmatrix(ivoutresult,'%rhs',jlp_nrow,1,j_matreg,ivout)
 
 				j_o(ivout)%d = jlp_rhs
@@ -7297,7 +7422,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					if(jlp_rhs(i_).eq.-huge(1.d0))j_o(ivout)%d(i_) =-1.7e37
 					if(jlp_rhs2(i_).eq.huge(1.d0))j_o(ivout2_)%d(i_) =1.7e37
 				enddo !do i_=1,j_nrow
-			endif !if(j_nrow.gt.0)then
+				call j_defmatrix(ivoutresult,'%shprice',jlp_nrow,1,j_matreg,ivout2_)
+				j_o(ivout2_)%d = jlp_vc(1:jlp_nrow)
+			
 		endif !if(j_xpresent.and.ivoutresult.ne.j_ivresult) then
 
 		if(nz.gt.0.and.iprint.ge.1)then
@@ -7345,7 +7472,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			jlp_buf='Solution is infeasible'
 		endif !if(j_v(ivfeasible)>0) then
 		write(nureport,'(a)')jlp_buf(1:79)
-
+!write(6,*)'OBJECTIVE&&&&& ',jlp_objf,j_v(ivobjective2)
+call j_getname(ivobjective2)
+!write(6,*)'%%%',j_oname(1:j_loname)
 		if(j_v(ivoptimal)>0) then
 			if(kier.ge.mxiter)then
 				jlp_buf='Solution may not be optimal, maximum number of iterations reached'

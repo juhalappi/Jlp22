@@ -30,8 +30,8 @@
 !%%function
 module jmod  
 double precision,parameter::j_inf=huge(0.d0)
-
-
+double precision,parameter::j_ninf=-j_inf
+logical ::j_inited=.false.
 !!module lenmod   !the lengths of character variables
 	integer,parameter :: j_lenoption=14
 	integer, parameter :: j_lenfunction=16
@@ -63,24 +63,24 @@ double precision,parameter::j_inf=huge(0.d0)
 		!functions
 	integer, parameter :: j_nfspec=8 
 	integer, parameter :: j_nfobj=4
-	integer, parameter :: j_nftrans=4 
-	integer, parameter :: j_nfloop=16
+	integer, parameter :: j_nftrans=5 
+	integer, parameter :: j_nfloop=18
 	integer, parameter :: j_nfoper=19
 	integer, parameter :: j_nfarit=34
 	integer, parameter :: j_nfarit2=5
-	integer, parameter :: j_nfdist=4
-	integer, parameter :: j_nfran=6
+	integer, parameter :: j_nfdist=5  !distributions
+	integer, parameter :: j_nfran=7  !random
 	integer, parameter :: j_nfinter=3
 	integer, parameter :: j_nflist=8  !list function
 	integer, parameter :: j_nftex=2
 	integer, parameter :: j_nffile=7 
 	integer, parameter :: j_nfio=7 
 	integer, parameter :: j_nfmatr=19  !matrix
-	integer, parameter :: j_nfdata=8
+	integer, parameter :: j_nfdata=9  !data functions
 	integer, parameter :: j_nfstat=13 
 	integer, parameter :: j_nfjlp=19
 	integer, parameter :: j_nfsimu=6
-	integer, parameter :: j_nffig=5
+	integer, parameter :: j_nffig=6
 	integer, parameter :: j_nfspli=6 
 	integer, parameter :: j_nfbit=7 
 	integer, parameter :: j_nfmisc=4 
@@ -109,12 +109,15 @@ double precision,parameter::j_inf=huge(0.d0)
 	integer, parameter :: j_fbbit=j_fbspli+j_nfspli 
 	integer, parameter :: j_fbmisc=j_fbbit+j_nfbit 
 !functions needed in derivatives 
-	integer,parameter::j_fipower=j_fboper+1
-	integer,parameter::j_fmult=j_fboper+2
-	integer,parameter::j_fdiv=j_fboper+3
-	integer,parameter::j_fplus=j_fboper+4
-	integer,parameter::j_fminus=j_fboper+5
-	integer,parameter::j_fpower=j_fboper+17
+	integer,parameter::j_fipower=j_fboper+3
+	integer,parameter::j_fmult=j_fboper+4
+	integer,parameter::j_fdiv=j_fboper+5
+	integer,parameter::j_fplus=j_fboper+6
+	integer,parameter::j_fminus=j_fboper+7
+	integer,parameter::j_fpower=j_fboper+19
+	! !Arithmetic and logical operations after converting to the polish notation
+	! 'HMULT','HDIV','IPOWER','MULT','DIV','PLUS','MINUS','EQ','NE','LE','LT','GE', &
+	! 'GT','NOT','AND','OR','EQV','NEQV','POWER', & !19
 	
 	!inout functions
 	integer,parameter::j_fputlist=j_fblist+8
@@ -160,10 +163,15 @@ double precision,parameter::j_inf=huge(0.d0)
 	integer,parameter::j_floggamma=j_fbarit+3
 	integer,parameter::j_flogistic=j_fbarit+3
 	integer,parameter::j_fassign=j_fbloop+3
+	integer,parameter::j_fgoto=j_fbloop+7
+	integer,parameter ::j_fgoto2=j_fbloop+17
+		integer,parameter::j_fgoto3=j_fbloop+18
 	integer,parameter::j_fassone=j_fbloop+14
+	integer,parameter::j_fpause=j_fbtrans+3
 	integer,parameter::j_fsetoption=1
 	integer,parameter::j_fsgetelem=2
 	integer,parameter::j_fsetelem=3
+	
 	
 		! integer, parameter :: j_nfunctions_ = &
 	! 7+   3+     3  +12+  16+      34    +5+    4+   6+    3+   6+   1+  6+    6+  15+ &!!%%function
@@ -185,11 +193,11 @@ double precision,parameter::j_inf=huge(0.d0)
 	'type','delete_o','exist_o','name',    &  !4
 	
 	! Transformations
-	'trans','call','pause','noptions', &  !4
+	'trans','call','pause','noptions','R', &  !5
 	
 	! Loops and controls structures
 	'do', 'if','ASSIGN','sit','which','errexit', 'goto','itrace', 'trace','tracenow', &
-	'itraceoff','traceoff','tracetest','assone','enddo','assmany',&  !16
+	'itraceoff','traceoff','tracetest','assone','enddo','assmany','goto2','goto3', &  !18
 	
 	!Arithmetic and logical operations after converting to the polish notation
 	'HMULT','HDIV','IPOWER','MULT','DIV','PLUS','MINUS','EQ','NE','LE','LT','GE', &
@@ -206,10 +214,10 @@ double precision,parameter::j_inf=huge(0.d0)
 	'der','gamma','loggamma','logistic','npv', & !5
 	
 	! Probability distributions
-	'pdf','cdf','bin','negbin', &  !4
+	'pdf','cdf','bin','negbin','density', &  !4
 	
 	!Random numbers 
-	'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', & !6
+	'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select','random', & !6
 	
 	!! Interpolation
 	'interpolate','plane','bilin', & !3
@@ -224,14 +232,14 @@ double precision,parameter::j_inf=huge(0.d0)
 	'exist_f','delete_f','close','showdir','setdir','thisfile', 'filestat',& ! 7
 	
 	!! io 
-	'read','write','print','ask','askc','printdebug', 'printdebug2',& ! 7 j_fbio
+	'read','write','print','ask','askc','printresult', 'printresult2',& ! 7 j_fbio
 	
 	!! Matrices
 	'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 	'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix',  & !19
 	
 	!! Data functions
-	'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', & !8
+	'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata',& !9
 	
 	!! Statistical functions
 	'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
@@ -243,10 +251,10 @@ double precision,parameter::j_inf=huge(0.d0)
 	'weightschedw','integerschedw','xkf',  & ! 19  (Note)
 	
 	!! Simulator
-	'simulator','next','branch','simulate','cut','loadtrees', & ! 6
+	'simulatorfree','nextfree','branchfree','simulatefree','cutfree','loadtreesfree', & ! 6
 	
 	!! Plotting figures
-	'plotyx','draw','drawclass', 'drawline','show', & ! 5
+	'plotyx','draw','drawclass', 'drawline','show', 'plot3d',& ! 6
 	
 	!! Splines, stem splines,  and volume functions
 	'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate',  & ! 6
@@ -261,12 +269,12 @@ double precision,parameter::j_inf=huge(0.d0)
 	data j_minarg_/ 1,1,1,1,1,1,1,2,&
 	! 'setoption','getelem','setelem','list2', 'o1_funcs','o2_funcs','o3_funcs','setcodeopt', &  ! 8n
 	1,1,1,1,&
-	! 'type','delete_o','exist_o',    &  !3
-	0,1,1,0,&
+	! 'type','delete_o','exist_o','name',    &  !3
+	0,1,1,0,1,&
 	! 'trans','call','pause','noptions', &  !4
-2,1,2,0,2,0,1,1,1,0,0,0,0,2,0,2,&
+2,1,2,0,2,0,1,1,1,0,0,0,0,2,0,2,2,1,&
 	! 'do', 'if','assign','sit','which','errexit', 'goto','itrace', 'trace','tracenow',  &
-	! 'itraceoff','traceoff','tracetest','assoneone','enddo','assmany',&  !16
+	! 'itraceoff','traceoff','tracetest','assoneone','enddo','assmany','goto2','goto3',&  !16
 	2,2,2,2,2,2,1,  2,2,2,   2,2,2,1,2,2,2,2,2,&
 	!Arithmetic and logical operations after converting to the polish notation
 	!'HMULT','HDIV','IPOWER','MULT','DIV','PLUS','MINUS','EQ','NE','LE', &
@@ -278,26 +286,26 @@ double precision,parameter::j_inf=huge(0.d0)
 	! 'cosh','tanh','fraction','abs', & !34
 1,1,1,1,2,&
 	! 'der','gamma','loggamma','logistic','npv', & !5
-1,1,2,2,&
-	! 'pdf','cdf','bin','negbin', &  !4
-0,0,0,1,2,1,&
-	! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', & !6
+1,1,2,2,0,&
+	! 'pdf','cdf','bin','negbin', 'density' ,&  !4
+0,0,0,1,2,1,1,&
+	! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
 1,4,4,&
 ! 'interpolate','plane','bilin', & !3
-2,2,2,1,2,1,1,2,&
+1,2,2,1,2,1,1,2,&
 	! 'list','merge','difference','index','index_v','len','ilist','putlist',& ! 8
 	0,0, &
 	! 'text','txt', & !2  text is old txt new
 	1,1,1,0,1,0,1,&
 	! 'exist_f','delete_f','close','showdir','setdir','thisfile', 'filestat',& ! 7
 	3,2,1,1,1,1,1,&
-	! 'read','write','print','ask','askc','printdebug','printdebug2', & ! 6 j_fbio
+	! 'read','write','print','ask','askc','printresult','printresult2', & ! 6 j_fbio
 	0,4*1,2,12*1,1,&
 	! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 	! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix',  & !19
-0,1,0,0,0,1,0,1,&
-	! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', & !8
-0,1,1,1,1,1,2,1,1,2,  1,1,1,&
+0,1,0,0,0,1,0,1,0,&
+	! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata',& !8
+0,1,1,1,1,1,2,1,1,2,  1,0,1,&
 	! 'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
 	! 'varcomp', 'classify', 'class', & !13
 	0,0,0,16*1,&
@@ -306,8 +314,8 @@ double precision,parameter::j_inf=huge(0.d0)
 	! 'weightschedw','integerschedw','xkf',  & ! 19  (Note)
 0,1,1,0,0,0,&
 	! 'simulator','next','branch','simulate','cut','loadtrees', & ! 6
-	0,0,1,1,1,&
-	! 'plotyx','draw','drawclass', 'drawline','show', & ! 5
+	0,0,1,1,1,1,&
+	! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
 	1,2,2,2,2,2,&
 	! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate',  & ! 6
 	2,1,1,1,0,2,1,&
@@ -346,7 +354,7 @@ double precision,parameter::j_inf=huge(0.d0)
 
 
 !free options free$
-	parameter (j_noptions_=187) !!!option number of j_ options
+	parameter (j_noptions_=193) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 	'extra','subextra','mean', 'min','max',& ! 1-10
@@ -367,7 +375,7 @@ double precision,parameter::j_inf=huge(0.d0)
 'expand','exist','slow','initial','eof','object','fastrounds','fastpercent','finterval','cov', & !151-160
 'sdmean','parmin','parmax','step','dpar','rfhead','rfcode','subrfhead','subrfcode','subnobs',& !161-
 'stop','rfvars','first','last','echo','list','delete','ext','got','do','set','xlabel', & !171-179
-'ylabel','t','coef'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170,j_mrfsubcode=171)
+'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170,j_mrfsubcode=171)
 
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -399,7 +407,8 @@ double precision,parameter::j_inf=huge(0.d0)
 	parameter (j_mfastrounds=159,j_mfastpercent=160,j_mfinterval=161,j_mcov=162,j_msdmean=163)
 	parameter (j_mparmin=164,j_mparmax=165,j_mstep=166,j_mdpar=167,j_mrfhead=168,j_mrfcode=169,j_msubrfhead=170,j_msubrfcode=171)
 	parameter (j_msubnobs=172,j_mstop=173,j_mrfvars=174,j_mfirst=175,j_mlast=176,j_mecho=177,j_mlist=178,j_mdelete=179,j_mext=180)
-	parameter (j_mgot=181,j_mdo=182,j_mset=183,j_mxlabel=184,j_mylabel=185,j_mt=186,j_mcoef=187)
+	parameter (j_mgot=181,j_mdo=182,j_mset=183,j_mxlabel=184,j_mylabel=185,j_mt=186,&
+	j_mcoef=187,j_msorted=188,j_msub=189,j_mdiscrete=190,j_mprolog=191,j_mepilog=192,j_munit=193)
 
 	integer,parameter :: j_nnamedoptarg=60
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
@@ -430,7 +439,7 @@ double precision,parameter::j_inf=huge(0.d0)
 
 	character*(j_lenobjecttype), dimension (1:j_nobjecttypes_)::j_objecttypes !=(/ &
 	data j_objecttypes/ & !%%objecttypes
-		'REAL','CHAR','free','LIST','MATRIX','free','TRANS','STORE','LISTI','free', & !1-10
+		'REAL','CHAR','free','LIST','MATRIX','free','TRANS','STORE','LISTI','TXT', & !1-10
 		'STEMSPLINE','TEXT','DATA','PROBLEM','FIGURE','SMOOTH','free','REGR','BITMATRIX','free',& !11-20
 		'free','free','TRACESET','LAASPOLY','TAUTSPLINE'/
 
@@ -482,7 +491,8 @@ double precision,parameter::j_inf=huge(0.d0)
 
   !	integer, dimension (:), pointer :: j_arg0 !!!function temporary pointer for arguments
 	integer, dimension (:), pointer :: j_optarg0 !!!option temporary pointerfor !!option arguments
-	! do not use any more better to use local pointers
+	
+	integer, dimension (:), allocatable:: j_optarg2,j_optarg3
 !	!                                
 	character*14 j_chrchr  !used in !!chr functions
 	character*14 :: j_chrchr0='00000000000000' !used in !!chr functions
@@ -536,7 +546,7 @@ double precision,parameter::j_inf=huge(0.d0)
 	parameter (j_iplist2=3)  !r
 	parameter(j_iplist=4 )    ! type for variable lists
 	parameter(j_ipmatrix=5 )     !matrix
-	parameter (j_matreg=1,j_matclass=2,j_matdiag=3)
+	parameter (j_matreg=1,j_matclass=2,j_matdiag=3,j_matfreq=4)
  !parameter(j_IPRANDOM=6 )     ! random number generator coefficients
 	parameter(j_iptrans=7)    ! free named transformations
 	parameter(j_ipstore=8)    ! stored data in simulations
@@ -640,6 +650,9 @@ double precision,parameter::j_inf=huge(0.d0)
 	parameter (j_mxtemporalv=200)
 	parameter (j_mxtemporalv0=100)  !oridinry temporals rsst are for dervative
 	integer j_mxv 	!total maximum number of values
+	integer,parameter ::j_mxrecursion=100
+	integer,dimension(j_mxrecursion)::j_curline
+	integer ::j_recursion=0
 ! integer ivdebug  ! ??
 
 !objects initialized in j_init
@@ -649,7 +662,7 @@ double precision,parameter::j_inf=huge(0.d0)
 	integer,parameter :: j_ivzero=3 ! Result !  output when no explicit output is given
 	integer,parameter :: j_ivone=4 ! Arg
 	integer,parameter :: j_ivinf=5 ! Obs  default variable getting observation number in data !!!note nonstandard
-	integer,parameter :: j_ivninf=6 ! Record  gets the record number when reading data, if records are rejected then
+	integer,parameter :: j_ivtolast=6 ! Record  gets the record number when reading data, if records are rejected then
 ! !  v(ivrecord) and v(ivobs) are not equal
 	integer,parameter :: j_ivmaxnamed=7 ! Subrecord v(ivsubrecord) get the record number
 !                                    of sub-level when reading hierarchical data
@@ -740,18 +753,20 @@ double precision,parameter::j_inf=huge(0.d0)
 	integer,parameter ::j_ivdebug=58
 	integer,parameter ::j_ivregf=59
 	integer,parameter ::j_ivresid=60
-	integer,parameter ::j_ivtestoptions=61
+	integer,parameter ::j_ivdebugconsole=61
 	integer,parameter ::j_ivarg=62
 	integer,parameter ::j_ivcontinue=63
 	integer,parameter ::j_iverr=64
 	integer,parameter ::j_ivresult=65
 	integer,parameter ::j_ivdata=66
 	integer,parameter ::j_ivdollar=67
-	integer,parameter ::j_ivprintdebug=68
+	integer,parameter ::j_ivprintresult=68
 	integer,parameter ::j_ivdollar2=69
 	integer,parameter ::j_ivterminal=70
 	integer,parameter::j_ivwindow=71
-	integer,parameter::j_predefined=71
+	integer,parameter::j_ivall=72
+	integer,parameter ::j_ivdebugtrans=73
+	integer,parameter::j_predefined=73
 	
 	type j_basicobject  ! defines basic J-object types
 		real, dimension(:),allocatable ::r  ! real vector associated with each  object
@@ -759,10 +774,10 @@ double precision,parameter::j_inf=huge(0.d0)
 		integer, dimension(:),allocatable::i2  !second integer vector, contains usually object indexes of subobjects
 		double precision, dimension(:),allocatable::d ! double precision vector associatedhh
 		character*1,dimension(:), allocatable::ch ! character*1 -vector associated with each object
-		character*132,dimension(:),allocatable::txt
+		character*160,dimension(:),allocatable::txt
 	end type j_basicobject !type j_basicobject
-	integer,parameter::j_txtlen=132
-	character*132,dimension(:),allocatable::j_temptxt
+	integer,parameter::j_txtlen=160
+	character*160,dimension(:),allocatable::j_temptxt
 	double precision,dimension(:),allocatable::j_tempvector
 
 !j-objects:
@@ -801,7 +816,7 @@ double precision,parameter::j_inf=huge(0.d0)
 	integer::j_dnkeep,j_divkeep,j_dimatup,j_divkeepup,j_dnkeepup,j_divnobsw
 	integer::j_divobsup,j_dnextobs,j_diba,j_dibaup,j_divobsw,j_divobs,j_diob
 	logical::j_disup,j_distrans,j_disreject,j_disfilter,j_disprint
-	integer::j_dfrom,j_duntil,j_dprint
+	integer::j_dfrom,j_duntil,j_dprint,j_depilog
 	
 	integer ::j_dlastdata
 	
@@ -809,6 +824,9 @@ double precision,parameter::j_inf=huge(0.d0)
 	integer j_iobdata
 	integer j_ivtransopt,j_ivtransoptafter
 	logical j_filter,j_reject,j_rejected,j_transopt,j_transoptafter,j_subfilter,j_subreject
+
+	logical j_remain
+
 !!end motule
 !datafmod : dataf-funktion käyttöön
 !!module datafmod
@@ -831,7 +849,8 @@ double precision,parameter::j_inf=huge(0.d0)
 
 	double precision,dimension(100)::j_tempv
 	double precision ::j_dapu  !for different purposes
-	character*1000 j_tempchar
+	character*3000 j_tempchar
+	character*3000 j_tempchar7   !used in j_interpret
 	character*400 j_tempchar2, j_tempchar3
 	character*50 j_varname1, j_varname2,j_oname,j_oname2
 	integer::j_loname,j_loname2
@@ -1178,7 +1197,7 @@ double precision,parameter::j_inf=huge(0.d0)
 
 	logical ,dimension(:),allocatable:: jlp_isx ,jlp_isxval
 
-	integer ,dimension(:), pointer ::jlp_zvarl
+	integer ,dimension(:), allocatable ::jlp_zvarl
 	integer::jlp_zvarl0
 
 	integer ,dimension(:),allocatable:: jlp_nxrow,jlp_nxrow2
@@ -1496,6 +1515,36 @@ double precision,parameter::j_inf=huge(0.d0)
 			!integer,optional ::istart
 		end subroutine !subroutine j_getoption_name(iob,option,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg,istart)
 	end interface !interface j_getoption
+	
+	interface j_getoption2
+		subroutine j_getoption2_index(iob,io,moption,minarg,maxarg,iptype,needsarg,noptarg,optarg)
+			integer, intent(in):: iob
+			integer, intent(in):: io
+			integer, intent(in):: moption
+			integer, intent(in):: minarg
+			integer, intent(in)::maxarg
+			integer, intent(in):: iptype
+		!	logical, intent(in):: expand
+			logical, intent(in):: needsarg    !min0 is reserved
+			integer,intent(out) :: noptarg
+			integer, dimension (:), allocatable :: optarg
+		
+		end subroutine !subroutine j_getoption_index(iob,moption,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg,istart)
+
+		subroutine j_getoption2_name(iob,io,option,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg)
+			integer, intent(in):: iob
+			integer, intent(in):: io
+			character*(*) option
+			integer, intent(in):: minarg
+			integer, intent(in)::maxarg
+			integer, intent(in):: iptype
+			logical, intent(in):: expand
+			logical, intent(in):: needsarg
+			integer,intent(out) :: noptarg
+			integer, dimension (:), allocatable :: optarg
+			!integer,optional ::istart
+		end subroutine !subroutine j_getoption_name(iob,option,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg,istart)
+	end interface !interface j_getoption
 
 	! interface j_linkcodeoption     NOT NEEDED
 	  ! function j_linkcodeoption_index(moption)
@@ -1535,9 +1584,27 @@ double precision,parameter::j_inf=huge(0.d0)
 		! subroutine j_freeunit(nu) ! free unit nu
 			! integer,intent(in) ::nu
 		! end subroutine !subroutine j_freeunit(nu)
-		subroutine j_parent(inp)
-			character*(*),intent(in)::inp
+		subroutine j_bypassinc(nu)
+		integer,intent(in)::nu
+		end subroutine
+		subroutine j_parent(inp,le)
+			character*(*),intent(inout)::inp
+			integer,intent(inout)::le
 		end subroutine 
+		
+		subroutine j_jinit(jparf)
+			character*(*),intent(inout)::jparf
+		end subroutine
+		
+		subroutine j_jinit0(jparf)
+		character*(*),intent(inout)::jparf
+		end subroutine
+		
+		subroutine j_sub(remain,jparf,error)
+			logical,intent(in)::remain
+			character*32,intent(in),optional ::jparf
+			logical,intent(out)::error
+		end subroutine
 		
 		subroutine j_printlist(nu,iv,head)
 			integer,intent(in)::nu,iv
@@ -1574,6 +1641,7 @@ double precision,parameter::j_inf=huge(0.d0)
 		
 		subroutine j_readtext(iv)
 			integer,intent(in)::iv
+			
 		end subroutine
 		
 		subroutine j_func(iob,io,func)
@@ -1895,10 +1963,10 @@ double precision,parameter::j_inf=huge(0.d0)
 
 
 !20150812(arg1<->arg2) oli: 		subroutine deftrans(name,iv,leng,ivout,lenin,lenout,ivinl,ivoutl,linsource)
-		subroutine j_deftrans(iv,name,ivout,leng,lenin,lenout,ivinl,ivoutl,linsource,ivarg,istrans)
+		subroutine j_deftrans(iv,name,ivout,leng,lenin,lenout,ivinl,ivoutl,ivlocal,linsource,ivarg,istrans)
 
 			integer, intent(in):: iv,leng,lenin,lenout,linsource
-			integer, intent(out):: ivout,ivinl,ivoutl
+			integer, intent(out):: ivout,ivinl,ivoutl,ivlocal
 			integer,optional, intent(in):: ivarg
 			character*(*), intent(in):: name
 			logical,optional, intent(in):: istrans
@@ -1941,6 +2009,10 @@ double precision,parameter::j_inf=huge(0.d0)
 		subroutine j_debugerr(iob,io)
 
 			integer, intent(in):: iob,io
+		end subroutine !subroutine j_debugerr(iob,io)
+		subroutine j_debug(iob)
+
+			integer, intent(in):: iob
 		end subroutine !subroutine j_debugerr(iob,io)
 		
 		subroutine j_where(iob,io)
@@ -2302,8 +2374,8 @@ double precision,parameter::j_inf=huge(0.d0)
 			DOUBLE PRECISION, intent(in)::  a
 		end function !character*10 function j_chr10(a)
 
-		subroutine j_gayainit(iob)
-			integer, intent(in):: iob
+		subroutine j_gayainit(iob,io)
+			integer, intent(in):: iob,io
 		end subroutine !subroutine j_gayainit(iob)
 
 		subroutine j_gayax(nuown2,is)   !,readxl,v)
@@ -2523,11 +2595,8 @@ double precision,parameter::j_inf=huge(0.d0)
 		!getdots(i1,i2,new,list,n) : get varaible list from ... , if(new) can generate vars
 		subroutine j_getdots(i1,i2,list,n,nmax)
 			integer, intent(in)	:: i1, i2
-		
-
 			integer, intent(out):: n
 			integer, intent(in):: nmax
-			
 			integer, intent(out):: list(*)
 		end subroutine !subroutine j_getdots(i1,i2,new,list,n)
 
@@ -2563,8 +2632,8 @@ double precision,parameter::j_inf=huge(0.d0)
 			integer,intent(in)::mopt
 		end function
 
-		integer function j_nargopt(iob,mopt)
-			integer,intent(in) ::iob
+		integer function j_nargopt(iob,io,mopt)
+			integer,intent(in) ::iob,io
 			integer, intent(in)::mopt
 		end function !integer function j_nargopt(iob,mopt)
 
@@ -2740,15 +2809,15 @@ double precision,parameter::j_inf=huge(0.d0)
 		! end function !function j_putlist3(i,ivlist)
 
 		!putinput(iv,ivinl,ivoutl) : put variable into inputlist if not in the outputlist
-		subroutine j_putinput(iv,ivinl,ivoutl)
+		subroutine j_putinput(iv,ivinl,ivoutl,ivarg)
 
 
-			integer, intent(in):: iv,ivinl,ivoutl
+			integer, intent(in):: iv,ivinl,ivoutl,ivarg
 		end subroutine !subroutine j_putinput(iv,ivinl,ivoutl)
 
 		!putoutput(iv,ivinl,ivoutl) : put varaible in the outputlist, ignore $-varaibles
-		subroutine j_putoutput(iv,ivinl,ivoutl)
-			integer, intent(in):: iv,ivinl,ivoutl
+		subroutine j_putoutput(iv,ivinl,ivoutl,ivarg)
+			integer, intent(in):: iv,ivinl,ivoutl,ivarg
 		end subroutine !subroutine j_putoutput(iv,ivinl,ivoutl)
 
 		!xt(ivmat,ivkeep,iobs) : get all keep-variables for observation iobs for data matrix ivmat
@@ -2874,6 +2943,9 @@ double precision,parameter::j_inf=huge(0.d0)
 			integer,intent(in),optional :: nul0t !at what value of nul(0) returns
 		end subroutine !subroutine j_getinput(prompt,inprint,nul0t)
 		
+		subroutine j_sit()
+		
+		endsubroutine
 	
 
 !20150812(arg1<->arg2) oli: 		!defconst(varname,ivin,text) compute the numeric value of a text string
@@ -3114,7 +3186,7 @@ double precision,parameter::j_inf=huge(0.d0)
 		subroutine jlp_getcol(icol)
 			integer,intent(in)::icol
 		end subroutine
-		
+	
 		subroutine jlp_subcol(ic1,ic2,icr)   !!!!
 			integer,intent(in)::ic1,ic2,icr
 		end subroutine
