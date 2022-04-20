@@ -4,19 +4,7 @@
 ! Copyright (C) 2022 Juha Lappi and Natural Resources Institute Finland (Luke)
 ! Author  Juha Lappi
 !
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU Affero General Public License as
-! published by the Free Software Foundation, either version 3 of the
-! License, or (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU Affero General Public License for more details.
-!
-! You should have received a copy of the GNU Affero General Public License
-! along with this program.  If not, see <https://www.gnu.org/licenses/>.
-!
+! See LICENSE file
 !-----------------------------------------------------------------------
 !
 ! j_.f90	Main program (technically a subroutine), initialization and core functions
@@ -140,6 +128,8 @@ subroutine j_jinit0(jparf)
 	!	if(present(jparf))then
 			call j_jinit(jparf)
 			jpar=len_trim(jparf).gt.0
+			
+		!	write(6,*)len_trim(jparf),jparf
 		!else
 		!	call j_jinit()
 		
@@ -497,10 +487,12 @@ subroutine j_jinit(jparf)
 	! %constant   if it is too smaal it is increased automatically
 	lename_=12
 	icontrol=0
+!	write(6,*)'<3663',jparf,len_trim(jparf)
 	goto 567
 77		write(6,*)'*j* error opening jpar-file ',jparf
 		j_err = .true.
 		return
+		
 567		lep=len_trim(jparf)
 	if(lep.gt.0)then
 		inquire(file=jparf(1:lep),exist=jpar)
@@ -511,10 +503,11 @@ subroutine j_jinit(jparf)
 		endif
 
 	else
-		jparf='j.par'
+		
 		lep=5
 		inquire(file='j.par',exist=jpar)
-
+		if(jpar)jparf='j.par'
+!	write(6,*)'<333',jpar
 	endif
 	j_mxnamedv=5000
 	if(jpar)then
@@ -846,7 +839,7 @@ subroutine j_jinit(jparf)
 	write(6,*)'using default value 2000'
 	close(1)
 
-	j_mxnamedv=2000
+!	j_mxnamedv=2000
 
 	goto 17
 
@@ -3461,7 +3454,7 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 
 	subroutine do(iob,io)
 		integer, dimension(:), pointer :: arg  !narg=4
-Section 
+!Section 
 
 	!addres where to jump if no iterations ,index variable,iv-low,iv-up,iv-step,
 	!current,up,step
@@ -10762,6 +10755,29 @@ character*40 filename
 
 
 	subroutine values(iob,io)  !doub
+	! Section values values() extracts values of class variables
+	! Extracting values of class variables: values( ).
+	! endheader
+	! Option
+	! Output&1&VECTOR& the vector getting differen values
+	! arg&1&REALV& variables whose values obtained
+	! data&1&DATA& The data set.
+! endoption
+
+! values() all different values of a variable in one or several datasets into a vector.
+! Output:
+! a columns vector getting different values
+! Argument:
+! variable a data set variable (either stored in the data matrix or generated with the
+! associated transformations).
+! Option:
+! data gives the data sets searched
+! Note 1. The values found will be sorted in an increasing order.
+! Note 2. After getting the values into a vector, the number of different values can be obtained
+! using nrows() function.
+! ***Later there will be different ways to utilize the obtained values in connection of data sets.
+! Note 3. The values() function can be utilized e.g. in generating domains for all different
+! owners or regions found in data.
 
 		double precision,dimension(:), allocatable::value9
 		integer,dimension(:),allocatable::iperm  !quick sort

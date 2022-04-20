@@ -4,19 +4,7 @@
 ! Copyright (C) 2022 Juha Lappi and Natural Resources Institute Finland (Luke)
 ! Author  Juha Lappi
 !
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU Affero General Public License as
-! published by the Free Software Foundation, either version 3 of the
-! License, or (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU Affero General Public License for more details.
-!
-! You should have received a copy of the GNU Affero General Public License
-! along with this program.  If not, see <https://www.gnu.org/licenses/>.
-!
+! See LICENSE file
 !-----------------------------------------------------------------------
 !
 ! j_.f90	Main program (technically a subroutine), initialization and core functions
@@ -195,6 +183,8 @@ subroutine j_jinit0(jparf)
 	!	if(present(jparf))then
 			call j_jinit(jparf)
 			jpar=len_trim(jparf).gt.0
+	
+		!	write(6,*)len_trim(jparf),jparf
 		!else
 		!	call j_jinit()
 	
@@ -681,10 +671,12 @@ subroutine j_jinit(jparf)
 	! %constant   if it is too smaal it is increased automatically
 	lename_=12
 	icontrol=0
+!	write(6,*)'<3663',jparf,len_trim(jparf)
 	goto 567
 77		write(6,*)'*j* error opening jpar-file ',jparf
 		j_err = .true.
 		return
+	
 567		lep=len_trim(jparf)
 	if(lep.gt.0)then
 		inquire(file=jparf(1:lep),exist=jpar)
@@ -695,10 +687,11 @@ subroutine j_jinit(jparf)
 		endif
  
 	else
-		jparf='j.par'
+	
 		lep=5
 		inquire(file='j.par',exist=jpar)
- 
+		if(jpar)jparf='j.par'
+!	write(6,*)'<333',jpar
 	endif
 	j_mxnamedv=5000
 	if(jpar)then
@@ -1030,7 +1023,7 @@ subroutine j_jinit(jparf)
 	write(6,*)'using default value 2000'
 	close(1)
  
-	j_mxnamedv=2000
+!	j_mxnamedv=2000
  
 	goto 17
  
@@ -3575,6 +3568,12 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 	use jmod, only: j_err
 	use jmod, only: j_o
 	use jmod, only: j_v
+	! Section putlist putlist()
+	! Usage://
+	! putlist(LIST,OBJ)//
+	! put OBJ into LIST
+	! endsection
+	
 		integer, dimension(:), pointer :: arg !arguments of the function
 		integer,dimension(:),allocatable::temp
 		call j_startfunction(iob,io,0,.false.,narg,arg,ivout)
@@ -3829,6 +3828,7 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 	use jmod, only: j_ipreal
 	use jmod, only: j_del
 		integer, dimension(:), pointer :: arg  !narg=4
+!Section
  
 	!addres where to jump if no iterations ,index variable,iv-low,iv-up,iv-step,
 	!current,up,step
@@ -3978,6 +3978,27 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 	use jmod, only: j_ipreal
 	use jmod, only: j_del
 	use jmod, only: j_v
+	! Section which Selecting a value based on conditions. Usage://
+	
+	! output=which(condition1,value1,...,conditionn,valuen) //
+	! or//
+	! output=which(condition1,value1,...,conditionn,valuen,valuedefault)
+! Where conditionx is a REAL value, nonzero	value indicating TRUE. Output will get first value for which
+ ! the condition is TRUE. When the number of arguments is not even, the the last value
+ ! is the default value.
+ ! endheader
+ ! Ex whichex Example of which()
+ ! c=9
+ ! which(a.eg.3.or.c.gt.8,5,a.eq.7,55);
+ ! a=7
+ ! which(a.eg.3.or.c.gt.8,5,a.eq.7,55);
+ ! a=5
+ ! which(a.eg.3.or.c.gt.8,5,a.eq.7,55);
+ ! which(a.eg.3.or.c.gt.8,5,a.eq.7,55,108);
+ ! endex
+ ! endsection
+	
+	
  
 		narg=j_o(iob)%i(io+1)
 		imod=mod(narg,2)
@@ -5465,6 +5486,12 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 	use jmod, only: j_defmatrix
 	use jmod, only: j_matreg
 	use jmod, only: j_ivinf
+	! Section minloc minloc() : locations of the minimum values in columns
+	! minloc(MATRIX) generates a row vector containing the locations of the  minimum
+	! values in each column. minloc(VECTOR) is the REAL scalar telling
+	! the location of the minimum value. Thus the VECTOR can also be a row vector.
+	! endsection
+	
 		double precision::minva
 		integer loco(1)
 		narg=j_o(iob)%i(io+1)
@@ -5528,6 +5555,13 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 	use jmod, only: j_defmatrix
 	use jmod, only: j_matreg
 	use jmod, only: j_ivinf
+	! Section maxloc maxloc() : locations of the minimum values in columns
+	! maxloc(MATRIX) generates a row vector containing the locations of the  minimum
+	! values in each column. maxloc(VECTOR) is the REAL scalar telling
+	! the location of the maxim value whether VECTOR is a row vector or column vector.
+	! endsection
+	
+	
 		double precision::maxva
 		integer loco(1)
 		narg=j_o(iob)%i(io+1)
@@ -5585,6 +5619,15 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 	use jmod, only: j_defmatrix
 	use jmod, only: j_matreg
 	use jmod, only: j_0
+	! Section cumsum cumsum(): cumulative sums of matrix columns
+	! cumsum(MATRIX) generates a MATRIX with the same dimesnions as the argument,
+	! and puts the cumulative sums of the columsn into the output matrix.
+	! endheader
+	! Note If the argument is vector, the cumsum makes a vector having the same
+	! form as the argument.
+	! endnote
+	! endheader
+	
 		double precision::cumsu
 		logical::inverse
 		narg=j_o(iob)%i(io+1)
@@ -7379,6 +7422,39 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 	use jmod, only: j_matreg
 	use jmod, only: j_0
 	use jmod, only: j_1
+	
+	! Section matrixstat Statistical functions for matrices
+	! Functions mean(), sd(), var(), sum(), min() and max()
+	! can be used used to compute stastics from a matrix. Let mean() here present
+	! any of thes functions. The following rules apply:
+	! \begin{itemize}
+	! [\textbf{J}\.] mean(VECTOR) computes the mean of the vector, output is REAL
+	! [\textbf{J}\.] mean(MATRIX) computes the mean of the each column. Result is row vector.
+	! [\textbf{J}\.] mean(VECTOR,weight->wvector) computes the
+! weigted mean of the vector,weights being in vector wvector.
+! [\textbf{J}\.] mean(MATRIX,weight->wvector) computes the
+! weighted mean of each column, weights being in vector wvector, result is row vector.
+	
+	! \end{itemize}
+	! endsection
+	
+	! Section mean mean(): means or weighted means of matrix columns
+	! See section matrixstat for details
+	! endsection
+	
+	! Section sd sd(): sd's or weighted sd's of matrix columns
+	! See section matrixstat for details
+	! endsection
+	
+	! Section var var(): Sample variances or weighted variances of matrix columns
+	! See section matrixstat for details
+	! endsection
+	
+	! Section sum sum(): sums or weighted sums of matrix columns
+	! See section matrixstat for details
+	! endsection
+	
+	
 		integer, dimension(:), pointer :: arg !arguments of the function
 		integer, dimension(:), pointer :: rows !arguments of the function
 		integer, dimension(:), pointer :: cols !arguments of the function
@@ -9155,6 +9231,14 @@ if(j_err)return
 	use jmod, only: j_v
 	use jmod, only: j_interplane
 	!note: use lines are generated by j_precompiler
+	! Section plane plane() interpolation from a plane
+	! Usage://
+	! plane(x1,x2,x3,y1,y2,y3,z1,z2,z3,x,y]//
+! The function computes the equation of plane going through the three points (x1,y1,z1), etc
+! and computes the value of the z-coordinate in point (x,y). The three points defining the plane
+! cannot be on single line.
+! endsection
+	
  
 		integer, dimension(:), pointer :: arg !arguments of the function
  
@@ -9188,6 +9272,34 @@ if(j_err)return
 	use jmod, only: j_o
 	use jmod, only: j_v
 	use jmod, only: j_1
+	! Section logistic logistic(): value of the logistic function
+	! Returns the value of the logistic function 1/(1+exp(-x)). This can in principle computed by the
+! transformation, but the transformation will produce an error condition when the argument -x
+! of the exp-function is large. Because the logistic function is symmetric, these cases are
+! computed as 1-1/(1+exp(x)). Because the logistic function can be needed in the nonlinear
+! regression, also the derivatives are implemented.  Note, to utilse derivatives
+! the function needs to be in a TRANS object.
+! Eg when f=logistic(a*(x-x0)), then
+! the derivatives can be obtained with respect to the parameters a and x0 by
+! endheader
+! Ex logisticex Example of logistic function
+! tr=trans()
+! der(a,x0)
+! f=logistic(a*(x-x0));
+! /
+! x,x0,a=10,5,0.1
+! d[a],d[x],tr(d[x0]);
+! endex
+! Note In the previous example tr(d[x0] ahs the effect that TRANS tr is first
+! called, which makes that also d[a] and d[x] have been computed. Remember that
+! the parse tree is computed from right to left.
+! endnote
+! endsection
+ 
+ 
+ 
+	
+	
 		double precision::arg
 	!note: use lines are generated by j_precompiler
  
@@ -9229,6 +9341,18 @@ if(j_err)return
 	use jmod, only: j_v
 	use jmod, only: j_bilin
 	!note: use lines are generated by j_precompiler
+	
+	! Section bilin bilin(): bilinear interpolation
+	! Usage://
+	! bilin(x1,x2,y1,y2,z1,z2,z3,z4,x,y]//
+! z1 is the value of function at point (x1,y1), z2 is the value at point (x1,y2), z3 is the value at
+! (x2,y1) and z4 is the value at (x2,y2): the function is using bilinear interpolation to compute
+! the value of the z-coordinate in point (x,y). The point (x,y) needs not be within the square
+! defined by the corner points, but it is good if it is. See Press et al. ? (or Google) for the principle
+! of bilinear interpolation
+! endsection
+	
+	
  
 		integer, dimension(:), pointer :: arg !arguments of the function
  
@@ -11372,6 +11496,28 @@ if(j_err)return
 	use jmod, only: j_ivresult
 	use jmod, only: j_defmatrix
 	use jmod, only: j_matreg
+! Section sort sort() sorts a matrix
+! Usage://
+! sort(a,key->(key1[,key2]))//
+! Makes a new matrix obtained by sorting all matrix columns of MATRIX a according to one or two columns.
+! Absolute value of key1 and the value of key2 must be legal column numbers.
+! If key1 is
+! positive then the columns are sorted in ascending order,
+ ! if key1 is negative then the columns
+! are sorted in descending order. If two keys are given, then first key dominates.
+! endheader
+! Note It is currently
+! assumed that if there are two keys then the values in first key column have integer values.
+! endnote
+! Note  If key2 is not given and key1 is positive, then the syntax is: sort(a,key->key1).
+! endnote
+! Note If there is no output, then the argument matrix is sorted in place.
+! endnote
+! Note The argument can be the data matrix of a data object. The data object will remain a
+! valid data object.
+! endnote
+! endsection
+	
  
 		integer, dimension(:), allocatable::p
 		real ,dimension(:), allocatable::xi
@@ -11506,7 +11652,16 @@ if(j_err)return
 	use jmod, only: j_filename
 	use jmod, only: j_object
 	use jmod, only: j_asschar2
-!	character*40 filename
+!
+! Section thisfile thisfile() returns the name of the current include file
+! The name of the current include file is returned as a character variable by:
+! out=thisfile()
+! This is useful when defining shortcuts for commands that include sections from an include file.
+! Using this function the shortcuts work even if the name of the include file is changed. See file
+! jexamples.inc for an application
+! endsection
+ 
+character*40 filename
 		narg=j_o(iob)%i(io+1)
 		ivout=j_o(iob)%i(io+narg+2)
  
@@ -11538,6 +11693,11 @@ if(j_err)return
 	use jmod, only: j_ipchar
 	use jmod, only: j_err
 	use jmod, only: j_filesize
+	! Section filestat filestat() gives information of a file
+	! Function filestat(filename) prints the size of the
+	! file in bytes (if available) and the time the file was last accessed
+	! endsection
+	
 	!ite(6,*)j_o(iob)%i(io:io+4)
 		ifile=j_o(iob)%i(io+2)
 		if(j_otype(ifile).ne.j_ipchar)then
@@ -11598,6 +11758,17 @@ if(j_err)return
 	use jmod, only: j_ipbitmatrix
 	use jmod, only: j_printname
 	use jmod, only: j_err
+! Section nrows nrows() can be used as:
+! \begin{itemize}
+! \item[\textbf{J}\.] nrows(MATRIX)
+! \item[\textbf{J}\.] nrows(TEXT)
+! \item[\textbf{J}\.] nrows(BITMATRIX)
+! \end{itemize}
+! endheader
+! Note If the argument has another object type, and error occurs
+! endnote
+! endsection
+ 
 !	io=io_
 		narg=j_o(iob)%i(io+1)
 !	io_=io_+narg+3
@@ -11628,6 +11799,15 @@ if(j_err)return
 	use jmod, only: j_ipbitmatrix
 	use jmod, only: j_printname
 	use jmod, only: j_err
+	! Section ncols ncols() can be used as:
+! \begin{itemize}
+! \item[\textbf{J}\.] nrows(MATRIX)
+! \item[\textbf{J}\.] nrows(BITMATRIX)
+! \end{itemize}
+! endheader
+! Note If the argument has another object type, and error occurs
+! endnote
+! endsection
 !	io=io_
 		narg=j_o(iob)%i(io+1)
 !	io_=io_+narg+3
@@ -11663,6 +11843,23 @@ if(j_err)return
 	use jmod, only: j_ipregr
 	use jmod, only: j_printname
 	use jmod, only: j_err
+	
+	! Section len len() lengths of different lists or vectors
+! len(]arg[) gives the following lenghts for different argument types
+	! \begin{itemize)
+	! \item[\textbf{J}\.] ]arg[ is MATRIX => len=the size of the matrix, i.e.
+	! nrows(]arg[)*ncols(]arg[)
+	
+	! \item[\textbf{J}\.] ]arg[ is TEXT => len=the number of chracter in TEXT object
+	
+		! \item[\textbf{J}\.] ]arg[ is LIST => len=the number of elements in LIST
+		! \item[\textbf{J}\.] ]arg[ is ILIST => len=the number of elements in ILIST
+	! \end{itemize}
+	! If ]arg[ does not have a legal type for len(), then len(]arg[)=-1 if len() has
+	! option any->, otherwise an error is produced.
+	! endsection
+	
+	
 		logical any
 		any=j_linkoption(iob,io,j_many).ge.0
 		if(any)call j_clearoption(iob,io)  ! subroutine
@@ -11705,6 +11902,24 @@ if(j_err)return
 	use jmod, only: j_v
 	use jmod, only: j_defmatrix
 	use jmod, only: j_matreg
+	
+!Section envelope envelope() computes the convex hull of point
+!endheader
+!Option
+!Output& 1&MATRIX & (nvertex+1, 2) matrix of the coordinates of the convex hull, where nvertex is the number of
+!verteces. The last point is the same as the first point
+! arg &1&MATRIX & (n,2) matrix of point coordinates
+!nobs&-1|1& REAL& gives the number of points if not all
+! points of the input matrix are used
+! endoption
+! Note The transpose of the output can be directly used in frawline() function
+!to draw the envelope
+!endnote
+!Note The function is using a subroutine made by Alan Miller and found in Netlib
+!endnote
+!endsection
+	
+	
  
 	!  Find the vertices (in clockwise order) of a polygon enclosing
 	!  the points (x(i), y(i), i=1, ..., n.
@@ -11965,6 +12180,29 @@ if(j_err)return
 	use jmod, only: j_defmatrix
 	use jmod, only: j_matreg
 	use jmod, only: j_depilog
+	! Section values values() extracts values of class variables
+	! Extracting values of class variables: values( ).
+	! endheader
+	! Option
+	! Output&1&VECTOR& the vector getting differen values
+	! arg&1&REALV& variables whose values obtained
+	! data&1&DATA& The data set.
+! endoption
+ 
+! values() all different values of a variable in one or several datasets into a vector.
+! Output:
+! a columns vector getting different values
+! Argument:
+! variable a data set variable (either stored in the data matrix or generated with the
+! associated transformations).
+! Option:
+! data gives the data sets searched
+! Note 1. The values found will be sorted in an increasing order.
+! Note 2. After getting the values into a vector, the number of different values can be obtained
+! using nrows() function.
+! ***Later there will be different ways to utilize the obtained values in connection of data sets.
+! Note 3. The values() function can be utilized e.g. in generating domains for all different
+! owners or regions found in data.
  
 		double precision,dimension(:), allocatable::value9
 		integer,dimension(:),allocatable::iperm  !quick sort
@@ -12072,6 +12310,18 @@ if(j_err)return
 	use jmod, only: j_matreg
 	use jmod, only: j_objecttypes
 	use jmod, only: j_printname
+	! Section solve solve() solves a linear equation A*x=b
+	! A linear matrix eqaution A*x=b can be solved for x with code//
+	! x=solve(A,b)
+	! endheader
+	! Note x=solve(A,b) is faster and more accurate than x=inverse(A)*b
+	! endnote
+	! Note solve works also if A and b are scalars. This is useful when
+	! working with linear systems which start to grow from scalars.
+	! endnote
+	! endsection
+	
+	
 		integer,dimension(:), pointer::arg=>null()
 		double precision ,dimension(:,:), allocatable::mat,rhs_
 		integer ,dimension(:), allocatable::ipiv
@@ -13498,6 +13748,11 @@ if(j_err)return
 	use jmod, only: j_ivresult
 	use jmod, only: j_del
 	use jmod, only: j_v
+	! Section random random(): generate random scalrs or matrices defined with density()
+	! usage random(]dist[) where ]dist[ is the density defined in density().
+	! See density() for examples.
+	! endsection
+	
 		logical ::diskr
 				external ranf
 					integer, dimension(:), pointer :: arg
@@ -13684,6 +13939,11 @@ if(j_err)return
 	use jmod, only: j_del
 	use jmod, only: j_v
 	use jmod, only: j_err
+! Section ranpoi ranpoi(): random Poisson variables
+! ranpoi(]myy[//
+! returns a random Poisson variable with expected value and variance ]myy[
+! endsection
+ 
  
 !	io=io_
 		narg=j_o(iob)%i(io+1)
@@ -13879,6 +14139,22 @@ if(j_err)return
 	subroutine printresult(iob,io,level)  !
 	use jmod, only: j_v
 	use jmod, only: j_ivprintresult
+! Section printresult printresult() and printresult2() excute ; and ;; -printing
+! The J interpreter translates ';'  at the end of the
+! line to a call to printresult() function and ';;' to a call to printresult2()
+ ! The output of a function is printed by writing ';' or ';;' at the end of the line. The excution of implied print()
+ ! is dependent on the value of ]Printoutput[. If ]printoutput[ =0,
+ ! then the output is not printed, If ]printoutput[ =1, then ';' is
+ ! causing printing, if ]Printoutput[ =2 then only ';;'-outputs are
+ ! printed, and if ]Printoutput[ =3, the bot ';' and ';;' outputs are printed.
+ !endheader
+! Note printresult() and printresult2() are  simple functions
+!which just test the value of
+! ]Printoutput[ and then call the  printing subroutine, if needed.
+! endnote
+!endsection
+	
+	
 		ilevel=j_v(j_ivprintresult)
 		if(ilevel.eq.level.or.ilevel.eq.3)call print(iob,io)
 		return
@@ -15961,7 +16237,11 @@ if(j_err)return
 	use jmod, only: j_ipdata
 	use jmod, only: j_printname
 	use jmod, only: j_err
- 
+	! Section nobs nobs(): number of observations in DATA or REGR
+	! nobs(DATA) returns the number of rows in the data matrix of DATA//
+	! nobs(REGR) returns the number of observations used to compute
+	! the regression with regr().
+	! endsection
 !	io=io_
 		narg=j_o(iob)%i(io+1)
 !	io_=io_+narg+3
@@ -15971,12 +16251,14 @@ if(j_err)return
 		if(j_otype(iv).eq.j_ipregr)then
 			j_v(iout)=j_o(iv)%i(  j_o(iv)%i(0)+1)
 		elseif(j_otype(iv).ne.j_ipdata)then !if(j_otype(iv).eq.j_ipregr)then
-			call j_printname('**argument of nobs not a data set:',iv,' ')
+			call j_printname('**argument of nobs not a DATA or REGR:',iv,' ')
 			j_err=.true.
 			return
 		else !if(j_otype(iv).eq.j_ipregr)then
 			ivmat=j_o(iv)%i(1)
 			j_v(iout)=j_o(ivmat)%i(1)
+	
+ 
 		end if !if(j_otype(iv).eq.j_ipregr)then
 		return
 	end subroutine nobs !subroutine nobs(iob,io)
@@ -16006,6 +16288,34 @@ if(j_err)return
 	use jmod, only: j_ipreal
 	use jmod, only: j_printname
 	use jmod, only: j_clearoption
+	! Section linkdata linkdata() links hierarchical data sets
+	! linkdata(data->,subdata->,nobsw->[,obsw->])//
+! links hierarchical data sets.
+! endheader
+! Option
+! data&1&DATA& the upper level data set object
+! subdata &1&DATA& the lower data set object
+! nobsw&1&REAL & the name of variable telling the number of lower level observations for each
+! obsw & 0|1 &REALV &variable which will automatically get the number of lower level observation within
+! each upper level observation. If not given, then this variable will be
+! the Obs-variable of the upper level data.
+! endoption
+! Note  In most cases links between data sets can be either made using sub-options of data()
+! function or linkdata() function. If there is need to duplicate lower level observations, then
+! this can be currently made only in data() function. Also when the data for both the upper
+! level and lower level data are read from the same file, then data() function must be used.
+! endnote
+! Note  When using linked data in other functions, the values of the upper level variables are
+! automatically obtained when accessing lower level observations. Which is the observational
+! unit in each function is determined which data set is given in data-> option or defined using
+! Data list.
+! endnote
+! Note In the current version of J it is no more necassary to use linked data sets in
+! jlp() function, as the treatment unit index in data containing both
+! stand and schdedule data can be given in unit-> option
+! endnote
+! endsection
+ 
 		call j_checkoutput(iob,io)
 		if(j_err)return
 		if(j_nargopt(iob,io,j_mdata).le.0)then
@@ -16103,6 +16413,12 @@ if(j_err)return
 	use jmod, only: j_err
 	use jmod, only: j_ipmatrix
 	use jmod, only: j_clearoption
+	
+	! Section index index(): index of a variable in a data object
+	! To be documented later
+	! endsection
+	
+	
 		double precision::valu
 !	io=io_
 		narg=j_o(iob)%i(io+1)
@@ -16173,6 +16489,33 @@ if(j_err)return
 	use jmod, only: j_defchar
 	use jmod, only: j_asschar2
 	use jmod, only: j_clearoption
+	
+ 
+	! Section askc askc() asks a value for a character variable
+	! Usage ://
+		! askc(chvar1[,default->][,q->][,exit->])
+! Asks values for character variables when reading commands from an include file.
+!endheader
+! Option
+ 
+! Args&0-4&REAL | ILIST&row and column range as explained below.
+ 
+! Args & 0|1 &CHAR & character variable (need not exist before)
+ 
+! default&0|1&CHAR & default character stings
+! q & 0|1 &CHAR &text used in asking
+! exit& -1|0& & if the character constant or variable given in this option is read, then the control
+! return to command level similarly as if an error would occur.
+! endoption
+! Note
+! Response with carriage return indicates that the variable gets the default value. If there is no
+! default-> option, then the variable will be unchanged (i.e. it may remain also as another
+! object type than character variable).
+! endnote
+! Note: If there are no arguments, then the value is asked for the output variable, otherwise for
+! the arguments.
+! endnote
+! endsection
  
 		character*40 line_
 		character*40 def
@@ -16287,6 +16630,35 @@ if(j_err)return
 	use jmod, only: j_tempchar2
 	use jmod, only: j_lentrim
 	use jmod, only: j_tempv
+	
+	! Section ask ask() asks a value for REAL
+! ask([var][,default->][,q->][,exit->])//
+! Ask values for a variable while reading commands from an include file.//
+! Argument://
+! var 0 or one real variable (need not exist before)
+! Options:
+! default default values for the asked variables
+! q text used in asking
+! exit if the value given in this option is read, then the control returns to command level
+! similarly as if an error would occur. If there is no value given in this option, then
+! the exit takes place if the text given as answer is not a number.
+!endheader
+! Note If there are no arguments, then the value is asked for the output variable, otherwise for
+! the argument. The value is interpreted, so it can be defined using transformations.
+! Response with carriage return indicates that the variables get the default values. If there is no
+! default-> option, then the previous value of the variable is maintained (which is also printed
+! as the default-> value in asking)
+! endnote
+ 
+! Ex askex Examples for ask()
+! a=ask(default->8)
+! ask(a,default->8)
+! print(ask()+ask()) ! ask without argument is a numeric function
+! ask(v,q->'Give v>')
+! endex
+! endsection
+	
+	
 		integer,dimension(:),pointer::arg,argq
 		logical::yes
 !	character*40 line_
@@ -16473,6 +16845,14 @@ if(j_err)return
 	use jmod, only: j_err
 	use jmod, only: j_printname
 	use jmod, only: j_closeunit
+	! Section close close() closes a file
+	! close(file) closes an open file where file is either a character constant
+	! or character variable associated with a file.
+	! endheader
+	! Note No open(9 function is needed. An file is opened when it is first time in write().
+	! if the file exists, it is asked whether the old file is dleted.
+	! endnote
+	! endsection
 		logical ope
 !	io=io_
 		narg=j_o(iob)%i(io+1)
@@ -16573,6 +16953,43 @@ if(j_err)return
 	use jmod, only: j_ninc
 	use jmod, only: j_closeunit
 	use jmod, only: j_filename
+	
+!Section read read() read from a file
+! read(file,format[,obj1,…,objn][,eof->var] [,wait->])//
+! Reads real variables or matrices from a file. If there are no objects
+! to be read, then a record is
+! by-passed.//
+! Arguments:
+! file the file name as a character variable or a character constant//
+! format//
+! b' unformatted (binary) data //
+! 'bn' unformatted, but for each record there is integer for the size of the record. Does
+! not work when reading matrices.
+! 'bis' binary data consisting of bytes, each value is converted to real value (the only
+! numeric data type in J). This works only when reading matrices.//
+! '(….)' a Fortran format. Does not work when reading matrices.
+! $ the * format of Fortran//
+! obj1,…,objn
+! J objects//
+! Options://
+! eof Defines the variable which indicates the end of file condition of the file. If the end
+! of the file is not reached the variable gets the value 0, and when the end of file is
+! reached then the variable gets value 1 and the file is closed without extra notice.
+ 
+! When eof-> option is not present and the file ends then an error
+! condition occurs and the file is closed.//
+! wait J is waiting until the file can be opened. Useful in client-server applications. See
+! chapter J as a server.
+!endheader
+!Note Use ask() or askc() to read values from the terminal when reading lines from an
+! include file.
+! endnote
+! Note When reading matrices, their shapes need to
+! be defined earlier with matrix()
+! hfunction.
+! endnote
+! endsection
+	
  
 		integer,dimension(:),pointer :: eof  !eofvariable
 		integer :: neof
@@ -16756,6 +17173,125 @@ if(j_err)return
 	use jmod, only: j_vector
 	use jmod, only: j_chr8b
 	use jmod, only: j_lentrim
+!Section write write()
+	! write(file,format,val1,…,valn[,tab->][,rows->])! case[1/6]
+! Writes real values to a file or to the console. If val1 is a matrix then this matrix (or usually
+! vector) is written or at most as many values as given in the values-> option.
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! format
+! $ indicates the '*' format of Fortran, works only for numeric values.
+! A character expression, with the following possibilities:
+! A format starting with 'b' will indicate binary file. Now 'b' indicates ordinary
+! unformatted write, later there will be other binary formats
+! A Fortran format statement, e.g. (~the values were ~,4f6.0), with this
+! format pure text can be written by having no object to write (e.g.
+! write('out.txt','(~kukuu~)')).
+! For these formats, other arguments are supposed to be real variables or numeric
+! expressions or there is a matrix argument. If they are not, then just the real value
+! which is anyhow associated with each J object is printed (usually it will be zero).
+! If the val1 argument is a matrix, then all values are printed.
+! val1,…,valn
+! real values
+! Options:
+! tab if format is a Fortran format then, tab-> option indicates that sequences of
+! spaces are replaced by tab character so that written text can be easily converted
+! to Ms Word tables. If there are no decimals after the decimal point also the
+! decimal point is dropped.
+! rows If val1 is a matrix or a vector and rows-> has one argument then at most as
+! many values are written as given in this option, if there are two arguments then
+! the option gives the range of written rows in the form rows->(row1,-row2). If the
+! upper limit is greater than the number of rows, no error is produced, all available
+! rows are just written.
+! write(file,'t',t1,val1,t2,val2,…,tn,valn[,tab->]) ! case[2/6]
+! Tabulation format. positive tab position values indicate that the value is written starting from
+! that position, negative tab positions indicate that the value is written up to that position. The
+! values can be either numeric expressions or character variables or character constants. Tab
+! positions can be in any order.
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! 't' tabulation format
+! t1,val1,t2,val2,…,tn,valn
+! KUVAUS
+! Options:
+! tab option indicates that sequences of spaces are replaced by tab character so that
+! writ-ten text can be easily converted to Ms Word tables.
+!endheader
+! note Variable names from a variable list can be written using @-construction. E.g. if xl is a
+! variable list, then both the name and value of element i can be written:
+! write($,'w',1,'@xl(i)=',8,@xl(i))
+! write(file,'w',w1,val1,w2,val2,…,wn,valn[,tab->]) ! case[3/6]
+! Width format: positive w-value indicates that the value is right-justified into field of that length,
+! negative w-values indicate that the value is left-justified. The value can be either numeric or
+! character expression.
+! In both 't' and 'w' format with integer w-value, numeric values are converted into character
+! expression with 8 characters. This special formatting drops unnecessary decimal points, leading
+! and ending zeros, and will give as much precision as can be obtained using 8 characters. If less
+! than 8 characters are needed, then one can use shorter fields than 8 characters.
+! A decimal w-value works similarly as f-format of Fortran, thus w-value 8.2 is equivalent to f8.2.
+! For technical reasons, the format with zero decimals but with decimal point included must be
+! given with w-value having decimal part .01, e.g. w value 5.01 is equivalent to f5.0. Note that
+! writing with zero decimal using e.g. 5,nint(value) will drop also the decimal point
+! (corresponding to I format of Fortran).
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! 'w' width format
+! w1,val1,w2,val2,…,wn,valn
+! KUVAUS
+! Options:
+! tab option indicates that sequences of spaces are replaced by tab character so that
+! writ-ten text can be easily converted to Ms Word tables.
+! note. Variable names from a variable list can be written using @-construction. E.g. if xl is a
+! variable list, then both the name and value of element i can be written:
+! write($,'w',8,'@xl(i)=',7,@xl(i))
+! When first write to a file is done, then the file will be opened. If the file already exists then J
+! asks if the old file can be deleted. Note that before answering you can rename the file. In that
+! case the old file will be saved even if you answer ‘y’.
+! write(file,text_object) ! case[4/6]
+! A text object can be written into a file using this form of write() function.
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! text_object
+! J text object
+! write(file,character) ! case[5/6]
+! When second argument is a character constant or character variable referring to a character
+! constant, then it is written to the file (or to the screen is file is $). Note character constant can
+! contain “”-sequences, and after J3.0 these can contain also format specifier.
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! character a character constant or a variable referring to character constant
+ 
+! note: You can put character information into the format (to put apostrophe within character
+! constant use (~),see Character constants and variables).
+! Examples:
+! write(‘out.txt’,’sin(“[f4.4]a” is “[f5.3]sin(a)”, believe or not’)
+! dir='d:\j\'
+! write('"dir"example.out','(~the values were ~,4f4.0)',@values)
+! Writing into $Buffer ! case[6/6]
+! If variable $Buffer is used as the file argument, then different write() function calls can put
+! information on the same line. Writing into $Buffer has the following logic. Other parts of J
+! consider $Buffer as real variable. The output buffer can be initialized by giving value zero to
+! $Buffer (i.e. giving command $Buffer=0), this is the situation initially. One can write onto
+! the buffer using $,'(...)', 't', or 'w' -formats. $ and '(... )' formats will also initialize
+! the buffer first, so only 't', and 'w' formats can be used to collect buffer in several parts.
+! After writing into the buffer, the real variable $Buffer gets the current length of the output.
+! The current output buffer can be written into file using either
+! write(file,$Buffer)
+! or $Buffer can be used similarly as character variables in writing with 'w' or 't' format, e.g.
+! write($,'t',1,$Buffer,$Buffer+2,'kukuu')
+! In the above first $Buffer indicates the current content of the buffer. In the tab value
+! $Buffer+2 indicates that the tab position is two characters past the buffer length.
+! close(file)
+! Closes an open file.
+! Argument:
+! file a character variable or constant telling the name of an open file. The file has been
+! created and opened with write(), print() or save() functio
+!endsection
  
 		logical bin,wform,bin8
 		character*60 luku
@@ -17338,6 +17874,18 @@ if(j_err)return
 	use jmod, only: j_objecttypes
 	use jmod, only: j_err
 	use jmod, only: j_namedv
+	! Section t t() gives transpose of a MATRIX or a LIST
+	! t(MATRIX) is the transpose of a MATRIX. As LIST objects can now
+	! be used in matrix computations, t(LIST) is also available.
+	! endheader
+	! Note Multiplying a matrix by the transpose of a matrix can be made by
+	! making new operation '*.
+	! endnote
+	! Note The argument matrix can also be a submatrix expression.
+	! endnote
+	! endsection
+	
+	
 		double precision,dimension(:),allocatable :: copy
  
 		narg=j_o(iob)%i(io+1)
@@ -17732,6 +18280,12 @@ if(j_err)return
 	use jmod, only: j_ipreal
 	use jmod, only: j_del
 	use jmod, only: j_v
+	! Section npv npv(): net present value
+	
+	! npv(]interest,income1,…,incomen,time1,…,timen[)//
+! Returns net present value for income sequence income1,...,incomen, occurring at times
+! time1,…,timen when the interest percentage is ]interest[.
+! endsection
  
 		double precision pv
  
@@ -17824,6 +18378,46 @@ if(j_err)return
 	use jmod, only: j_getname
 	use jmod, only: j_oname
 	use jmod, only: j_loname
+	
+! Section print print() prints objects
+! print(arg1,…,argn[,maxlines->][,data->][,row->]
+! [,file->][,func->][,debug->])//
+! Print values of variables or information about objects.//
+! Arguments:
+! arg1,…,argn
+! arguments can be any J objects or values of arithmetic or logical expressions
+! Options:
+! maxlines the maximum number of lines printed for matrices, default 100.
+! data data sets. If data-> option is given then arguments must be ordinary real
+! variables obtained from data.
+! row if a text object is printed, then the first value given in the row-> option gives the
+! first line to be printed. If a range of lines is printed, then the second argument
+! must be the negative of the last line to be printed (e.q. row->(10,-15)).Note
+! that nrows() function can be used to get the number of rows.
+! file the file name as a character variable or a character constant. Redirects the output
+! of the print() function to given file. After printing to the file, the file remains
+! open and must be explicitly closed (close(‘file’)) if it should be opened in
+! a different application.
+! form when a matrix is printed, the format for a row can be given as a Fortran format,
+! e.g. form ‘(15f6.2)’ may be useful when printing a correlation matrix.
+! debug the associated real variable part is first printed, and thereafter the tow associated
+! two integer vectors, the real vector and the double precision vector
+! func all functions available are printed
+! endheader
+! Note  For simple objects, all the object content is printed, for complicates objects only
+! summary information is printed. print(Names) will list the names, types and sizes of all
+! named J objects. The printing format is dependent on the object type.
+!endnote
+! Note print() function can be executed for the output of a J command
+ ! by writing ';' or ';;' at the end of the line. The excution of implied print()
+ ! is dependent on the value of ]Printoutput[. If ]printoutput[ =0,
+ ! then the output is not printed, If ]printoutput[ =1, then ';' is
+ ! causing printing, if ]Printoutput[ =2 then only ';;'-outputs are
+ ! printed, and if ]Printoutput[ =3, the bot ';' and ';;' outputs are printed.
+! endnote
+	
+	
+! endsection
 ! file->filename  writen to file
 !print(cgar,file->) prints teh content of file
 !print(cahrvar) print the cahr
@@ -22429,6 +23023,18 @@ iobs(1)=iobs(1)-nrejected(1)
 	use jmod, only: j_lentrim
 	use jmod, only: j_puttext
 	use jmod, only: j_inciv
+	! Section text text() creates the old TEXT object
+	! Text objects are created as a side product by many J functions. Text objects can be created
+! directly by the text() function which works in a nonstandard way. The syntax is:
+! output=text()//
+! …
+! //
+ 
+! The input paragraph ends exceptionally with '//' and not with '/'. The lines within the input
+! paragraph of text are put literally into the text object (i.e. even if there would be input
+! programming functions or structures included)
+! endsection
+ 
  
 		narg=j_o(iob)%i(io+1)
  
@@ -22498,6 +23104,10 @@ iobs(1)=iobs(1)-nrejected(1)
 	use jmod, only: j_temptxt
 	use jmod, only: j_cleanstart
 	use jmod, only: j_lentrim
+	! Section txt txt() generates the new TXT object.
+	! Works as text(), to be documented later. The new TXT object is used
+	! to implement ;incl and Gnuplot -figures.
+	! endsection
  
 		narg=j_o(iob)%i(io+1)
  
@@ -23218,7 +23828,7 @@ iobs(1)=iobs(1)-nrejected(1)
 	use jmod, only: j_ndiffer
 	use jmod, only: j_differ
 	use jmod, only: j_deflistobject
-	! Section differ Difference of LIST objects
+	! Section difference Difference of LIST objects
 	! difference() removes elements from a LIST
 	! endheader
 	! Option
@@ -23323,6 +23933,18 @@ iobs(1)=iobs(1)-nrejected(1)
 	use jmod, only: j_igetopt
 	use jmod, only: j_mrow
 	use jmod, only: j_rlinter
+	! Section interpolate interpolate
+	! Usage://
+	! interpolate(x0,x1[,x2],y0,y1[,y2],x]//
+! If arguments x2 and y2 are given then computes the value of the quadratic function at value
+! x going through the three points, otherwise computes the value of the linear function at value
+! x going through the two points.
+! endheader
+! Note. The argument x need not be within the interval of given x values (thus the function also
+! extrapolates).
+! endnote
+! endsection
+	
 		integer, dimension(:), pointer :: argx,argy !arguments of the function
 		double precision denom,c1,c2,arg
 		logical ismatrix,found
@@ -23508,6 +24130,22 @@ iobs(1)=iobs(1)-nrejected(1)
 	use jmod, only: j_getobs0
 	use jmod, only: j_iptrans
 	use jmod, only: j_clearoption
+	
+! Section getobs getobs() loads an obsevarion from  DATA
+! Getting an observation from a data set: //
+! getobs(dataset,obs[,trans->])//
+! Get the values of all variables associated with observation obs in data object dataset. First all the
+! variables stored in row obs in the data matrix are put into the corresponding real variables. If
+! a transformation set is permanently associated with the data object, these transformations are
+! executed.
+! endheader
+! Option
+! dataset&1&DATA & the DATA object
+! obs &1& REAL& row number in the data matrix of the dataset
+! trans&-1|1 & TRANS & these transformations are also executed.
+! endoption
+! endsection
+	
  
 		logical listarg
 		logical arg
@@ -24527,6 +25165,11 @@ iobs(1)=iobs(1)-nrejected(1)
 	use jmod, only: j_o
 	use jmod, only: j_v
 	use jmod, only: j_err
+	! section loggamma loggamma function: loggamma()
+	! Function gamma() produces the value of loggamma funtion for a positive argument.
+	! The function utilises gamma subroutine from
+	! library dcdflib in Netlib.
+	! endesection
  
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -24537,17 +25180,24 @@ iobs(1)=iobs(1)-nrejected(1)
 			return
  
 		endif !if(arg.lt.0)then
-		write(6,*)'loggamma given is you need it, (J.L.)'
+		write(6,*)'loggamma given if you need it, (J.L.)'
 		j_err=.true.
 		return
 	  !numerical recipes not availablegammln(v(o(iob)%i(io+2)))
 !	90 io=io+narg+3
 		return
 	end subroutine !subroutine loggamma(iob,io)
-	subroutine gamma_(iob,io)  !
+
+	subroutine gamma_(iob,io)  ! gamma(iob,io)
 	use jmod, only: j_o
 	use jmod, only: j_v
 	use jmod, only: j_err
+	! Section gamma gamma function: gamma()
+	! Function gamma() produses the value of gamma funtion for a positive argument.
+	! The function utilises gamma subroutine from
+	! library dcdflib in Netlib.
+	! endsection
+	
  
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -24562,12 +25212,28 @@ iobs(1)=iobs(1)-nrejected(1)
 !	90 io=io+narg+3
 		return
 	end subroutine !subroutine gamma_(iob,io)
+
 	subroutine negbin(iob,io)  !
 	use jmod, only: j_o
 	use jmod, only: j_v
 	use jmod, only: j_0
 	use jmod, only: j_err
 	use jmod, only: j_1
+	! Section negbin negbin():: negative binomila distribution
+! negbin(]k[,]myy[,]theta[)//
+! Gives the probability that a negative binomial random variable
+ ! has value ]k[ when the variable
+! has mean ]myy[ and variance ]myy[+]theta[*]myy[**2.
+! endheader
+! Note  negbin(k,n*p,0)=
+! bin(k,n*p).
+! endnote
+! Note Sorry for the parameter inconsistency with rannegbin().
+! endnote
+! endsection
+	
+	
+	
 		double precision gamma,arg,pk,ak,amyy,kert
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -24629,6 +25295,53 @@ iobs(1)=iobs(1)-nrejected(1)
 	use jmod, only: j_matclass
 	use jmod, only: j_printname
 	use jmod, only: j_getmatel
+!Section density density() define
+!any discrete or continues distribution for random numbers either with a function
+!or histogram generated with classify()
+!	endheader
+	!Option
+!Args&0-1&MATRIX & MATRIX generated with classify()
+!func& N|1& &codeoption defining the density. The x-varaible is $.
+!xrange&0|2& REAL& Range of x-values
+!discrete&-1|0& & Presence implies the the distribution is discrete
+!endoption
+!Note Actually the function generates a matrix having towo rows which
+!has values for the cumulative distribution function.
+!endnote
+!Note When defining the density function, the user need not care about
+!the scaling constant which makes the integral to integrate up to 1.
+!endnote
+!Ex densityex Example of distributions
+! ber=density(func->(1-p+(2*p-1)*$),xrange->(0,1),discrete->); Bernoully
+! bim=matrix(100)
+! bim=random(ber)
+! mean(bim);
+! p*(1-p);  !theoretical variance
+! var(bim);
+! pd=density(func->exp(-0.5*$*$),xrange->(-3,3))  !Normal distribution
+ 
+! ra=random(pd);
+! f=matrix(1000)
+! f=random(pd)
+! da=newdata(f,read->x)
+! stat(min->,max->)
+! cl=classify(x->x,xrange->);
+! fi=drawclass(cl)
+! fi=drawclass(cl,area->)
+ 
+ 
+! fi=draw(func->pdf(x),x->x,xrange->,append->)
+! f=matrix(1000)
+! f=rann()
+! da=newdata(f,read->x)
+! stat(min->,max->)
+! cl=classify(x->x,xrange->)
+! fi=drawclass(cl,histogram->,classes->20)
+! den=density(cl);
+! fi=drawline(den)
+! endex
+! endsection
+	
 	double precision ::xx,scale,sum,dd,xmin,xmax,yvalue
 	integer, dimension(:), pointer :: arg !arguments of the funct
 	logical ::isdisc
@@ -24724,6 +25437,13 @@ iobs(1)=iobs(1)-nrejected(1)
 	use jmod, only: j_o
 	use jmod, only: j_v
 	use jmod, only: j_err
+	! Section bin bin(): binomial probability
+	! bin(]k[,]n[,]p[)//
+! Gives the binomial probability that there will be ]k[ successes
+! in ]n[ independent trials when in a
+! single trial the probability of success is ]p[.
+! endsection
+	
 		double precision coef,p
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
