@@ -1,0 +1,84 @@
+# Gfortran makefile for release version of J3.0, result j3.0.exe
+# use this file: make -f Makefile_release
+# The compiler
+FC = gfortran
+# flags for debugging or for maximum performance, comment as necessary
+# FCFLAGS = -ggdb -O0 -pg -fcheck=all -g -fbacktrace      -pg produces gmon.out
+# FCFLAGS = -ggdb -O0 -fcheck=all -g -fbacktrace         debug version
+
+FCFLAGS = -ggdb -O0 -g -fmax-errors=6 
+
+# release version
+#FCFLAGS = -ggdb -O0 -fbounds-check  -pg -fcheck=all -g -fbacktrace 
+#FCFLAGS = -ggdb -O0 -fbounds-check  -pg -fcheck=all -g -Wall 
+# note Wall produces all kinds of warnings ,should be checked which are relevant 
+# flags forall (e.g. look for system .mod files, required in gfortran)
+# FCFLAGS += -I/usr/include
+
+# List of executables to be built within the package
+PROGRAMS = j3.0.exe
+
+# "make" builds all
+all: $(PROGRAMS)
+
+j3.0.exe : jmodules.o\
+		 	 own1mod_2.o\
+		 own2mod_2.o\
+		 own3mod_2.o\
+		 jownmod_2.o\
+		 own1_2.o\
+		 own2_2.o\
+		 own3_2.o\
+		 jutilities_2.o\
+		 fletcherd.o\
+		 jlp_2.o\
+		 matsub.o\
+		 jsysdep_gfortran_2.o\
+		 j_2.o 
+
+
+
+	$(FC) $(FCFLAGS) -o j3.0.exe \
+			jmodules.o\
+		 own1mod_2.o\
+		 own2mod_2.o\
+		 own3mod_2.o\
+		 jownmod_2.o\
+		 own1_2.o\
+		 own2_2.o\
+		 own3_2.o\
+		 jutilities_2.o\
+		 fletcherd.o\
+		 jlp_2.o\
+		 matsub.o\
+		 jsysdep_gfortran_2.o\
+		 j_2.o 
+
+
+j_ownmod_2.o : jmodules.o own1mod_2.o own2mod_2.o own3mod_2.o
+jutilities_2.o :jmodules.o jownmod_2.o
+own1mod_2.o : jmodules.o 
+own2mod_2.o : jmodules.o 
+own3mod_2.o : jmodules.o 
+own1_2.o : jmodules.o
+own2_2.o : jmodules.o
+own3_2.o : jmodules.o
+j_2.o : jmodules.o 
+
+
+
+# General rule for building prog from prog.o; $^ (GNU extension) is
+# used in order to list additional object files on which the
+# executable depends
+%: %.o
+	$(FC) $(FCFLAGS) -o $@ $^ $(LDFLAGS)
+
+# General rules for building prog.o from prog.f90 or prog.F90; $< is
+# used in order to list only the first prerequisite (the source file)
+# and not the additional prerequisites such as module or include files
+%.o: %.for
+	$(FC) $(FCFLAGS) -c $<
+%.o: %.f
+	$(FC) $(FCFLAGS) -c $<
+%.o: %.f90
+	$(FC) $(FCFLAGS) -c $<

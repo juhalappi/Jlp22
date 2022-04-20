@@ -196,7 +196,7 @@ logical ::j_inited=.false.
 	'trans','call','pause','noptions','R', &  !5
 	
 	! Loops and controls structures
-	'do', 'if','ASSIGN','sit','which','errexit', 'goto','itrace', 'trace','tracenow', &
+	'do', 'if','ASSIGN','bincode','which','errexit', 'goto','itrace', 'trace','tracenow', &
 	'itraceoff','traceoff','tracetest','assone','enddo','assmany','goto2','goto3', &  !18
 	
 	!Arithmetic and logical operations after converting to the polish notation
@@ -298,7 +298,7 @@ logical ::j_inited=.false.
 	! 'text','txt', & !2  text is old txt new
 	1,1,1,0,1,0,1,&
 	! 'exist_f','delete_f','close','showdir','setdir','thisfile', 'filestat',& ! 7
-	3,2,1,1,1,1,1,&
+	3,2,0,1,1,1,1,&
 	! 'read','write','print','ask','askc','printresult','printresult2', & ! 6 j_fbio
 	0,4*1,2,12*1,1,&
 	! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
@@ -826,6 +826,8 @@ logical ::j_inited=.false.
 	logical j_filter,j_reject,j_rejected,j_transopt,j_transoptafter,j_subfilter,j_subreject
 
 	logical j_remain
+	logical j_stop
+!	logical j_initialized:: .false.
 
 !!end motule
 !datafmod : dataf-funktion käyttöön
@@ -1583,7 +1585,7 @@ logical ::j_inited=.false.
 	interface
 		! subroutine j_freeunit(nu) ! free unit nu
 			! integer,intent(in) ::nu
-		! end subroutine !subroutine j_freeunit(nu)
+		! end subroutine !subroutine j_freeunit (nu)
 		subroutine j_bypassinc(nu)
 		integer,intent(in)::nu
 		end subroutine
@@ -1594,6 +1596,10 @@ logical ::j_inited=.false.
 		
 		subroutine j_jinit(jparf)
 			character*(*),intent(inout)::jparf
+		end subroutine
+		
+		subroutine j_clear()
+		
 		end subroutine
 		
 		subroutine j_jinit0(jparf)
@@ -2103,10 +2109,24 @@ logical ::j_inited=.false.
 			character*(*), intent(in) :: name
 		end function !function j_object2(name,iv)
 		
-		function j_object3(iv,name) !reverse order
+		function j_object3(iv,name,char) !reverse order
 			integer, intent(in):: iv
 			character*(*), intent(in) :: name
+			logical,intent(in),optional::char
 		end function !function j_object2(name,iv)
+		
+		subroutine j_getobjectnam(name,itype,ivout) ! %%object get old or new object, UUSI
+!                  %%object is  ready to use only for real variables or character constants
+! if the object exist and it is not of type real, it will be deleted
+	! if name=' ' then get as object ivin
+	! if name & ivin=0 then get old or new with the name
+	! if name & ivin>0 then get variable which has prefix name of ivin and then come the name
+	!if ivin=0 and name starts wit ' the character contant is created even ityp is j_ipreal
+	character*(*), intent(in):: name
+	integer,intent(in)::itype
+	integer, intent(out):: ivout
+	
+	end subroutine
 
 		!line(iv,name) : get line number of text consisting of name, not found =>0
 		function j_line(iv,name)
@@ -2543,6 +2563,12 @@ logical ::j_inited=.false.
 		function j_igetopt(iob,io,mopt) ! %option obsolete
 			integer, intent(in):: iob,io, mopt
 		end function !function j_igetopt(iob,mopt)
+		
+		logical function j_isopt(iob,io,mopt,default) ! %o
+			integer, intent(in):: iob,io, mopt
+			logical, intent(in),optional:: default
+		end function !function j_igetopt(iob,mopt)
+		
 
 		!igetoptval(iob,mopt,idef,idef0) : -1 ==not  0== opt->,  otherwise iv for first argument
 		function j_igetoptval(iob,io,mopt,idef,idef0)
@@ -2628,9 +2654,6 @@ logical ::j_inited=.false.
 			integer, intent(out):: ipos,ipos1,ioper
 		end subroutine !subroutine j_nextop(inp,icur,last,oper,noper,ipos,ipos1,ioper)
 
-		logical function j_isopt(mopt)
-			integer,intent(in)::mopt
-		end function
 
 		integer function j_nargopt(iob,io,mopt)
 			integer,intent(in) ::iob,io
@@ -3007,6 +3030,11 @@ logical ::j_inited=.false.
 			logical,optional,intent(in)::clear
 		end function
 		
+		integer function j_intloc(ivec,lenvec,i)
+			integer,dimension(*),intent(in):: ivec
+			integer,intent(in) ::lenvec,i
+		end function
+		
 		integer function j_codelink(iob,io,jmcode)
 			integer, intent(in):: iob,io, jmcode
 		end function !function j_objecttype_index(objecttype)
@@ -3067,6 +3095,10 @@ logical ::j_inited=.false.
 			integer,intent(out):: le  !length of the name
 		!call j_getline(j_ivnames,iv,name,le)
 		end subroutine
+		
+		subroutine j_getcurline(iob,io)
+			integer,intent(in)::iob,io
+		endsubroutine
 
 	!20150202 real function eqf
 		real function j_eqf(iv1,iv2)

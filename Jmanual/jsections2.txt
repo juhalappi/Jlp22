@@ -4,71 +4,417 @@ infile c:/j3/j.f90
 
 outfile jexamples.inc
 
-;return
+!!;return
 
 outfile jmanual.tex
-section incl
-section inpugoto
-section inpureturn
-section inpudo
+!!subsection matrix
 !!;return
-section merge
-section inverse
-section qr
-section cominou
-section inpuline
-section inpusum
-section inpudif
-!!;return
-section pref
-section classify
-section data
-section jfuncs
+section preface1 
+subsection preface2 
+subsection preface3 
+subsection preface4 
+subsection preface5 
+subsection preface6 
+subsection preface7
+subsection preface8
+subsection preface9
+subsection changes 
+
+section intro
+subsection intro1
+subsection pack
+!!!;return
+!!!ubsection compo
+subsection jfuncs0
+subsection jfunc
+
+subsection objintro
+subsection system
+subsection setup
+subsection firstuse
+subsection exit
+subsection typo
+subsectione license
+
+subsection joperation
+
 section cominout
 subsection inpuline
+subsection inpupara
+subsection short
 subsection inpuprog
-subsection inpufunc
+subsubsection inpuad
+subsubsection inpureplace
 subsubsection incl
-subsection inpuchange
-subsection inpudots
-section Data
-subsection newdata
-subsection exceldata
-section classvector
-section jtrans
+subsubsection inpugoto
+subsubsection inpureturn
+subsubsection inpudo
+subsubsection inpusum
+subsubsection inpudif
+subsubsection inpupause
+subsubsection inpureturn 
+subsection dots
+
+section jfuncs
+section  special Special functions
+
+subsection setoption setoption()
+subsection getelem getelem()
+subsection setelem setelem()
+subsection list20 list2()
+subsection setcode setcodeopt()
+subsection own
+
+
+section objects  Functions for handling objects
+subsection type 
+subsection delete_o delete_o()
+subsection exist_o  exist_o()
+subsection name name()
+
+section 	Transformations
+
+subsection trans trans()
+subsection call call()
+subsection pause pause()
+subsection noptions noptions()
+subsection R R()
+
+
+section loops Loops and controls structures
+	
+subsection do do()
+
+subsection if if()
+subsection ASSIGN ASSIGN()
+!!section sit
+subsection which which()
+subsection errexit errexit()
+subsection goto goto()
+
+
+
+
+!!subsection goto2 goto2() 
+!!subsection goto3	goto2()
+
+
+
+
+section arit Arithmetic and logical operations after converting to the polish notation
+	
+! subsection HMULT HMULT() .* Hadamard (elementwise) product
+! subsection HDIV HDIV() ./ Hadamard (elementwise) division
+! subsection IPOWER IPOWER() *** Integer power
+! subsection MULT * multiplication
+! subsection DIV / division
+! subsection PLUS + addition
+! subsection MINUS - subtract 
+! subsection EQ .eq. == equal
+! subsection NE .ne. not equal
+! subsection LE .le. <= less or equa
+! subsection LT .lt. < less than
+! subsection GE .ge. >= greater or equal
+! subsection GT .gt. > grater than
+! subsection NOT .not. not
+! subsection AND .and. & and
+! subsection OR .or. or 
+! subsection EQV .eqv. equivalent
+! subsection NEQV .neqv. not equivalent
+! subsection POWER ** real power
+!
+!section arit2 Arithemetic functions which can operate on scalars or on matrices
+!		
+subsection minmax  min() and max()
+
+section matrixstat 
+
+
+! subsection max
+! subsection sign sign()
+! subsection mod mod()
+! subsection nint nint()
+! subsection int int()
+! subsection ceiling ceiling()
+! subsection floor floor()
+! subsection sqrt sqrt()
+! subsection sqrt2 sqrt2()
+! subsection log log()
+! subsection log10 log10()
+! subsection exp exp()
+! subsection sin sin()
+! subsection sind sind()  argument is in degrees, also in the following d-functions
+! subsection cos cos()
+! subsection cosd cosd()
+! subsection tan tan()
+! subsection tand tand()
+! subsection cotan	cotan()
+! subsection cotand cotand()
+! subsection asin asin()
+! subsection asind asind()
+! subsection acos acos()
+! subsection acosd acosd()
+! subsection atan atan()
+! subsection atand atand()
+! subsection acotan acotan() arcus-cotan
+! subsection acotand acotand() arcus_tand
+! subsection sinh sinh()
+! subsection cosh cosh()
+! subsection tanh tanh()
+! subsection fraction fraction()
+! subsection abs abs()
+!
+	
+section  Special arithemetic functions
+!	
+subsection der der()
+subsection gamma gamma()
+!!subsection loggamma loggamma()
+subsection logistic logistic()
+subsection npv npv()
+!
+	
+section dist Probability distributions
+!	
+subsection pdf pdf()
+subsection cdf cdf()
+subsection bin bin()
+subsection negbin negbin()
+subsection density density()
+!
+section randomgen Random numbers 
+
+subsection ran ran()
+subsection rann rann()
+subsection ranpoi ranpoi()
+subsection ranbin ranbin()
+subsection rannegbin rannegbin()
+subsection select select()
+subsection random random()
+!
+section inter Interpolation
+!	
+subsection interpolate interpolate()
+subsection plane plane()
+subsection bilin bilin()
+!
+	
+section  lists List functions
+subsection listo List object
+subsection  list
+subsection merge
+subsection difference
+subsection index
+subsection index_v
+subsection len
+subsection ilist
+subsection putlist
+!
+section texts 
+subsection text text()
+subsection txt txt() 
+!
+section file File handling
+
+subsection exist_f
+subsection delete_f
+subsection close
+subsection showdir
+subsection setdir
+subsection thisfile
+subsection filestat
+
+section io io-functions
+subsection read read()
+subsection write write()
+subsection print print()
+subsection ask	ask() asking REAL value
+subsection askc askc() asking character
+subsection printresult 
+
+!
+	
+section  matrixs functions for matrices
+
+subsection matrix matrix()
+subsection nrows nrows()
+subsection ncols ncols()
+subsection t t() transpose
+subsection inverse inverse()
+subsection solve solve(): solving a linear equation
+subsection qr qr() qr decomposionn for stying linear dependencies
+subsection eigen eigen() computing eigen values and eigen vectors 
+subsection sort sort() sorting a matrix
+subsection envelope envelope() computing convex envelope around points
+subsection find find() find matrix elements
+subsection mean mean() mean of a column vector or mean od all matrix elements
+subsection sum sum() sum of matrix elment
+subsection var var() variance of matrix elements
+subsection sd sd() standard deviation of matrix elements
+subsection minloc minloc() location of minimum value
+subsection maxloc maxloc() location of maximum value 
+subsection cumsum cumsum() cumulative sum
+subsection corrmatrix corramtrix() correlation matrix from variance matrix
+!
+	
+section dataf Data functions
+	
+subsection data data() creating a DATA object or two hierarchical data objects
+subsection newdata newdata(): making a new DATA from matrices posssibly with transformations
+subsection exceldata exeldata(): making DATA from excel file 
+subsection linkdata linkdata(): linking two DATA objects
+subsection getobs getobs(): getting an observation from DATA
+subsection nobs nobs(): number of observations
+subsection classvector classvector(): extracting information from grouped data 
+subsection values values(): getting different values of a variable in DATA
+subsection transdata transdata() going through data and computing tranformations
+
+section statistical Statistical functions
+
+subsection stat stat():computing minimums, maximums, means and standard deviations from DATA
+subsection cov cov(): covariance MATRIX
+subsection corr corr(): correlation MATRIX
+subsection regr regr(): linear regression, also stepwise linear regression, produces REGR object
+subsection mse mse(): mse of a REGR-object
+subsection rmse rmse(): rmse of a REGR object
+subsection coef coef(): coefficient of variable in REGR object
+subsection r2 r2(): cofficient of determination
+subsection se se(): standard error of a coefficient
+subsection nonlin nonlin(): nonlinear regression
+subsection varcomp varcomp(): variance or covariance components
+subsection classify classify(): group means, group standard devitions and standard errors of group meean
+subsection class class(): class of a given observation
+!
+	
+section lp Linear programming
+subsection problemo PROBLEM object
+subsection problem problem(): defining a a PROBLEM object
+subsection jlp jlp(): solving a PROBLEB in DATA
+subsection weights weights() weights of schedules
+subsection unit unit() unit of a schedule
+subsection schedcum schedcum(): cumulative schedule number
+subsection schedw schedw(): within unit schedule number
+subsection weight weight() weight of a give schedule
+subsection partweights partweights() weights of split schedules
+subsection partunit partunit() unit for of split schedules
+subsection partschedcum partschedcum() cumulative schedule number of split schedules
+subsection partschedw partschedw(): within unit schedule number for split schdeules
+subsection partweight partweight(): weight of a given split schedule
+subsection priceunit priceunit(): price of a unit
+subsection weightschedcum weightschedcum()
+subsection priceschedcum priceschedcum()
+subsection priceschedw priceschedw()
+subsection weightschedw weightschedw()
+subsection integerschedw integerschedw() schedule with largest weight in a unit
+subsection xkf xkf(): transportations of a variable into factories
+!
+	
+section Plotting figures
+subsection gnu Gnuplot
+subsection plotyx plotyx(): scatterplot
+subsection draw draw() drawing a function
+subsection drawclass drawclass() drawing classmeans and possibly se's of class means
+subsection drawline drawline(): line through points, used also for labels
+subsection show show(): showing a FIGURE object, possibly with updated paramters
+subsection plot3d plot3d() 3d plot 
+!
+section spline Splines, stem splines,  and volume functions
+	!	
+subsection tautspline tautspline()
+subsection stemspline stemspline()
+subsection stempolar stempolar(): stem curve in polar coorniates
+subsection laasvol laasvol() volume function of Laasasenaho
+subsection laaspoly laaspoly() polynomial stem curve of Laasasenaho
+subsection integrate integrate()
+!
+	
+section bit Bit functions
+subsection bitmatrixo	
+subsection setbits setbits(): setting bits
+subsection clearbits clearbits(): clearing bits
+subsection getbit getbit(): getting a bit value
+subsection getbitch getbitch() get a bit value from a CHAR
+subsection bitmatrix bitmatrix(): matrix of bits
+subsection setvalue setvalue(): set a bit value
+subsection closures clusures(): convex closures
+!
+	
+section  misc Misc. utility functions
+!	
+subsection value value()
+subsection properties properties()
+subsection cpu cpu()
+subsection seconds seconds()
+!
+!
+
+subsection onames
+subsection copy
+subsection delete
+subsection otypes
+subsubsection realo
+subsubsection charo
+subsubsection logical0
+
+subsubsection logicalo
+
+
+
+subsection pref
+
+
+
+
+subsubsection transo
+subsubsection simulatoro
+
+subsection codeopt
+subsection comoptions
+subsection call
+subsection jtrans
+subsection trans
+subsection transfunc
+subsection transcont
+subsubsection if
+subsubsection ifthen
+subsection loops
+subsection return
+subsection errexit
+subsection goto
+
+subsection numer
+subsection logic
+subsection arfu
+
+
+section matrixsection
+subsubsection matrixo
+subsection matrixf
+subsection matrix
+
+subsection getelems
+
+section datahead
+
+
+subsubsection textob
+
+
+section figu
+subsubsection figureo
+
+section jlpintro
+
 
 section statistics
 
-subsection stat
 
-subsection cov
-subsection corr
 
-subsection regr
 
-section classes
 
-subsection class
+subsection compo
+subsection distributions
 
-section comoptions
-
-section matrixsection
-
-subsection matrix
-
-subsection t
-
-subsection inverse
-
-subsection submatrix
-
-subsection find
-
-subsection solve
-subsection dots
-subsection random
-subsection rann
-subsection eigen
 ;return
 
 

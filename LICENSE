@@ -1,0 +1,73 @@
+J
+Copyright (C) 2022 Juha Lappi and Natural Resources Institute Finland
+
+The following license conditions apply to folders Jsource and Jsource2
+
+This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+The linear programming algorithm used via funtion jlp() is utilizing
+the subroutines made by late Prof Fletcher, and his contribution
+should be acknowledged by making a reference  to:
+
+
+Subroutines in file matsub.f found in the folders Jsource and Jsource2 have
+been obtained from other sources and have the following license conditions:
+
+From De Boor
+subroutine tautsp used in j_function tautspline
+from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
+No license restrictions known
+Distribution:  http://pages.cs.wisc.edu/~deboor/pgs/tautsp.f
+
+real function ppvalu used in J function value
+from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
+No license restrictions known
+Distribution: http://pages.cs.wisc.edu/~deboor/pgs/tautsp.f
+
+subroutine interv , used in function ppvalue
+from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
+No license restrictions known
+Distribution: http://pages.cs.wisc.edu/~deboor/pgs/tautsp.f
+
+Lapack matrix routines
+Distribution : www.netlib.org/lapack 
+License : http://www.netlib.org/lapack/LICENSE.txt
+
+
+Juha Lappi has the copyright to precompiler and Latex generation 
+codes found in folders Jpre and Jmanual.
+ These codes are distributed under the license MIT.
+ 
+ MIT License
+
+Copyright (c) 2022 Juha Lappi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+ 

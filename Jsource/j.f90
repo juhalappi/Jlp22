@@ -1,7 +1,7 @@
 !
 ! J Software
 !
-! Copyright (C) 2021 Juha Lappi and Natural Resources Institute Finland (Luke)
+! Copyright (C) 2022 Juha Lappi and Natural Resources Institute Finland (Luke)
 ! Author  Juha Lappi
 !
 ! This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 !
 !-----------------------------------------------------------------------
 !
-! j_.f90	Main program, initialization and core functions
+! j_.f90	Main program (technically a subroutine), initialization and core functions
 !
 !-----------------------------------------------------------------------
 
@@ -33,8 +33,10 @@ subroutine j_sub(remain,jparf,error)
 !	le=len_trim(parf)
 !	write(6,*)j_remain,len_trim(jparf),jparf(1:len_trim(jparf))
 	!if(le.gt.0)then
+!	write(6,*)'calling j_init0'
 		call j_jinit0(jparf)
 	!else
+!	write(6,*)'from j_init0'
 !	call j_jinit0()
 	!endif
 	if(j_err)return
@@ -64,13 +66,15 @@ subroutine j_sub(remain,jparf,error)
 !	j_o(j_ivcursor)%i(1)=0
 !	write(6,*)'nul(0)',j_ninc
 	call j_sit()
+!	write(6,*)'tas2,remain',remain,'j_nused ',j_nused
 !	call j_command('sit()')
 !rite(6,*)'j_nused ',j_nused
-	if(.not.remain)then
-	if(j_nused.gt.0)write(6,*)' '
+	if(.not.j_remain)then
+!	if(j_nused.gt.0)write(6,*)'j_nused ',j_nused
 		do while(j_nused.gt.0)
-			
+		!	write(6,*)'67765'
 			nu=j_nunits(j_nused)
+	!		write(6,*)'nu',nu
 			iv=j_unitchar(nu)
 	!		write(6,*)'<66 nu iv ',nu,iv
 			iv2=abs(iv)
@@ -87,7 +91,10 @@ subroutine j_sub(remain,jparf,error)
 			endif
 			call j_closeunit(nu)
 		enddo
+!		write(6,*)'j_nused ',j_nused
+		
 	endif
+	!write(6,*)'tassss'
 	error=j_err
 
 	return
@@ -109,132 +116,138 @@ subroutine j_jinit0(jparf)
 	!lencmd=len_trim(cmd)
 	!istcmd=j_nextlim(cmd(1:lencmd),1,lencmd,' ')
 	!write(6,*)'>44',lencmd,istcmd,cmd
-	write(6,*)j_title
-	write(6,1357)'j',j_nfunctions_,j_noptions_,j_nobjecttypes_
-	write(6,1357)o1_title,o1_nfunctions,o1_noptions,o1_nobjecttypes
-	write(6,1357)o2_title,o2_nfunctions,o2_noptions,o2_nobjecttypes
-	write(6,1357)o3_title,o3_nfunctions,o3_noptions,o3_nobjecttypes
+	if(.not.j_inited)then
+		write(6,*)j_title
+		write(6,1357)'j',j_nfunctions_,j_noptions_,j_nobjecttypes_
+		write(6,1357)o1_title,o1_nfunctions,o1_noptions,o1_nobjecttypes
+		write(6,1357)o2_title,o2_nfunctions,o2_noptions,o2_nobjecttypes
+		write(6,1357)o3_title,o3_nfunctions,o3_noptions,o3_nobjecttypes
 
-	ib0=index(j_title,' ')
-	j_leno1_title=j_nextlim(o1_title,1,len_trim(o1_title),' ')-1
-	j_leno2_title=j_nextlim(o2_title,1,len_trim(o2_title),' ')-1
-	j_leno3_title=j_nextlim(o3_title,1,len_trim(o3_title),' ')-1
-	if(j_title(1:ib0).eq.o1_title(1:j_leno1_title).or.j_title(1:ib0).eq.o2_title(1:j_leno2_title).or. &
-		j_title(1:ib0).eq.o3_title(1:j_leno3_title).or.&
-		o1_title(1:j_leno1_title).eq.o2_title(1:j_leno2_title).or. &
-		o1_title(1:j_leno1_title).eq.o3_title(1:j_leno3_title).or. &
-		o2_title(1:j_leno2_title).eq.o3_title(1:j_leno3_title))then
-		write(6,*)'*two packages cannot have the same title'
-		nerr=1
+		ib0=index(j_title,' ')
+		j_leno1_title=j_nextlim(o1_title,1,len_trim(o1_title),' ')-1
+		j_leno2_title=j_nextlim(o2_title,1,len_trim(o2_title),' ')-1
+		j_leno3_title=j_nextlim(o3_title,1,len_trim(o3_title),' ')-1
+		if(j_title(1:ib0).eq.o1_title(1:j_leno1_title).or.j_title(1:ib0).eq.o2_title(1:j_leno2_title).or. &
+			j_title(1:ib0).eq.o3_title(1:j_leno3_title).or.&
+			o1_title(1:j_leno1_title).eq.o2_title(1:j_leno2_title).or. &
+			o1_title(1:j_leno1_title).eq.o3_title(1:j_leno3_title).or. &
+			o2_title(1:j_leno2_title).eq.o3_title(1:j_leno3_title))then
+			write(6,*)'*two packages cannot have the same title'
+			nerr=1
 
-	endif !o2_title(1:j_leno2_title).eq.o3_title(1:j_leno3_title))then
-!	lef=len_trim(jparf)
-!	if(present(jparf))then
-		call j_jinit(jparf)
-		jpar=len_trim(jparf).gt.0
-	!else
-	!	call j_jinit()
-	
-!	endif
-	if(j_err)return
-	
-	call o1_init()
-	if(j_err)then
-		write(6,*)'*o1* error initiliazing ',o1_title
-		nerr=nerr+1
-		j_err=.false.
-	endif !if(j_err)then
+		endif !o2_title(1:j_leno2_title).eq.o3_title(1:j_leno3_title))then
+	!	lef=len_trim(jparf)
+	!	if(present(jparf))then
+			call j_jinit(jparf)
+			jpar=len_trim(jparf).gt.0
+		!else
+		!	call j_jinit()
+		
+	!	endif
+		if(j_err)return
+		
+		call o1_init()
+		if(j_err)then
+			write(6,*)'*o1* error initiliazing ',o1_title
+			nerr=nerr+1
+			j_err=.false.
+		endif !if(j_err)then
 
-	call o2_init()
-	if(j_err)then
-		write(6,*)'*o2* error initiliazing ',o2_title
-		nerr=nerr+1
-		j_err=.false.
-	endif !if(j_err)then
+		call o2_init()
+		if(j_err)then
+			write(6,*)'*o2* error initiliazing ',o2_title
+			nerr=nerr+1
+			j_err=.false.
+		endif !if(j_err)then
 
-	call o3_init()
-	if(j_err)then
-		write(6,*)'*o3* error initiliazing ',o3_title
-		nerr=nerr+1
-		j_err=.false.
-	endif !if(j_err)then
+		call o3_init()
+		if(j_err)then
+			write(6,*)'*o3* error initiliazing ',o3_title
+			nerr=nerr+1
+			j_err=.false.
+		endif !if(j_err)then
 
-	if(nerr.gt.0)then
-		9		write(6,*)'initialization failed, press any key to stop'
-		read(5,'(a)')ch
-		stop
-	endif !if(nerr.gt.0)then
+		if(nerr.gt.0)then
+			9		write(6,*)'initialization failed, press any key to stop'
+			if(j_remain)read(5,'(a)')ch
+			j_stop=.true.
+			j_err=.true.
+			return
+		endif !if(nerr.gt.0)then
 
-	do i_=1,j_noptions_
-		j_lenoptions(i_)=len_trim(j_options(i_))
-	enddo !do i_=1,j_noptions_
-	it=j_noptions_
-	do i_=1,o1_noptions
-		it=it+1
-		j_lenoptions(it)=len_trim(o1_options(i_))
-	end do !do i_=1,o1_noptions
-	do i_=1,o2_noptions
-		it=it+1
-		j_lenoptions(it)=len_trim(o2_options(i_))
-	end do !do i_=1,o2_noptions
-	do i_=1,o3_noptions
-		it=it+1
-		j_lenoptions(it)=len_trim(o3_options(i_))
-	end do !do i_=1,o3_noptions
+		do i_=1,j_noptions_
+			j_lenoptions(i_)=len_trim(j_options(i_))
+		enddo !do i_=1,j_noptions_
+		it=j_noptions_
+		do i_=1,o1_noptions
+			it=it+1
+			j_lenoptions(it)=len_trim(o1_options(i_))
+		end do !do i_=1,o1_noptions
+		do i_=1,o2_noptions
+			it=it+1
+			j_lenoptions(it)=len_trim(o2_options(i_))
+		end do !do i_=1,o2_noptions
+		do i_=1,o3_noptions
+			it=it+1
+			j_lenoptions(it)=len_trim(o3_options(i_))
+		end do !do i_=1,o3_noptions
 
-	do i_=1,j_nfunctions_
-		j_lenfunctions(i_)=len_trim(j_functions(i_))
-	enddo !do i_=1,j_nfunctions_
-	it=j_nfunctions_
-	do i_=1,o1_nfunctions
-		it=it+1
-		j_lenfunctions(it)=len_trim(o1_functions(i_))
-	end do !do i_=1,o1_nfunctions
-	do i_=1,o2_nfunctions
-		it=it+1
-		j_lenfunctions(it)=len_trim(o2_functions(i_))
-	end do !do i_=1,o2_nfunctions
-	do i_=1,o3_nfunctions
-		it=it+1
-		j_lenfunctions(it)=len_trim(o3_functions(i_))
-	end do !do i_=1,o3_nfunctions
+		do i_=1,j_nfunctions_
+			j_lenfunctions(i_)=len_trim(j_functions(i_))
+		enddo !do i_=1,j_nfunctions_
+		it=j_nfunctions_
+		do i_=1,o1_nfunctions
+			it=it+1
+			j_lenfunctions(it)=len_trim(o1_functions(i_))
+		end do !do i_=1,o1_nfunctions
+		do i_=1,o2_nfunctions
+			it=it+1
+			j_lenfunctions(it)=len_trim(o2_functions(i_))
+		end do !do i_=1,o2_nfunctions
+		do i_=1,o3_nfunctions
+			it=it+1
+			j_lenfunctions(it)=len_trim(o3_functions(i_))
+		end do !do i_=1,o3_nfunctions
 
-	do i_=1,j_nobjecttypes_
-		j_lenobjecttypes(i_)=len_trim(j_objecttypes(i_))
-	enddo !do i_=1,j_nobjecttypes_
-	it=j_nobjecttypes_
-	do i_=1,o1_nobjecttypes
-		it=it+1
-		j_lenobjecttypes(it)=len_trim(o1_objecttypes(i_))
-	end do !do i_=1,o1_nobjecttypes
-	do i_=1,o2_nobjecttypes
-		it=it+1
-		j_lenobjecttypes(it)=len_trim(o2_objecttypes(i_))
-	end do !do i_=1,o2_nobjecttypes
-	do i_=1,o3_nobjecttypes
-		it=it+1
-		j_lenobjecttypes(it)=len_trim(o3_objecttypes(i_))
-	end do !do i_=1,o3_nobjecttypes
+		do i_=1,j_nobjecttypes_
+			j_lenobjecttypes(i_)=len_trim(j_objecttypes(i_))
+		enddo !do i_=1,j_nobjecttypes_
+		it=j_nobjecttypes_
+		do i_=1,o1_nobjecttypes
+			it=it+1
+			j_lenobjecttypes(it)=len_trim(o1_objecttypes(i_))
+		end do !do i_=1,o1_nobjecttypes
+		do i_=1,o2_nobjecttypes
+			it=it+1
+			j_lenobjecttypes(it)=len_trim(o2_objecttypes(i_))
+		end do !do i_=1,o2_nobjecttypes
+		do i_=1,o3_nobjecttypes
+			it=it+1
+			j_lenobjecttypes(it)=len_trim(o3_objecttypes(i_))
+		end do !do i_=1,o3_nobjecttypes
 
-	do i_=1,j_nobjecttypes_
-		j_lenobjecttypes(i_)=len_trim(j_objecttypes(i_))
-	enddo !do i_=1,j_nobjecttypes_
-	it=j_nobjecttypes_
-	do i_=1,o1_nobjecttypes
-		it=it+1
-		j_lenobjecttypes(it)=len_trim(o1_objecttypes(i_))
-	end do !do i_=1,o1_nobjecttypes
-	do i_=1,o2_nobjecttypes
-		it=it+1
-		j_lenobjecttypes(it)=len_trim(o2_objecttypes(i_))
-	end do !do i_=1,o2_nobjecttypes
-	do i_=1,o3_nobjecttypes
-		it=it+1
-		j_lenobjecttypes(it)=len_trim(o3_objecttypes(i_))
-	end do !do i_=1,o3_nobjecttypes
-
+		do i_=1,j_nobjecttypes_
+			j_lenobjecttypes(i_)=len_trim(j_objecttypes(i_))
+		enddo !do i_=1,j_nobjecttypes_
+		it=j_nobjecttypes_
+		do i_=1,o1_nobjecttypes
+			it=it+1
+			j_lenobjecttypes(it)=len_trim(o1_objecttypes(i_))
+		end do !do i_=1,o1_nobjecttypes
+		do i_=1,o2_nobjecttypes
+			it=it+1
+			j_lenobjecttypes(it)=len_trim(o2_objecttypes(i_))
+		end do !do i_=1,o2_nobjecttypes
+		do i_=1,o3_nobjecttypes
+			it=it+1
+			j_lenobjecttypes(it)=len_trim(o3_objecttypes(i_))
+		end do !do i_=1,o3_nobjecttypes
+		j_inited=.true.
+		
+	endif !initialized
 	if(jpar) then
-		write(6,*)'getting from ',jparf
+		write(6,*)'getting from ',jparf,' using:'
+		write(6,*)';incl('//jparf(1:len_trim(jparf))//')'
 		!write(6,*)'j-namedv ',j_namedv
 	!	write(6,*)'hep:',';incl('//jparf(1:len_trim(jparf))//')' 
 		call j_incl(';incl('//jparf(1:len_trim(jparf))//')' )   !j_command(";incl('j.par')")%%%
@@ -255,11 +268,6 @@ subroutine j_jinit0(jparf)
 			! call j_errexit()
 			! j_err=.false.
 		! endif !if(j_err)then
-	! endif !if(istcmd.lt.lencmd) then
-	j_nutf8=6; allocate(j_utf8(1:6));j_utf8=(/char(228), char(229),char(246),char(196),char(214),char(197)/)
-	!   'ä','å','ö','Ä','Ö','Å'/)
-	!	write(6,*)'>45/',j_utf8
-	allocate(j_ocode(1:6));j_ocode=(/char(132),char(134),char(148),char(142),char(153),char(143)/)
 
 end subroutine j_jinit0 !subroutine jinit0()
 
@@ -528,6 +536,7 @@ subroutine j_jinit(jparf)
 	write(6,*)'max named objects  ',j_mxnamedv
 	17 j_nv=j_mxnamedv+j_mxtemporalv
 	j_mxv=j_nv+j_mxconstantv
+	
 	allocate(j_v(1:j_mxv))  !
 	allocate(j_o(1:j_nv))
 	allocate(j_otype(0:j_mxv))
@@ -543,6 +552,12 @@ subroutine j_jinit(jparf)
 	allocate( j_o(j_ivnames)%i(0:j_mxnamedv+1),j_o(j_ivnames)%ch(1:lename_*j_mxnamedv))
 
 	j_o(j_ivnames)%i(0)=0;j_o(j_ivnames)%i(1)=1
+		! endif !if(istcmd.lt.lencmd) then
+	j_nutf8=6; allocate(j_utf8(1:6));j_utf8=(/char(228), char(229),char(246),char(196),char(214),char(197)/)
+	!   'ä','å','ö','Ä','Ö','Å'/)
+	!	write(6,*)'>45/',j_utf8
+	allocate(j_ocode(1:6));j_ocode=(/char(132),char(134),char(148),char(142),char(153),char(143)/)
+
 
 	j_ivstartedjlp=j_ivzero
 	j_namedv=1
@@ -817,7 +832,9 @@ subroutine j_jinit(jparf)
 
 	if(j_ivdebugtrans.ne.ivout_)then
 		write(6,*)'predefined variables are mixed up,j_ivresult=',j_ivresult,' but ivout_=',ivout_
-		stop
+	j_err=.true.
+	j_stop=.true.
+		return
 	endif !if(j_ivprintresult.ne.ivout_)theniranges
 
 
@@ -886,6 +903,11 @@ recursive subroutine dotrans(iob,ioi)
 	! logical ::reci
 	!write(6,*)'err0',j_err
 	j_recursion=j_recursion+1
+		if(j_recursion.gt.j_mxrecursion)then
+			write(6,*)'recursion>maxrecusion =',j_mxrecursion
+			j_err=.true.
+			return		
+		endif
 	j_v(j_ivrecursion)= j_recursion !j_v(j_ivrecursion) + 1 ! $Recursion=$Recursion+1
 	
 	j_curline(j_recursion)=1
@@ -942,7 +964,7 @@ recursive subroutine dotrans(iob,ioi)
 	
 	
 	if(j_o(iob)%i(io).lt.0)then
-
+	
 		j_curline(j_recursion)=j_curline(j_recursion)-j_o(iob)%i(io)
 			if(j_v(j_ivdebugtrans).ne.j_0)call j_debug(iob)
 		io=io+1
@@ -970,7 +992,7 @@ recursive subroutine dotrans(iob,ioi)
 		if(j_o(iob)%i(io).ne.0)then
 			iio=j_o(iob)%i(io)
 			na=j_o(iob)%i(io+1)
-			write(6,*)'io ',io,' j_nopt ',j_nopt,j_functions(iio),iio,'teku:',j_o(iob)%i(io:io+na+2)
+		!	write(6,*)'io ',io,' j_nopt ',j_nopt,j_functions(iio),iio,'teku:',j_o(iob)%i(io:io+na+2)
 		else !if(j_o(iob)%i(io).ne.0)then
 			write(6,*)io,'finito'
 		endif !if(j_o(iob)%i(io).ne.0)then
@@ -1085,7 +1107,7 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 43	call assign(iob,io)  ! Explicit assignment of output
 		goto 2
 
-44	call sit(iob,io)	! ! Go to o prompt
+44	call bincode(iob,io)   !sit(iob,io)	! ! Go to o prompt
 		goto 1
 
 45	call which(iob,io)   !! Get value based on condition
@@ -3246,6 +3268,12 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 	end subroutine ilist !subroutine ilist(iob,io)
 
 	subroutine putlist(iob,io)
+	! Section putlist putlist()
+	! Usage://
+	! putlist(LIST,OBJ)//
+	! put OBJ into LIST
+	! endsection
+	
 		integer, dimension(:), pointer :: arg !arguments of the function
 		integer,dimension(:),allocatable::temp
 		call j_startfunction(iob,io,0,.false.,narg,arg,ivout)
@@ -3279,6 +3307,23 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 
 
 	subroutine type(iob, io)  !
+! Section type Get type of an object: type()
+! ! The index of any object can be access by type(]object[).
+! ! If the argument is a character variable or character constant referring to 
+! ! a character constant, and there is content-> option, and the character is the name of
+! an object , the type() returns the type of the object having the name given in the argument.
+! If there is no object having taht name, then type() returns -1 and no error is generated. 
+! endheader
+! Ex typeex Example of type
+! ttt=8;   !REAL
+! type(ttt);
+! type('ttt'); !type is CHAR
+! type('ttt',content->); 
+! cttt='ttt'
+! type(cttt);
+! type(cttt,content->);
+! endex
+! endsection
 
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -3344,7 +3389,7 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 	subroutine exist_f(iob,io)
 		logical exis
 		narg=j_o(iob)%i(io+1)
-		iv=j_o(iob)%i(io+1)
+		iv=j_o(iob)%i(io+2)
 		iout=j_o(iob)%i(io+narg+2)
 
 		if(j_otype(iv).ne.j_ipchar)then
@@ -3416,6 +3461,7 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 
 	subroutine do(iob,io)
 		integer, dimension(:), pointer :: arg  !narg=4
+Section 
 
 	!addres where to jump if no iterations ,index variable,iv-low,iv-up,iv-step,
 	!current,up,step
@@ -3476,77 +3522,105 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 		else !if(j_v(j_o(iob)%i(io+2)).eq.j_0)then
 			io=j_o(iob)%i(io+3)   !condition satified
 		endif !if(j_v(j_o(iob)%i(io+2)).eq.j_0)then
-!	if(j_o(iob)%i2(13).gt.0)write(26,'(20i5)')iob,ioold,j_o(iob)%i(ioold+1:ioold+3),io,j_o(iob)%i(io:io+5)
+	!	write(6,*)'io ',io
+	!if(j_o(iob)%i2(13).gt.0)write(26,'(20i5)')iob,ioold,j_o(iob)%i(ioold+1:ioold+3),io,j_o(iob)%i(io:io+5)
 		return
 	end subroutine if !subroutine if(iob,io)
 
-	recursive subroutine sit(iob,io) !sit -prompt
-		integer ::recursion=0
-		integer,dimension(3)::ivcursor=(/j_ivcursor,0,0/)
-		save recursion,ivcursor
+	! recursive subroutine sit(iob,io) !sit -prompt
+		! integer ::recursion=0
+		! integer,dimension(3)::ivcursor=(/j_ivcursor,0,0/)
+		! save recursion,ivcursor
 
-		integer, dimension (:), pointer :: optarg_
+		! integer, dimension (:), pointer :: optarg_
 
-		recursion=recursion+1
-		if(recursion.gt.3)then
-			write(6,*)'* sit() cannot be called at recursion level ',recursion
-			j_err=.true.
-			goto 900
-		endif !if(recursion.gt.3)then
-		if(ivcursor(recursion).eq.0)call j_deftrans(0,'$Cursor$'//char(48+recursion), &
-			ivcursor(recursion),200,0,0,iii,iii,iii,0)
+		! recursion=recursion+1
+		! if(recursion.gt.3)then
+			! write(6,*)'* sit() cannot be called at recursion level ',recursion
+			! j_err=.true.
+			! goto 900
+		! endif !if(recursion.gt.3)then
+		! if(ivcursor(recursion).eq.0)call j_deftrans(0,'$Cursor$'//char(48+recursion), &
+			! ivcursor(recursion),200,0,0,iii,iii,iii,0)
 
-		call j_startfunction(iob,io,0,.false.,narg,optarg_,ivout)
-		inprint=j_v(j_ivprintinput)
+		! call j_startfunction(iob,io,0,.false.,narg,optarg_,ivout)
+		! inprint=j_v(j_ivprintinput)
 
-	1 inprint=j_v(j_ivprintinput)
-		if(recursion.eq.1)then
-			if(j_ndo.le.0.and.j_ninc.eq.1)write(6,*)' '
-			call j_getinput('sit>',inprint)
-		else !if(recursion.eq.1)then
-			call j_getinput('sit'//char(48+recursion)//'>',inprint)
-		endif !if(recursion.eq.1)then
-		if(j_err.and..not.j_remain)goto 900
-!	write(6,*)'<431>recursion,',recursion,j_inp(1:j_linp)
-	if(j_inp(1:j_linp).eq.'RETURN') return
-		if(j_linp.eq.0.and.recursion.gt.1)goto 900
-		if(j_inp(1:j_linp).eq.'end')call j_stopj()
-!	write(6,*)'<7337',j_inp(1:j_linp)
-		iiv=j_inciv(j_ninc)
-	!	write(6,*) '  after using  ', j_o(iiv)%i(6),' lines from ',j_vname(iiv)
-		if(j_ninc.gt.1.and.j_v(j_ivdebugconsole).ne.j_0)&
-		call j_pause('<c'//j_chi5(j_o(iiv)%i(6),0)//'>',do=.true.)
-		if(.not.j_err)call j_interpret(j_inp(1:j_linp),ivcursor(recursion))
-!	write(6,*)'tas,recursion',recursion,j_err
-		if(j_err)then
-			call j_errexit()
-			if(.not.j_remain)return
-			if(recursion.gt.1)goto 900
-			j_err=.false.
-			goto 1
-		endif !if(j_err)then
+	! 1 inprint=j_v(j_ivprintinput)
+		! if(recursion.eq.1)then
+			! if(j_ndo.le.0.and.j_ninc.eq.1)write(6,*)' '
+			! call j_getinput('sit>',inprint)
+		! else !if(recursion.eq.1)then
+			! call j_getinput('sit'//char(48+recursion)//'>',inprint)
+		! endif !if(recursion.eq.1)then
+		! if(j_err.and..not.j_remain)goto 900
+! !	write(6,*)'<431>recursion,',recursion,j_inp(1:j_linp)
+	! if(j_inp(1:j_linp).eq.'RETURN') return
+		! if(j_linp.eq.0.and.recursion.gt.1)goto 900
+		! if(j_inp(1:j_linp).eq.'end')call j_stopj()
+! !	write(6,*)'<7337',j_inp(1:j_linp)
+		! iiv=j_inciv(j_ninc)
+	! !	write(6,*) '  after using  ', j_o(iiv)%i(6),' lines from ',j_vname(iiv)
+		! if(j_ninc.gt.1.and.j_v(j_ivdebugconsole).ne.j_0)&
+		! call j_pause('<c'//j_chi5(j_o(iiv)%i(6),0)//'>',do=.true.)
+		! if(.not.j_err)call j_interpret(j_inp(1:j_linp),ivcursor(recursion))
+! !	write(6,*)'tas,recursion',recursion,j_err
+		! if(j_err)then
+			! call j_errexit()
+			! if(.not.j_remain)return
+			! if(recursion.gt.1)goto 900
+			! j_err=.false.
+			! goto 1
+		! endif !if(j_err)then
 
-		j_njump=0
-		call dotrans(ivcursor(recursion),1)
-	!write(6,*)'<22sit, err',j_err
-		if(j_err)then
-	!	write(6,*)'<22sit, err,calling errexit',j_err,'recursion ',recursion
-			call j_errexit()
-	!			write(6,*)'<22sit, errAFT,calling errexit',j_err,'recursion ',recursion
-			if(.not.j_remain)return
-			if(recursion.gt.1)goto 900
-			j_err=.false.
-		endif !if(j_err)then
+		! j_njump=0
+		! call dotrans(ivcursor(recursion),1)
+	! !write(6,*)'<22sit, err',j_err
+		! if(j_err)then
+	! !	write(6,*)'<22sit, err,calling errexit',j_err,'recursion ',recursion
+			! call j_errexit()
+	! !			write(6,*)'<22sit, errAFT,calling errexit',j_err,'recursion ',recursion
+			! if(.not.j_remain)return
+			! if(recursion.gt.1)goto 900
+			! j_err=.false.
+		! endif !if(j_err)then
 
-		goto 1
-		!write(6,*)'<44>',recursion
-	900 recursion=recursion-1
+		! goto 1
+		! !write(6,*)'<44>',recursion
+	! 900 recursion=recursion-1
 
-		return
+		! return
 
-	end subroutine sit !recursive subroutine sit(iob,io)
+	! end subroutine sit !recursive subroutine sit(iob,io)
+	
+	subroutine bincode(iob,io)
+		write(6,*)'current io ',io, ' in which ',j_o(iob)%i(io),' maxio ',j_o(iob)%i(0)
+		write(6,'(20i5/)')j_o(iob)%i(1:j_o(iob)%i(0))
+	
+	endsubroutine
 
 	subroutine which(iob,io)  !which()
+	! Section which Selecting a value based on conditions. Usage://
+	
+	! output=which(condition1,value1,...,conditionn,valuen) //
+	! or//
+	! output=which(condition1,value1,...,conditionn,valuen,valuedefault)
+! Where conditionx is a REAL value, nonzero	value indicating TRUE. Output will get first value for which
+ ! the condition is TRUE. When the number of arguments is not even, the the last value 
+ ! is the default value.
+ ! endheader
+ ! Ex whichex Example of which()
+ ! c=9
+ ! which(a.eg.3.or.c.gt.8,5,a.eq.7,55);
+ ! a=7
+ ! which(a.eg.3.or.c.gt.8,5,a.eq.7,55);
+ ! a=5
+ ! which(a.eg.3.or.c.gt.8,5,a.eq.7,55);
+ ! which(a.eg.3.or.c.gt.8,5,a.eq.7,55,108);
+ ! endex
+ ! endsection
+	
+	
 
 		narg=j_o(iob)%i(io+1)
 		imod=mod(narg,2)
@@ -3584,14 +3658,21 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 
 	subroutine goto(iob,io)
 		io=j_o(iob)%i(io+1)
+	!	write(6,*)'goto cur io',io,j_o(iob)%i(io+20)
+		if(j_v(j_ivdebugtrans).ne.0)call j_getcurline(iob,io)
+	!	write(6,*)'goto to line',j_curline(j_recursion),' newio',io
 		return
 
 	end subroutine !subroutine goto(iob,io)
 	
-	subroutine goto2(iob,io)
+	subroutine goto2(iob,io) !select fro all labels
+!	write(6,'(a,(20i5/))')'<fingoto2>',j_o(iob)%i(0:j_o(iob)%i(0)+7)
+	!select from argument list
+	!write(6,*)'io ',io, 'locio ',j_o(iob)%i(io)
 		narg=j_o(iob)%i(io+1)
-		iout=j_o(iob)%i(io+2+narg)
+		iout=j_o(iob)%i(io+1+narg)
 		igo=j_v(iout)
+	!	write(6,*)'goto2 narg,iout,igo ',narg,iout,igo
 		if(igo.eq.0)then
 			io=io+narg+2
 		endif
@@ -3604,30 +3685,40 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 		endif
 		
 		io=j_o(iob)%i(io+igo+1)
+		if(j_v(j_ivdebugtrans).ne.0)call j_getcurline(iob,io)
+	!	write(6,*)'goto2 to line ',j_curline(j_recursion), ' new io ',io
+		
+		
 		return
 
 	end subroutine !subroutine goto(iob,io)
 	
 	subroutine goto3(iob,io)
-write(6,'(a,(20i5/))')'<fin>',j_o(iob)%i(0:j_o(iob)%i(0)+7)
+!write(6,'(a,(20i5/))')'<fingoto3  ',j_o(iob)%i(1:j_o(iob)%i(0)+7)
 		igo=j_v(j_o(iob)%i(io+1))
 		iad=j_o(iob)%i(0)+2
+		!select from all lables
 			
 		nlabel=j_o(iob)%i(iad)
-		write(6,*)'goto3 ',io,igo,iad,nlabel
+	!	write(6,*)'goto3 ',io,igo,iad,nlabel
 			write(6,*)j_o(iob)%i(j_o(iob)%i(0):j_o(iob)%i(0)+8)
 		if(igo.eq.0)then
 			io=io+2
+			if(j_v(j_ivdebugtrans).ne.0)call j_getcurline(iob,io)
+		write(6,*)'goto3curl ',j_curline(j_recursion)
 			return
 		endif
 		if(igo.lt.0.or.igo.gt.nlabel)then
-			write(6,*)'cannot goto to address ',igo, 'there are only ',nlabel,' labels'
+			write(6,*)'cannot goto to label ',igo, 'there are only ',nlabel,' labels'
 			j_err=.true.
 			return
 		endif
 		
 		io=j_o(iob)%i(iad+igo)
-		write(6,*)'uusio',io
+		if(j_v(j_ivdebugtrans).ne.0)call j_getcurline(iob,io)
+	!	write(6,*)'goto3curl ',j_curline(j_recursion)
+		
+	!	write(6,*)'uusio',io
 		return
 
 	end subroutine !subroutine goto(iob,io)
@@ -4790,6 +4881,12 @@ write(6,'(a,(20i5/))')'<fin>',j_o(iob)%i(0:j_o(iob)%i(0)+7)
 	end subroutine !subroutine max_(iob,io)
 
 	subroutine minloc_(iob,io)
+	! Section minloc minloc() : locations of the minimum values in columns
+	! minloc(MATRIX) generates a row vector containing the locations of the  minimum
+	! values in each column. minloc(VECTOR) is the REAL scalar telling 
+	! the location of the minimum value. Thus the VECTOR can also be a row vector.
+	! endsection
+	
 		double precision::minva
 		integer loco(1)
 		narg=j_o(iob)%i(io+1)
@@ -4840,6 +4937,13 @@ write(6,'(a,(20i5/))')'<fin>',j_o(iob)%i(0:j_o(iob)%i(0)+7)
 	end subroutine !subroutine minloc_(iob,io)
 
 	subroutine maxloc_(iob,io)
+	! Section maxloc maxloc() : locations of the minimum values in columns
+	! maxloc(MATRIX) generates a row vector containing the locations of the  minimum
+	! values in each column. maxloc(VECTOR) is the REAL scalar telling 
+	! the location of the maxim value whether VECTOR is a row vector or column vector.
+	! endsection
+	
+	
 		double precision::maxva
 		integer loco(1)
 		narg=j_o(iob)%i(io+1)
@@ -4890,6 +4994,15 @@ write(6,'(a,(20i5/))')'<fin>',j_o(iob)%i(0:j_o(iob)%i(0)+7)
 	end subroutine !subroutine maxloc_(iob,io)
 
 	subroutine cumsum(iob,io)
+	! Section cumsum cumsum(): cumulative sums of matrix columns
+	! cumsum(MATRIX) generates a MATRIX with the same dimesnions as the argument,
+	! and puts the cumulative sums of the columsn into the output matrix.
+	! endheader
+	! Note If the argument is vector, the cumsum makes a vector having the same
+	! form as the argument.
+	! endnote
+	! endheader
+	
 		double precision::cumsu
 		logical::inverse
 		narg=j_o(iob)%i(io+1)
@@ -6394,6 +6507,39 @@ write(6,'(a,(20i5/))')'<fin>',j_o(iob)%i(0:j_o(iob)%i(0)+7)
 	end subroutine find !subroutine find(iob,io)
 
 	subroutine matrixstat(iob,io,ifunc)
+	
+	! Section matrixstat Statistical functions for matrices
+	! Functions mean(), sd(), var(), sum(), min() and max()
+	! can be used used to compute stastics from a matrix. Let mean() here present
+	! any of thes functions. The following rules apply:
+	! \begin{itemize}
+	! [\textbf{J}\.] mean(VECTOR) computes the mean of the vector, output is REAL 
+	! [\textbf{J}\.] mean(MATRIX) computes the mean of the each column. Result is row vector.
+	! [\textbf{J}\.] mean(VECTOR,weight->wvector) computes the
+! weigted mean of the vector,weights being in vector wvector.
+! [\textbf{J}\.] mean(MATRIX,weight->wvector) computes the
+! weighted mean of each column, weights being in vector wvector, result is row vector.
+	
+	! \end{itemize}
+	! endsection
+	
+	! Section mean mean(): means or weighted means of matrix columns
+	! See section matrixstat for details
+	! endsection
+	
+	! Section sd sd(): sd's or weighted sd's of matrix columns
+	! See section matrixstat for details
+	! endsection
+	
+	! Section var var(): Sample variances or weighted variances of matrix columns
+	! See section matrixstat for details
+	! endsection
+	
+	! Section sum sum(): sums or weighted sums of matrix columns
+	! See section matrixstat for details
+	! endsection
+	
+	
 		integer, dimension(:), pointer :: arg !arguments of the function
 		integer, dimension(:), pointer :: rows !arguments of the function
 		integer, dimension(:), pointer :: cols !arguments of the function
@@ -7168,6 +7314,11 @@ if(j_err)return
 					if(j_err)return
 					write(6,*)'jcode:',j_inpr(7:le)
 					call j_command(j_inpr(7:le),.true.)
+					if(j_stop)then
+					write(6,*)'stopehere'
+						call j_stopj()
+						return
+					endif
 					if(j_err)then
 						call j_closeunit(nu(ifi))
 						goto 99
@@ -8011,6 +8162,14 @@ if(j_err)return
 
 	subroutine plane(iob,io)
 	!note: use lines are generated by j_precompiler
+	! Section plane plane() interpolation from a plane
+	! Usage://
+	! plane(x1,x2,x3,y1,y2,y3,z1,z2,z3,x,y]//
+! The function computes the equation of plane going through the three points (x1,y1,z1), etc
+! and computes the value of the z-coordinate in point (x,y). The three points defining the plane
+! cannot be on single line.
+! endsection
+	
 
 		integer, dimension(:), pointer :: arg !arguments of the function
 
@@ -8041,6 +8200,34 @@ if(j_err)return
 
 	end subroutine !subroutine plane(iob,io)
 	subroutine logistic(iob,io)
+	! Section logistic logistic(): value of the logistic function
+	! Returns the value of the logistic function 1/(1+exp(-x)). This can in principle computed by the
+! transformation, but the transformation will produce an error condition when the argument -x
+! of the exp-function is large. Because the logistic function is symmetric, these cases are
+! computed as 1-1/(1+exp(x)). Because the logistic function can be needed in the nonlinear
+! regression, also the derivatives are implemented.  Note, to utilse derivatives
+! the function needs to be in a TRANS object.
+! Eg when f=logistic(a*(x-x0)), then
+! the derivatives can be obtained with respect to the parameters a and x0 by
+! endheader
+! Ex logisticex Example of logistic function
+! tr=trans()
+! der(a,x0)
+! f=logistic(a*(x-x0));
+! /
+! x,x0,a=10,5,0.1
+! d[a],d[x],tr(d[x0]);  
+! endex
+! Note In the previous example tr(d[x0] ahs the effect that TRANS tr is first
+! called, which makes that also d[a] and d[x] have been computed. Remember that
+! the parse tree is computed from right to left.
+! endnote
+! endsection
+
+
+
+	
+	
 		double precision::arg
 	!note: use lines are generated by j_precompiler
 
@@ -8077,6 +8264,18 @@ if(j_err)return
 
 	subroutine bilin(iob,io)
 	!note: use lines are generated by j_precompiler
+	
+	! Section bilin bilin(): bilinear interpolation
+	! Usage://
+	! bilin(x1,x2,y1,y2,z1,z2,z3,z4,x,y]//
+! z1 is the value of function at point (x1,y1), z2 is the value at point (x1,y2), z3 is the value at
+! (x2,y1) and z4 is the value at (x2,y2): the function is using bilinear interpolation to compute
+! the value of the z-coordinate in point (x,y). The point (x,y) needs not be within the square
+! defined by the corner points, but it is good if it is. See Press et al. ? (or Google) for the principle
+! of bilinear interpolation
+! endsection
+	
+	
 
 		integer, dimension(:), pointer :: arg !arguments of the function
 
@@ -8252,7 +8451,7 @@ if(j_err)return
 
 		iva1=j_o(iva)%i(1);iva2=j_o(iva)%i(2)
 		ivb=j_ivbuf(j_ninc);lena=iva2-iva1+1
-		if(ivb.ne.0.and.j_otype(max(ivb,1)).eq.j_iptext)then !search for address
+		if(ivb.ne.0.and.j_otype(max(ivb,1)).eq.j_iptext)then !search for labels
 			adrloop: do i=1,j_o(ivb)%i2(0)
 				iil=j_o(ivb)%i2(i)
 				j1=j_o(ivb)%i(iil)+1;j2=j_o(ivb)%i(iil+1)-2
@@ -8843,7 +9042,7 @@ if(j_err)return
 		if(j_v(j_ivprintinput).ge.3)inprint=1
 		call j_clearoption(iob,io)  ! subroutine
 	1 call j_getinput('prop>',inprint)
-		if(j_err)return
+		if(j_err.or.j_stop)return
 		if(j_inp(1:1).eq.'/')goto 90
 		iip=index(j_inp(1:j_linp),',')
 		iip2=j_lentrim(j_inp(1:iip-1))
@@ -9556,7 +9755,7 @@ if(j_err)return
 ! endnote
 
 ! Ex showex Example of show()
-! fi=draw(func->sqrt2(x),x->x,xrange->(-50,50))
+! fi=draw(func->sqrt2(x),x->x,xrange->(-50,50),continue->fcont)
 ! show(fi,xrange->(-60,60),xlabel->'NEWX',ylabel->'NEWY')
 ! show(fi,axes->10)
 ! show(fi,axes->01)
@@ -9564,7 +9763,7 @@ if(j_err)return
 ! Window='400,800'
 ! show(fi)
 ! Window='700,700'
-! fi=drawline(1,10,3,1,color->Red)
+! fi=drawline(1,10,3,1,color->Red,continue->fcont)
 ! show(fi,xrange->(1.1,11)) !the line is not visible
 ! dat=data(read->(x,y),in->)
  ! 1,4
@@ -9573,7 +9772,7 @@ if(j_err)return
  ! 5,1
  ! /
  ! stat()
- ! fi=plotyx(y,x)  ! Gnuplot hides points at border
+ ! fi=plotyx(y,x,continue->fcont)  ! Gnuplot hides points at border
  ! show(fi,xrange->(0,6),yrange->(0,7))
 
 ! endex
@@ -9731,6 +9930,7 @@ if(j_err)return
 	!	 old=.true.
 	!	 	 call execute_command_line('gnuplot -- '//j_filename(1:le), wait=.false.)
 		if(j_gpcontinue.or.j_ispause)return
+		write(6,*)'pausetassa ',j_cline
 		if(j_ninc.gt.1)call j_pause('<ret>',do=.true.)
 	end subroutine
 	
@@ -9950,6 +10150,28 @@ if(j_err)return
 
 
 	subroutine sort(iob,io)
+! Section sort sort() sorts a matrix	
+! Usage://
+! sort(a,key->(key1[,key2]))//
+! Makes a new matrix obtained by sorting all matrix columns of MATRIX a according to one or two columns.
+! Absolute value of key1 and the value of key2 must be legal column numbers. 
+! If key1 is
+! positive then the columns are sorted in ascending order,
+ ! if key1 is negative then the columns
+! are sorted in descending order. If two keys are given, then first key dominates. 
+! endheader
+! Note It is currently
+! assumed that if there are two keys then the values in first key column have integer values.
+! endnote
+! Note  If key2 is not given and key1 is positive, then the syntax is: sort(a,key->key1).
+! endnote
+! Note If there is no output, then the argument matrix is sorted in place.
+! endnote
+! Note The argument can be the data matrix of a data object. The data object will remain a
+! valid data object.
+! endnote
+! endsection
+	
 
 		integer, dimension(:), allocatable::p
 		real ,dimension(:), allocatable::xi
@@ -10076,7 +10298,16 @@ if(j_err)return
 
 
 	subroutine thisfile(iob,io) ! returns the character object referring to current include file
-!	character*40 filename
+!	
+! Section thisfile thisfile() returns the name of the current include file
+! The name of the current include file is returned as a character variable by:
+! out=thisfile()
+! This is useful when defining shortcuts for commands that include sections from an include file.
+! Using this function the shortcuts work even if the name of the include file is changed. See file
+! jexamples.inc for an application
+! endsection
+
+character*40 filename
 		narg=j_o(iob)%i(io+1)
 		ivout=j_o(iob)%i(io+narg+2)
 
@@ -10103,6 +10334,11 @@ if(j_err)return
 	end subroutine !subroutine thisfile(iob,io)
 
 	subroutine filestat(iob,io)
+	! Section filestat filestat() gives information of a file
+	! Function filestat(filename) prints the size of the
+	! file in bytes (if available) and the time the file was last accessed
+	! endsection
+	
 	!ite(6,*)j_o(iob)%i(io:io+4)
 		ifile=j_o(iob)%i(io+2)
 		if(j_otype(ifile).ne.j_ipchar)then
@@ -10153,6 +10389,17 @@ if(j_err)return
 	end subroutine !subroutine filestat(iob,io)
 
 	subroutine nrows(iob,io)  ! %%matrix
+! Section nrows nrows() can be used as:
+! \begin{itemize}
+! \item[\textbf{J}\.] nrows(MATRIX) 
+! \item[\textbf{J}\.] nrows(TEXT) 
+! \item[\textbf{J}\.] nrows(BITMATRIX) 
+! \end{itemize}
+! endheader
+! Note If the argument has another object type, and error occurs
+! endnote
+! endsection
+
 !	io=io_
 		narg=j_o(iob)%i(io+1)
 !	io_=io_+narg+3
@@ -10174,6 +10421,15 @@ if(j_err)return
 	end subroutine nrows !subroutine nrows(iob,io)
 
 	subroutine ncols(iob,io) !%%matrix
+	! Section ncols ncols() can be used as:
+! \begin{itemize}
+! \item[\textbf{J}\.] nrows(MATRIX) 
+! \item[\textbf{J}\.] nrows(BITMATRIX)  
+! \end{itemize}
+! endheader
+! Note If the argument has another object type, and error occurs
+! endnote
+! endsection
 !	io=io_
 		narg=j_o(iob)%i(io+1)
 !	io_=io_+narg+3
@@ -10193,6 +10449,23 @@ if(j_err)return
 	end subroutine ncols !subroutine ncols(iob,io)
 
 	subroutine len(iob,io)
+	
+	! Section len len() lengths of different lists or vectors
+! len(]arg[) gives the following lenghts for different argument types	
+	! \begin{itemize)
+	! \item[\textbf{J}\.] ]arg[ is MATRIX => len=the size of the matrix, i.e. 
+	! nrows(]arg[)*ncols(]arg[)
+	
+	! \item[\textbf{J}\.] ]arg[ is TEXT => len=the number of chracter in TEXT object
+	
+		! \item[\textbf{J}\.] ]arg[ is LIST => len=the number of elements in LIST
+		! \item[\textbf{J}\.] ]arg[ is ILIST => len=the number of elements in ILIST
+	! \end{itemize}
+	! If ]arg[ does not have a legal type for len(), then len(]arg[)=-1 if len() has
+	! option any->, otherwise an error is produced.
+	! endsection
+	
+	
 		logical any
 		any=j_linkoption(iob,io,j_many).ge.0
 		if(any)call j_clearoption(iob,io)  ! subroutine
@@ -10225,6 +10498,24 @@ if(j_err)return
 	end subroutine len !subroutine len(iob,io)
 
 	SUBROUTINE envelope(iob,io)
+	
+!Section envelope envelope() computes the convex hull of point
+!endheader
+!Option
+!Output& 1&MATRIX & (nvertex+1, 2) matrix of the coordinates of the convex hull, where nvertex is the number of
+!verteces. The last point is the same as the first point
+! arg &1&MATRIX & (n,2) matrix of point coordinates
+!nobs&-1|1& REAL& gives the number of points if not all
+! points of the input matrix are used	
+! endoption
+! Note The transpose of the output can be directly used in frawline() function
+!to draw the envelope
+!endnote
+!Note The function is using a subroutine made by Alan Miller and found in Netlib
+!endnote
+!endsection
+	
+	
 
 	!  Find the vertices (in clockwise order) of a polygon enclosing
 	!  the points (x(i), y(i), i=1, ..., n.
@@ -10565,6 +10856,18 @@ if(j_err)return
 ! end subroutine load !subroutine load(iob,io)
 
 	subroutine solve(iob,io)
+	! Section solve solve() solves a linear equation A*x=b
+	! A linear matrix eqaution A*x=b can be solved for x with code//
+	! x=solve(A,b)
+	! endheader
+	! Note x=solve(A,b) is faster and more accurate than x=inverse(A)*b
+	! endnote
+	! Note solve works also if A and b are scalars. This is useful when
+	! working with linear systems which start to grow from scalars.
+	! endnote
+	! endsection
+	
+	
 		integer,dimension(:), pointer::arg=>null()
 		double precision ,dimension(:,:), allocatable::mat,rhs_
 		integer ,dimension(:), allocatable::ipiv
@@ -11833,6 +12136,11 @@ if(j_err)return
 	end subroutine !subroutine select(iob,io)
 	
 	subroutine random(iob,io)
+	! Section random random(): generate random scalrs or matrices defined with density()
+	! usage random(]dist[) where ]dist[ is the density defined in density().
+	! See density() for examples.
+	! endsection
+	
 		logical ::diskr
 				external ranf
 					integer, dimension(:), pointer :: arg
@@ -12005,6 +12313,11 @@ if(j_err)return
 	end subroutine rann !subroutine rann(iob,io)
 
 	subroutine ranpoi(iob,io)  !calls function ignpoi from netlib ranlib
+! Section ranpoi ranpoi(): random Poisson variables
+! ranpoi(]myy[//
+! returns a random Poisson variable with expected value and variance ]myy[
+! endsection
+
 
 !	io=io_
 		narg=j_o(iob)%i(io+1)
@@ -12057,9 +12370,9 @@ if(j_err)return
 !da=newdata(A,read->(s1,s2))
 !stat()
 !cl=classify(1,x->s1)
-!fi=drawclass(cl,histogram->,color->Blue)
+!fi=drawclass(cl,histogram->,color->Blue,continue->fcont)
 !cl=classify(1,x->s2)
-!fi=drawclass(cl,histogram->,color->Red,append->)
+!fi=drawclass(cl,histogram->,color->Red,append->,continue->fcont)
 ! endex
 
 ! endsection
@@ -12171,6 +12484,22 @@ if(j_err)return
 	end subroutine back !subroutine back(iob,io)
 
 	subroutine printresult(iob,io,level)  !
+! Section printresult printresult() and printresult2() excute ; and ;; -printing
+! The J interpreter translates ';'  at the end of the
+! line to a call to printresult() function and ';;' to a call to printresult2() 
+ ! The output of a function is printed by writing ';' or ';;' at the end of the line. The excution of implied print()
+ ! is dependent on the value of ]Printoutput[. If ]printoutput[ =0,
+ ! then the output is not printed, If ]printoutput[ =1, then ';' is 
+ ! causing printing, if ]Printoutput[ =2 then only ';;'-outputs are 
+ ! printed, and if ]Printoutput[ =3, the bot ';' and ';;' outputs are printed.
+ !endheader
+! Note printresult() and printresult2() are  simple functions 
+!which just test the value of 
+! ]Printoutput[ and then call the  printing subroutine, if needed.
+! endnote
+!endsection
+	
+	
 		ilevel=j_v(j_ivprintresult)
 		if(ilevel.eq.level.or.ilevel.eq.3)call print(iob,io)
 		return
@@ -12726,7 +13055,7 @@ if(j_err)return
 	! thus initially 0
 	! istarts_ are for the period at which the node is aaplied
 	1 	call j_getinput('simu>',inprint)
-
+			if(j_stop)return
 		if(j_err)goto 980
 		iip=index(j_inp(1:j_linp),'::')
 		if(iip.gt.0)then
@@ -12970,19 +13299,19 @@ if(j_err)return
 !width & 0 | 1 & REAL & the width of the line
 !endoption
 ! Ex drawex Example of draw()
-! fi=draw(func->sin(x),xrange->(0,2*Pi),color->Blue,Continue->)
-! fi=draw(func->cos(x),xrange->(0,2*Pi),color->Red,append->)
+! fi=draw(func->sin(x),xrange->(0,2*Pi),color->Blue,continue->fcont)
+! fi=draw(func->cos(x),xrange->(0,2*Pi),color->Red,append->,continue->fcont)
 ! if(type(figyx).ne.FIGURE)plotyxex
-! show(figyx)  
+! show(figyx,cont->fcont)  
 ! reg0=regr(y,x)
 ! stat(data->datyx,min->,max->)
-! figyx=draw(func->reg0(),x->x,xrange->,color->Violet,append->)
+! figyx=draw(func->reg0(),x->x,xrange->,color->Violet,append->,continue->fcont)
 ! tr=trans()
 ! x2=x*x
 ! fu=reg2()
 ! /
 ! reg2=regr(y,x,x2,data->datyx,trans->tr)
-! figyx=draw(func->tr(fu),xrange->,color->Orange,append->)
+! figyx=draw(func->tr(fu),xrange->,color->Orange,append->,continue->fcont)
 !Continue=1  !Errors
 !fi=draw(func->sin(x),x->x)
 !fi=draw(xrange->(1,100),func->Sin(x),x->x)
@@ -13008,9 +13337,10 @@ if(j_err)return
 
 		endif !if(linkfunc.eq.0)then
 
-
-
+	!	write(6,*)'draw0io',io
+	!	write(6,'(20i5)')j_o(iob)%i(1:j_o(iob)%i(0))
 		call j_startfig(iob,io)  !
+	!		write(6,*)'draw0io,gpiout',io,j_gpiout,j_o(j_gpiout)%i
 !			write(6,*)'<88pp88AFTER',j_o(j_gpiout)%i(1:3)
 	!		j_o(j_gpiout)%i(1)=0  !number of lines
 		!	j_o(j_gpiout)%i(2)=j_gplines !number of allocated lines
@@ -13105,8 +13435,12 @@ if(j_err)return
 !write(6,*)'<747close ',nu,'nul',nul
 		call j_closeunit(nu)
 
-!	if(j_gpshow)call j_showfig(j_gpiout)
-!	if(p)write(6,*)'<0111667io  ',io
+	!if(j_gpshow)call j_showfig(j_gpiout)
+	!shown later 
+	! write(6,*)'<011166aftshowfig7io  ',io,' recursion ',j_recursion
+	! write(6,'(20i5)')j_o(iob)%i(1:j_o(iob)%i(0))
+	! write(6,'(20i5)')j_o(iob)%i(io:io+19)
+	
 	900 continue !  if(j_err)return
 	
 		return
@@ -13155,12 +13489,12 @@ if(j_err)return
 !label& N |1 &CHAR & Text plotted to the end of line.
 !endoption
 ! Ex drawlineex Example of drawline()
-! fi=draw(func->sin(x),xrange->(0,2*Pi),color->Blue,Continue->)
-! fi=drawline(Pi,sin(Pi)+0.1,label->'sin()',append->)
+! fi=draw(func->sin(x),xrange->(0,2*Pi),color->Blue,continue->fcont)
+! fi=drawline(Pi,sin(Pi)+0.1,label->'sin()',append->,continue->fcont)
 !xval=matrix(do->(1,100))
 ! mat=matrix(values->(xval,xval+1,xval,xval+2,xval,xval+3))
 ! fi=drawline(mat,color->Red)
-! fi=drawline(mat,break,color->Orange,break->)
+! fi=drawline(mat,break,color->Orange,break->,continue->fcont)
 ! x=matrix(do->(0,100,1)
 ! e=matrix(101)
 ! e=rann()
@@ -13168,19 +13502,17 @@ if(j_err)return
 ! da=newdata(x,y,read->(x,y))
 ! reg=regr(y,x)
 
-
-! fi=drawline(
 ! if(type(figyx).ne.FIGURE)plotyxex
 ! show(figyx)  
 ! reg0=regr(y,x)
 ! stat(data->datyx,min->,max->)
-! figyx=draw(func->reg0(),x->x,xrange->,color->Violet,append->)
+! figyx=draw(func->reg0(),x->x,xrange->,color->Violet,append->,continue->fcont)
 ! tr=trans()
 ! x2=x*x
 ! fu=reg2()
 ! /
 ! reg2=regr(y,x,x2,data->datyx,trans->tr)
-! figyx=draw(func->tr(fu),xrange->,color->Orange,append->)
+! figyx=draw(func->tr(fu),xrange->,color->Orange,append->,continue->fcont)
 !Continue=1  !Errors
 !fi=draw(func->sin(x),x->x)
 !fi=draw(xrange->(1,100),func->Sin(x),x->x)
@@ -13401,12 +13733,13 @@ if(j_err)return
 		character*1 ch
 		call j_startfunction(iob,io,0,.true.,narg,arg,iout)
 !		write(6,*)'<66iout,append,j_otype(iout)',iout,append,j_otype(iout)
-		call j_getoption_index(iob,io,j_mshow,-1,1,j_ipreal,.false.,.false.,noptarg,j_optarg0)
-		if(noptarg.le.0)then
-			show=.true.
-		else !if(noptarg.le.0)then
-			show=j_v(j_optarg0(1)).gt.j_0
-		endif !if(noptarg.le.0)then
+		! call j_getoption_index(iob,io,j_mshow,-1,1,j_ipreal,.false.,.false.,noptarg,j_optarg0)
+		! if(noptarg.le.0)then
+			! show=.true.
+		! else !if(noptarg.le.0)then
+			! show=j_v(j_optarg0(1)).gt.j_0
+		! endif !if(noptarg.le.0)then
+		show=j_isopt(iob,io,j_mshow,.true.)
 		call j_getoption_index(iob,io,j_mmark,-1,1,j_ipchar,.false.,.true.,noptarg,j_optarg0)
 		if(noptarg.le.0)then
 			ismark=.false.
@@ -13548,6 +13881,10 @@ if(j_err)return
 				endif !if(ch(1:lec).eq.'e')then
 
 				call j_command(ch(1:lec))
+				if(j_stop)then
+					call j_stopj()
+					return
+				endif
 				if(j_err)then
 					j_err=.false.
 					write(6,*)'try again, <ret> to continue e => ;return'
@@ -13590,15 +13927,15 @@ if(j_err)return
 ! dat=newdata(x,y,x2,read->(x,y,x2),extra->(Regf,Resid))
 ! stat(min->,max->)
 ! reg=regr(y,x) ! Regf and resid are put into the data
-! fi=plotyx(y,x)
-! fi=drawline(x%min,x%max,reg(x%min),reg(x%max),width->3,color->Cyan,append->)
+! fi=plotyx(y,x,continue->fcont)
+! fi=drawline(x%min,x%max,reg(x%min),reg(x%max),width->3,color->Cyan,append->,continue->fcont)
 ! cl=classify(Resid,x->x,xrange->,classes->5)
-! fi=drawclass(cl,color->Blue)
-! fi=drawclass(cl,se->)
-! fi=drawclass(cl,sd->)
-! fi=drawclass(cl,var->)
-! fi=drawclass(cl,histo->,area->)
-! fi=draw(func->pdf(0,rmse(reg)),x->x,xrange->,append->) ! xrange comes from stat()
+! fi=drawclass(cl,color->Blue,continue->fcont)
+! fi=drawclass(cl,se->,continue->fcont)
+! fi=drawclass(cl,sd->,continue->fcont)
+! fi=drawclass(cl,var->,continue->fcont)
+! fi=drawclass(cl,histo->,area->,continue->fcont)
+! fi=draw(func->pdf(0,rmse(reg)),x->x,xrange->,append->,continue->fcont) ! xrange comes from stat()
 ! endex
 ! Note In previous versions of J if se-> and sd-> were both present, the error
 ! bot bars were plotted. This possibility will be included later.
@@ -13806,12 +14143,12 @@ if(j_err)return
 ! y=2+3*x+0.4*x*x+4*rann()
 ! /
 ! da=newdata(xmat,read->x,maketrans->tr,extra->(Regf,Resid))
-! fi=plotyx(y,x)
-! fi=plotyx(x,func->tr(y),mark->3,color->Orange)
+! fi=plotyx(y,x,continue->fcont)
+! fi=plotyx(x,func->tr(y),mark->3,color->Orange,continue->fcont)
 ! reg=regr(y,x)
 ! fi=plotyx(y,x,show->0)
-! fi=plotyx(Regf,x,append->)
-! fir=plotyx(Resid,x)
+! fi=plotyx(Regf,x,append->,continue->fcont)
+! fir=plotyx(Resid,x,continue->fcont)
 ! endex
 ! Note With data with integer values, the default ranges of Gnuplot may be hide point at 
 ! borderlines.
@@ -13947,7 +14284,11 @@ if(j_err)return
 	end subroutine plotyx !subroutine plotyx(iob,io)
 
 	subroutine nobs(iob,io) !number of observations in a data-object
-
+	! Section nobs nobs(): number of observations in DATA or REGR
+	! nobs(DATA) returns the number of rows in the data matrix of DATA//
+	! nobs(REGR) returns the number of observations used to compute
+	! the regression with regr().
+	! endsection
 !	io=io_
 		narg=j_o(iob)%i(io+1)
 !	io_=io_+narg+3
@@ -13957,12 +14298,14 @@ if(j_err)return
 		if(j_otype(iv).eq.j_ipregr)then
 			j_v(iout)=j_o(iv)%i(  j_o(iv)%i(0)+1)
 		elseif(j_otype(iv).ne.j_ipdata)then !if(j_otype(iv).eq.j_ipregr)then
-			call j_printname('**argument of nobs not a data set:',iv,' ')
+			call j_printname('**argument of nobs not a DATA or REGR:',iv,' ')
 			j_err=.true.
 			return
 		else !if(j_otype(iv).eq.j_ipregr)then
 			ivmat=j_o(iv)%i(1)
 			j_v(iout)=j_o(ivmat)%i(1)
+			
+
 		end if !if(j_otype(iv).eq.j_ipregr)then
 		return
 	end subroutine nobs !subroutine nobs(iob,io)
@@ -13972,6 +14315,34 @@ if(j_err)return
 
 
 	subroutine linkdata(iob,io) !linkdata()
+	! Section linkdata linkdata() links hierarchical data sets
+	! linkdata(data->,subdata->,nobsw->[,obsw->])//
+! links hierarchical data sets.
+! endheader
+! Option
+! data&1&DATA& the upper level data set object
+! subdata &1&DATA& the lower data set object
+! nobsw&1&REAL & the name of variable telling the number of lower level observations for each
+! obsw & 0|1 &REALV &variable which will automatically get the number of lower level observation within
+! each upper level observation. If not given, then this variable will be
+! the Obs-variable of the upper level data.
+! endoption
+! Note  In most cases links between data sets can be either made using sub-options of data()
+! function or linkdata() function. If there is need to duplicate lower level observations, then
+! this can be currently made only in data() function. Also when the data for both the upper
+! level and lower level data are read from the same file, then data() function must be used.
+! endnote
+! Note  When using linked data in other functions, the values of the upper level variables are
+! automatically obtained when accessing lower level observations. Which is the observational
+! unit in each function is determined which data set is given in data-> option or defined using
+! Data list.
+! endnote
+! Note In the current version of J it is no more necassary to use linked data sets in 
+! jlp() function, as the treatment unit index in data containing both 
+! stand and schdedule data can be given in unit-> option
+! endnote
+! endsection
+
 		call j_checkoutput(iob,io)
 		if(j_err)return
 		if(j_nargopt(iob,io,j_mdata).le.0)then
@@ -14056,6 +14427,12 @@ if(j_err)return
 	end !subroutine linkdata(iob,io)
 
 	subroutine index(iob,io)  ! index(data_set,variable)
+	
+	! Section index index(): index of a variable in a data object
+	! To be documented later
+	! endsection
+	
+	
 		double precision::valu
 !	io=io_
 		narg=j_o(iob)%i(io+1)
@@ -14108,6 +14485,33 @@ if(j_err)return
 	end subroutine index !subroutine index(iob,io)
 
 	subroutine askc(iob,io) ! %%io
+	
+
+	! Section askc askc() asks a value for a character variable
+	! Usage ://
+		! askc(chvar1[,default->][,q->][,exit->])
+! Asks values for character variables when reading commands from an include file.
+!endheader
+! Option 
+
+! Args&0-4&REAL | ILIST&row and column range as explained below.
+
+! Args & 0|1 &CHAR & character variable (need not exist before)
+
+! default&0|1&CHAR & default character stings
+! q & 0|1 &CHAR &text used in asking
+! exit& -1|0& & if the character constant or variable given in this option is read, then the control
+! return to command level similarly as if an error would occur.
+! endoption
+! Note 
+! Response with carriage return indicates that the variable gets the default value. If there is no
+! default-> option, then the variable will be unchanged (i.e. it may remain also as another
+! object type than character variable).
+! endnote
+! Note: If there are no arguments, then the value is asked for the output variable, otherwise for
+! the arguments.
+! endnote
+! endsection	
 
 		character*40 line_
 		character*40 def
@@ -14203,6 +14607,35 @@ if(j_err)return
 	end subroutine askc !subroutine askc(iob,io)
 
 	subroutine ask(iob,io)  !ask()
+	
+	! Section ask ask() asks a value for REAL
+! ask([var][,default->][,q->][,exit->])//
+! Ask values for a variable while reading commands from an include file.//
+! Argument://
+! var 0 or one real variable (need not exist before)
+! Options:
+! default default values for the asked variables
+! q text used in asking
+! exit if the value given in this option is read, then the control returns to command level
+! similarly as if an error would occur. If there is no value given in this option, then
+! the exit takes place if the text given as answer is not a number.
+!endheader
+! Note If there are no arguments, then the value is asked for the output variable, otherwise for
+! the argument. The value is interpreted, so it can be defined using transformations.
+! Response with carriage return indicates that the variables get the default values. If there is no
+! default-> option, then the previous value of the variable is maintained (which is also printed
+! as the default-> value in asking)
+! endnote
+
+! Ex askex Examples for ask()
+! a=ask(default->8)
+! ask(a,default->8)
+! print(ask()+ask()) ! ask without argument is a numeric function
+! ask(v,q->'Give v>')
+! endex
+! endsection
+	
+	
 		integer,dimension(:),pointer::arg,argq
 		logical::yes
 !	character*40 line_
@@ -14369,6 +14802,14 @@ if(j_err)return
 	end subroutine cdf !subroutine cdf(iob,io)
 
 	subroutine close(iob,io)  ! close()
+	! Section close close() closes a file
+	! close(file) closes an open file where file is either a character constant
+	! or character variable associated with a file.
+	! endheader
+	! Note No open(9 function is needed. An file is opened when it is first time in write().
+	! if the file exists, it is asked whether the old file is dleted.
+	! endnote
+	! endsection
 		logical ope
 !	io=io_
 		narg=j_o(iob)%i(io+1)
@@ -14445,6 +14886,43 @@ if(j_err)return
 ! end subroutine recl_ !subroutine recl_(iob,io)
 
 	subroutine read(iob,io)   !read()   %%io
+	
+!Section read read() read from a file
+! read(file,format[,obj1,…,objn][,eof->var] [,wait->])//
+! Reads real variables or matrices from a file. If there are no objects 
+! to be read, then a record is
+! by-passed.//
+! Arguments:
+! file the file name as a character variable or a character constant//
+! format//
+! b' unformatted (binary) data //
+! 'bn' unformatted, but for each record there is integer for the size of the record. Does
+! not work when reading matrices.
+! 'bis' binary data consisting of bytes, each value is converted to real value (the only
+! numeric data type in J). This works only when reading matrices.//
+! '(….)' a Fortran format. Does not work when reading matrices.
+! $ the * format of Fortran//
+! obj1,…,objn
+! J objects//
+! Options://
+! eof Defines the variable which indicates the end of file condition of the file. If the end
+! of the file is not reached the variable gets the value 0, and when the end of file is
+! reached then the variable gets value 1 and the file is closed without extra notice.
+
+! When eof-> option is not present and the file ends then an error
+! condition occurs and the file is closed.//
+! wait J is waiting until the file can be opened. Useful in client-server applications. See
+! chapter J as a server.
+!endheader
+!Note Use ask() or askc() to read values from the terminal when reading lines from an
+! include file.
+! endnote
+! Note When reading matrices, their shapes need to
+! be defined earlier with matrix()
+! hfunction.
+! endnote
+! endsection
+	
 
 		integer,dimension(:),pointer :: eof  !eofvariable
 		integer :: neof
@@ -14592,6 +15070,125 @@ if(j_err)return
 	end subroutine read !subroutine read(iob,io)
 
 	subroutine write(iob,io)   !write( ) %%io
+!Section write write() 
+	! write(file,format,val1,…,valn[,tab->][,rows->])! case[1/6]
+! Writes real values to a file or to the console. If val1 is a matrix then this matrix (or usually
+! vector) is written or at most as many values as given in the values-> option.
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! format
+! $ indicates the '*' format of Fortran, works only for numeric values.
+! A character expression, with the following possibilities:
+! A format starting with 'b' will indicate binary file. Now 'b' indicates ordinary
+! unformatted write, later there will be other binary formats
+! A Fortran format statement, e.g. (~the values were ~,4f6.0), with this
+! format pure text can be written by having no object to write (e.g.
+! write('out.txt','(~kukuu~)')).
+! For these formats, other arguments are supposed to be real variables or numeric
+! expressions or there is a matrix argument. If they are not, then just the real value
+! which is anyhow associated with each J object is printed (usually it will be zero).
+! If the val1 argument is a matrix, then all values are printed.
+! val1,…,valn
+! real values
+! Options:
+! tab if format is a Fortran format then, tab-> option indicates that sequences of
+! spaces are replaced by tab character so that written text can be easily converted
+! to Ms Word tables. If there are no decimals after the decimal point also the
+! decimal point is dropped.
+! rows If val1 is a matrix or a vector and rows-> has one argument then at most as
+! many values are written as given in this option, if there are two arguments then
+! the option gives the range of written rows in the form rows->(row1,-row2). If the
+! upper limit is greater than the number of rows, no error is produced, all available
+! rows are just written.
+! write(file,'t',t1,val1,t2,val2,…,tn,valn[,tab->]) ! case[2/6]
+! Tabulation format. positive tab position values indicate that the value is written starting from
+! that position, negative tab positions indicate that the value is written up to that position. The
+! values can be either numeric expressions or character variables or character constants. Tab
+! positions can be in any order.
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! 't' tabulation format
+! t1,val1,t2,val2,…,tn,valn
+! KUVAUS
+! Options:
+! tab option indicates that sequences of spaces are replaced by tab character so that
+! writ-ten text can be easily converted to Ms Word tables.
+!endheader
+! note Variable names from a variable list can be written using @-construction. E.g. if xl is a
+! variable list, then both the name and value of element i can be written:
+! write($,'w',1,'@xl(i)=',8,@xl(i))
+! write(file,'w',w1,val1,w2,val2,…,wn,valn[,tab->]) ! case[3/6]
+! Width format: positive w-value indicates that the value is right-justified into field of that length,
+! negative w-values indicate that the value is left-justified. The value can be either numeric or
+! character expression.
+! In both 't' and 'w' format with integer w-value, numeric values are converted into character
+! expression with 8 characters. This special formatting drops unnecessary decimal points, leading
+! and ending zeros, and will give as much precision as can be obtained using 8 characters. If less
+! than 8 characters are needed, then one can use shorter fields than 8 characters.
+! A decimal w-value works similarly as f-format of Fortran, thus w-value 8.2 is equivalent to f8.2.
+! For technical reasons, the format with zero decimals but with decimal point included must be
+! given with w-value having decimal part .01, e.g. w value 5.01 is equivalent to f5.0. Note that
+! writing with zero decimal using e.g. 5,nint(value) will drop also the decimal point
+! (corresponding to I format of Fortran).
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! 'w' width format
+! w1,val1,w2,val2,…,wn,valn
+! KUVAUS
+! Options:
+! tab option indicates that sequences of spaces are replaced by tab character so that
+! writ-ten text can be easily converted to Ms Word tables.
+! note. Variable names from a variable list can be written using @-construction. E.g. if xl is a
+! variable list, then both the name and value of element i can be written:
+! write($,'w',8,'@xl(i)=',7,@xl(i))
+! When first write to a file is done, then the file will be opened. If the file already exists then J
+! asks if the old file can be deleted. Note that before answering you can rename the file. In that
+! case the old file will be saved even if you answer ‘y’.
+! write(file,text_object) ! case[4/6]
+! A text object can be written into a file using this form of write() function.
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! text_object
+! J text object
+! write(file,character) ! case[5/6]
+! When second argument is a character constant or character variable referring to a character
+! constant, then it is written to the file (or to the screen is file is $). Note character constant can
+! contain “”-sequences, and after J3.0 these can contain also format specifier.
+! Arguments:
+! file variable $ (indicating the console), or the name of the file as a character variable
+! or a character constant, or variable $Buffer
+! character a character constant or a variable referring to character constant	
+
+! note: You can put character information into the format (to put apostrophe within character
+! constant use (~),see Character constants and variables).
+! Examples:
+! write(‘out.txt’,’sin(“[f4.4]a” is “[f5.3]sin(a)”, believe or not’)
+! dir='d:\j\'
+! write('"dir"example.out','(~the values were ~,4f4.0)',@values)
+! Writing into $Buffer ! case[6/6]
+! If variable $Buffer is used as the file argument, then different write() function calls can put
+! information on the same line. Writing into $Buffer has the following logic. Other parts of J
+! consider $Buffer as real variable. The output buffer can be initialized by giving value zero to
+! $Buffer (i.e. giving command $Buffer=0), this is the situation initially. One can write onto
+! the buffer using $,'(...)', 't', or 'w' -formats. $ and '(... )' formats will also initialize
+! the buffer first, so only 't', and 'w' formats can be used to collect buffer in several parts.
+! After writing into the buffer, the real variable $Buffer gets the current length of the output.
+! The current output buffer can be written into file using either
+! write(file,$Buffer)
+! or $Buffer can be used similarly as character variables in writing with 'w' or 't' format, e.g.
+! write($,'t',1,$Buffer,$Buffer+2,'kukuu')
+! In the above first $Buffer indicates the current content of the buffer. In the tab value
+! $Buffer+2 indicates that the tab position is two characters past the buffer length.
+! close(file)
+! Closes an open file.
+! Argument:
+! file a character variable or constant telling the name of an open file. The file has been
+! created and opened with write(), print() or save() functio	
+!endsection
 
 		logical bin,wform,bin8
 		character*60 luku
@@ -15149,6 +15746,18 @@ if(j_err)return
 
 
 	subroutine t(iob,io) ! t(mat)  transpose  %%matrix
+	! Section t t() gives transpose of a MATRIX or a LIST
+	! t(MATRIX) is the transpose of a MATRIX. As LIST objects can now
+	! be used in matrix computations, t(LIST) is also available.
+	! endheader
+	! Note Multiplying a matrix by the transpose of a matrix can be made by
+	! making new operation '*.
+	! endnote
+	! Note The argument matrix can also be a submatrix expression.
+	! endnote
+	! endsection
+	
+	
 		double precision,dimension(:),allocatable :: copy
 
 		narg=j_o(iob)%i(io+1)
@@ -15503,6 +16112,12 @@ if(j_err)return
 ! end subroutine cycledo !subroutine cycledo(iob,io)
 
 	subroutine npv(iob,io)  ! npv()
+	! Section npv npv(): net present value
+	
+	! npv(]interest,income1,…,incomen,time1,…,timen[)//
+! Returns net present value for income sequence income1,...,incomen, occurring at times
+! time1,…,timen when the interest percentage is ]interest[.
+! endsection
 
 		double precision pv
 
@@ -15521,6 +16136,46 @@ if(j_err)return
 	end subroutine npv !subroutine npv(iob,io)
 
 	subroutine print(iob,io)  !print-function  %%io  print()
+	
+! Section print print() prints objects	
+! print(arg1,…,argn[,maxlines->][,data->][,row->]
+! [,file->][,func->][,debug->])//
+! Print values of variables or information about objects.//
+! Arguments:
+! arg1,…,argn
+! arguments can be any J objects or values of arithmetic or logical expressions
+! Options:
+! maxlines the maximum number of lines printed for matrices, default 100.
+! data data sets. If data-> option is given then arguments must be ordinary real
+! variables obtained from data.
+! row if a text object is printed, then the first value given in the row-> option gives the
+! first line to be printed. If a range of lines is printed, then the second argument
+! must be the negative of the last line to be printed (e.q. row->(10,-15)).Note
+! that nrows() function can be used to get the number of rows.
+! file the file name as a character variable or a character constant. Redirects the output
+! of the print() function to given file. After printing to the file, the file remains
+! open and must be explicitly closed (close(‘file’)) if it should be opened in
+! a different application.
+! form when a matrix is printed, the format for a row can be given as a Fortran format,
+! e.g. form ‘(15f6.2)’ may be useful when printing a correlation matrix.
+! debug the associated real variable part is first printed, and thereafter the tow associated
+! two integer vectors, the real vector and the double precision vector
+! func all functions available are printed
+! endheader
+! Note  For simple objects, all the object content is printed, for complicates objects only
+! summary information is printed. print(Names) will list the names, types and sizes of all
+! named J objects. The printing format is dependent on the object type.	
+!endnote
+! Note print() function can be executed for the output of a J command
+ ! by writing ';' or ';;' at the end of the line. The excution of implied print()
+ ! is dependent on the value of ]Printoutput[. If ]printoutput[ =0,
+ ! then the output is not printed, If ]printoutput[ =1, then ';' is 
+ ! causing printing, if ]Printoutput[ =2 then only ';;'-outputs are 
+ ! printed, and if ]Printoutput[ =3, the bot ';' and ';;' outputs are printed.
+! endnote
+	
+	
+! endsection
 ! file->filename  writen to file
 !print(cgar,file->) prints teh content of file
 !print(cahrvar) print the cahr
@@ -15642,8 +16297,8 @@ if(j_err)return
 
 
 		call j_clearoption(iob,io)  ! subroutine
-
-		if(narg.eq.1.and.j_otype(arg(1)).eq.j_ipchar.and.nfile.eq.0)then
+!write(6,*)'narg',narg,arg(1),nfile,j_otype(arg(1))
+		if(narg.eq.1.and.j_otype(arg(1)).eq.j_ipchar.and.nfile.lt.0)then
 			nuu=j_iounit(arg(1))
 !			write(6,*)'<77nuu',nuu
 			if(nuu.ne.0)then
@@ -16856,6 +17511,10 @@ iobs(1)=iobs(1)-nrejected(1)
 				endif !if(iform(id).eq.iformd.or.iform(id).eq.iformb)then
 				read(nu(id),'(a)')j_tempchar2
 				call j_command(j_tempchar2(1:len_trim(j_tempchar2)))
+				if(j_stop)then
+					call j_stopj()
+					return
+				endif
 				if(j_err)then
 					write(6,*)'error was in rfcode:',j_tempchar2(1:len_trim(j_tempchar2))
 					return
@@ -18239,6 +18898,17 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine matrix !subroutine matrix(iob,io)
 
 	subroutine trans(iob,io)  ! define transformation set   output=trans()
+! Section Transformations Transformation objects
+! The code lines generated by the input programming can be either 
+! executed directly after interpretation, or the interpreted code lines
+! are packed into a transformation object, which can be excuted with call()
+! which is either in the code generated with the input programming
+! or inside the same or other transformation object. Recursive 
+! calling a transformation is thus also possible. Different functions 
+! related to transformation object are described in this section.
+! endsection	
+	
+	
 !Section trans Generating a transformation object trans()
 !trans() function interprets lines from input paragraph following the trans() command and puts the
 !  interpreted code into an integer vector, which can be excuted in several places.
@@ -18308,7 +18978,7 @@ iobs(1)=iobs(1)-nrejected(1)
 !endex
 !Listing
 ! sit>transex
- ! <;incl(exfile,from->'transex')
+ ! <;incl(exfile,from->transex)
 
 
  ! <tr=trans()
@@ -18676,7 +19346,7 @@ iobs(1)=iobs(1)-nrejected(1)
 		iout=j_o(iob)%i(io+narg+2)
 		issub=j_linkoption(iob,io,j_msub,clear=.true.).ge.0
 		
-	write(6,*)'LISTnarg,iout',narg,iout,issub
+!	write(6,*)'LISTnarg,iout',narg,iout,issub
 		if(j_linkoption(iob,io,j_mmask).ge.0)then
 			nel=0
 			nel2=0  ! how many elements specified
@@ -19683,6 +20353,26 @@ iobs(1)=iobs(1)-nrejected(1)
 	end !recursive subroutine call(iob,io)
 
 	subroutine pause(iob,io)
+! Section pause Pause: pause()
+! Function pause() stops the execution of J commands which are either in an
+! include file or in TRANS object. The user can give any commands during the
+ ! pause() except input programming commands.
+! If the user presses <return> the excution continues. If the user gives 'e', then
+! an error condition is generated, and J comes to the sit> promt, except
+! if ]Continue[ has values 1, in which case the control returns one level above
+! the sit> promt.
+! If pause()  has a CHAR argument, then that character constant is used as 
+! the prompt.
+! endheader
+! Note When reading commands from an include file, the a pause can be generated also
+! with ;pause, which works similarly as pause(), but during ;pause also input programming
+! commands can be given.
+! endnote
+! endsection
+! give any commands during the pause. Typing <return>, the exceution continues. Typing 'e' or 'end',
+! an error is generated, and the control returns to sit> promt. 
+
+
 		if(j_o(iob)%i(io+1).gt.0)then
 			call j_getchar(j_o(iob)%i(io+2),j_pauseprompt,le)
 			if(j_err)return
@@ -19693,12 +20383,43 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine pause(iob,io)
 
 	subroutine noptions(iob,io)
+! Section noptions Number of options in the current function: noptions()
+! noptions() returns as a REAL value the number of options currently
+! active. This may be used for testing purposes.
+! endheader
+! Note When J processes options in different funtions, it varies at which point
+! options are cleared and number of options decreases
+! endnote
+! endsection
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
 		j_v(iout)=j_nopt
 	end subroutine !subroutine noptions(iob,io)
 	
 	subroutine R(iob,io)
+	!Section R executing an R-script: R()
+	! An R script can be executed with R(script) where script is CHAR object 
+	! defining the script text file. The function is calling //
+	! call execute_command_line('Rscript.lnk '//j_filename(1:le), wait=.false.)//
+	! Thus a shortcut for the Rscript program needs to be available.
+	! endheader
+	! Ex Rex Example of Rscript
+	! rscript=text()
+	! # A simple R-script that generates a small data to file mydat.txt
+! wd<-"C:/j3/"
+! x<-runif(10,0,10)
+! y<-cbind(1,x)%*%c(1,2)+rnorm(10)
+! mydat<-data.frame(y,x)
+! write.table(mydat,file=paste(wd,"/mydat.txt",sep=""))
+! //
+! write('miniscript'.r',rscript)
+! close('miniscript.r)
+! R('miniscript.r')
+! print('mydat.txt')
+! endex
+	
+	
+	
 		integer, dimension(:), pointer :: arg
 		logical exis
 		call j_startfunction(iob,io,j_ipchar,.false.,narg,arg,ivout,minarg=1)
@@ -19719,6 +20440,18 @@ iobs(1)=iobs(1)-nrejected(1)
 			
 	end subroutine
 	subroutine text(iob,io)   !
+	! Section text text() creates the old TEXT object
+	! Text objects are created as a side product by many J functions. Text objects can be created
+! directly by the text() function which works in a nonstandard way. The syntax is:
+! output=text()//
+! …
+! //
+
+! The input paragraph ends exceptionally with '//' and not with '/'. The lines within the input
+! paragraph of text are put literally into the text object (i.e. even if there would be input
+! programming functions or structures included)
+! endsection
+
 
 		narg=j_o(iob)%i(io+1)
 
@@ -19773,6 +20506,10 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine text(iob,io)
 
 	subroutine txt(iob,io)   !
+	! Section txt txt() generates the new TXT object.
+	! Works as text(), to be documented later. The new TXT object is used 
+	! to implement ;incl and Gnuplot -figures.
+	! endsection
 
 		narg=j_o(iob)%i(io+1)
 
@@ -20410,7 +21147,7 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine closures(iob,io)
 
 	subroutine difference(iob,io)
-	! Section differ Difference of LIST objects
+	! Section difference Difference of LIST objects
 	! difference() removes elements from a LIST
 	! endheader
 	! Option
@@ -20501,6 +21238,18 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine unsave(iob,io)
 
 	subroutine interpolate(iob,io)
+	! Section interpolate interpolate
+	! Usage://
+	! interpolate(x0,x1[,x2],y0,y1[,y2],x]//
+! If arguments x2 and y2 are given then computes the value of the quadratic function at value
+! x going through the three points, otherwise computes the value of the linear function at value
+! x going through the two points.
+! endheader
+! Note. The argument x need not be within the interval of given x values (thus the function also
+! extrapolates).
+! endnote
+! endsection
+	
 		integer, dimension(:), pointer :: argx,argy !arguments of the function
 		double precision denom,c1,c2,arg
 		logical ismatrix,found
@@ -20670,6 +21419,22 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine sign(iob,io)
 
 	subroutine getobs(iob,io)   !this is j_function
+	
+! Section getobs getobs() loads an obsevarion from  DATA	
+! Getting an observation from a data set: //
+! getobs(dataset,obs[,trans->])//
+! Get the values of all variables associated with observation obs in data object dataset. First all the
+! variables stored in row obs in the data matrix are put into the corresponding real variables. If
+! a transformation set is permanently associated with the data object, these transformations are
+! executed.
+! endheader
+! Option
+! dataset&1&DATA & the DATA object
+! obs &1& REAL& row number in the data matrix of the dataset
+! trans&-1|1 & TRANS & these transformations are also executed.
+! endoption
+! endsection
+	
 
 		logical listarg
 		logical arg
@@ -20729,8 +21494,8 @@ iobs(1)=iobs(1)-nrejected(1)
 ! der(x)
 ! f=(1+x)*cos(x)
 ! /
-! fi=draw(func->tr(d[x]),x->x,xrange->(0,10),color->Blue)
-! fi=draw(func->tr(f),x->x,xrange->(0,10),color->Cyan,append->)
+! fi=draw(func->tr(d[x]),x->x,xrange->(0,10),color->Blue,continue->)
+! fi=draw(func->tr(f),x->x,xrange->(0,10),color->Cyan,append->,continue->fcont)
 !endex
 !Ex derex2  
 ! X=matrix(do->(0,1000,10))
@@ -20748,7 +21513,7 @@ iobs(1)=iobs(1)-nrejected(1)
 ! fi=draw(func->(rect(f)),x->I,xrange->(0,1000),color->Orange,width->2,continue->,show->0)
 ! da=newdata(X,Y,e,extra->(Regf,Resid),read->(I,P,er))
 ! stat()
-! fi=plotyx(P,I,append->,show->0,continue->)
+! fi=plotyx(P,I,append->,show->0,continue->fcont)
 
 ! A,Pmax,R=0.07,17,3 !initial values
 
@@ -20757,7 +21522,7 @@ iobs(1)=iobs(1)-nrejected(1)
 ! reg%var;
 ! reg%corr;
 ! corrmatrix(reg%var);
-! fi=draw(func->(rect(f)),x->I,xrange->(0,1000),color->Violet,append->)
+! fi=draw(func->(rect(f)),x->I,xrange->(0,1000),color->Violet,append->,continue->fcont)
 !endex
 !endsection
 
@@ -21391,9 +22156,9 @@ iobs(1)=iobs(1)-nrejected(1)
 				write(6,*)name(1:le),' new ',j_objecttypes(j_otype(iv))
 
 			endif !if(j_otype(iv).eq.j_ipreal)then
-			if(j_ninc.gt.1)then
-				write(6,*)'**input line: ',j_inp(1:j_linp)
-			endif !if(j_ninc.gt.1)then
+			! if(j_ninc.gt.1)then
+				! write(6,*)'**input line: ',j_inp(1:j_linp)
+			! endif !if(j_ninc.gt.1)then
 		endif !if(lin.gt.0)then
 
 	80 continue !io=io+3
@@ -21537,6 +22302,11 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine laaspoly(iob,io)
 
 	subroutine loggamma(iob,io)  !
+	! section loggamma loggamma function: loggamma()
+	! Function gamma() produces the value of loggamma funtion for a positive argument.
+	! The function utilises gamma subroutine from
+	! library dcdflib in Netlib.
+	! endesection
 
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -21547,14 +22317,21 @@ iobs(1)=iobs(1)-nrejected(1)
 			return
 
 		endif !if(arg.lt.0)then
-		write(6,*)'loggamma given is you need it, (J.L.)'
+		write(6,*)'loggamma given if you need it, (J.L.)'
 		j_err=.true.
 		return
 	  !numerical recipes not availablegammln(v(o(iob)%i(io+2)))
 !	90 io=io+narg+3
 		return
 	end subroutine !subroutine loggamma(iob,io)
-	subroutine gamma_(iob,io)  !
+	
+	subroutine gamma_(iob,io)  ! gamma(iob,io)
+	! Section gamma gamma function: gamma()
+	! Function gamma() produses the value of gamma funtion for a positive argument.
+	! The function utilises gamma subroutine from
+	! library dcdflib in Netlib.
+	! endsection
+	
 
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -21569,7 +22346,23 @@ iobs(1)=iobs(1)-nrejected(1)
 !	90 io=io+narg+3
 		return
 	end subroutine !subroutine gamma_(iob,io)
+	
 	subroutine negbin(iob,io)  !
+	! Section negbin negbin():: negative binomila distribution
+! negbin(]k[,]myy[,]theta[)//
+! Gives the probability that a negative binomial random variable
+ ! has value ]k[ when the variable
+! has mean ]myy[ and variance ]myy[+]theta[*]myy[**2. 
+! endheader
+! Note  negbin(k,n*p,0)=
+! bin(k,n*p). 
+! endnote
+! Note Sorry for the parameter inconsistency with rannegbin().
+! endnote
+! endsection
+	
+	
+	
 		double precision gamma,arg,pk,ak,amyy,kert
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -21608,6 +22401,53 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine negbin(iob,io)
 	
 	subroutine density(iob,io)
+!Section density density() define 
+!any discrete or continues distribution for random numbers either with a function
+!or histogram generated with classify()
+!	endheader
+	!Option
+!Args&0-1&MATRIX & MATRIX generated with classify()
+!func& N|1& &codeoption defining the density. The x-varaible is $.
+!xrange&0|2& REAL& Range of x-values
+!discrete&-1|0& & Presence implies the the distribution is discrete
+!endoption
+!Note Actually the function generates a matrix having towo rows which 
+!has values for the cumulative distribution function.
+!endnote
+!Note When defining the density function, the user need not care about
+!the scaling constant which makes the integral to integrate up to 1.
+!endnote
+!Ex densityex Example of distributions
+! ber=density(func->(1-p+(2*p-1)*$),xrange->(0,1),discrete->); Bernoully
+! bim=matrix(100)
+! bim=random(ber)
+! mean(bim);
+! p*(1-p);  !theoretical variance
+! var(bim);
+! pd=density(func->exp(-0.5*$*$),xrange->(-3,3))  !Normal distribution
+
+! ra=random(pd);
+! f=matrix(1000)
+! f=random(pd)
+! da=newdata(f,read->x)
+! stat(min->,max->)
+! cl=classify(x->x,xrange->);
+! fi=drawclass(cl)
+! fi=drawclass(cl,area->)
+
+
+! fi=draw(func->pdf(x),x->x,xrange->,append->)	
+! f=matrix(1000)
+! f=rann()
+! da=newdata(f,read->x)
+! stat(min->,max->)
+! cl=classify(x->x,xrange->)
+! fi=drawclass(cl,histogram->,classes->20)
+! den=density(cl);
+! fi=drawline(den)
+! endex
+! endsection
+	
 	double precision ::xx,scale,sum,dd,xmin,xmax,yvalue
 	integer, dimension(:), pointer :: arg !arguments of the funct
 	logical ::isdisc
@@ -21700,6 +22540,13 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine
 
 	subroutine bin(iob,io)  !binomial distribution
+	! Section bin bin(): binomial probability
+	! bin(]k[,]n[,]p[)//
+! Gives the binomial probability that there will be ]k[ successes 
+! in ]n[ independent trials when in a
+! single trial the probability of success is ]p[.
+! endsection
+	
 		double precision coef,p
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)

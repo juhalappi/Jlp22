@@ -1,23 +1,10 @@
 !
 ! J Software
 !
-! Copyright (C) 2021 Juha Lappi and Natural Resources Institute Finland (Luke)
-! Author  Juha Lappi
+! Copyright (C) 2022 Juha Lappi and Natural Resources Institute Finland (Luke)
+! Author  Juha Lappi and Reetta Lempinen (in factory optimization)
 !
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU Affero General Public License as
-! published by the Free Software Foundation, either version 3 of the
-! License, or (at your option) any later version.
 !
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU Affero General Public License for more details.
-!
-! You should have received a copy of the GNU Affero General Public License
-! along with this program.  If not, see <https://www.gnu.org/licenses/>.
-!
- 
 !-----------------------------------------------------------
 !
 ! jlp.f90	All subroutines needed in jlp-functions
@@ -2582,7 +2569,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	
 	ivunit=j_igetopt(iob,io,j_munit)
 	isunit=ivunit.gt.0
-	write(6,*)'ivunit ',ivunit
+!	write(6,*)'ivunit ',ivunit
 
 	fastpros = 90
 	i = j_igetopt(iob,io,j_mfastpercent)
@@ -3102,7 +3089,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		ivcmat=j_o(ivcdata)%i(1)
 		jlp_ivkeepc=j_o(ivcdata)%i(2)
 		keepc=j_o(jlp_ivkeepc)%i(1)
-		write(6,*)'dgdgu',ivxmat,jlp_ivkeepx,keepx,ivcmat,jlp_ivkeepc,keepc
+	!	write(6,*)'dgdgu',ivxmat,jlp_ivkeepx,keepx,ivcmat,jlp_ivkeepc,keepc
 
 	else !if(j_linkoption(iob,io,j_mdata).gt.0)then
 		ivcdata=0

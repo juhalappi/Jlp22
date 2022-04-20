@@ -1,17 +1,24 @@
-!+--! with gfortran J_precompiler.exe can be made using: gfortran j_precompiler.f90 -o j_precompiler
-
-
+! Copyright (C) 2022 Juha Lappi
+! This is published using MIT licence 
+! this program can be used  to generate file jmanual.tex which can be used to generate the 
+! PDF -manual (together with jmain.text)
+! The program lso generates the scrip file jexamples.inc which can be used to run all examples in the manual
+! The program is using two input files, in adition to the source code file jutilities.f90, j.f90 and jlp.f9. jections.txt and jsections2.txt.
+! The manual consists of sections which are defined either in the source files or in the 
+!  file jections.txt. The file jsections2.txt defines in which order the sections are put into the manual
+! and what is the hierarechical status (section, subsection, subsubsection) os each 'raw' section.
+! Note the used documentclass does not recognize chapters.
 
 
 program j_manual
 !use koemod,only: koe2
 
 	use jmod, only: j_nfunctions_,j_noptions_,j_functions,j_options
-	integer,parameter ::maxsections=2000
+	integer,parameter ::maxsections=1000
 	integer,parameter :: maxmacros=200  !common options
 	integer,parameter :: maxfuncs0=100 !per section
 	integer,parameter :: maxfuncs=1000 !all together
-	integer,parameter::maxhead=500 !lines per header
+	integer,parameter::maxhead=2000 !lines per header
 	integer,parameter::maxsec=1000 !lines per sectio
 	integer,parameter::maxlfunc=10000 !lines per function
 	integer,parameter::maxex=10000 !examples
@@ -304,7 +311,9 @@ goto 235
 	subroutine writeincl()
 		write(6,*)'writing ',nexample, ' examples as include file'
 		write(20,'(a)')'exfile=thisfile()'
-		write(20,'(a)')"ask(wait,q->'wait after each exaple(1/0)>')"
+		write(20,'(a)')"ask(wait,q->'pause after each example(1/0)>')"
+		write(20,'(a)')"ask(fcont,q->'continue after each figure(1/0)>')"
+		write(20,'(a)')"current=';incl(exfile,from->current)'"
 		do ine=1,nexample
 		lef=len_trim(exfile(ine))
 	
@@ -409,7 +418,8 @@ goto 235
 		write(6,*)' '
 		write(6,*)'*********',line(ifirst(2):ilast(2)), ' not found in sections'
 		write(6,*)' '
-		goto 700
+		stop 'section not found'
+!		goto 700
 999	 write(6,*)' ' 
 	
 	do isec=1,nsection
@@ -507,6 +517,10 @@ if(p)write(6,*)'<76',inoption,nl,line(1:40),frommacro
 17		read(2,'(a)',end=789)line;nl=nl+1;le=j_len_trim(line)
 		nb=nonblank(line,1,le)  !if le=0 nb=1
 !		if(iper.eq.100)write(6,*)'jdjdj',line(1:le+1)
+		if(le.eq.0.and.insection)then
+		call putsec(' ')
+		goto 17
+		endif
 		if(line(nb:nb).ne.'!')goto 17
 		iter=index(line(1:le),'itemize')
 		if(iter.gt.0)then
@@ -555,6 +569,7 @@ goto 790
 		if(inmacro)then
 			if(line(1:le).eq.'endmacro')then
 				inmacro=.false.
+				
 			else
 	!		write(6,*)'putmacro ',line(1:le)
 				call putmacro(line(1:le))				
@@ -616,6 +631,10 @@ goto 790
 756	if(line(ifirst(1):ilast(1)).eq.'Section')then
 		call testblock()
 		nlsection=nl
+!		if(nlsection.gt.nlblock)then
+	!		write(6,*)'line ', nl ,' Section but block strated at ',nlblock, ' is not closed'
+!			stop 'startsection'
+!		endif
 		nsection=nsection+1
 		sectionstart(nsection)=nl
 		sectionlabel(nsection)=line(ifirst(2):ilast(2))
@@ -662,6 +681,7 @@ goto 790
 	!	sectionlabel(nsection)
 		inheader=.true.
 		insection=.true.
+		nlblock=nl
 		goto 1
 	endif
 !if(nl.eq.11690)write(6,*)'<66',line(ifirst(1):ilast(1)),line(ifirst(1):ilast(1)).eq.'Latex',insection,&
@@ -1061,7 +1081,8 @@ if(nl.eq.2997)then
 		nlblock=nl
 		goto 1
 	endif
-	
+	if(nl.eq.14707)write(6,*)'yysys&',ifirst(1),ilast(1),line(ifirst(1):ilast(1)).eq.'endnote'
+	if(nl.eq.14707)write(6,*)'****',line,'*',line(ifirst(1):ilast(1)),line(ifirst(1):ilast(1)).eq.'endnote'
 	if(line(ifirst(1):ilast(1)).eq.'endnote')then
 		if(.not.innote)then
 			write(6,*)'line ', nl, ' in ',infile(1:linfile),  'endnote but we are not in note'
@@ -1069,6 +1090,7 @@ if(nl.eq.2997)then
 		endif
 		call putsec('\end{note}')
 		innote=.false.
+		if(nl.eq.14707)write(6,*)'jjhdj',inheader
 		goto 1
 	endif
 	
@@ -1283,6 +1305,7 @@ if(nl.eq.2997)then
 	end subroutine
 	
 	subroutine testblock()
+		
 		if(inheader.or.inexample.or.inex2.or.innote&
 		.or.inmacro.or.inoption.or.inlatex.or.intabular)then
 			write(6,*)'line ',nl, ' in ',infile(1:linfile), ' cannot start new block before closing the previous block'
@@ -1402,7 +1425,7 @@ inoption0=.false.
 	subroutine putsec(inpu)
 	character*(*)inpu
 	if(index(inpu,'\textcolor{teal}{textcolor{teal}{Pi}').gt.0)stop
-	if(lsection(nsection).ge.500)then
+	if(lsection(nsection).ge.1000)then
 	write(6,*)'there is too long section ',nsection,' which started at line ',nlsection
 	
 	write(6,*)'we are now at line',nl, ' in ',infile(1:linfile), ':',line(1:le)

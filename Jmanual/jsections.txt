@@ -5,6 +5,8 @@
 !Inpuf ;enddo
 !Inpuf ;sum
 !Inpuf ;dif
+!Inpuf ;pause
+
 
 !Macro seecom
 !See \vref{comoptions} for more details. 
@@ -23,7 +25,8 @@
 !Macro in2 
 ! in&0|1-&Char&Indicates from where the data are read in. If there are no arguments, 
 ! then the data are in the following input paragraph. If the values are
-!character constants or a character variables, then data are read in from files those names.
+!character constants or a character variables, then data are read in from
+! files having those names.
 !endmacro
 
 
@@ -33,7 +36,7 @@
 
 
 !Macro trans
-! trans &-1 | 1&Trans&	transformation set which is executed for each observation. If there is a transformation set associated with the data set, those transformations are computed first.
+! trans &-1 | 1&TRANS&	transformation set which is executed for each observation. If there is a transformation set associated with the data set, those transformations are computed first.
 !endmacro
 
 !Macro filter
@@ -44,6 +47,1059 @@
 ! reject &-1 | 1&Code& logical or arithmetic statement (nonzero value indicating True) describing which observations will be rejected. trans-> transformations are computed before using reject->.
 !endmacro
 
+!Macro figure
+! append&N | 0 & & The graph is appended to an existing FIGURE. If the output is does not exist 
+! beforehand or it is not a FIGURE, then the figure is (and not error) is generated.
+! continue&N|0 & & Often sequentila figures are made using include files. It would be diffuct
+! to keep track of the figures if J continues the J script. Thus the default is that
+! after plotting the figure, J excutes pause() function. The user can
+! give any commands during the pause. Typing <return>, the exceution continues. Typing 'e' or 'end',
+! an error is generated, and the control returns to sit> promt. If the function
+! contains continue-> option, pause() is not generated.
+! xlabel & N | 1&CHAR & Label for x-axes. Default is the name of the x-variable.
+! ylabel & N | 1&CHAR & Label for y-axes. Default is the name of the x-variable.
+!xrange & N |1-2& the range for x-axes. Gnuplot generates it automatically, but
+! sometimes the range used by Gnuplot needs to be changed.
+!yrange & N |1-2& the range for y-axes. Gnuplot generates it automatically, but
+! sometimes the range used by Gnuplot needs to be changed.
+! color & N | 1 & REAL & The color used. The color indices are put to
+! following  predefined REAL variables: ]Black[, ]Red[, ]Green[, ]Blue[,
+! ]Cyan[ , ]Violet[, ]Yellow[, ]Orange[.
+! show& N | 1 & REAL & show->0 indicates the that the figure is not yet plotted. 
+! As the value 0 can be given also as a variable or it can be computed, 
+! the same code can produce different showing combinations.
+! axes & N | 1 &REAL & Are axes drawn. 
+! \begin{itemize}
+! \item[\textbf{J}] axes->11 Both axes are drawn. (Default)
+! \item[\textbf{J}] axes->10 x- axes is  drawn, y-axes not. 
+! \item[\textbf{J}] axes->01 x- axes is  drawn, y-axes not. ~ axes->1.
+! \item[\textbf{J}] axes->00 Neiher axes is drawn. ~ axes->0.
+! \end{itemize}
+! endmacro
+
+!Macro draw
+! x & 1 & REAL & The x-variable.  
+!xrange & 0 | 2& the range for x-axes. The range can be given with REAL values. If
+! no arguments are given, then J assumes that REAL objects ]x%min[ and ]x%[max, which
+! can be computed from data using stat() funtion with options min-> and max->.
+! append&N | 0 & & The graph is appended to an existing FIGURE. If the output is does not exist 
+! beforehand or it is not a FIGURE, then the figure is (and not error) is generated.
+! continue&N|0 & & Often sequentila figures are made using include files. It would be diffuct
+! to keep track of the figures if J continues the J script. Thus the default is that
+! after plotting the figure, J excutes pause() function. The user can
+! give any commands during the pause. Typing <return>, the exceution continues. Typing 'e' or 'end',
+! an error is generated, and the control returns to sit> promt. If the function
+! contains continue-> option, pause() is not generated.
+! xlabel & N | 1&CHAR & Label for x-axes. Default is the name of the x-variable.
+! ylabel & N | 1&CHAR & Label for y-axes. Default is the name of the x-variable.
+!yrange & N |1-2& the range for y-axes. Gnuplot generates it automatically, but
+! sometimes the range used by Gnuplot needs to be changed.
+! color & N | 1 & REAL & The color used. The color indices are put to
+! following  predefined REAL variables: ]Black[, ]Red[, ]Green[, ]Blue[,
+! ]Cyan[ , ]Violet[, ]Yellow[, ]Orange[.
+! show& N | 1 & REAL & show->0 indicates the that the figure is not yet plotted. 
+! As the value 0 can be given also as a variable or it can be computed, 
+! the same code can produce different showing combinations.
+! endmacro
+
+!Macro terminal
+! Note it is possible to theche window size us by Gnuplot by giving the window size
+! by defining the window size using the predefined CHAR variable Window.
+ ! When the size is transmitted to Gnuplot in a character line, it saves the work load
+ ! by not circulating the size using REAL values of J.
+! The default is \newline
+! Window='700,700'
+! endnote
+!endmacro
+
+!Section preface Preface
+! The most important change in the new J3.0 is that the software is made 
+! open source. Initially I made the software so that only I could understand
+! the structure and the code. When Reetta Lempinen started to work with me 
+! in version 2.0 incorporating factory problems, I learned what are the
+! weakest points in the software if it should be maintained by a group of 
+! people. But as I was always able to tell Reetta how the software worked,
+! only very slight improvements in the documentation etc. were made.
+! When I realized that my retirement age is approaching, I started to worry
+! how the software could be maintained after my retirement. In 2014 
+! when we were looking at how J could be utilized in Me-la software, 
+! I encountered old JLP concept ‘own function’, which was the method 
+! for allowing users of JLP to add own (arithmetic) functions if they
+! had access to the source code. Adding these two things together
+! I realized how J should be restructured so that it could be better 
+! maintained and how different users could add their own J functions, 
+! object types and options. 
+! I was then convinced that the best way to utilize these improvements
+! would be to make the soft-ware open source. This would also allow me 
+! to continue my work with J after my retirement. So I started to make
+! necessary changes that different users could start to maintain and
+! develop J source code. This meant changes in the file structure and 
+! data structures and additional documentation. By changing the data 
+! structures, J also became significantly faster (main reason was that 
+! I made allocatable pointers were changed into allocatable arrays). 
+! I made also a precompiler which allows the users access global module 
+! global variables without knowing where they are. To separate the
+! global variables from user’s own variables, they are separated 
+! by j_ -prefix. 
+! At least in this initial phase of the open J project, we did not 
+! try to comment all existing J functions. The purpose is to give the
+! user enough information that she/he can make own functions, object
+! types and options and access old object types and options.  Old J
+! functions do not show good examples how to make J functions, as I 
+! made just for this open J project general purpose utility functions
+! for starting a function and accessing options, and these are not 
+! utilized in the old code. Old J functions utilize directly the 
+! information of how the interpreted J code is organized. ‘User’s 
+! guide to own J3.0 packages’ describes how the user can develop 
+! and maintain J code. 
+! The previous version utilized some subroutines of IMSL package and
+! from the ‘Numerical Recipes in Fortran’ book.  These are now replaced 
+! mainly by open access routines from Lapack and Ranlib packages from 
+! the Netlib library. Roger Fletcher allowed to distribute his linear
+! programming sub-routines in the open J package (see the Conditions
+! of the use for the conditions).??
+! The users are invited to develop the new open J software. This first
+! version could be better documented, but I think that it is according 
+! to the open source ideas that software can be opened even if it is 
+! not so completely clean. I try to bear the shame for the poor 
+! documentation.
+! Suonenjoki. dd mm 2021
+! Juha Lappi
+
+
+!endheader
+!endsection
+
+!Section changes Changes from previous versions
+! The software is almost  completely rewritten. There are many new 
+! functions and properties. All the previous users should  look at the
+! new properties.  If an old user has difficulties to run their old scripts they should
+! contact J.L. Note that graphics now assumes that Gnuplot is installed.
+ 
+!endsection
+
+!Section intro Introduction
+!The J software can be used as is, i.e. using exe files. The User guide concentrates 
+!on using binary files, but some reference is aslo made to additional possiblities offered
+! by the open J code which Luke finally after 7 years deadlock allowed to publish.
+!endsection
+
+!Section intro1 Using exe files
+!J is a general program for many different tasks. In one end, J is a programming language which
+! can be used to program several kind of applicatios and tasks, starting from computing 1+1, either
+!at sit> promt or inside a trasformation object. 
+!In the other end, it contains many functions which
+! can do several tasks in statistics, plotting figures, 
+! deterministic and stochastic simulation and linear optimization. Forest planning with factories
+ !using jlp() function can take several hours. 
+! The general J functions and J trasformations can be combined in many ways.
+!
+!The development of new J applications is made easier with special input programming. Input 
+! programming can generate efficiently several J code lines with few lines so that any part of
+! object names can be have indices. J scripts can be read from include files which can contain
+! sections, so that all code of a project can be stored in one file. Different sections can
+! be executed by just writing the name of the section at sit> prompt.
+!
+!The code development is easy using efficient debugging tools. The output of a J function is printed
+! if the line ends with ';' or ';;'. After the code development, the printing can be put off without 
+! changing the code by telling with ]Printresult[ variable whether ';' or ';;' or - results 
+! are printed. During pause() the user can do any computations and print objects and
+! then either continue or interrupt the process. With ]Debugconsole[ variable the user can
+! tell whether pause() is generated after each command line read from an include file. With
+!]Debugcode[ the user can tell wther pause() is generated after each line when J excecutes
+! code made by the interpreter and which is packed into a transformation object.
+
+!J is now efficient program to do many kind matrix computations. After retirement I sold a client 
+!an algorithm which I dad developed using J. I submitted the algorith using Matlab code, 
+! and thus learned Matlab. Then I implemented all Matlab properties I found useful. 
+! all arithemetical, trigonometric and logical funtions cand operate both on scalars and matrices.
+! Some useful extensios to normal computation rules were addewd. Matrices can be made
+! from submatrices, submatrices can be extracted from matrices and replaced by other
+! matrices. 
+!
+!The list object is used to transimit and acces object lists. If the list elements are 
+! objects called REAL variables, the the list can be used in matrix computaions 
+! in the same way as column vectors.
+!
+! The input programming  has the following functions and capabilities.
+!\begin{itemize}
+!\item ;incl(file,form->) include code from file starting from a label, e.g. as ;ad1;
+!\item ;do(i,ia1,ia2,step) generates input records in a loop
+!\item ;if();then \\ !includes conditionally code
+!\item objstart"i"end  ! replaces i in the text with the integer value of i. Combined with ;do()
+! this provides possiblitesd to generate large numer of lines using only some linse
+! ;goto()  ! code is obtained from a different place of an include file.
+! ;elseif();then \\
+! ;else \\
+! ;endif
+!\end{itemize}
+
+! J functions can have arguments and options. Options are used to trasnmit optional arguments
+! to a function. Options are expressed as option->. If the option does not refer to a single object then
+! the value of the option must be put into parentrhesi.In some cases the prence or absence of an argument passes an logical
+! argument into a function. There tow groups of options, ordinaryy options and code options.
+! Ordinalry options treansmit either object names or numeric values into a function.
+! code options contain a short peice of code which is computed several times form within the function.
+! E.g. func->sin(x) can tells the draw() function waht is the function to be drawn. If 
+! computation of the codeoption rquires several lines, then thes lines can be 
+packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ REAL object, 
+! then the func->tr(]res[) is used to tell how the function value is computed.
+!endsection
+
+!Section jfuncs J functions: an overview
+!J functions are organized into 21 groups. Some of of the functions are such that the
+! interpreter converts the code given by the user into new function names. For instance
+! the code 1+2 is first changed into PLUS(1,2), and code a(3) is changed 
+! into form getelem(a,3). The following list contains also such implicit
+! function names to support also those users who are interested to start looking at
+! the open source code.
+! The ordering of functions in this manual is the same as in the file jmodules.f90
+!in order to make it easier to start looking the source code, even if the order is
+!not the most logical from the application point of view. When adding new functions into
+!any group is easy when the new function is put to the end of group so new functions are not inserted 
+! in the middle of group even if it would more logical.
+!
+!\begin{itemize}
+! \item Special functions
+! \begin{itemize}
+!	\item setoption
+!\item getelem
+!\item setelem
+!\item list2
+! \item o1_funcs
+!\item o2_funcs
+!\item o3_funcs
+!\item setcodeopt
+!\end{itemize}
+! \item  Objects
+	!\begin{itemize}	
+	
+! \item type
+!\item delete_o
+!\item exist_o
+!\item name
+!\end{itemize}
+! \item 	Transformations
+!\begin{itemize}		
+! \item trans
+!\item call
+!\item pause
+!\item noptions
+!\item R
+!\end{itemize}
+
+! \item  Loops and controls structures
+!\begin{itemize}		
+! \item do
+! \item if
+!\item ASSIGN
+!\item sit
+!\item which
+!\item errexit
+! \item goto
+!\item itrace
+ ! \item trace
+!\item tracenow
+! \item itraceoff
+!\item traceoff
+!\item tracetest
+!\item assone
+!\item enddo
+!\item assmany
+!\item goto2
+!\item goto3
+!\end{itemize}
+	
+! \item Arithmetic and logical operations after converting to the polish notation
+!\begin{itemize}		
+! \item HMULT
+!\item HDIV
+!\item IPOWER
+!\item MULT
+!\item DIV
+!\item PLUS
+!\item MINUS
+!\item EQ
+!\item NE
+!\item LE
+!\item LT
+!\item GE
+!\item GT
+!\item NOT
+!\item AND
+!\item OR
+!\item EQV
+!\item NEQV
+!\item POWER
+!\end{itemize}
+! \item Arithemetic functions which can operate on scalars or on matrices
+!\begin{itemize}		
+\item min
+!\item max
+!\item sign
+!\item mod
+!\item nint
+!\item int
+!\item ceiling
+!\item floor
+!\item sqrt
+!\item sqrt2
+\item log
+!\item log10
+!\item exp
+!\item sin
+!\item sind argument is in degrees, also in the following
+!\item cos
+!\item cosd
+!\item tan
+!\item tand
+!\item cotan	
+! \item cotand
+!\item asin
+!\item asind
+!\item acos
+!\item acosd
+!\item atan
+!\item atand
+!\item acotan
+!\item acotand
+!\item sinh
+!\item cosh
+!\item tanh
+!\item fraction
+!\item abs
+!\end{itemize}
+	
+! \item  Special arithemetic functions
+!\begin{itemize}	
+!\item der
+!\item gamma
+!\item loggamma
+!\item logistic
+!\item npv
+!\end{itemize}
+	
+! \item  Probability distributions
+!\begin{itemize}	
+!\item pdf
+!\item cdf
+!\item bin
+!\item negbin
+!\item density
+!\end{itemize}
+! \item Random numbers 
+!\begin{itemize}	
+!\item ran
+!\item rann
+!\item ranpoi
+!\item ranbin
+!\item rannegbin
+!\item select
+!\item random
+!\end{itemize}
+! \item Interpolation
+!\begin{itemize}	
+!\item interpolate
+!\item plane
+!\item bilin
+!\end{itemize}
+	
+! \item  List functions
+	!\begin{itemize}	
+!\item  list
+!\item merge
+!\item difference
+!\item index
+!\item index_v
+!\item len
+!\item ilist
+!\item putlist
+!\end{itemize}
+! \item  Creating a text  object
+	!\begin{itemize}	
+!\item text
+!\item txt
+!\end{itemize}
+! \item File handling
+	!\begin{itemize}	
+! \item exist_f
+!\item delete_f
+!\item close
+!\item showdir
+!\item setdir
+!\item thisfile
+! \item filestat
+! \item read
+!\item write
+!\item print
+!\item ask
+!\item askc
+!\item printresult
+! \item printresult2
+!\end{itemize}
+	
+! \item  Matrices
+	!\begin{itemize}	
+! \item matrix
+!\item nrows
+!\item ncols
+!\item t
+!\item inverse
+!\item solve
+! \item qr
+!\item eigen
+!\item sort
+!\item envelope
+! \item ind
+!\item mean
+!\item sum
+!\item var
+!\item sd
+!\item minloc
+!\item maxloc
+!\item cumsum
+!\item corrmatrix
+!\end{itemize}
+	
+! \item  Data functions
+!\begin{itemize}		
+! \item data
+!\item newdata
+!\item exceldata
+!\item linkdata
+!\item getobs
+!\item nobs
+! \item classvector
+!\item values
+! \item transdata
+!\end{itemize}
+	
+! \item  Statistical functions
+	!\begin{itemize}	
+! \item stat
+!\item cov
+!\item corr
+ ! \item regr
+!\item mse
+!\item rmse
+!\item coef
+!\item r2
+!\item se
+!\item nonlin
+! \item varcomp
+! \item classify
+! \item class
+!\end{itemize}
+	
+! \item  Linear programming
+	!\begin{itemize}	
+! \item problem
+!\item jlp
+!\item weights
+!\item unit
+!\item schedcum
+!\item schedw
+!\item weight
+!\item partweights
+!\item partunit
+!\item partschedcum
+! \item partschedw
+!\item partweight
+!\item priceunit
+! \item weightschedcum
+!\item priceschedcum
+!\item priceschedw
+! \item weightschedw
+!\item integerschedw
+!\item xkf
+!\end{itemize}
+	
+! \item Plotting figures
+	!\begin{itemize}	
+! \item plotyx
+!\item draw
+!\item drawclass
+! \item drawline
+!\item show
+! \item plot3d
+!\end{itemize}
+! \item Splines, stem splines,  and volume functions
+	!\begin{itemize}	
+! \item tautspline
+!\item stemspline
+!\item stempolar
+!\item laasvol
+!\item laaspoly
+!\item integrate
+!\end{itemize}
+	
+! \item Bit functions
+!\begin{itemize}		
+! \item setbits
+!\item clearbits
+!\item getbit
+!\item getbitch
+!\item bitmatrix
+!\item setvalue
+!\item closures
+!\end{itemize}
+	
+! \item  Misc. utility functions
+!\begin{itemize}	
+! \item value
+!\item properties
+!\item cpu
+!\item seconds
+!\end{itemize}
+!\end{itemize}
+
+!endsection
+
+!Section special Special functions
+!The special functions are such that the interpreter uses these functions for special operations.
+!Only list2() is function which also the user can use, but the interpreter is
+! is using it implicitly. 
+!endsection
+!
+!Section setoption setoption(): set option on
+! When a function has an option then the interpreter generates first code
+! setoption(...) where the arguments of the option are interpred in the similar way as
+! arguments of all functions. Then the interpreter genarates the code for
+! setoption() function in a special way. 
+!endsection
+
+!Section getelems getelem(): extracting information from an object
+! The origin of this function is the function which was used in previous versions
+!to take an matrix element, which explains the name. Now it is used to extract 
+! also submatrices (e.g. a(1,-3,All)) , or to get value of an regression 
+! function or to compute
+!a transforamtion and then take argument object as the result. E.g. if ]tr[ is a transformation
+!then the result of  ]tr[(]a[) is object ]a[ after calling ]tr[.
+!endheader
+!Note If someone starts to use the own function property of the open source J, she/he
+! probably would like to get the possiblity to extract information from her/his object types
+! also. To implement this property requires some co-operation from my side.
+!endnote
+!endsection
+
+!Section setelem setelem(): Putting something  into an object.
+! The origin of this function is the function which was used in previous versions
+!to set an matrix element, which explains the name. Now it is used to replace values 
+!of submatrices when submatrix expression is on the
+! output side (e.g. a(1,-3,All)=..). 
+!endheader
+!Note If someone starts to use the own function property of the open source J, she/he
+! probably would like to get the possiblity to put information into from her/his object types
+! also. To implement this property requires some co-operation from my side.
+!endnote
+!Note In effect the getelem() and setelem() functions are excuted in the same
+! getelem() subroutine, because bot functions can utilize the same code.
+!endnote
+!endsection
+
+!Section list20 list2()
+!The interpreted utilizes this to separate when spearating output and input objects.
+! See Section \ref{list2} hw user can use this function
+!endsection 
+
+
+
+!Section setcode setcode(): Initialization of a code option
+! This function initializes an code option for a function which has the option. 
+!endsection
+
+!Section objects Functions for handling objects
+!The following functions can handle objects.
+!endsection
+
+!Section deleteuu delete_omika(): delete an object
+! delete_o(]Obj[) deallocates all the allocated components of the object and
+! makes the object a REAL variable (it is not possible to remove object names).
+! An charcter constant cannot be deleted. If a character variable (i.e. an oobject pointing
+! to a character constant) is associated with an open file, it cannot be
+!deleted before closing the file.
+!endheader
+!Note In previous versions files and objects were deleted with the same delete() function
+!which was potentially dangerous.
+!endnote
+!endsection
+
+!Section exist_o exist_o(): does an object exist
+! looks whether an object with the name given in
+! the character constant  argument exists. 
+!endheader
+!Note In the prvious versions of J same function was used for files and objects.
+!endnote
+!endsection
+
+!Section name name(): writes the name of an object
+! The argument gives the index of the object. This function
+! may useful if J prints in problem cases the object indices.
+!endsection
+
+
+!
+
+
+!Section sekava pupua
+! J is a general program for doing different tasks in data analysis, matrix computations,
+! simulation and optimization. It is intended to be used mainly in different forestry related
+! applications. It has superseded the previous linear programming software JLP (Lappi 1992).
+! Most users are interested in applying J in linear programming problems of forest management
+! planning. Linear programming functions and examples are described in chapter 11. J version
+! 2.0 is introducing factory problems where transportation costs and factory capacities can be
+! taken into account. Factory problems are also described in chapter 11. Shortest route to linear
+! programming problems is to read basics of command generation programming from chapter
+! 3.2, at least ;incl() function from chapter 3.2.3. Forestry LP-problem requires also use of
+! data() function (chapter 9.1) and usually also linkdata() function (chapter 9.3). LPproblems are defined with problem() function (chapter 11.5) and the problems are solved
+! with jlp() function (chapter 11.7). After version 2.1 it is possible to solve large ordinary linear
+! programming problems without problem() function using zmatrix-> option in jlp()
+! function. To access the weights of optimal treatment schedules and to get them into files
+! requires use of J-transformations (chapter 4.) inquiry functions (chapter 11.11), IO-functions
+! (chapter 8), loops (chapter 7.2). An example is given in chapter 11.
+!
+! J is operated using text command lines, but it contains tools which make this kind of operation
+! mode more efficient, e.g. input can be included from files so that a part of the input lines is
+! reinterpreted, input lines can be generated using loop constructs etc. These properties are
+! called here as input programming.
+!endsection
+
+!Section compo The main components of J program 
+! The structure of J program
+!Latex
+! \begin{itemize}
+! \item[\textbf{J}] Input programming which generates text input for the interpreter (subroutine
+! j_getinput). J commands are obtained:
+!\begin{itemize}
+!\item[\textbf{J}] from sit> prompt
+! \item[\textbf{J}] form possibly nested include files
+!\end{itemize}
+! \item[\textbf{J}] Interpreter which generates from text lines integer vectors containing function indices,
+! option indices and object indices (subroutine j_interpret). 
+!\item[\textbf{J}] Function driver which executes the code in the interpreted integer vector
+! (subroutine dotrans). The the function driver is using:
+!\begin{itemize}
+! \item[\textbf{J}] J functions which operate on arguments which are determined either as formal arguments or
+! via options.
+! \item[\textbf{J}] J objects
+! \item[\textbf{J}] Global variables and matrices
+! \item[\textbf{J}] Utility subroutines
+!\end{itemize}
+
+
+! \end{itemize}
+!endlatex
+ ! A user of J needs only input programming and J functions, but understanding of 
+ ! the other properties may help to understand waht is going on in a J session.
+!endsection
+
+!Section pack The components of the software package available in Github
+! 
+!endheader
+! \begin{itemize}
+! \item[\textbf{J}] Binary files for J found in Github folder Jbin
+	! \begin{itemize}
+	! \item[\textbf{J}] j3.0.exe: Fastest version of J.
+	! \item[\textbf{J}] j3.0_debug.exe: Version of J which shows which source lines are causing
+! 	memory limit violations.
+!\item[\textbf{J}] msys-2.0.dll, msys-gcc_s-seh-1.dll, msys-gfortran-5.dll, and
+! msys-quadmath-0.dll:  Msys dll
+s which need to be available. Tehy can be in the same folder as the exe files of J 
+	!\item[\textbf{J}] jmanual.exe: The program for generating the Latex code file jmanual.tex which produces this manual
+	! and the file jexample.inc which can be used to run all example in this guide.
+	!\item[\textbf{J}] jpre.exe: The precompler which gnerates code for accessing global variables.
+	! \item[\textbf{J}] jindent.exe: Program which makes indentation to source files and writes comments
+! that help to see how control structures are nested. 
+	! \end{itemize}
+!endsection
+
+
+ !Section objintro J objects
+ ! J objects have a simple yet efficient structure. Each object is associate with a double precision
+ ! variable, two integer vectors, one single precision vector, one double precision vector, 
+ ! one vector of characters and one vector of text lines. All vectors are allocated dynamically.
+ ! There are several object types which store data differently in these vectors.
+ ! Object can be either simple or compound objects. Compound objects are linked to other
+ ! objects which can be used also directly utilizing the standard naming conventions. All objects are
+ ! global, i.e. also users can acces all objects even if some predefined objects are locked so that
+ ! users cannot change them.  
+
+!endsection
+
+
+
+!Section system System requirement
+! The current binary versions of J are developed using Gfortran Fortran 90 compiler in MSYS2 MINGW 64-bit environment
+! under Windows 10. There are both release and debug versions available. 
+! Binary versions are ordinary console applications. It is recommended that J is used in command
+! prompt window, so that 
+! if execution of J terminates unexpectedly, the error debugging information, remains visible.
+! With the debug version the problematic line is indicated.
+! See chapter ? for more information of error handling.
+ 
+! See J3.0 Development Guide to start develop the software or to add
+! own functions. The development package contains, in addition to source code for
+! the standard J software, program Jmanual
+! which can be used to generate Latex code for the manual, program Jindent to make indentations for 
+! Fortran source files and
+! a precompiler Jpre which writes necessary Fortran statements to access all globa J data structures.
+
+! Figures are made with Gnoplot.
+!Gnuplot is freely available at
+
+ 
+ ! https://sourceforge.net/projects/gnuplot/files/gnuplot/5.4.2/
+ 
+ ! Download  download gp542-win64-mingw.exe. This will install gnuplot on your windows
+! system under C:\Program Files\gnuplot\. J will strat Gnuplot automatically when
+! plotting figures.
+
+!endsection
+
+
+
+!Section setup Set-up of J
+! The maximum number of available objects cannot be changed during a J session. It is determined during 
+! the initialization. When J is started it tries to read first file j.par from the default directory 
+! (see 'During the first use' chapter): The first line must look like
+! *2000
+! where the number gives the maximum number of named objects.  If j.par is not available, the default 
+! number of objects is 5000.
+! Thereafter there can be in j.par file any number of J commands executed directly (e.g. 
+! you can give shortcuts for 
+! commands which are handy e.g. when including repeatedly certain sections from include files). If you 
+! want to go directly into a specific J-application, you can put into j.par the corresponding include 
+! command.
+! If J is started from command prompt, there can be an include file name in the command line. This 
+! include file is run after commands read from j.par if it is available.  ?TESTAA
+!endsection
+
+!Section firstuse	During the first use
+! It is reasonable to have the exe versions and dll's found in 
+!Jbin folder in one folder, and to make shortcuts for exe-files
+! into all working folders. Edit the properties of the shortcut (right click the 
+! shortcut icon) so that the starting directory is the working directory. Or 
+! alternatively you can set the path to the folder containing J executable and 
+! run J in your working directory. Copy also the file j.par into each working 
+! directory.
+! It is recommended that J is run in the Command Prompt window even if it can be 
+! run also directly from the program shortcut.
+! Edit first the properties of the I/O window if you are using J directly or from 
+! the Command Prompt window. The properties of the I/O window can be changed by 
+! right-clicking the-icon at the upper left corner. It is reasonable to make the 
+! screen buffer rather large (large height) so that the whole history of the J 
+! session can be seen (this is done in the layout sheet of the shortcut 
+! properties). The default height of the I/O window is also probably too small. 
+! The width should be at least 81. If you would like to use mouse in copy and 
+! paste, put quick edit option on. Also the colours of the text and background of 
+! the J window should be made healthier for eyes (dark text, bright background).
+! To see that J is running properly, give your first commands at sit> prompt:
+! sit>a=7.7;
+! 
+! The result should look 
+! a=7.700000
+! sit>
+!It is possible to use arrow keys to gwt previous command lines.
+!
+! All input lines entered or generated by input programming at sit> prompt are 
+! called commands. Commands are either input programming commands (input 
+! commands) or commands that define operations in the J working environment 
+! (operation commands). Input commands and operation commands may read and 
+! interpret more input lines before returning control to the command level.
+! It is most convenient to develop J applications using include files. There is 
+! available in the jdoc-demo folder an include file jexamples.txt 
+! which can be used to run all examples in this manual. If the include file
+!is in the working directory you can run any example by wrting the name of the example
+! in the J-window if you have given ';incl(jexamples.txt)' at the sit> pronpt. 
+! The working environment of J consists of named objects, temporary objects, 
+! constants, functions, arithmetic operations and text paragraphs. Operation 
+! commands define simple arithmetic operations or more complicated operations on 
+! the data structures. Operation commands are defined using a transformation 
+! language. In addition to operation commands, the same transformation language 
+! is used to define transformation objects which are computed as a group, usually severl times,
+! and which 
+! can be linked in different ways to data structures or other 
+!transformation objects.
+!endheader
+!endsection
+
+!Section exit	Exiting J
+!To exit J program and close console window, just give end command:
+
+!sit>end
+!endheader
+!endsection
+
+!Section typo Typographical conventions
+!In this manual function names are written in red, option names in blue, object types in
+!capital letters, object names within the text are written in this color: {Object}.
+! Names like {ob1} are used as generic names for object and names like  {var1}
+! are generic names for REAL variables.
+!If there is no output for an operation command line, 
+!the object Result is used as the default output.
+!if the line ends with a single semicolon ';' or double semicolon ';;', then 
+!the output may be printed depending MIHIN KOHTAAN
+!In many cases there is no output object, and a possible
+! output given is ignored. If an explicit output is necessary, then '=' is
+! put in front of the function name. Notation ‘[=]’ means that the output can be given but 
+!it is not necessary. In most cases the default output Result is then used: 
+! In some cases no output is then generated (this will be indicated). 
+!For functions that return real values or matrices which can be
+! used directly in arithmetic or matrix operations, 
+!the existence of output is not indicated.
+
+!endheader
+!endsection
+
+!Section onames Object names
+!Object names start with letter or with '$'. Object names can contain any of 
+! symbols '#.%§/\_'. J is using '%' to name objects related to some other objects. 
+! E.g. function stat(x1,x2,mean->) will store means of variables x1 and x2 into 
+! variables x1%mean and x2%mean. Objects with name starting with '$' are not 
+! stored in the automatically created lists of input and output variables when 
+! defining transformation objects. The variable Result which 
+! is the output variable, if no output is given, is not put into these lists.
+! Object names can contain special characters (e.g. +-*=()) if these are closed 
+! within ‘[‘ and ‘]’, e.g. a[2+3]. This possibility to include additional information
+! is borrowed from Markku Siitonen, the developer of Mela software.
+! If an transformation object is created with trans() function, and the
+! intended global arguments are given in the list of arguments,
+! then a  local object {ob} created e.g. with transformation object {tr} have prefix
+! {tr/\} yelding {tr!\ob}. Actually also these objects are global, but their prefix
+! protects them so that they do not intervene with objects having the same name in the
+! calling transformation objec.
+! There are many objects intitilized automatically.
+! Some of these are locked so that the users cannot change them. 
+! Names of objects having a predefined interpretation start with capital letter. 
+! The user can freely use lower or upper case letters. J is case sensitive.
+! All objects known at a given point of a J session can be listed by command:
+! print(Names)
+!endheader
+!endsection
+
+
+
+!Section copy 	Copying object: a=b
+!A copy of object can be made by the assignment statement a=b.
+!endheader
+!endsection
+
+!Section delete Deleting objects: delete_o()
+! When an object with a given name is created, the name cannot be removed. With 
+! delete_0() function one can free all memory allocated for data structures needed 
+! by general objects:
+! delete_o(obj1,…,objn)
+! After deleting an object, the name refers to a real variable (which is 
+! initialized by the delete_o() function into zero).
+!endheader
+!Note  Other objects except matrices can equivalently be deleted by giving 
+! command
+! obj1,…,objn = 0
+! This is because the output objects of any functions are first deleted before 
+! defining them anew. Usually an object is automatically deleted if the object 
+! name is as an output object for other functions.
+!endnote
+!Note One can see how much memory each object is using print(Names).
+!endnote
+!Note Deleting a compound object deletes also such 
+! subobjects which have no meaning when the main object is deleted. But e.g. if a 
+! data object is deleted then the as-sociated transformation object is not 
+! deleted as the transformation can be used independently.
+!endnote
+!Note Files can be deleted with delete_f(file). See IO-functions for 
+! details.
+!endnote
+!Note If the user has defined own new compound objects in the open source 
+! J software she/he needs to define the associated delete function.
+!endnote
+!endsection
+
+
+!Section otypes Object types
+! The following description describes shortly different object types available in 
+! J. More detailed descriptions are given in connection of J functions which 
+! create the objects and in Developers' guide.
+!endheader
+!endsection
+
+
+!Section realo Real variables and constants
+! A REAL variable is a named object associated with a single 
+! double precision value. Before version J3.0 the values were in single
+! precision, and thus this objecttype is still called REAL. 
+! The 
+! value can be directly defined at the command level, or the variable can get 
+! the value from data structures.  E.g.
+!endheader
+!Ex2 hopo2
+!  stat(D,H,min->,max->) &! Here arguments must be variable names
+!endex2
+!Ex2 real giving value to REAL
+! a = sin(2.4) &! argument is in radians sind() is for degrees
+! h = data(read->(x1…x4))  & ! x1, x2 ,x3, x4 are variables in the data set, and 
+! get their values when doing operations for the data.
+!endex2
+
+! All numeric constants appearing in transformations will be stored
+! as double precision 
+! constants.
+! Intermediate results in arithmetic calculations are stored into unnamed REAL
+! variables.
+
+!Note All objects have also an associated REAL value. In order to make 
+! arithmetic operations fast, the argument types in simple arithmetic functions 
+! are not checked. If a general object is used as an argument in an arithmetic 
+! operation, then the REAL value associated with the object is used. This will 
+! usually prevent the program to stop due to Fortran errors, but will produce 
+! unintended results.
+!endnote
+
+!Note  In this manual 'variable' refers to a J object whose type is REAL.
+!endnote
+!endsection
+
+!Section charo Character constants and variables
+! Character constants are generated by closing text within apostrophe signs ( ' 
+! ). Apostrophe character ( ' ) within a character constant is indicated with (~) 
+! (if the character ~ is not present in the keyboard, it can be produced by <Alt 
+! >126, where numbers are entered from the numeric keyboard) Character constants are used e.g.  in I/O functions for file names, formats 
+! and to define text to be written.  , e.g
+!endheader
+!Ex2
+! a = data(in->'file1.dat', read->(x1,x2)) &
+!endex2
+
+!Ex2
+! write('output.txt', '(~kukkuu=~,4f7.0)', sqrt(a)) & 
+!endex2
+!Latex
+! Character variables are pointers to character constants. An example of a 
+! character variable definition:
+
+!endlatex 
+
+!Ex2
+! cvar='file1.dat' & 
+!endex2
+!Latex
+! After defining a character variable, it can be used exactly as the character 
+! constants.
+!/endlatex
+!Note The quotation mark (") has special meaning in the input programming. See 
+! Input programming how to use character constants within character constants.
+!endnote
+!endsection
+
+!Section textob	Text objects
+! Currently there are two text object types, the old text object TEXT and the new 
+! TXT. The TEXT object stores text in a long vector of single characters. The TXT
+! object stores text in lines of 132 characters. The TEXT objects save memory but
+! are not so easy to modify and use. Several J 
+! functions create associated text objects. J functions text() and txt() 
+! can be used to 
+! create text objects directly. All the names of J objects are also stored in a 
+! TEXT object called Names. The number of lines in a text objects can be obtained 
+! with nrows() function and the total number of characters can be obtained with 
+! len() function.
+!endsection
+
+!Section logical0	Logical values
+! There is no special object type for logical variables. Results of logical 
+! operations are stored into temporary or named real variables so that 0 means 
+! False and 1 means True. In logical tests all non-zero values will mean True. 
+! Thus e.g. if(6)b=7 is legal statement, and variable b will get value 7. E.g.
+!endheader
+!Ex2 
+! sit>h=a.lt.b.and.b.le.8 &
+! sit>print(h) &
+! h=   1.00000 &
+!endex2
+!endsection
+
+!Section listo Object lists
+! An object list is a list of named J object. See Shortcuts for implicit object 
+! lists and List functions for more details. Object lists can be used also as 
+! pointers to objects, see e.g. the selector option of the simulate() function.
+!endsection
+
+
+
+!Section matrixo	Matrices and vectors
+! Matrices and vectors are generated with the matrix() function or they are 
+! produced by matrix operations, matrix functions or by other J functions. E.g. 
+! the data() function is producing a data matrix as a part of the compound data 
+! object. Matrix elements can be used in arithmetic operations as input or output 
+! in similar way as real variables.
+! See Matrix computations.
+!endsection
+
+
+!Section transo Transformation object
+! A transformation object groups several operation commands together so that they 
+! can be used for different purposes by J functions and J objects. A 
+! transformation object contains the interpreted transformations. For more details 
+! see J function for defining transformation objects: trans().
+! Transformation objects can be called using call() function, so that all 
+! transformations defined in the object are done once. Function result() also calls 
+! transformations but is also returning a value. When transformation objects are 
+! linked to data objects, then the transformations defined in trans-formation object 
+! are done separately for each observation.
+! There is an implicit transformation object $Cursor$ which is used to run the 
+! command level. The name $Cursor$ may appear in error messages when doing 
+! commands at command level.  An-other transformation object $Val$ which is used to 
+! take care of the substitutions of "-sequences in the input programming. Some J 
+! functions use also implicitly transformations object $Cursor2$.
+!endsection
+
+!Section simulatoro	Simulator
+! A simulator is a transformation object with a few additional parameters. The 
+! simulator is described in the Simulator chapter.
+!endsection
+
+
+
+!Section problemo	Problem definition object
+! Problem definition object is a compound object produced by the problem() function, and it is 
+! described in Linear programming.
+!endsection
+
+
+!Section figureo Figure object
+! Graphic functions produce FIGURE objects. Each FIGURE object can consist of 
+! several subfigures. Each FIGURE object stores information of x- and y axes, the 
+! range of all x- and y-values, and for each sub-figure information of the ranges 
+! of x and y in the subfigure plus the subfigure type and the needed data values. 
+! Currently, when Gnuplot is used for graphics, most data values are stored 
+! in text files which Gnuplot reads. Function plot3d() is plotting 3-d figures without making a FIGURE object.
+! See Plotting figures for more information.
+!endsection
+
+!Section storageo	Storage for variables
+! Especially in a simulator it may happen that a set of variables have certain 
+! values but the same variables are used for other purposes for some time and 
+! then one would like to get the previous values. There is special J object used 
+! to store the values, and special store() and load() functions to deal with the 
+! storage.
+!endsection
+
+!Section bitmatrixo	Bitmatrix
+! A BITMATRIX is an object which can store in small memory space large matrices 
+! used to indicate logical values. A BITMATRIX object is produced by bitmatrix() 
+! function or by closures() function from an existing bitmatrix. Bitmatrix values 
+! can be read from the input stream or file or set by setvalue() function. The 
+! values of bitmatrix elements can be accessed with value() function.
+!endheader
+!Note: Also ordinary real variable can be used to store bits. See bit functions.
+!endnote
+!endsection
+
+!Section traceo Trace set
+! TRACESET is an object created by ;trace() function which is used by 
+! tracetest() function to test if a set of variables has been updated. See 
+! chapter Tracing variables.
+!endsection
+
+
 
 
 
@@ -52,10 +1108,9 @@
 ! J has two programming levels. First level, called input programming, generates text lines which are then
 ! transmitted to the interpreter which generates code which is the put into transformations sets or 
 !excuted directly. Input programming loops make it possible to generate large number of command lines 
-! in a compact and short form. This chapter describes input programming commands.
-!endheader
+! in a compact and short form. This chapter describes input programming concepts and commands.
 !endsection
-! Section inpuline Input line and input paragraph
+!Section inpuline Input record and input line 
 !J reads input records from the current input channel which may be terminal, file or a text object.
 ! When J interprets input lines, spaces between limiters and function or object names are not
 ! significant. In input programming, functions start with ';' which is part of the function name (and
@@ -83,7 +1138,9 @@
 ! be interpreted as comment (!debug will put a debugging mode on for interpretation of the
 ! line, but this debug information can be understood only by the author). If a comment line starts
 ! with '*!', it will be printed.
+!endsection
 
+!Section inpupara Input Paragraph
 ! Many J functions interpreted and executed at the command level need or can use a group of
 ! text lines as input. In these cases the additional input lines are immediately after the function.
 ! This group of lines is called input paragraph. The input paragraph ends with '/', except the
@@ -93,7 +1150,7 @@
 ! without any value. An input paragraph can contain input programming commands; the
 ! resulting text lines are transmitted to the J function which interprets the input paragraph
 !endheader
-! Ex inpuparag Example of inputparagraph
+!Ex inpuparag Example of inputparagraph
 ! tr=trans()
 ! a=log(b)
 ! write($,'(~sinlog is=~,f4.0)',sin(a))
@@ -105,26 +1162,71 @@
 !endex
 !endsection
 
-! Section inpuprog Input programming
+!Section short Command shortcuts
+!Command shortcuts are defined by defining character variables. When entering the 
+! name of a character variable at sit> prompt or from an include file, J excutes the command.
+!The command can be either input programming command or ??? command. The file jexamples.inc
+!shows an useful way to organize shortcuts and include files.
+!endheader
+!Ex shortex Example of using shortcuts and include files
+!short1='sin(Pi)+cos(Pi);'
+!short1
+!te=text()
+!this=thisfile()
+!ju1=';incl(this,from->a1)'
+!ju2=';incl(this,from->a2)'
+!;return
+!;a1:
+!'greetings from a1'
+!;return
+!;a2:
+!'here, jump to a1';
+!ju1
+!'back here, return to sit>'
+!;return
+!//
+!write('shortex.txt',$,te)
+!;incl(shortex.txt)
+!ju1
+!ju2
+!delete_f('shortext.txt')
+!te=0 !delete also text object te
+!endex
+!endsection
+
+!Section inpuprog Input programming
 ! The purpose of the input programming is to read or generate J commands or input lines
 ! needed by J functions. The names of input programming commands start with semicolon ';'.
 ! There can be no space between ';' and the following input programming function. The syntax
 ! of input programming commands is the same as in J functions, but the input programming
-! functions cannot have an out-put. There are also controls structures in the input programming.
+! functions cannot have an output. There are also controls structures in the input programming.
 ! An input paragraph can contain input programming structures.
-! 3.2.1. Addresses in input programming
-! The included text files can contain addresses. Addresses define possible starting points for the
-! inclusion or jump addresses within an include file. An address starts with semicolon (;) and
-! ends with colon (:). There cannot be other text on the address line. E.g.
-! ;ad1:
-! See: ;incl, ;goto
-!endheader
-! Note The definition of a transformations set can also contain addresses. These addresses start
-! with a letter and end also with colon (:).
-!endnote
 !endsection
 
-! Section inpudots Changing “i” sequences
+!Section inpuad  Labels in input programming
+
+! The included text files can contain labels. Labels define possible starting points for the
+! inclusion or jump labels within an include file. A label starts with semicolon (;) and
+!ends with colon (:). There cannot be other text but not commands on the label line. 
+!endheader
+
+!Ex2
+! ;ad1:  At this point we are doing thit and that
+!endex2
+
+
+!Note The definition of a transformations object can also contain labels. These labels start
+! with a letter and end also with colon (:). When defining a transformation object with trans() function,
+! the input paragraph can contain input programming addresses and code labels. It is up to 
+! input programming what code alabels become part of the transformation object.
+!endnote
+
+
+!endsection
+
+
+
+!Section inpureplace Changing “i” sequences
 ! If an original input line contains text within quotation marks, then the sequence will be replaced
 ! as follows. If a character variable is enclosed, then the value of the character variable is
 ! substituted: E.g.
@@ -164,14 +1266,58 @@
 ! drawline(5,5,mark->’y=”[f5.2]coef(reg,x1)“*x1+”[f5.2]coef(reg,1)“‘)
 ! See file jex.txt and Chapter 8 for an ex
 !endheader
-! endsection
-
-!Section dots Generating object lists with ... -construct
-!Indexed objects are indexed
-
 !endsection
 
-! Section jtrans J transformations
+!Section inpureturn ;return returns from include file
+!;return in an input file means that the control returns to the point where a 
+! jumpt to an label was found. Two different cases need to be separated:
+!endheader
+!Latex
+!\begin{itemize}
+!\item[\textbf{J}] The conrol came to the starting address or to the beginning of the include file 
+!from outside the current include file using a ;incl command. Then ;return returns the control to upper level include 
+! file or to the sit> prompt.
+!\item[\textbf{J}] The control came to the starting label from within the same include file using
+! either an explicit ;incl or ;goto command or generating these commands commands 
+! with command shortcut.
+!\end{itemize}
+!endlatex
+!endsection
+
+
+
+!Section dots Generating sequences with ... -construct
+!It is often natural to index object names, and often we need to refer object
+! names having consecutive index numbers or index letters. In J versions before version 3.0 it
+! was possible to generate object lists using ... -construct which replaced part of
+! the input line with the names of objects being between the the object 
+! name before ... and after ... . Now the dots construct is no more done as
+! part of the input programming but in the interpret subroutine which interprets the
+! input line and generates the integer vector for function and argument indices.
+!But as dots work as if it would be part of the input programming, it is presented in this
+! section. Currently also sequences of integer constants can be generated with dots and
+!sequences can be from larger to smaller.
+!endheader
+!Ex dotsex Example of dots construct
+!dat=data(read->(x4...x7),in->)
+!1,2,3,4
+!11,12,13,14
+!/
+!stat(min->,max->,mean->)
+!x3%mean...x7%mean;
+!A...D=4...1;
+!Continue=1  !demo of error in data()
+!dat=data(read->(x3...x7),in->)
+!1,2,3,4
+!11,12,13,14
+!/
+!Continue=0
+!endex
+!endsection
+
+
+
+!Section jtrans J transformations
 ! Most operation commands affecting J objects can be entered directly at the command level or
 ! packed into transformation object. In both cases the syntax and working is the same. A
 ! command line can define arithmetic operations for real variables or matrices, or they can
@@ -187,7 +1333,7 @@
 !endheader
 !endsection
 
-!Section jfuncs Structure of general J functions
+!Section jfuncs0 J functions
 ! The general (non arithmetic) J functions are used either in statements
 
 ! func(arg1,…,argn,opt1->value1,….,optm->valuem)
@@ -218,11 +1364,17 @@
 ! An argument for a J function can be either functional statements producing a J object as its
 ! value, or a name of J object. Some options can be without any argument (indicating that the
 ! option is on). 
+
+!An essential feature in J functions is that the driver subroutine which is computing
+! the functions is recursive. This recursion is used when code options SEE? are used to compute
+! the the output of an code option or when transformation objects are explcitly called
+! within an transformation object or a function dealing with data is computing trans-> transforamtion for each
+! observation.
 !endheader
 !Ex2 hopo
 ! a = sin(cos(c)+b) &! Usual arithmetic functions have numeric values as
 ! arguments
-! ! here the value of the argument of cos is obtained by 'computing' the
+!  here the value of the argument of cos is obtained by 'computing' the
 ! value of real variable c. 
 !endex2
 !Ex2 hopo2
@@ -257,9 +1409,16 @@
 !Section classes Analyzing classified data
 !The are several functions which can be used to analyze classified data.
 !All these functions are described here, even if they belong Figure functions and
-! statistical functions.  
-!endheader
-!endsection
+! statistical functions. 
+!endsection 
+
+!Section distributions
+! Currently there are sepcial functions for the density funtion pdf() of normal distribution,
+! cumulative distribution function cdf() for normal and chi2 distributions,
+! frequncy funtion for binomial distribution, and frequnce funtion negbin() for the
+! negative binomial distribution (providing Poisson as a special case).
+! endsection
+
 
 !Section Data Data functions 
 !Data functions can generate data objects by reading data from files, or forming data
@@ -272,6 +1431,111 @@
 !endheader
 !endsection
 
+!Section jfunc Structure of general J functions
+! The general (non arithmetic) J functions are used either in statements
+
+! func(arg1,…,argn,opt1->value1,….,optm->valuem)
+
+! or
+
+! output=func(arg1,…,argn,opt1->value1,….,optm->valuem)
+
+! If there is no output for a function in a statement, then there can be three different cases:
+! Latex
+! \begin{itemize}
+! \item[\textbf{J}] The function does not produce any output (if an output would be given, then J would just 
+! ignore it
+
+! \item[\textbf{J}] The function is producing output, and the default name {Result} is used for the output  
+! for arithmetic and matrix operations.
+! \item[\textbf{J}] The function is a sub expression within a transformation consisting of several parts including 
+! other function or arithmetic operations. Then the output is put into a temporary unnamed 
+! object which is used by upper level functions as an argument (e.g. a=inverse(b)*t(c)) 
+! \end{itemize}
+!endlatex
+! If the value of an option is not a single object or numeric constant, then it must be enclosed in 
+! parenthesis.
+! endheader
+
+! Note : It is useful to think that options define additional argument sets for a function. Actually 
+! an alternative for options would be to have long argument lists where the position of an 
+! argument determines its interpretation. Hereafter generic term 'argument' may refer also to 
+! the arguments of an option.
+! endnote
+! Note : When J is interpreting a function, it is checking that the option names and the syntax 
+! are valid, but it is not checking if an option is used by the function. Also when executing the 
+! function, the function is reacting to all options it recognizes but it does not notice if there are 
+! extra options, and these are thus just ignored.
+! An argument for a J function can be either functional statements producing a J object as its 
+! value, or a name of J object. Some options can be without any argument (indicating that the 
+! option is on).
+! endnote
+! Ex jfuncex Examples of J-functions
+! a = sin(cos(c)+b) ! Usual arithmetic functions have numeric values as arguments
+! ! here the value of the argument of cos is obtained by 'computing' the value of real variable c.
+! Dm=matrix(do->(0.1,40))
+!nob=nrows(Dm)
+! e=matrix(nob)
+!e=rann()
+!Hm=0.5+Dm**0.7+e
+!dat=newdata(Dm,Hm,read->(D,H))
+! stat(D,H,min->,max->) ! Here arguments must be variable names
+! plotyx(H,D) !arguments of the function are variables
+! h=matrix(5,5);
+!h=rann();
+!g=matrix(5,do->5);
+! c = inverse(h+t(g)); ! The argument can be intermediate result from matrix computations.
+!endex
+! endsection
+ 
+
+
+! Section codeopt Code options
+! There are some special options which do not refer to object names or values. Some options 
+! define a small one-statement transformations to be used to compute something repeatedly. 
+! As these one-statement can use transformation objects as functions, the code option can actually
+! execute long computations.
+! endheader
+! Ex codeoptex Codeoptions
+! dat=data(read->(D,H),in->)
+! 3,2
+! 2,4
+! 4,1
+! /
+! stat(D,H,filter->(H.gt.D)) ! only those observations are accepted which pass the filter
+! fi=draw(func->(sin($x)+1),x->$x,xrange->(0,10),color->Red,ylabel->'sin(x)+1',xlabel->'x',width->2) ! the func-> option transmits the function to be drawn not a single value.
+! endex
+! endsection
+
+! Section license Subroutines obtained from other sources
+! The following subroutines are obtained from other sources.
+! endheader
+! Latex
+! \begin{itemize}
+
+! \item[\textbf{J}]  subroutine tautsp used in j_function tautspline
+! from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
+! No licence restrictions known
+! distribution:  http://pages.cs.wisc.edu/~deboor/pgs/tautsp.f
+
+! \item[\textbf{J}]  real function ppvalu used in J function value
+! from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
+! No licence restrictions known
+! distribution: http://pages.cs.wisc.edu/~deboor/pgs/tautsp.f
+
+! \item[\textbf{J}] subroutine interv , used in function ppvalue
+! from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
+! No licence restrictions known
+! obtained from: http://pages.cs.wisc.edu/~deboor/pgs/tautsp.f
+! Lapack matrix routines
+
+! \item[\textbf{J}] Several subroutines from www.netlib.org/lapack 
+! licence : http://www.netlib.org/lapack/LICENSE.txt
+! \end{itemize}
+! endlatex
+! endsection
+
+
 
 
 
@@ -279,8 +1543,8 @@
 ! There are some options which are used in many J functions. Such options are e.g.
 !endheader
 !Option
-!@in2 
-!@data
+!@@in2 
+!@@data
 !All data sets will be
 ! treated logically as a single data set. 
 ! If the function is using data sets, the daenta sets are given in data-> option. All data sets will be
@@ -292,45 +1556,1348 @@
 ! When a data set is created, it will automatically become the only element in LastData list. If
 ! the Data list has not been defined and there is no data-> option, then the LastData dataset
 ! will be used.
-!@trans
+!@@trans
 ! In all functions which are using data sets, trans-> option defines a
 ! transformation set which is used in this function. 
-!@filter
+!@@filter
 !endoption
-!Ex comopt data1 
+!Ex comoptex data1
+!dat=data(read->(x,y),in->)
+!1,2
+!3,4
+!5,6
+!/ 
 ! tr=trans()
 ! xy=x*y
+!x,y,xy;
 !/
-! stat(xy,trans->tr)
+! stat(trans->tr)
 !endex
 !endsection
 
+!Section call Excuting transformation object explicitly call()
+
+!Interpreted transformations in a transformation object can be automatically executed by other J
+!functions or they can be executed explicitly using call() function.
+!endheader
+
+!call(tr)
+!Option
+!Arg&1&TRANS& The transformation object executed.
+!endoption
+
+!The call() function can be used at the command level or within transformation object. Defining
+!transformation objects which are called within other transformation sets one can use some
+!transformation as subroutines. Lists can be used to transmit objects into transformation
+!objects similarly as done in more advanced programming environ ments using arguments.
+!Using input
+!programming one can define transformations which get specific interpretation after giving
+!values to character variables and object lists. But these transformations must be interpreted
+!first with trans() function before they can be used. It is also possible to transmit lists 
+!into interpreted transformations.
+!endheader
+!Note: A transformation objects can be used recursively, i.e. a transformation can be called from
+!itself. The depth of recursion is not controlled by J, so going too deep in recursion will
+!eventually lead to a system error.
+!endnote
+!Ex recursion Recursion produces system crash.
+!tr=trans() !level will be initialized as zero
+!level;
+!level=level+1
+!call(tr)
+!/
+!Continue=1  !error is produced
+!call(tr)
+!Continue=0
+!endex
+!endsection
+
+!Section transfunc Using a transformation object as a function
+! It is now possible to use a transformation object as a function which computes new
+! objects when generating arguments for functions or options, 
+! or values of code options, or in any place within a transformation object. 
+! If {tr} is a transformation and the transformation computes an object {A} then
+! {tr(A)} is first calling transformation {tr} and provides then object {A} into this place.
+! As the transformation computes also other objects which are computed within it, also thes objects
+! are available. At this point it is important to note that arguments of 
+! a transformation line are computed from right to left, because options must be computed before
+! entering into a function. 
+! endheader
+!Ex transfunc Transformation as a function
+!delete_o(a,c)
+! tra=trans()
+! a=8;
+! c=2;
+! /
+! trb=trans()
+! a=5;
+! c=1;
+! /
+! c=2
+! a=c+trb(a)+c+tra(a);
+!endex
+!endsection
+
+! Section numer Numeric operations
+! An arithmetic expression consisting of ordinary arithmetic operations is formed in 
+! the standard way. The operations are in the order of their precedence.
+! Latex
+! \begin{itemize}
+! \item[\textbf{J}] - unary minus
+! \item[\textbf{J}] *** integer power
+! \item[\textbf{J}] ** or \^ real power
+! \item[\textbf{J}] * multiplication
+! \item[\textbf{J}] / division
+! \item[\textbf{J}] + addition
+! \item[\textbf{J}] - subtraction
+! \end{itemize}
+! endlatex
+
+! The reason for having a different integer power is that it is faster to compute and a negative 
+! value can have an integer power but not a real power.
+
+ ! In matrix computations there are two addtional opertations.
+ 
+ ! Latex
+! \begin{itemize}
+! \item[\textbf{J}] *. elementwise product (Hadamard product)
+! \item[\textbf{J}] /. elementwise division
+! \end{itemize}
+! endlatex
+
+! The matrix operations are explained in section ?. Their operation rules extent
+! the standard rules. 
+! endsection
+!!!'\textbf{J}'
+! Section logic Logical and relational expressions
+! There are following relational and logical operations. The first alternatives
+! follow Fortan style:
+!endheader
+! Latex
+ ! \begin{itemize}
+! \item[\textbf{J}] .eq. == equal to
+! \item[\textbf{J}] .ne. <> not equal
+! \item[\textbf{J}] .gt. > greater than
+! \item[\textbf{J}] .ge. >= greater or equal
+! \item[\textbf{J}].lt. < less than
+! \item[\textbf{J}] .le. <= less or equal
+! \item[\textbf{J}].not. ~ negation
+! \item[\textbf{J}] .and. & conjunction
+! \item[\textbf{J}] .or. disjunction
+! \item[\textbf{J}] .eqv. equivalent.
+! \item[\textbf{J}] .neqv. not equivalent
+! \end{itemize}
+
+! The relational and logical expressions produce value 1 for True and value 0 for False. 
+! Note: Testing equivalence can be done also using 'equal to' and 'not equal', as the same truth 
+! value is expressed with the same numeric value.
+! endlatex
+! Note when the truth value of an expression is tested with if(), then all nonzero real values
+! means that the expression is true. 
+! endnote
 
 
+! endsection
 
-! Section statistics Statistical functions
+! Section arfu Arithmetic functions
+! The arithmetic functions return single REAL value or a MATRIX.
+! \Latex 
+! sqrt(), sqrt2(), exp(), log(), log10(), abs()
+! \begin{itemize}
+! \item[\textbf{J}] sqrt(x) square root, sqrt(0) is defined to be 0, negative argument produce error.
+! If {x} is matrix, then an error occurs if any elemet is negative.
+! \item[\textbf{J}] sqrt2(x) If {x} or an element of {x} is negative then $sqrt2()=-sqrt()$. Actually sqrt2() might be a
+! useful sigmoidal function in modeling context.
+! \item[\textbf{J}] exp(x) $e$ to power {x}. If {x}>88, then J produces error in order to avoid system
+! crash.
+! \item[\textbf{J}] log(x) natural logarithm
+! \item[\textbf{J}] log10(x) base 10 logarithm
+! \item[\textbf{J}] abs(x) absolute value
+! \end{itemize}
+
+! Real to integer conversion
+! \begin{itemize}
+! \item[\textbf{J}] nint(x) nearest integer value
+! \item[\textbf{J}] nint(x,modulo) returns modulo*nint(x/modulo) ,e.g.nint(48,5)=50; nint(47,5)=45;
+! \item[\textbf{J}] int(x) integer value obtained by truncation
+! \item[\textbf{J}] int(x,modulo) returns modulo*int(x/modulo), e.g. int(48,5)=45
+! \item[\textbf{J}] ceiling(x) smallest integer greater than or equal to {x}.
+! \item[\textbf{J}] ceiling(x,modulo) returns modulo*ceiling(x/modulo), e.g. ceiling(47,5)=50.
+! \item[\textbf{J}] floor(x) greatest integer smaller than or equal to {x}.
+! \item[\textbf{J}] floor(x,modulo) returns modulo*floor(x/modulo), e.g. floor(47,5)=45.
+! \end{itemize}
+
+! The following rules apply both for min() and max(). The rules are presented here only for min().
+! \begin{itemize}
+! \item[\textbf{J}] min(x1,...,xn): $n>1$ and all arguments are REAL, ]Result[ is REAL.
+! \item[\textbf{J}] min(A): If ]A[ is matrix then the result result is row vector containg minumum
+! of each column. If ]A[ is a column vector, ]Result[ is REAL.
+! \item[\textbf{J}] min(A,any->) If ]A[ is matrix, then ]Result[ minimum over all elements.
+! \item[\textbf{J}] min(x,A) If ]x[ is REAL and ]A[ is matrix, then ]Result[ is
+ ! matrix with the same dimensions as ]A[ and 
+ ! ]Result[(i,j)=max(]x[,]A[(i,j)). The order of arguments does not matter.
+ ! \item[\textbf{J}] min(A,B), ]A[ and ]B[ compatible matrices. ]Result[ is amatrix with the same dimesnions containg elementwise
+ ! minimums.
+! \end{itemize}
+! endlatex
+! endsection
+
+!!!sign(val)
+
+!Section statistics Statistical functions
 ! There are several statistical functions which can be used to compute basic statistics
 !linear and and nonlinear regression, class means, standard deviations and standard errors 
 ! in one or two dimensional tables using data sets. There are also functions
 ! which can be used to compute statistics from matrices, but these are described 
 ! in Section  \ref{matrix}
-! endsection
+!endsection
 
-! Section matrix  Matrix functions
+!Section matrixf  Matrix functions
 ! There are matrix function which can create matrices (objects with type Matrix), take submatrices from larger matrices,
 ! make matrices from submatrices, compute statitics from matrices, solve linear equations,
 ! compute inverse and transpose of a matrix.
 ! Sums, differences and products of matrices are defined using ordinary arithmetic
 ! operations +,- and *. Arithmetic operations can combine scalars and matrices in the normal way.
-! Now all matrices are in double precision. The data functions store data single precision 
-! matrices (type Matrix0) which cannot be used in matrix computations. Single precison data matrices can
-! can be changed to double precision matrices simply by xmat=data1%matrix, where data1 is a data object.
+! Now all matrices are in double precision. 
+
+! The arithemetic operations work for matrices as follows for arguments ]a1[ and ]a2[
+! \begin{itemize}
+! \item[\textbf{J}] ]a1[ + ]a2[
+! \begin{itemize}
+ ! \item[\textbf{J}] ]a1[ and ]a2[ can be compatibe matrices 
+! \item[\textbf{J}] ]a1[ or ]a2[ can be scalar (REAL) and the other argument is MATRIX.
+! \item[\textbf{J}] ]a1[ or ]a2[ can be row vector and the other argument 
+! can be matrix having the same number 
+! of columns. Then the row vector is added to each row of the matrix. This is NONSTADARD.
+ ! Similarly the other argument can be a colun vector and the other argument matrix having the same number of rows.
+ ! Then the vector is added to each column of the matrix. NONSTANDARD.
+! \end{itemize}
+ 
+! \end{itemize}
+
+! The same computation rules apply for operations -, *. (elementwise product), and
+! /. (elemetwise division). The same rules apply also for logical operations, 
+! except the nonstandard rules do not apply.
+
+! For multiplication ]a1[ * ]a2[, either of the arguments can be scalar,
+ ! and the other matrix or LIST of REAL objects.
+! When ]a1[ and ]a2[ are matrices, standar matrix multiplication rules apply.
+
+! When ]a1[ or ]a2[ is LIST of REAL values then, it works exacty as
+ ! a column vector, when it is on the input side.  The elements are eqaul 
+ ! to the values of the REAL elements. When a LIST is an output of matrix 
+ ! computaions, the an error occurs if the output of the matrix operation is
+ ! not comaptibel with the number of elemets in the LIST.
+
+
+!endheader
+! Ex matrixop Matrix operations
+! A=matrix(3,4,do->);
+! A+2;
+! A-1;
+! 2*A;
+! A*.matrix(3,4,do->2);
+! A/.A;
+! b=matrix(4,values->(1,3,6,8));
+! A*b;
+!Continue=1  !Error
+! A*.b;  
+! A+b(1,-3);  ! NONSTANDARD
+! B=matrix(3,4,values->2);
+!A;
+! A.eq.B;
+! li=list(x1...x3)
+! li=4,5,7;
+!A+li;
+! li=matrix(3,do->);
+! @li;
+! A+li;
+! b*A;
+! A+t(b);
+! li=matrix(4,do->);
+! Continue=0
+! endex
+!endsection
+
+! Section transcont Transformation control structures
+! Within J transformations, there can be similar controls structures as in the input programming. 
+! The  difference  is  that  these  will  remain  as  part  of  the  transformation  set.  Only  the 
+! 'if()output=…'structure is allowed at the command level, other are possible only within a 
+! transformations set.
 ! endsection
 
-!Section random Random number generators
+
+! Section if if()
+
+! if()j_statement… \newline
+! The one line if-statement. 
+! endsection
+
+! Section ifthen  if() elseif() else endif
+! There can be 4 nested if()then structures. If-then-structures are not 
+! allowed at command level.
+! endheader
+
+! Ex2
+! if()then
+! ….
+! elseif()then
+! …
+! else
+! ….
+! endif
+! endex2
+! endsection
+!Section loops Loops and control strucures
+!This section describes nonstadard functions.
+!endsection
+
+
+! Section do do() loops
+
+! The loop construction in J looks as follows: 
+! endheader
+! Ex2
+! do(i,start,end[,step])
+! enddo
+! endex2
+! Note cycle and exit are implemented in the current J version with goto()
+! Within a do–loop there can be cycleand exitdostatements 
+!endnote
+! Note There can be 8 nested loops. do-loop is not allowed at command level.
+!endnote
+! Ex doex do-loop
+!'begin';
+ ! tr=trans()
+ ! do(i,1,5)
+ !i;
+! ad1: if(i.eq.3)goto(cycle)
+ ! i;
+ ! if(i.eq.4)goto(jump)
+ ! cycle:enddo
+ ! jump:i;
+ ! !goto(ad1)  ! it is not allowed to jump into a loop
+ ! /
+ ! call(tr)
+! endex
+! endsection
+
+! Section return return
+! Return from a transformation set to the transformation object where call()
+! function was, or  to the include file with call(), or to the sit> promt, 
+! is call() was at sit>. 
+! endheader
+! Ex retex example of return and goto ()
+! tr=trans()
+! ad1:r=ran();
+!if(r.lt.0.2)return
+! goto(ad1)
+! /
+! call(tr)
+! endex
+! Note return is automatically put to the end of transformation object.
+! endnote
+! Note Labels in a transformation object are without ';' as the addresses in an include file start with ';'.
+! endnote
+
+! endsection
+
+! Section errexit errexit()
+! Function errexit() returns the control to sit> prompt with a message similarly 
+! as when an error occurs.
+! endheader
+
+! Ex errexitex
+! tr=trans()
+! if(a.eq.0)errexit('illegal value ',a)
+! s=3/a; ! division with zero is teste automatically
+! /
+! a=3.7
+! call(tr)
+! tr(s); !tr can also be used as a function
+! a=0
+!Continue=1  !Do not stop in thsi seflmade error
+! call(tr)
+!Continue=0
+! endex
+! endsection
+
+
+!Section goto goto()
+! Control can be transfered to a line in a transformation set with goto().
+! endheader
+! Ex gotoex
+! tr=trans() 
+! i=0 
+! if(i.eq.0)goto(koe)
+! 'here';
+! koe:ch='here2';
+! /
+! call(tr)
+! ch;
+
+! endex
+
+! Note It is not allowed to jump in to a loop or into if -then structure. This is 
+! checked already in in the interpreter. 
+! endnote
+! Note It is not yet possible to continue within an include file using Continue=1.
+! endnote
+! Note: It is not recommended to use goto() according to modern computation practices.  
+! However, it was easier to implement cycle and exitdo with goto(), especially if
+! cycle or exitdo does not apply hte innermost do-loop.
+!endnote
+!endsection
+
+! Section ASSIGN assignment: ]output[=]input[
+! There are two assignment functions generated by '=', when the line is of
+! form ]output[=func[]input[), then the output is directly 
+! put to the output position of the function
+! without explicitly generating assignment.
+! When the codeline is in form ]output[=]input[ then the following cases can occur
+
+! \begin{itemize}
+! \item[\textbf{J}]  ]output[ is MATRIX  
+! and ]input[ is scalar, then each element of MATRIX is replaced with the ]input[ 
+! in assone() function.
+! \item[\textbf{J}]  ]output[ is submatrix expression, then the elements of the
+! submatrix are asigned in setelem() funtion whether ]input[ is MATRIX or submatrix 
+! expression, scalar or LIST.
+
+! \item[\textbf{J}]  ]output[ is MATRIX  and on input side is a random number 
+! generation function, the random numbers are put to all elements of the matrix.
+
+! \item[\textbf{J}] If on output side are many object names, and input side is
+! one REAL value, this is put to all variables.
+
+! \item[\textbf{J}] If on output side are many object names, and input there are several
+! variables then both sides should have equal numbers of object names, then
+! then copies of the input objects are put into output objects. 
+
+
+! \end{itemize)
+! endheader
+! Ex assignex Examples of assignments 
+! a=matrix(2,3);
+! a=4;
+! a=rann();
+! v1...5=2...6;
+! v1...5=77;
+! Continue=1  ! ERROR
+! v1..3=1,5;
+! Continue=0
+!endex
+! endsection
+
+
+
+
+a call to function assone()
+
+
+
+
+!Section randomgen Random number generators
 !Random number generators are taken from Ranlib library of Netlib. 
 !They can produce single REAL variables or random MATRIX objects.
 !Random matrices are produced by defining first a matrix with matrix()
 !funtion and putting that as the output.
 !endheader
+!endsection
+
+! Section figu Figures
+! Figures are made using Gnuplot. J transmits information into Gnuplot using text files.
+! J generates the files using .jfig extension. Necessary files are generated  by deleting old
+! files without asking permission. If ]fig[ is the output of a figure function, then
+! J creates always, except in 3D, file with name ]fig[.jfig and possibly other files with
+! .jfi0, jfi1  etc extensions.
+! All figure functions use the following options.
+! endheader
+! Option
+! Output & 1& FIGURE & The FIGURE object created or updated
+! @@figure
+! endoption
+! Note is possible to show a figure using show() function. It can have either the ]fig[ object as the
+ ! argument or the file name of ]fig[.jfig -file. Thus it is possible
+ ! to edit the file using Gnuplot capabilites.
+ ! endnote
+ !Note It is possible to change the terminal type used by Gnuplot by giving 
+ ! the name of the terminal to the predefine CHAR variable ]Terminal[.
+ ! The default is \newline ]Terminal[='qt'. 
+ !endnote
+ !@@terminal
+!Note The default writte by Gnuplot does not look nice and is not implemented.
+! The user can write own legends using label-> option in drawline().
+!endnote
+!Note Easiest way to delete an nonmatrix object ]fi[ is ]fi[=0, which makes it possible
+! to use append-> also for an ]fi[ wihtout the need to construct if then-
+!structures.
+!endnote
+! endsection
+
+!Section joperation 
+!In this section the main tools in code devlopment in a project are presented. It is usefule to organize
+! the project sript into one script file, which conatians swections starting with a lable and ending
+! with ;return. 
+! I think that it is more difficult to have several script files.
+ ! The example file jexamples.inc is a good eaxample of a script file.
+! !The script files should start with shortcuts for each section. If it is possible that 
+! different versions of the same script file are stored in different names, it is useful to have
+ ! as first line something like
+ ! this=thisfile()//
+ ! Then it is not necessary to change anything if the file is stored in a different name.
+ ! Thereafter comes the shortcut defintiosn for different sections.
+ ! the same 
+! For instance, if the the section
+! label is //
+! ;thistask://
+! then the shortcut definition could be
+! thistaskh=';incl(this,from->thsitask)'//
+
+! The section should end with//
+! ;return//
+! After defining shortcuts for all sections, it is useful to have a shortcut as://
+! again=;incl(this)//
+! If new sections are added, then one needs to give just shortcut//
+! again//
+! and then the new shortcuts will be defined. It does not matter if the earlier shortcuts are redefined. 
+
+! The last shortcut could be //
+! current=';incl(this,from->current)
+! The label 'current' can be a floating label which is put into the section which is under developed
+! in place the problems started.
+
+! If a J code line, either in the input paragraph defining a transforamtion object
+ ! or outside it, ends with ';' or ';;', the the output object of the code line may be printed.
+! The output of ';'-line is printed if the variable ]Printoutput[ has value 1 or 3 at the time when the the
+ ! code line is computed.
+ ! The output of ';;'-line is printed if the variable ]Printoutput[ has value 2 or 3 at the time when the the
+ ! code line is computed.
+ 
+ ! If a code line within a tranformation has function pause('text'), then a pause is generated during which
+ ! the user can give any commands except
+ ! input programming commands. If the user will press <return> then the exceution continues. If the user
+ ! presses 'e' and <return>, the control comes to the sit> promt similarly as during an error.
+ 
+ ! If the line outside the transforasmtion definition paragraph is ';pause', then
+ ! a similar pause is generated except also input programming commands can be give.
+ 
+ ! If the variable ]Debugtrans[ has value 1, them a pause() is genertated before each line within
+! a tranformation object is executed.  If variable ]Debugconsole[ has value 1, 
+! a ';pause' is generated before  the line is excuted. In bot cases the user can
+ ! give new values for ]Debugtrans[ and ]Debugconsole[.
+ 
+ ! What happens when an error is encountered is dependent on the value of variable ]Continue[. If ]Continue[ has
+ ! value 0 8teh default case), the control comes into sit> prompt when an real error occurs or if an atrficial 
+ ! error condition is generated with errexit(). If ]Continue[ has value 1 then the computation continues in
+ ! the same script file where the error occured. This property is used in file jexaples.inc to demosntrate 
+ ! possible error conditions so that the computation continues as fi no error had occured.
+ 
+ ! endheader
+ ! Ex operexr Exapmple of operation of J.
+ 
+ ! endex
+ 
+ !endsection
+
+
+
+!ote Using ;incl() in a project
+!When working in a project it is reasonable to organize
+!the include file as follows. Put into the beginning of the file section:\\
+!this=thisfile()  !There can different versions of the file with differetn names.\\
+!A=';incl(this)' !If new sections are added to the file, new shortcuts
+!can be defined by adding those here and writing A at sit> prompt.\\
+!R=';incl(this,from->read)'     ! read data in \\
+!T1=';incl(this,from->task1)'   ! first analysis \\
+!T2=';incl(this,from->task2)'   ! second analysis \\
+!;return \\
+!Now everything what needs to written at sit> after the first
+!;incl() are the shortcuts. If adding section task3 then
+!add the shortcut here, then write shortcuts A and T3 at sit>.
+!The file jexamples.inc which comes with the manual and which is generated
+! with the jmanual program shows an examle.
+
+!Section preface1 Preface
+! I will here describe the history of J in this preface in unusual
+! length and detail. Readers interested ony in the use of the current 
+! software can perhasp look briefly the subsection Freedom. The reason
+!  why I'm going through in detail
+! the difficulties with Luke is that I think that the leaders of Luke did not
+! treat me as researchers should be treated. I think also that the leaders of Luke 
+! were willing to waste large amount of taxpayers' money when the prevented the
+! development and timely publication of J software. I hope that this part of the
+!preface gets some attention also outside the potential users of the software e.g. 
+! in the ministry. As an amateur actor, I also hope that some play writer would 
+! notice this and would make tragicomedy on the stage.
+!endsection
+
+!Section preface2 JLP and first version of J
+
+! I started to develop J software as a successor of the linear programming software 
+! JLP \cite{JLP} around 
+! 2004. I had also done several programs for statistical computing (AKTA and Jakta) 
+! since late seventies
+ ! when there was not
+! easy to use software even for ordinary linear regression.
+ ! Later I had to write own software 
+ ! for mixed linear models. AKTA, Jakta, and JLP contained  means to use script files and 
+! make new variables described in arithmetic expressions. The starting idea in J was to put all my 
+! previous software developments into one program.
+ ! Version 0.9.3 of J was published in August 2004.
+
+! In JLP the crucial property was the utilization of the generalized upper bound (GUB) technique which
+ ! I invented and, which I could later find also in the literature (\cite{dant}), as I expected. GUB is
+ ! just the right technique which is
+! needed in foreast management planning. JLP made it possible to solve 
+! significantly larger LP problems significantly faster
+! than using standard commercial LP software. In JLP I programmed all the necessary matrix 
+! operations needed to change columns of the basis matrix in the revised simplex method.
+! I updated the inverse of the basis matrix explicitly, 
+! instead of using factorization procedures as is the standard way in LP.
+ ! I treated nonbinding constraints in a nonstandard way 
+ ! by reducing the dimension of the basis matrix instead of using residual
+ ! basic variables, as is normally done. 
+
+! When I started to develop J, I thought that it might be good idea to use matrix routines
+! based on factorizations and developed by a professional in this field. 
+! I found the LP software bqbd by Fletcher
+ ! based on \cite{flet}. The bqbd software was meant to use 'as is' software for linear and quadratic programming. 
+! When I told Fletcher that I plan to separate the matrix routines needed in the GUB algorithm,
+! he told he is certain that I will not succeed, as his Fortran code did not have any comments.
+! He wrote that he will not have any time to help me.
+! However, it was not that difficult becasue his code was divided 
+! to proper subroutines. His code did computations in
+! single precision, and it was necessary to change computations
+! into double precision. Because I do not have 
+! a proper training in the rounding error business, 
+! I had hoped his advice in changing the several tolerance 
+! parameters to correspont double precision computations. In the development of the original JLP algorith,
+! I spent two-three times more time to fight rounding errors than to
+ ! get the code mathematically correct. Now I understood the rounding errors better, but
+ ! anyhow they are the permanent nuisance. The fundamental question 
+ ! with respect to rounding errors is: is a small-looking number zero or non-zero.
+
+ ! When I later told him how large problems and how fast my algorithm could solve, 
+ ! his attitude towards
+! my efforts clearly changed. 
+
+! Even Bergseng from NMBU started to use J in forest management problems 
+! in a quite premature 
+! stage, and we had quite tough time to keep his project in time.
+ ! It took some time to clear a bug in Fletcher
+! code which every now and then took the optimization into a wrong path.
+ ! I had a quite slow computer, and the 
+! data transwer between Norway and Finland was slow. The bug was such that
+ ! it had never caused problems in
+! standard applications of bqbd software. In forest planning problems 
+! it can happen that after many
+! pivot operations only residual variables corresponding nonbinding
+ ! constrains are in the basis. 
+! And when J refactorized of the basis after fixed number of pivot operations,
+! as is the common procedure, the basis became slightly corrupted. 
+! In such a case, the refactorization is not needed. NMBU started to use J
+! together with their GAYA simulator, and called the whole system GAYA-J, 
+! as the previous system was called GAYA-JLP. 
+! I appreciate that they have acknowledged our co-operation this way.
+ ! J version 0.9.3 was published in
+! August 2004.
+
+! J contained also a simulator language by which one describe a simulator 
+! which can be used to geneate
+! treatment schedules which are later optimized with the 
+! LP funtions of J. When Simosol started 
+! to develop sofware which would compete with the Mela, which had had a 
+! monopoly status in planning software
+! in Finland, and had all the problems which are inevitable in all monopoly projects. 
+! Simosol made first simulator developments using J, but moved to other solutions before first
+! published version of Simo software. Simosol however used the 
+! linear programming routines
+! of J. Jussi Rasinmaki presented the software of Simosol 
+! in the seminar 21.9.2018 celebrating the work of Pekka Kilkki.
+! When he did not mention J, which continues the work of Pekka Kilkki, 
+! and I did not 
+! find anything about J in the web pages of Simosol, 
+! I asked whether they have stopped to use J.
+! Rasinmäki told that they are still using J, and he promised to mention the
+ ! co-operation in their web pages. I think that in co-operation
+ ! between research and 
+ ! business, it would be necessary that the impact of research
+ ! would be openly recocnized by the business partners so 
+ ! that the funders of research know that the research has been useful. 
+ ! Now Simsol is part of Afry.
+ !endsection
+ 
+!Section preface3 J with factories: J2.0
+! For me the most disturbing feature of J and JLP was that they were not able to treat factories. 
+! I thought that the clever heuristic DTRAN algorithm of Howard Hoganson 
+! (\cite{dtran} and \cite{howard} showed 
+ ! that it should be possible to extend basic ideas of the
+ ! JLP algorithm to treat with factory 
+ ! problems. I was able to derive the needed equations (see \cite{lappilem}).
+ ! Reetta Lempinen started to work with me to implement the formulas. Reetta has professional
+ ! training in programming, while I'm a self-learning amateur. The necessary
+ ! data structures were quite complicated.
+ ! I had made some wrong decisions which made the data structes even
+ ! more complicated than was necessary. 
+ ! Reetta had a clear head to keep data structures in order. 
+ ! It was a nice new experience to
+ ! work together through video connection on the code which both could 
+ ! see simultaneously.
+! I just gave commands, but it was not necessary to give detailed 
+! instructions because Reetta 
+ ! understood from a half word what to do. An important 
+ ! contribution of her was that when there were several dead ends,
+ ! and I started to doubt whether we can really 
+ ! do what we were aiming at, she told, 'listen Juuso, we can solve this problem as we have
+ ! solved all previous problems'. Interestingly, the problems were usually not in any programming errors,
+! but the path could be found by raising to a little upper level and going to the main ideas.
+ ! Reetta's role was essential in the factory optimization. Also later she has been helpful in
+ ! minor technical matters, in writing the manual, testing the new developments etc. Recently she 
+ ! adviced me how to use Git and Github. Reetta has also been
+! solidary during the painful Luke years, when she was not 
+! allowed to work with J as she had liked 
+! to do. I appreciate her contibution very much. She is the second author of this
+! manual and the paper \cite{lappilem} for good reasons. However, I use word 'I'
+! for such situtions where Reetta has not been involved in the decisions how to proceed. The factory optimization was implemeted in
+! J version 2.0. published in 2013.
+!endsection
+
+!Section preface4 Battle over open-source J3.0 in Luke starts
+
+ ! Initially I made the software so that only I could understand the structure and the code. 
+ ! When Reetta started to work with me in factory problems,
+ ! I learned what are the weakest points in the software if it should be maintained 
+ ! by a group of people. But as I was always able to tell Reetta how the software worked,
+ ! only very slight improvements in the documentation and comments of the code etc. were made.
+! When I realized that my retirement age is approaching, 
+! I started to worry how the software could be maintained and developed after my retirement. 
+
+! I had worked for Finnish Forest Research Institute (Metla) with small Academy 
+! and University of Joensuu brakes since 1978. In 2015 Metla and 
+! two other institutes were merged into Institute of Natural Resources Finland (Luke). 
+! Based on my long service in a government organization, I expected that 
+! the new organization would mean
+! new leaders, new lawyers, new bureaucrats, and  much more bureaucracy, 
+! and less time 
+! for researchers to do research, as always happens when 
+! government organizations simplify
+!their administration and make it more efficient.
+! My expectations were in the right direction, but even in my worst
+ ! nightmares I could not have imagined
+! what Luke would mean to me personally.
+
+! Lauri Mehtätalo and I had agreed with an international publisher to 
+! make a book about forest biometry. In Metla this kind of agreement had been 
+! considered as a merit to Metla. But Luke forbad me to put any working time 
+! to this book project. After retirement I was free to prepare this book with Lauri.
+! On the back-cover of the book I presented myself as a researcher of Metla
+! in order to give the affilation credit to Metla. 
+! The co-operation
+ ! among statisticians of Luke, led by Juha Heikkinen, the continued co-operation
+ ! with Jaana Luoranen, and the support of the whole personell
+ ! of the Research Station of Suonenjoki when the leaders of Luke
+ ! started to humillate me
+ ! were my only positive experiences at Luke.
+
+! I started to clean and reorganize the J code so that it would be easier to maintain it.
+! My superior Olli Salminen forbad me to continue that effort because
+ ! he was certain that I would 
+! never get that work ready. I didn't obey, of course not. The eternity of
+! this first cleaning round lasted two and
+! half weeks. Reorganization of files took 2-3 days, but programming 
+! of a precompiler took
+! two weeks. In JLP I already had learned that a precompiler could help to manage  
+! data areas of JLP. In J, the precompiler has greatly helped to manage
+ ! global variables.
+! The precompiler allows the users access global module variables 
+ ! without knowing where they are. To separate the global variables 
+ ! from local variables, the global variables have
+ ! j_ or jlp_ prefix. By changing the data structures,
+ ! J also became significantly faster
+ ! (main reason was that allocatable pointers were changed into allocatable arrays).
+
+
+! In 2014 when we were looking at how J could be utilized in Mela software, I encountered 
+! old JLP concept ‘own function’, which was the method for allowing users of JLP to 
+! add own (arithmetic) functions if they had access to the source code. I thought that this
+! idea would be useful also with respect to J. So, I organized J so that 
+ ! different users could add their own J functions,
+ ! object types and options. 
+ 
+ ! I was then convinced that the best way to utilize these improvements would be to 
+! make the soft-ware open source. This would also allow me to continue my work freely
+ ! with J after my retirement.
+
+ 
+ ! The leaders of Luke agreed with me that the open-source J is a good idea. 
+ ! Unfortunately they
+ ! also thought that open J is so important for Luke that the leaders could not
+ ! allow me to take care of the publication and prepare and present
+ ! the necessary decisions for their approval, or even participate as
+ ! member in the group which
+ ! started to hustle with the publication.
+ ! The leaders wanted themselves take care of the publication. Unfortunately, none 
+ ! of the leaders involved
+ ! considered that the publication of J would be even so 
+ ! important that he/she 
+ ! had taken care that J would be eventually published.
+ ! They just wanted keep important 
+ ! in the process. This absurd deadlock lasted almost seven years. 
+ 
+ ! The previous version utilized some subroutines of IMSL package and from 
+! the ‘Numerical Recipes in Fortran’ book. I replaced these subroutines mainly by
+ ! open access routines from Lapack and Ranlib packages from the Netlib library.
+ ! Roger Fletcher allowed to distribute his linear programming sub-routines in 
+ ! the open J package. Fletcher gave a very liberal permission to use
+ ! his subroutines in open source distribution (the 
+ ! price of his bqbd sofware was perhaps 100-200 Euros).
+ ! But the lawyers of Luke studied his permission
+ ! so long that he died before giving permission with better formulation. 
+ ! A permission with
+! better formualations was obtained from his department in Dundee University. 
+ ! But the leading
+! laywer of Luke, Emilia Katajajuuri was not satisfied, she wanted make 
+! sure that the
+ ! legal position of the person 
+! who gave the new permission was such that he could give the permission. 
+
+
+ 
+! The following persons were involved in
+! process: Päivi Eskelinen, Olli Salminen, Kari T. Korhonen, Kimmo Kukkavuori,
+! Tuula Packalen, Sirpa Thessler, Sari Forsman-Hugg, Emilia Katajajuuri and Johanna
+! Buchert. Iikka Sainio was an outside legal consult.
+
+! The leading lawyer of Emilia Katajuuri made my position clear 
+! in a video meeting to which I also was accidentally invited to
+ ! listen their new instructions.
+! When I accidentally said 'could we decide that..', she interrupted me and said: 
+! 'Listen Juha,
+! you do not decide anything in this matter'. Their message was that
+ ! I have done my part, and now 
+! I should keep out and not disturb their play with their new conquest.
+
+! When it was evident that the leaders of Luke wanted to get rid of me,
+ ! I threatened that I will not retire before the opening decision is done. 
+! Sari Forsman-Hugg told she will make the decision. But as my threat 
+! seemed to make no influence, 
+! I retried at the beginning of 2017. When I despite of all
+! the humiliation and frustration still hoped that
+! some kind a co-operation with Luke would be possible, 
+! I applied the position outside researcher,
+! which had provided me access to Luke's e-mail and library services. Sari Forsman-Hugg was not 
+! able to make a decision also with recpect to my application.
+ ! I did withdraw my application
+! when my e-mail connections were interrupted two times.
+
+! Later I heard from Reetta that Luke had made the opening decision but
+ ! she did not know what kind decsion and 
+! I was not informed of the decision either, in disargeeent with the distribution list
+ ! of the decision, as I noticed in when I finally could see the decision after
+ ! three years.
+ !endsection
+ 
+ !Section preface5 Retired and still waiting for open J
+ ! After my retirement I was still hoping that some kind of co-operation
+ ! without outside researcher status with Luke would be possible, and I
+ ! participated in the application of factory optimization which was published in \ref{pekka}. 
+ ! Prof. Packalen told late 2017 that the publication of J is approaching. 
+ ! When I asked about the opening decision, she 'did not
+ ! remember' what it contained but promised to check it out, which she 
+  ! did forget to do or atl least forget to tell me what the decision contained. 
+ ! Prof. Packalen was planning a very high level launch of 
+ ! J with prominent international guests. I wrote that such 
+ ! seminar would not probably be worth of
+! for trans-Atlantic flights. I was so stupid that 
+! I believed her promise that the publication of J was approaching
+! and I submitted a correction to a bug which produced some amount of negative timber
+! quantities. 
+
+! During 2018-2021 I made some small parameter adjustments for Simosol and Norway and made some additions
+! for my own research. Prof. Packalen had lost all interest in the publication,
+ ! and she did not allow Reetta to 
+! develop the publication documents. When I heard 2020 that prof Packalen 
+! had left Luke and could 
+! not prevent publication any more, I asked Reetta to
+! ask her superiors whether she could continue
+! the preparation of manuals. She got the permission to use some time for that. 
+! This work with all style details was not very nice for her as she
+! had already done big part of the work for the previous format of 
+! Lukes's report series. 
+! The report series had changed the formats, and Reetta had to do 
+! such tedious work she already had done once before. 
+! Reetta's superiors did never  discuss with me anything related to the 
+! manuals or to the code. This
+! way they had been free to pretent that I have not contributed to
+ ! the work if J had been some time published.
+ 
+
+! In spring 2021 Hannu Salminen from Luke contacted me. He had memory 
+! problems with a very large data set. I made a rapid fix for his acute
+ ! problem and did develop
+! more permanent solutions for large data sets using direct access files.
+ ! Actually that work was 
+! unncessary as Viktor Strimbu from  NMBU  adviced me later how to make 
+! J a 64-bit
+ ! application using MSYS2 environment. The Gfortran environment I had 
+ ! used before did not
+! support 64-bit applications. The 64-bit program allows to put the whole country 
+ ! into one run aslo in factory optimization. Hannu organized a video
+ ! meeting where we discussed the
+ ! development and utilization of the J software. He was the first person 
+ ! in Lukes six years history who 
+ ! was willing to discuss with me such things.
+ 
+ ! I started to work with J again. Reetta had told that J had could 
+! collapse after some hours of computations in  large data sets in factory optimization.
+! I asked Luke to get the problematic
+! data sets so that I could try to fix the problem. I got the answer that Luke is not allowed to send the
+! data sets, and the answer did  not indicate
+! that Luke would do anything to get such permission. 
+! I was quite upset from such answer,
+ ! and I started to think how to open the deadlock situation. Later I got the data, 
+ ! and I was able to fix the problem, which was not exactly
+ ! a clear bug but rather a thin-ice place in the algorithm sot that J did drop
+ ! throug the ice when going over the place repeatedly.
+ !endsection
+ 
+ !Section preface6 Operation Charles XII
+ ! When I strarted to think how I could find a way out from the deadlock,
+ ! I remembered Charles XII, 
+ ! the king of Sweden (wich included  also Finland). He was in war with Denmark
+ ! and he decided to fight Denmark by attacking Norway, which belonged to Denmark.
+ ! He failed as almost his solders died in snowstorms
+ ! in Northern Norway and he was shot by his own soldier.
+ ! I was in conflict with Luke, even if Luke did 
+ ! acknowledge that such confilict existed
+ ! because Luke insisted that in a legal sense,
+ ! I did not even exist in this J affair.  
+ ! I thought to conquer Norway with nice J codes.
+ ! Renovation of my co-operation with GAYA group 
+ ! suited their plans as they were rebuilding their simulator.
+ 
+ ! I wrote to Johanna Buchert, director general of Luke (who was already in the group of
+ ! Luke leaders hustling in the publication of J when I was in Luke)
+  ! Antti Asikainen, research director of Luke,  and Kari T. Korhonen, who has 
+	! been involved in this J affair and was the superior of Reetta, and 
+	! told that I will not send to Luke new J codes including working 
+	! factory optimization codes without a written co-operation agreement. 
+	! I wrote also to registry-office and asked for the opening decision, and 
+	 ! to a lawyer of Luke and asked what kind of legal actions
+	! Luke will take agaisnt me if I started to publish factory optimization
+	! things with GAYA group using codes which I would not give to Luke.
+	! The leaders did not comment in any way my co-operation proposal. The research director 
+	! just wrote that
+	! all codes done in METLA are property of Luke. Buchert did not respond, but
+	! the the Senior Vice President Ilkka P. Laurila answered that Luke regrets
+	! for the delays in the publication of J caused by personell changes 
+	! (a funny expression for the fact that the publication process
+	! could just start in 2020
+	! when prof Packalen left Luke)
+	 ! and 
+	! that Luke has started to prepare the publication and will publish the J on its
+	! web pages. Kari T Korhonen did not respond.
+	
+	! Thus the leaders of Luke insisted that Luke will publish tens of thousands code
+	! and manual lines I had written, and insisted that it has no reason 
+	! or obligation to discuss with
+	! me what and in what form it will these lines publish. 
+	! It is evident that Luke had not been able to publish
+	! J in my life time (I'm over 70 yrs and I have a heart disease). 
+	! But if I had been alive when Luke had 
+	! published J under my name, I had made a lawsuit againt Luke 
+	! for shaming my researcher honor
+	! by publishing something I had not accepted for publication. Or perhaps 
+	! Luke had followed
+	! the previous  custom of  Romania where all chemistry 
+	! research was published under the the name of Elena Ceaușescu,
+	! and had published the the software and
+	! manuals under the name of some equivalent to Elena. 
+	! Also in that case I had made a lawsuit
+	! against Luke (if I had been alive). When the director general of Luke,
+	! the research director of Luke, the Senior Vice President of Luke 
+	! and the lawyers of Luke
+	! decided that Luke has absolutely no interest in 
+	! working factory optimization J codes or
+	! other up to date J codes, did they discuss with any researchers? 
+	
+	! After getting such a reponse to my co-opertation suggestion, it was evident that 
+	! I would not give Luke any new codes, and would require Luke to remove all codes I had
+	! submitted after my retirement as Luke would not akckowledge that
+	! it had got any codes from me after my retirement, and it would publish my codes
+	! as if they were developed in Luke. So I would continue my Charles XII operation. 
+	! Unfortunately NMBU did not have factory and transportation cost data ready.  In Norway
+	! the transportation costs can not be estimated as easily from coordinates as in Finland.
+	
+	! Laurila did send the decision to publish J as a open source software 
+	! after the lawyers of Luke
+	! had considered two weeks whether Luke should do that. The decision was 
+	! signed by the research director Johanna Buchert 30.8. 2017. 
+	! The process of trying to 
+	! get permission to use Fletchers codes after his death was not described properly.
+	! It was written
+	! that after Fletchers death the university of Dundee did not
+	! respond to queries of Luke. As decribed above, the things did not go that way.
+	! When Luke was not satisfied with the corrected  permission sent
+	! by the university, the university had probably decided that 
+	! it is vain to continue correspondece with Luke. However, 
+	! the university wanted to communicate with me,
+	! when they asked my statement about the importance of Flethers 
+	! code in planning of natural resources.
+	! The government wanted to figure out whether the
+	! university is doing something useful. I think that my statement 
+	! was more valuable for
+	! the university than the euros the university would loose when
+	! not getting payments for the bqbd code.
+	
+	! The decision told that J is published under licence AGPLv3. 
+	! The licence is specially
+	! planned for programs which provide computing services through the net. 
+	! Luke has not done anything to develop such net work services, as it has not 
+	! developed J in any way after my retirement in 2017.
+	! The leaders of Luke did not discuss with
+! me the license matters, of cource not.  
+
+! The decision nominated prof Packalen to take care of the launch of the software.
+  ! Unfortunately she could not organize the lauch, as J was not ready to publication 
+  ! because prof Packalen did not allow Reetta to do the necessary
+ ! preparations with respect to the code and manuals.
+ 
+ ! The lawyers of Luke did not tell anything of the plans of Luke to make lawsuits 
+ ! against me if I would co-operate with Norway and would not send new codes to Luke.
+ 
+ ! Lauri Mehtätalo became Professor in Mathematical Modeling for Forest Planning
+ ! in Luke in Mai 2021.
+ ! Coming from an university environment, he is interested 
+ ! in the development of science
+ ! and research. He wanted to get J finally published after 6 year deadlock. 
+ ! Lauri did have anything againts that I would take care
+ ! of the publication. Lauri even thought that it 
+ ! would be good for science and research that I would
+ ! work without payment. It was a refreshing new attitude in Luke
+ ! to put science into priority.
+ ! Lauri told that he would try to convince the leaders of Luke
+ ! that it would not harm Luke's interests that I would 
+ ! take care of the publication of
+ ! the software I had made (for most part). Lauri told initially that
+ ! he wants to persuade 
+ ! me to give all new codes to Luke. When I protested his choice of words, 
+ ! he apologized, and used thereafter the word 'negotiate'. When Lauri started to 'negotiate' with
+ ! me, I consider that Luke first time in its history acknowledged that I do exist
+ ! as an legal entity is this J affair. 
+ 
+ ! Lauri was able to rotate the head of the research director 180 degrees. The research director even told
+ ! that he would be interested to become a coauthor in the publication dealing the factory
+ ! optimization. It was, however, not mentally feasible for me, as
+ ! he did not even
+ ! answer my previous co-operation suggestion, but just told that Luke has everything
+ ! it needs. Being a researcher, Lauri understood what
+ ! were my aims and was able to get approval of the research director. 
+ ! So it seemed that 
+ ! the agreement was about ready. But then the agreement was
+ ! stuck on the table of the research director. 
+ !endsection
+ 
+ !Section preface7 Last battle, victory and peace in Olavinlinna
+ ! I was invited to the 100 year anniversary celebration of the Finnish National Forest Inventory
+! as I had worked also in the NFI group. I was interested to see my former colleagues,
+ ! but it started to disturb me 
+! that I would not know whether I would be a guest of my enemy 
+! or my co-operations partner.
+! I had a very exciting video meeting with the GAYA people. They promised me access
+ ! to the Norwegian supercomputers needed in large factory optimizations, funding for traveling
+ ! and for any consulting work. I started to think that have been stupid 
+ ! when I spent years of my short residual life waiting for such co-operation
+ ! with Luke. As Lauri had tried 
+ ! to establish such co-operation between me and Luke, 
+ ! I decided to give Luke a last chance. 
+ ! I made an ultimatum that if we do not get a agreement with Luke within a week,
+ ! I would break all negotiations with Luke and would continue only with Norwegian people,
+ ! even if Luke might try to make a lawsuit against me. 
+ ! Twenty-four hours before the time
+ ! limit Lauri called that Luke is willing to make treaty with me.
+ ! The lawyers of Luke did finalize the treaty
+  ! two hours before the NFI celebration.
+
+! Antti Asikainen, the research director of Luke and I signed the co-opertation treaty in the king's hall in 
+! Olavinlinna (St. Olaf's Castle) in Savonlinna 7.10. 2021.
+ ! In the treaty I got almost everything I had
+! fighted for: The J software will be published, and I have
+ ! full responsibility of the code and manuals.
+! Luke will provide me data of factory locations, simulated treatment schedules for
+! all inventory plots for the whole country, and the matrix of distances between the
+ ! factories and inventory plots. Luke will also provide me access to CSC
+! supercomputers which are necessary for the whole country optimizations. CSC does not allow 
+! independent retirees to use its computers. I'm allowed to make a methodological
+! paper from developments, whereafter I will provide Luke all the 
+! new and improved J functions and the developed J scripts. I had hoped that
+! Luke had promised me access to Mela so I could study how Mela is doing interest
+! rate computations, as I have suspects that these computations are not in order.
+! I had asked Olli Salminen some Mela results to study my suspects, but he told, after some
+! day considerations, that Luke is not willing to make such computations. 
+! I suspect that the reason is
+! Luke wants to keep all possible Mela problems secret. I did not insist to get
+! such permissions as Lauri thought that this would delay and complicat 
+! the J process. In the treaty it 
+! is said that the code files state that Juha Lappi
+ ! and Natural Resources Institute Finland have the copyright for the code.
+! In the last minutes 
+! before the signatures
+! the lawyers tried to reverse the order of copyright owners. I did not, of course,
+! accept the reveresed order, bacause I have made the J really operable after my retirement, 
+! Now, the recent developments have made Lukes or Metlas contribution 
+! even smaller, and the overall influence of Luke has been negative. 
+! It must, however to be taken into account that Pekka M\"akinen has done valuable
+! work in collecting data of factories and 
+!transportation costs, and this data greatly helps my work when I'm now allowed
+! to start to develop factory optimization for the whole Finland.
+!endsection
+
+!Section preface8 Total balance with Luke
+! At the signing of the peace treaty, Johanna Buchert told that there has not been any
+ ! disagreement in this J busisness, and let bygones be bygones.
+ ! From my point of view, I had six and half years fight to get permission to
+! publish the results of my research.  For Luke, there was no
+! disagreement because Luke did not acknowledge that I even existed as a 
+! legal entity. How could Luke 
+! have disagreement with something which does not even exist? For me,
+! the behavior of the leaders of Luke was a 'me too' experience. In 
+! the heart of my researcher
+! identity is the conviction that every researcher, at least in a government 
+! research institute, has the right and even the obligation to publish the
+! results of his research let it be a stastistical method or computer code or 
+! ordinary research publication. 
+! The leaders of Luke denied 
+! me the right to publish the results of my statistical work
+ ! in our biometry book and the results of my software development.  In this J case,
+ ! the reason was that they
+ ! wanted to publish my results themselves.  This has been a very traumatic
+! harrasment experience. All the victims of sexual harassment are also
+ ! told that 'let bygones be bygones'.
+! As in the peace treaty I was given all responsibility of manuals, I'm 
+! now utilizing this responsibility in this preface hoping the leaders of 
+! Luke and perhaps also others
+! would be more careful when making decisions which may not tolerate daylight,
+ ! similarly
+! as bosses are slowly learning to keep better control of
+ ! their hands which would like
+! to grope the bottoms of their subordinates.
+
+! From the legal perspective, the leaders of Luke have insisted that 
+! Luke has full copyright to all work I've done in Mela or Luke. So they can freely
+! follow their whims and waste hundreds of thousands of euros 
+! taxpayers money used in the J project.
+! With Lukes overhead multipliers we may speak about millions.
+! Perhaps they should also pay
+ ! attention to the by-law telling what is the duty of Luke. How has
+ ! Luke promoted forest research and its utilization by prevented 
+ ! the development and 
+ ! utilization of J software for over six years? 
+ ! Perhaps the ministry should  give
+ ! the leaders of Luke training about the duties of Luke. The leaders
+ ! of Luke never gave any rational justification why Luke should prevent me
+ ! to take care of the publication. 
+ 
+ ! If I had been allowed to publish and develop J as I wanted, 
+ ! Luke and forest industry would have
+ ! now available methods to analyze e.g. what can be done 
+ ! when timber import from Russia suddenly stops.
+ ! Luke is also still doing static regional sustainability analyzes,
+ ! which are not reasonable
+ ! as they do not take factories into account. Mentally Luke 
+ ! is stuck to the German foresters from 
+ ! 1800's who rotated a fixed cutting area for each year. 
+ ! If Luke had let me publish the open-source software in 2015
+ ! Luke had been a forerunner in the open source publication, and I had praised it
+ ! for its progressive attitude. Now Luke has
+ ! has establised its status in the history of open-source as an institute which
+ ! decided to open a software
+ ! but keeps the decision and the code locked for several years because
+ ! it did not allow the principal
+ ! author to take care of or even participate in the publication.
+ !endsection
+ 
+ !Section preface9 Freedom
+ ! After the Olavinlinna peace treaty, I thought initially that
+ ! I would like to publish the software before Christmas 2021. 
+ ! But when the iron cage around me disappeared, the pressure which had increased
+ ! in my mind for seven years did burst in intensive code development.
+ ! This development had already started when negotiations with Lauri started to look promising,
+ ! and I developed the program to make Latex files for manuals and script files
+ ! for examples automatically from comments embedded within the code or from a
+ ! separate text files.
+ 
+ ! After the peace treaty I have rewritten all the central parts of the 
+ ! software using simpler and more easily maintained solutions,
+ ! and added many new properties. The most important was the rewriting
+ ! of the interpreter
+ ! which interprets the J code generated using the input programming capabilities.
+ ! I had been shamed if the previous interpreter had be offered to the eyes of 
+ ! professional programmers. I did rewrite the precompiler so it takes only some 
+ ! seconds to do the precompilation, and if the precompiled file 
+ ! does not change the new precompiled file is deleted so that the compiler
+ ! does not do any more unnecessary compilation. I did put the matrix computations 
+ ! into a new level implementing
+ ! all properties I had found useful in Matlab when providing a method for a client
+ ! using Matlab codes. I added new tools for debugging 
+ ! and code development. Now J can treat nicely submatrices and do 
+ ! all arithmetic operations and logical operations
+ ! on matrices in addition to scalars. The previous version of  J could make rough 
+ ! figures using a separate program written in Intel
+ ! fortran, which I do no more have available. Publication level
+ ! figures could be done using R sripts generated by J.
+ ! Now J is producing figures using Gnuplot which is automatically run from within J. 
+ ! Currently only basic 2D and 3D figures
+ ! can be done, but this Gnuplot connection makes it possible to develop J
+ ! into full scale interface to all Gnuplot properties. J can now generate random numbers from any
+ ! continuous or discrete distibution providing new possiblities to study the
+! effects of random errors in the simulation of treatment schedules or in 
+! optimization. It is now  possible to run R scripts from within J.
+ ! Now J can be used easily also as a subroutine. Lauri has utilized this property 
+ ! by calling J from R. This offers many new possiblities,
+ ! which we will utilize when
+ ! continuing the co-operation with the GAYA-group. 
+ 
+ ! I made first cleaning of the important jlp() function in the spring of 2021
+ ! when correcting
+ ! the fragility which prevented the solution of large problems which take several hours in
+ ! a ordinary PC. There are many things to be done in jlp() function, but I start
+ ! to work with them when developing factory optimization in CSC supercomputers.
+ ! I know already how parallel computations can be utilized in jlp()-function. 
+ ! Previous versions of J had special functions for developing forest simulators and
+ ! computing the simulated schedules. Now all simulators can be developed and utilized
+ ! using standard properties of J transformations either for using stand level
+  ! or tree level variables
+  ! I have not yet made good examples to demonstrate these properties. Because the new J provides
+	! a platform for making all kind of new devlopments, including 
+	! integer optimization (i.e preventing treatment unit to be divided among several 
+	! schedules), nonlinear objective function  
+	! (which would utlize the capability of J to compute derivatives
+	! according to analytic derivation rules), it was difficult to breathe a little and make the
+	! new codes available for users. The codes now published contain many errors.
+	! I invite the users to help me to correct them. First users should have some 
+	! patience with respect to errors. I claime that the bug percentage is smaller than
+! estimated 23-27% bug percentage in the first version
+! of Windows 1, which accintally happened be the same as the bug percentage 
+! Soviet masons used in the mortar they used when masoning the US embassy in Moscow.
+!	Currently I can correct most bugs
+	! causing system crash in 5-10 minutes. It should be emphasized that 
+	! Luke does not have any kind of responsibility of the errors.
+	! I take the full moral responsibilty of the errors. Similarly, it should 
+	! be emphasized that Luke has no responsibility of the code which works correctly.
+	! I take the main responsibility of the correctly working code,
+	! giving Reetta her fair 
+	! share. It is easier for me to correct the errors while alive. 
+	! This fundamental fact of life
+	! was ignored by Luke when it prevented the publication for seven years.
+	
+	! During the intensive work period after the Olavinlinna peace treaty, my deep
+	! 'me too' traumas have started to heal slowly. Probably this healing process takes 
+! a long time, and I cannot very soon say let bygones be bygones.
+
+! endsection
+
+!Section own Own functions:  o1_o1_funcs(), o2_funcs() and o3_funcs()
+! The users of open J can define their own functions using three
+! available own-function sets. In addition to own functions open J is ready to
+! recognize also own object types and options which are defined in the source files
+! controlled by the users. The main J does not know what to do with these own 
+! object types and options, they are just transmitted to the own-functions.
+! In the main J the control is transmitted to the own functions using
+! J functions o1_o1_funcs(), o2_funcs() and o3_funcs().
+! endsection
+
+!Section arit Arithmetic and logical operations
+! !The arithmetic and logical operations are first converted into the polish notation.
+! The logical operations follow the same ruels as addition +. The following rules, 
+! extending the standard matrix computaion rules apply. The same rules aplly if the
+ ! order of arguments is changed,
+! \begin{itemize}
+! \item[\textbf{J}] MATRIX + REAL : REAL is added to each element
+
+! \item[\textbf{J}] MATRIX1+MATRIX2 :: elementwise addition, if matrices hav comptaible dimensions
+! \item[\textbf{J}]  MATRIX+ column vector: column vector is added to each column of MATRIX 
+! if the numbers of rows agrees.
+! \item[\textbf{J}]  MATRIX+ row vector: row vector is added to each 
+! row of MATRIX 
+! if the numbers of columns agree.
+
+! \end{itemize}
+! The same rules apply for the lelmentwise multiplication *. and elementwise
+! division /. as for addition +.
+! endsection
+
+
+! Section minmax Minimum and maximum: min() and max()
+! Functions min() and max ()
+ ! behave in a special way, max() behaves similarly as min() here:
+ ! \begin{itemize}
+ ! \item[\textbf{J}] min(x1,x2):: minimum of two REAL
+ ! \item[\textbf{J}] min(MATRIX,REAL):: each element is min(elem,REAL)
+ ! \item[\textbf{J}] min(MATRIX):: row vector having minimums of all columns
+ ! \item[\textbf{J}] min(MATRIX,any->):: minimum over the whole amtrix
+ ! \end{itemize}
+ ! endsection
+ 
+ ! Section Special Special arithmetic functions
+ ! J has the following arithmetic functions producing REAL values.These functions cannot yet have
+ !matrix arguments.
+ ! endsection
+ 
+ ! Section dist Functions for probality distributions
+ ! There are currently the following functions relate to probality distributions.
+ !endheader
+ ! Note function density() can be used define density or probality 
+ ! function for any continuous or discrete distribution which can then be used 
+ ! to generate random numbers with random() function.
+ ! endnote
+ ! endsection
+ 
+ ! Section inter Functions for interpolation
+ ! The following functions can be used for interpolation
+ ! endsection
+ 
+ ! Section lists List functions
+ ! The following list functions are available
+ ! endsection
+ 
+
+
+
+
+
+! Section texts Creating two types of text objects
+! The are now two object types for text.
+! endsection
+
+! Section file File handling
+! The following function can handle files.
+! endsection
+
+!Section showdir showdir() shows the current directory
+!endheader
+!Note showdir is defined in the system dependent file jsysdep_gfortran.f90.
+!Using other compliers it may be neccessary to change the definition
+!endnote
+!endsection
+
+!Section setdir setdir() sets the current directory
+!endheader
+!Note setdir is defined in the system dependent file jsysdep_gfortran.f90.
+!Using other complilers it may be neccessary to change the definition
+!endnote
+!endsection
+
+! Section io Io-functions
+! Theree are following io functions
+! endsection
+
+
+!Section matrixs Matrix functions
+!J contains now the following matrix functions.
+!endsection
+
+!Section dataf Functions for DATA objects
+!J contains now the following Functions for DATA objects.
 !endsection

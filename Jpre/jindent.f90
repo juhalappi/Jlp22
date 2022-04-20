@@ -1997,8 +1997,15 @@ if(inp(ial:lop).eq.dolabel(ndo)(1:dolop(ndo)))then
 letot=le+lendlabel(indent)
 inp(le+1:letot)=endlabel(indent)
 indent=indent-1
-
+if(indent.lt.0)then
+	write(6,*)'crash (1) againts left margin in line ',ilinn
+	stop 'negative indent 1'
+endif
 ndo=ndo-1
+if(ndo.lt.0)then
+write(6,*)'line ',ilinn, 'closing do which was not opened '
+ndo=0
+endif
 !write(22,'(a,i,i)')inp0//' ndo-1',indent,ndo
 call wr(indent)
 goto 10
@@ -2014,8 +2021,16 @@ if( ndo.gt.0.and.(&
  letot=le+lendlabel(indent)
 inp(le+1:letot)=endlabel(indent)
 indent=indent-1
+if(indent.lt.0)then
+	write(6,*)' line ',ilinn,' crash against left margin'
+	stop 'negative indent (2)'
+
+endif
 
 ndo=ndo-1
+if(ndo.lt.0)then
+ndo=0
+endif
 !write(22,'(a,i,i)')inp0,indent,ndo
 call wr(indent)
 elseif(&
@@ -2031,11 +2046,21 @@ letot=le+lendlabel(indent)
 inp(le+1:letot)=endlabel(indent)
 !write(outfileunit,*)'indent=',indent,'enlabel2=/',endlabel(indent)(1:lendlabel(indent)),'/'
 indent=indent-1
+if(indent.lt.0)then
+	write(6,*)'crash (3) againts left margin in line ',ilinn
+	stop 'negative indent 3'
+endif
+ndo=ndo-1
+if(ndo.lt.0)then
+write(6,*)'line ',ilinn, 'closing do which was not opened ',inp(ialw(1):lopw(1))
+!stop 'errindo (3)
+ndo=0
+endif
 !write(22,'(a,i)')inp0,indent
 call wr(indent)
 elseif(&
 ((inp(ialw(1):lopw(1)).jeq.'do').or.(inp(ialw(2):lopw(2)).jeq.'do')).and.inp(ialw(nwords):lopw(nwords)).ne.'enddo'&
-.and.inp(ialw(nwords):lopw(nwords)).ne.'do')then
+.and.(inp(ialw(nwords):lopw(nwords)).ne.'do'))then
 ndo=ndo+1
 
 dolabel(ndo)='?'

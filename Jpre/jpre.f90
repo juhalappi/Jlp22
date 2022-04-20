@@ -1,10 +1,10 @@
+! Copyright (C) 2022 Juha Lappi
+! This is published using MIT licence 
+
+
 !+--! with gfortran J_precompiler.exe can be made using: gfortran j_precompiler2.f90 -o j_precompiler2
 
-
-! j_precompiler can be used to do two things:
-! 1. It can add prefixes to global variables or subroutines stored in modules
-! Also the prefixes can be changed. The addition or changing of prefixes is done only once.
-!2. The precompiler generates necessary 'use' statments for global variables or subroutines stored
+!The precompiler generates necessary 'use' statments for global variables or subroutines stored
 ! in modules.
 ! The prefixes and the files to be precompiled are in the command file whose default name is j_pre.txt.
 ! the program generates the output files indicated in the command file
@@ -56,6 +56,9 @@ module sub
 	logical :: p=.false. !.true.
 	integer ::linein=0
 	logical ::infunc,isfunc
+	logical,dimension(10000)::subsit
+	integer,dimension(10000)::subslines
+
 end module
 
 
@@ -76,7 +79,6 @@ program jpre
 	
 	logical :: p=.false. !.true.
 	logical ::p2=.false.  !if <> written
-
 
 
 	character*60 outfile,outfile0
@@ -159,9 +161,9 @@ program jpre
 					close(4,status='delete')
 				endif
 				open(4,file=inpf(1:ipi-1)//'_3'//inpf(ipi:lef),status='new')
-				write(6,*)char(9)//'openening new output ',inpf(1:ipi-1)//'_3'//inpf(ipi:lef)
-				open(3,file=inpf(1:ipi-1)//'_2'//inpf(ipi:lef),err=11,status='old')
-				write(6,*)char(9)//'openening also old output ' ,inpf(1:ipi-1)//'_2'//inpf(ipi:lef)
+				write(6,*)char(9)//'opening new output ',inpf(1:ipi-1)//'_3'//inpf(ipi:lef)
+				open(3,file=inpf(1:ipi-1)//'_2'//inpf(ipi:lef),err=11,status='old',action='READWRITE')
+				write(6,*)char(9)//'opening also old output ' ,inpf(1:ipi-1)//'_2'//inpf(ipi:lef)
 			else
 				open(4,file=inpf(1:ipi-1)//'_2'//inpf(ipi:lef),err=11,status='new')
 				write(6,*)char(9)//'opening ',inpf(1:ipi-1)//'_2'//inpf(ipi:lef)
@@ -211,9 +213,11 @@ program jpre
 		
 90		write(6,*)'************************************output changed  at line' ,ili
 
-		close(3)
+		close(3,status='delete')
 		close(4)
-		call rename(inpf(1:ipi-1)//'_3'//inpf(ipi:lef),inpf(1:ipi-1)//'_2'//inpf(ipi:lef)) 
+		write(6,*)'rename ',inpf(1:ipi-1)//'_3'//inpf(ipi:lef),'  ',inpf(1:ipi-1)//'_2'//inpf(ipi:lef)
+		call rename(inpf(1:ipi-1)//'_3'//inpf(ipi:lef),inpf(1:ipi-1)//'_2'//inpf(ipi:lef),istatus) 
+		write(6,*)'status ',istatus, ' 0 =success'
 		goto 2
 
 
@@ -236,10 +240,11 @@ program jpre
 
 		logical ::endmodule,issub,endsub,ok,inprogram,inmodule,insub
 		logical incontains,incontsub
-
+		nsubs=0
 		inprogram=.false.
 		inmodule=.false.
 		insub=.false.
+		call insubs(linein,subsit,subslines,nsubs,insub)
 	
 		incontains=.false.
 		incontsub=.false.
@@ -392,8 +397,14 @@ program jpre
 			if(ib.eq.ico.and.ib2.eq.le+1)then
 				if(p)write(6,*)linein, ' contains'
 				if(.not.insub)then
-					write(6,*)'line ',linein,' contains  but not in subroutine or function'
+					write(6,*)'line ',linein,' contains but not in subroutine or function'
 					write(6,*)inp(1:letot)
+					write(6,*)'lines where insub changes'
+					!inline,subsit,subslines,nsubs,insub
+					do isu=max(nsubs-10,1),nsubs
+						write(6,*)isu,subslines(isu),subsit(isu)
+					
+					enddo
 					stop
 				endif
 			incontains=.true.
@@ -429,6 +440,7 @@ program jpre
 				endif
 				!if(p)write(6,*)'<29> insub',insub
 				insub=.true.
+				call insubs(linein,subsit,subslines,nsubs,insub)
 				if(isfunc)infunc=.true.
 				subname=subname0
 				lensubname=len_trim(subname)
@@ -476,6 +488,7 @@ program jpre
 			enddo
 			if(write4)write(4,'(a)')inp(1:letot)
 			insub=.false.
+			call insubs(linein,subsit,subslines,nsubs,insub)
 			infunc=.false.
 			nsubline=0
 			incontains=.false.
@@ -950,4 +963,14 @@ ih=nextlim(inp,ih2+1,le,"'")
 if(ih.le.le)goto 10
 return
 end function
+
+subroutine insubs(inline,subsit,subslines,nsubs,insub)
+	logical,dimension(10000)::subsit
+	integer,dimension(10000)::subslines
+	logical ::insub
+	nsubs=nsubs+1
+	subsit(nsubs)=insub
+	subslines(nsubs)=inline
+end subroutine
+
 
