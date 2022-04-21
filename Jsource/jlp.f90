@@ -182,6 +182,114 @@ end module !module fletdmod2
 !end module !module jlpdmod
  
 subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
+
+!Section problem problem() defines a Lp-problem
+! An LP-problem is defined in similar way as a TEXT object//
+! problem([repeatdomains->])//
+! … 
+! /
+! endheader
+! Listing
+! Define a lp problem for jlp() function.
+! Output:
+! a problem definition object
+! OOption:
+! repeatdomains
+! if this option is given then the same domain definition can be in several places of
+! the problem definition, otherwise having the same domain in different places
+! causes an error (as this is usually not what was intended). If the same domain
+! definition is in several places is slightly inefficient in computations, e.g. jlp()
+! function computes and prints the values of x-variables for each domain definition
+! even if the same values have been computed and printed for earlier occurrence
+! of the domain definition.
+! The problem definition paragraph can have two types of lines: problem rows and domain rows.
+! Examples of problem definitions showing the syntax.
+! pr=problem() !ordinary lp-problem
+! 7*z2+6*z3-z4==min
+! 2*z1+6.1*z2 >2 <8+ !both lower and upper bound is possible
+! (a+log(b))*z5-z8=0
+! -z7+z1>8
+! /
+! prx=problem() ! timber management planning problem
+! All:
+! npv.0==max
+! sitetype.eq.2: domain7:
+! income.2-income.1>0
+! /
+! In the above example domain7 is a data variable. Unit belongs to domain if the value of the
+! variable domain7 is anything else than zero.
+! The objective row must be the first row. The objective must always be present. If the purpose
+! is to just get a feasible solution without objective, this can be obtained by minimizing a zvariable which does not otherwise appear in the problem (remember z-> option in the jlp()
+! function.
+! In problems having large number of variables in a row it is possible to give the coefficients as
+! a vector and variables as a list e.g.
+! ESIMERKKI
+! In problems with x-variables it is possible to maximize or minimize the objective without any
+! constraints. In factory problems this would also be quite straightforward to implement, but i
+! In problems with x-variables it is possible to maximize or minimize the objective without any
+! constraints. In factory problems this would also be quite straightforward to implement, but it
+! does not come as a side effect of computations as in the case of maximization of x-variables,
+! and thus it has not been implemented. The maximization of a factory objective without
+! constraints can be obtained by adding to the problem constraints which require that the
+! amounts of transported timber assortments to different factories are greater than or equal to
+! zero.
+! Function problem() interprets the problem paragraph, and extracts the coefficients of
+! variables in the object row and in constraint rows. The coefficients can be defined using
+! arithmetic statements utilizing the input programming "-sequence or enclosing the coefficient
+! in parenthesis. The right hand side can utilize arithmetic computations without parenthesis.
+! The values are computed immediately. So if the variables used in coefficients change their
+! values later, the problem() function must be computed again in order to get updated
+! coefficients. Note that a problem definition does not yet define a JLP task. Final interpretation
+! is possibly only when the problem definition and simulated data are linked in a call to jlp()
+! function. At the problem definition stage it is not yet known which variables are z-variables,
+! which are x-variables and which are factory variables (see Lappi 1992).
+! NNote that ‘<’ means less or equal, and ‘>’ means greater or equal. The equality is always
+! part of linear programming constraints.
+! The logic of jlp() function is the same as in the old JLP software. There is one difference
+! which makes the life a little easier with J. In J the problem definition can use c-variables which
+! are defined in the stand data. These are used similarly as if they would become from the xdata. It does not make any sense to have on a problem row only c-variables, but there can be
+! constraints like
+! vol#1-vol#0>0
+! where vol#0 is the initial volume, i.e. a c-variable, and vol#1 is the volume during first period.
+! In old JLP these initial values had to be put into the x-data.
+! NNote also that problem definition rows are not in one-to-one relation to the constraint rows in
+! the final lp problem. A problem definition row may belong to several domains, thus several lpconstraint rows may be generated from one problem definition row. The problem obtained by
+! taking multiple domains in domain definition rows into account is called ‘expanded problem’.
+! Domain definitions describe logical or arithmetic statements indicating for what management
+! units the following rows apply. Problem will generate problem definition object, which is
+! described below.
+! Starting from J3.0 it is also possible to specify the period of the row for each row containing xvariables. The period is given between two ‘#’ signs at the beginning of the row, e.g.
+! #2# income.2-income.1 >0
+! If the row contains x variables from several periods, the period of the row is the last period of
+! the x variables. If the period is given for some rows containing x variables, it must be given for
+! all except for the objective row. The period of the objective is assumed to be the last period as
+! having any other period for the objective would not make any sense. If wrong period is given
+! for a row, J computes the correct solution but not as efficiently as with correct periods.
+! If periods are given for rows, J is utilizing the tree structure of schedules in the optimization.
+! This leads to smaller amount of additions and multiplications as the computation of the valu
+! of a branch of the tree can for each node utilize the value of branch before that node.
+! Unfortunately this was not more efficient e.g. in test problems with five periods.
+! NNote 1: Only maximization is allowed in problems including factories. To change a
+! minimization problem to a maximization problem, multiply the objective function by -1.
+! *** We may later add the possibility to define also minimization problems.
+! NNote 2: If optimization problem includes factories (see chapter 11.2 Optimization problem
+! including factories), there have to be variables in the objective function or at least in one
+! constraint row. Example of problem definition including factories can be found in chapter 11.12
+! JLP Examples.
+! NNote 3: An ordinary linear programming problem contains only z-variables.
+! NNote 4: It is not necessary to define problem() function if the problem includes only zvariables. In jlp() function you can use zmatrix-> option instead of problem-> option.
+! For more information see chapter 11.8 Solving a large problem with z-variables: jlp( ).
+! NNote 5: If the problem contains harvest/area constraints for several domains, it saves memory,
+! if the constraints are written in form
+! harvest < area_of_domain*constant
+! instead of
+! (1/area_of_domain)*harvest < constant.
+! The latter formulation takes the number of domains times more memory than the former
+! formulation.
+! endlisting
+! endsection
+
+
 	! domainvars%.. added as a part of the problem object Feb. 2011
 	!ivdomain text for domain definitions
 	!ivrow text for rows
@@ -1091,6 +1199,9 @@ end subroutine !subroutine priceschedcum(iob,io)
  
  
 subroutine weights(iob,io)   !!!!
+! Section weights weigts() weights of schdules
+! TO BE RAPORTED LATER
+! endsection
  
 	if(j_v(j_ivstartedjlp).eq.0)then
 		write(6,*)'**weights: Started_jlp=0'
@@ -1135,6 +1246,9 @@ end !function nweights()
  
  
 subroutine partweights(iob,io)   !!!!
+! Section partweights partweight() weights of split schedules
+! TO BE RAPORTED LATER
+! endsection
  
 	if(j_v(j_ivstartedjlp).eq.0)then
 		write(6,*)'**partweights: Started_jlp=0'
@@ -2148,15 +2262,12 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 
 
 !endsection
-!Section jlpzs Small ordinary LP problems with text input: jlp()
 
 
 
 
 
 
-
-!ndsection
 
 
 ! Section jlp Solving large problems without schedule data. 
@@ -2183,9 +2294,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 ! indicate the absence of the upper bound in a row. Either or both of the bound
 ! options (rhs->, rhs2->) has to be defined.
 ! Other options described above in chapter Solving a problem: jlp( ).
-! Note. When zmatrix-> option is used, the solution is not automatically printed. Use jlp
+! NNote. When zmatrix-> option is used, the solution is not automatically printed. Use jlp
 ! solution objects to access solution. For more information see chapter 11.10 Objects for the JL
-
+!enEdnote
 
 
 ! There are two versions of jlp() function call: one with problems-> option for problems
@@ -2225,9 +2336,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 ! accidentally missing from the data sets.
 ! trans transformation set which is executed for each unit.
 ! subtrans transformation set which is executed for each schedule.
-! Note: the subtrans transformations can utilize the variables in the unit data and
+! NNote: the subtrans transformations can utilize the variables in the unit data and
 ! the output variables of trans-> transformations.
-! Note: transformations already associated with cdata and xdata are taken
+! NNote: transformations already associated with cdata and xdata are taken
 ! automatically into account and they are executed before transformations defined
 ! in trans-> or subtrans-> options.
 ! *** Later we may add the possibility to have several data sets (note that several files can be
@@ -2350,11 +2461,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 ! JLP-solution stored in special data structures which can be accessed with special J functions
 ! described below and if output is given then several output objects are created (see Objects for
 ! the JLP solution).
-! Note 1: a feasible solution (without an objective) can be found by minimizing a z-variable
+!NNote 1: a feasible solution (without an objective) can be found by minimizing a z-variable
 ! (remember z-> option), or by maximizing a unit variable (which is constant for all schedules in
 ! a unit).
-! Note 2: If virtual memory overflow occurs, see first Note 5 for problem() function and then
-
+! NNote 2: If virtual memory overflow occurs, see first Note 5 for problem() function and then
+!endsection
 
 
 

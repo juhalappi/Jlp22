@@ -1555,7 +1555,7 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 231	call stat_(iob,io) ! basic satistics call stat(
 		goto 1
 
-232	call corr(iob,io,1)
+232	call corr(iob,io,1) !cov(
 		goto 1
 
 233	call corr(iob,io,0)  !correlation
@@ -3454,7 +3454,7 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 
 	subroutine do(iob,io)
 		integer, dimension(:), pointer :: arg  !narg=4
-!Section 
+ 
 
 	!addres where to jump if no iterations ,index variable,iv-low,iv-up,iv-step,
 	!current,up,step
@@ -7972,6 +7972,10 @@ if(j_err)return
 	end subroutine classvector !subroutine classvector(iob,io)
 
 	subroutine varcomp(iob,io)
+	! Section varcomp varcomp(): variance and covariance components
+	! TO BE RAPORTED LATER, see old manual
+	! endsection
+	
 		integer, dimension(:), pointer :: arg !arguments of the function
 		integer, dimension(:), pointer :: classv !arguments of the function
 		integer, dimension(:), pointer :: cov !arguments of the function
@@ -9016,6 +9020,12 @@ if(j_err)return
 
 
 	subroutine properties(iob,io)
+	
+	! Section properties properties(): defining properties of some subjects.
+	! This function has been used to define properties of factories.
+	! It will replaced with othe means in later versions.
+	! endsection
+	
 
 		character*24 name1
 		integer,dimension(:),allocatable::linevar
@@ -9928,6 +9938,10 @@ if(j_err)return
 	end subroutine
 	
 	subroutine clearbits(iob,io)
+	! Section clearbits clearbits(): clearing bits 
+	! To be reported alter
+	! endsection
+
 		real rw
 		integer iw
 		equivalence(iw,rw)
@@ -9977,6 +9991,9 @@ if(j_err)return
 	end subroutine clearbits !subroutine clearbits(iob,io)
 
 	subroutine setbits(iob,io)
+	! Section setbits setbits(): setting bits on
+	! To be reported alter
+	! endsection
 
 		real rw
 		integer iw
@@ -10031,6 +10048,10 @@ if(j_err)return
 	end subroutine setbits !subroutine setbits(iob,io)
 
 	subroutine getbit(iob,io)
+	! Section getbit getbit() : get bit value
+	! To be reported later, see old manual
+	! endsection
+	
 		double precision rw
 		integer*8 iw
 		equivalence(iw,rw)
@@ -10082,6 +10103,9 @@ if(j_err)return
 	end subroutine getbit !subroutine getbit(iob,io)
 
 	subroutine getbitch(iob,io)
+	! Section getbitch getbitch() : get bit value
+	! To be reported later, see old manual
+	! endsection
 		double precision rw
 		integer*8 iw
 		integer ::i1,i2
@@ -10445,7 +10469,7 @@ character*40 filename
 	
 	! Section len len() lengths of different lists or vectors
 ! len(]arg[) gives the following lenghts for different argument types	
-	! \begin{itemize)
+	! \begin{itemize}
 	! \item[\textbf{J}\.] ]arg[ is MATRIX => len=the size of the matrix, i.e. 
 	! nrows(]arg[)*ncols(]arg[)
 	
@@ -10763,21 +10787,17 @@ character*40 filename
 	! arg&1&REALV& variables whose values obtained
 	! data&1&DATA& The data set.
 ! endoption
-
-! values() all different values of a variable in one or several datasets into a vector.
-! Output:
-! a columns vector getting different values
-! Argument:
-! variable a data set variable (either stored in the data matrix or generated with the
-! associated transformations).
-! Option:
-! data gives the data sets searched
-! Note 1. The values found will be sorted in an increasing order.
-! Note 2. After getting the values into a vector, the number of different values can be obtained
+! Note  The values found will be sorted in an increasing order.
+!endnote
+! Note After getting the values into a vector, 
+!the number of different values can be obtained
 ! using nrows() function.
-! ***Later there will be different ways to utilize the obtained values in connection of data sets.
-! Note 3. The values() function can be utilized e.g. in generating domains for all different
+!endnote
+
+! Note values() function can be utilized e.g. in generating domains for all different
 ! owners or regions found in data.
+!endnote
+!endsection
 
 		double precision,dimension(:), allocatable::value9
 		integer,dimension(:),allocatable::iperm  !quick sort
@@ -10956,7 +10976,61 @@ character*40 filename
 	end subroutine solve !subroutine solve(iob,io)
 
 	subroutine regr(iob,io)   !compute a linear regression model using linpack (%%stat)
-		integer,dimension(:), pointer::arg=>null()
+	! Section regr regr(): linear regression.
+	! Ordinary or stepwise linear regrwession can be computed using regr().
+	! endheader
+	
+	! Option 
+	! output&1&REGR& sRegression object..
+	! arg& 1-N&LIST or REALV& y-variable and x-variables variables listing them
+	! individually or given as a LIST.
+	! @@data
+	! noint&-1|0& & noint-> implies that the model does not include intercept
+	!step&-1|1 &REAL& t-value limit for stepwise regression. Regression variables are droped one-by-one
+	! until the absolute value of t-value is at least as large as the limit given.
+	!intercept is not considered.
+	!var&-1|0& & if var-> is present regr() generated matrix ]output%var[ for 
+	!the variance-covariance matrix of the coeffcient estimates.
+	!corr&-1|0& & if vcorr-> is present regr() generated matrix ]output%corr[ for 
+	!the correlation matrix of the coeffcient estimates. Standard deviations
+	!are put to the diagonal.
+	!endoption
+	! Note If the DATA object contains variables Regr and Resid, then the values of 
+	! the regression function and resduals are put into these columns. Space for these e
+	! coluns cab reserved with extra-> option in data() or in newdata()
+	! endnote
+	! Note If ]re[ is the output of the regr() then function re() can be used to compute
+	! the value of the regression function. re() can contain from zero arguments up to the
+	! total number of arguments as arguments. The rest of arguments get 
+	! the value they happen to have at the moment when teh function is called.
+	! endnote
+	! Latex 
+	! Information from the REGR object can be obtained with the following functions.
+	! let ]re[ be the name of the REGR object.
+	! \begin{itemize}
+	! \item[\textbf{J}\.]  coef(]re[,xvar) = coefficient of variable xvar
+	! \item[\textbf{J}\.]  coef(]re[,xvar,any) = returns zero if the variable is dropped from
+	! the equation in the setwise procsedure of
+	! due to linear dependencies.
+	! \item[\textbf{J}\.] coef(]re[,1) or coef(]re(,$1) returns the intercept
+	! \item[\textbf{J}\.] se(]re[,xvar) standard error of a coeffcient
+	! \item[\textbf{J}\.] mse(]re[) MSE of the regression
+	! \item[\textbf{J}\.] rmse(]re[) RMSE of the regression
+	! \item[\textbf{J}\.]	r2(]re[) adjusted R2. If the intercept is not present this can be negative.
+	! \item[\textbf{J}\.]	nobs(]re[) number of observations used
+	! \item[\textbf{J}\.]	len(]re[) number of independent variables (including intercept) used
+	! \end{itemize}
+	!endlatex
+	! endsection
+	
+	
+	
+	
+	
+	
+
+
+	integer,dimension(:), pointer::arg=>null()
 !	integer,dimension(:), pointer::regrl=>null()
 		integer ,dimension(:), allocatable::regl   !,ortonew
 		double precision,dimension(:),allocatable::t
@@ -11401,6 +11475,12 @@ character*40 filename
 
 
 	subroutine nonlin(iob,io)   !compute a linear regression model using linpack (%%stat)
+! Section nonlin nonlin():: nonlinear regression
+! To be raported later, see old manual
+! endsection
+
+
+
 		integer,dimension(:), pointer::arg=>null()
 		integer,dimension(:), pointer::par=>null()
 		integer,dimension(:), pointer::initial=>null()
@@ -12442,6 +12522,19 @@ character*40 filename
 
 
 	subroutine cpu(iob,io)  !J-function cpu()
+	! Section cpu cpu() gives the elapsed cpu time
+	! endheader
+	! Ex cpuex Example of cpu-timing
+	! cpu0=cpu()
+	! a=matrix(100000)
+	! a=ran() !uniform
+	! mean(a),sd(a),min(a),max(a);
+	! cpu1=cpu()
+	! elapsed=cpu1-cpu0;
+	! endex
+	! endsection
+	
+	
 
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -12457,6 +12550,20 @@ character*40 filename
 	end subroutine cpu !subroutine cpu(iob,io)
 
 	subroutine seconds(iob,io) !J-function seconds()
+	! Section seconds seconds() gives the elapsed clock time
+	! endheader
+	! Ex secondsex Example of elapsed time
+	! cpu0=cpu()
+	! sec0=seconds()
+	! a=matrix(100000)
+	! a=ran() !uniform
+	! mean(a),sd(a),min(a),max(a);
+	! cpu1=cpu()
+	!sec1=seconds()
+	! elapsed=cpu1-cpu0;
+	!selapsed=sec1-sec0;
+	! endex
+	! endsection
 
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -18026,21 +18133,89 @@ iobs(1)=iobs(1)-nrejected(1)
 	
 	
 	subroutine transdata(iob,io)
-	
+	! Section transdata transdata() own transformations for data 
+	! transdata() is useful when all necassy computions are put into a TRANS
+	! object, and a DATA object is gone throug obsevation by observation.
+	! This is useful e.g. when simulating harvesting schdules using a simulator which is defined 
+	! as an ordinary TRANS object. The whole function is written below to indicate
+	!how users' own functions dealing with data could be developped.
+	! endheader
+	! Option
+	! @@data
+	! endoption
+
+	!Listing
+	!subroutine transdata(iob,io)
+		! call j_getdataobject(iob,io)
+		! if(j_err)return
+		! call j_clearoption(iob,io)  ! subroutine
+
+		! do iobs=j_dfrom,j_duntil
+			! call j_getobs(iobs)
+			! if(j_err)return
+		! end do !do iobs=j_dfrom,j_duntil
+		
+		! if(j_depilog.gt.0)call dotrans(j_depilog,1)
+		
+		! return	
+	!endlisting
+	!endsection
 		call j_getdataobject(iob,io)
 		if(j_err)return
 		call j_clearoption(iob,io)  ! subroutine
 
 		do iobs=j_dfrom,j_duntil
-
 			call j_getobs(iobs)
 			if(j_err)return
 		end do !do iobs=j_dfrom,j_duntil
+		
 		if(j_depilog.gt.0)call dotrans(j_depilog,1)
+		
 		return
 	end subroutine transdata!subroutine stat_(iob,io)
 
 	subroutine corr(iob,io,itype)  !stat()
+	! Section cov cov():  covariance matrix
+	! cov() computes the covariance matrix of variables in DATA.
+	! endheader
+	! Option 
+	! output&1&MATRIX& symmetric aoutput matrix.
+	! arg& 1-N&LIST or REALV& variables for which covarianes are computed, listing 
+	! individually or given as a LIST.
+	! @@data
+	! weight&-1|1&CODE& Codeoption for weight of each observation.
+	! endoption
+	! Note the output is not automaticall printed, but it can be printed using ';'
+	! at the end of line.
+	! endnote
+	! Note The covariance matrix can changed into correaltion matrix with corrmatrix()
+	! function.
+	! endnote
+	! Note If variable ]w[ in the data is used as the weigth, this can be expressed as
+	! weight->w
+	! endnote
+	! Ex covex Example of covariance
+	! X1=matrix(200)
+	! X1=rann()
+	! ;do(i,2,6)
+	! ad=matrix(200)
+	! ad=rann()
+	! X"i"=X"i-1"+0.6*ad
+	! ;enddo
+	! dat=newdata(X1...X6,read->(x1...x5))
+	! co=cov(x1...x5);
+	! co=cov(dat%keep);
+	! endex
+	! endsection
+	
+	! Section corr corr() computes a correlation matrix.
+	! corr(1) works similarly as cov()
+	! endsection
+	
+	
+	
+	
+	
 		integer, dimension(:), pointer :: arg !arguments of the function
 		logical weig,weigt !filter, single
 		double precision sumwt,b_,c,wt
@@ -18051,8 +18226,14 @@ iobs(1)=iobs(1)-nrejected(1)
 		if(j_err)return
 !	io=io_
 		narg=j_o(iob)%i(io+1)
+		ivi=j_o(iob)%i(io+2)
 !	io_=io_+narg+3
+		if(j_otype(ivi).eq.j_iplist)then
+			arg=>j_o(ivi)%i2(1: j_o(ivi)%i(1))
+		else
+
 		arg=>j_o(iob)%i(io+1+1:io+1+narg)
+		endif
 		iout=j_o(iob)%i(io+2+narg)
 		if(j_otype(iout).ne.j_ipreal)call j_del(iout)
 		if(allocated(cov))deallocate(cov,xc,xm)
@@ -19541,6 +19722,11 @@ iobs(1)=iobs(1)-nrejected(1)
 ! end subroutine !subroutine param(iob,io)
 
 	subroutine stempolar(iob,io)  !
+	
+	! Section stempolar stempolar(): polar coordinates
+	! TO bE REPORTED LATER, see old manual
+	! endsection
+
 
 		dimension acal(4),root(3)
 	!parameter ( deg=0.017453293)  !*deg makes degrees to radians
@@ -19700,6 +19886,9 @@ iobs(1)=iobs(1)-nrejected(1)
 	end !subroutine stempolar(iob,io)
 
 	subroutine integrate(iob,io)  !
+	! Section integrate integrate(): integrate
+	! TO bE REPORTED LATER,  see old manual
+	! endsection
 
 !	io=io_
 		narg=j_o(iob)%i(io+1)
@@ -19777,6 +19966,9 @@ iobs(1)=iobs(1)-nrejected(1)
 	end !subroutine valuex(iob,io)
 
 	subroutine stemspline(iob,io)     !
+	! Section stemspline stemspline(): splines for stems
+	! TO bE REPORTED LATER,  see old manual
+	! endsection
 
 		real,dimension(:), allocatable::dapu,hapu
 		integer,dimension(:), allocatable::iperm
@@ -20056,6 +20248,28 @@ iobs(1)=iobs(1)-nrejected(1)
 	end !subroutine stemspline(iob,io)
 
 	subroutine tautspline(iob,io)   !
+	!Section tautspline tautspline()
+	! tautspline(x1,…,xn,y1,…,yn[,par->][,sort->][,print->])//
+! Output://
+! An interpolating cubic spline, which is more robust than an ordinary cubic spline. To prevent
+! oscillation (which can happen with splines) the function adds automatically additional knots
+! where needed.//
+! Arguments://
+! x1,…,xn the x values//
+! d1,…,dn the y values.//
+! There must be at least 3 knot point, i.e. 6 arguments.//
+! Options://
+! par gives the parameter determining the smoothness of the curve. The default is zero,
+! which produces ordinary cubic spline. A typical value may 2.5. Larger values mean
+! that the spline is more closely linear between knot points.//
+! sort the default is that the x’s are increasing, if not then sort-> option must be given//
+! print if print-> option is given, the knot points are printed (after possible sorting).
+! The resulting spline can be utilized using value() function.
+! The taut spline algorithm is published by de Boor (1978) on pages 310-314. The source code
+! was loaded from Netlib.
+! endsection
+	
+	
 
 		real*8,dimension(:,:), allocatable::s
 		real*8,dimension(:), allocatable::tau
@@ -20802,6 +21016,10 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine abs(iob,io)
 
 	subroutine bitmatrix(iob,io) ! matrix() %%matrix
+	
+	! Section bitmatrix bitmatrix() : define a matrix for bits
+	! To be reported later,  see old manual
+	! endsection
 
 		integer ,dimension(:), allocatable:: ivals
 		character*8 loppu
@@ -20979,6 +21197,9 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine bitmatrix(iob,io)
 
 	subroutine setvalue(iob,io) !set value for a bitmatrix  %%bitmatrix
+	! Section setvalue setvalue() : set value for a bitmatrix 
+	! To be reported later,  see old manual
+	! endsection
 
 !	io=io_
 		narg=j_o(iob)%i(io+1)
@@ -21031,6 +21252,9 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine setvalue(iob,io)
 
 	subroutine closures(iob,io)             !
+	! Section closures closures/) :convex closures
+	! To be desrribed later,  see old manual
+	! endsection
 
 		logical*1, dimension(:,:),allocatable::itemp
 		integer, dimension(:,:),allocatable::nei
@@ -22268,6 +22492,10 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine exist(iob,io)
 
 	subroutine laasvol(iob,io)  !
+	! Section laasvol laasvol(): svolume eqaitions of Laasasenaho
+	! TO bE REPORTED LATER,  see old manual
+	! endsection
+
 
 		narg=j_o(iob)%i(io+1)
 		iout=j_o(iob)%i(io+2+narg)
@@ -22290,6 +22518,10 @@ iobs(1)=iobs(1)-nrejected(1)
 	end subroutine !subroutine laasvol(iob,io)
 
 	subroutine laaspoly(iob,io)   !
+	! Section laaspoly laaspoly(): polynomila stem curves of Laasasenaho
+	! TO bE REPORTED LATER,  see old manual
+	! endsection
+	
 		implicit double precision(a-h,o-z)
 		call j_checkoutput(iob,io)
 		if(j_err)return

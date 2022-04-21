@@ -3,7 +3,7 @@
 ! this program can be used  to generate file jmanual.tex which can be used to generate the 
 ! PDF -manual (together with jmain.text)
 ! The program lso generates the scrip file jexamples.inc which can be used to run all examples in the manual
-! The program is using two input files, in adition to the source code file jutilities.f90, j.f90 and jlp.f9. jections.txt and jsections2.txt.
+! The program is using two input files, in adition to the source code file jutilities.f90, j.f90 and jlp.f90. jections.txt and jsections2.txt.
 ! The manual consists of sections which are defined either in the source files or in the 
 !  file jections.txt. The file jsections2.txt defines in which order the sections are put into the manual
 ! and what is the hierarechical status (section, subsection, subsubsection) os each 'raw' section.
@@ -58,8 +58,7 @@ program j_manual
 	integer,dimension(maxsections)::nfuncs=0
 	integer,dimension(maxsections)::sectionstart
 	integer,dimension(maxsections)::lsection=0 !lenggth of section name
-	integer,dimension(maxmacros)::lmacro=0  !number of examples per section
-	
+	integer,dimension(maxmacros)::lmacro=0  !number of examples per sectio
 	character*1500 line,linec,line2
 	character*500,dimension(maxhead,j_nfunctions_)::headers
 	integer,dimension(j_nfunctions_)::lheaders=0
@@ -356,6 +355,7 @@ goto 235
 	
 	subroutine writeoutput()
 	logical isend
+	character*1 ::yesno
 	isend=.true.
 700	 read(10,'(a)',end=999)line;nl=nl+1;le=j_len_trim(line) !read(2,'(a)',end=40)line;nl=nl+1;le=j_len_trim(line)
 	if(line(1:1).eq.'!')goto 700
@@ -427,15 +427,22 @@ goto 235
 	if(.not.written(isec))then
 		write(6,*)'**Section ',isec,' ',sectionlabel(isec)(1:lelabel),' not written earlier'
 		lesec=j_len_trim(section(isec))
+1000 format(a,$)
+	if(nonw.eq.0)then
+		write(6,1000)'are sections not written earlie written now (y/n)'
+		read(5,'(a)')yesno
+		if(yesno.ne.'y'.and.yesno.ne.'Y')exit
+	endif
 		write(20,'(a)')'\section*{'//section(isec)(1:lesec)//'}' 
 		write(20,'(a)')'EXTRAAAAAAAAAAAAAAA'
+		nonw=nonw+1
 		do j=1,lsection(isec)
 					lei=j_len_trim(sheaders(j,isec))
 					write(20,'(a)')sheaders(j,isec)(1:lei)
 			enddo
 			endif
 	enddo
-	if(nonw.gt.0)write(6,*)'writing now unwritten sections'
+	if(nonw.gt.0)write(6,*)nonw,' sections written which were not written earlier'
 	
 	
 	

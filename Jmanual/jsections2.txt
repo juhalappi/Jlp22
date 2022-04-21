@@ -1,7 +1,7 @@
 infile jsections.txt
 infile c:/j3/jutilities.f90
 infile c:/j3/j.f90
-
+infile c:/j3/jlp.f90
 outfile jexamples.inc
 
 !!;return
@@ -9,16 +9,16 @@ outfile jexamples.inc
 outfile jmanual.tex
 !!subsection matrix
 !!;return
-section preface1 
-subsection preface2 
-subsection preface3 
-subsection preface4 
-subsection preface5 
-subsection preface6 
-subsection preface7
-subsection preface8
-subsection preface9
-subsection changes 
+! section preface1 
+! subsection preface2 
+! subsection preface3 
+! subsection preface4 
+! subsection preface5 
+! subsection preface6 
+! subsection preface7
+! subsection preface8
+! subsection preface9
+! subsection changes 
 
 section intro
 subsection intro1
@@ -258,7 +258,7 @@ subsection corrmatrix corramtrix() correlation matrix from variance matrix
 !
 	
 section dataf Data functions
-	
+subsection datahead
 subsection data data() creating a DATA object or two hierarchical data objects
 subsection newdata newdata(): making a new DATA from matrices posssibly with transformations
 subsection exceldata exeldata(): making DATA from excel file 
@@ -275,42 +275,41 @@ subsection stat stat():computing minimums, maximums, means and standard deviatio
 subsection cov cov(): covariance MATRIX
 subsection corr corr(): correlation MATRIX
 subsection regr regr(): linear regression, also stepwise linear regression, produces REGR object
-subsection mse mse(): mse of a REGR-object
-subsection rmse rmse(): rmse of a REGR object
-subsection coef coef(): coefficient of variable in REGR object
-subsection r2 r2(): cofficient of determination
-subsection se se(): standard error of a coefficient
+!!subsection mse mse(): mse of a REGR-object
+!!subsection rmse rmse(): rmse of a REGR object
+!!subsection coef coef(): coefficient of variable in REGR object
+!!subsection r2 r2(): cofficient of determination
+!!subsection se se(): standard error of a coefficient
 subsection nonlin nonlin(): nonlinear regression
 subsection varcomp varcomp(): variance or covariance components
 subsection classify classify(): group means, group standard devitions and standard errors of group meean
 subsection class class(): class of a given observation
 !
 	
-section lp Linear programming
+section jlpintro Linear programming
 subsection problemo PROBLEM object
 subsection problem problem(): defining a a PROBLEM object
 subsection jlp jlp(): solving a PROBLEB in DATA
 subsection weights weights() weights of schedules
-subsection unit unit() unit of a schedule
-subsection schedcum schedcum(): cumulative schedule number
-subsection schedw schedw(): within unit schedule number
-subsection weight weight() weight of a give schedule
-subsection partweights partweights() weights of split schedules
-subsection partunit partunit() unit for of split schedules
-subsection partschedcum partschedcum() cumulative schedule number of split schedules
-subsection partschedw partschedw(): within unit schedule number for split schdeules
-subsection partweight partweight(): weight of a given split schedule
-subsection priceunit priceunit(): price of a unit
-subsection weightschedcum weightschedcum()
-subsection priceschedcum priceschedcum()
-subsection priceschedw priceschedw()
-subsection weightschedw weightschedw()
-subsection integerschedw integerschedw() schedule with largest weight in a unit
-subsection xkf xkf(): transportations of a variable into factories
+!subsection unit unit() unit of a schedule
+! subsection schedcum schedcum(): cumulative schedule number
+! subsection schedw schedw(): within unit schedule number
+! subsection weight weight() weight of a give schedule
+! subsection partweights partweights() weights of split schedules
+! subsection partunit partunit() unit for of split schedules
+! subsection partschedcum partschedcum() cumulative schedule number of split schedules
+! subsection partschedw partschedw(): within unit schedule number for split schdeules
+! subsection partweight partweight(): weight of a given split schedule
+! subsection priceunit priceunit(): price of a unit
+! subsection weightschedcum weightschedcum()
+! subsection priceschedcum priceschedcum()
+! subsection priceschedw priceschedw()
+! subsection weightschedw weightschedw()
+! subsection integerschedw integerschedw() schedule with largest weight in a unit
+! subsection xkf xkf(): transportations of a variable into factories
 !
 	
 section Plotting figures
-subsection gnu Gnuplot
 subsection plotyx plotyx(): scatterplot
 subsection draw draw() drawing a function
 subsection drawclass drawclass() drawing classmeans and possibly se's of class means
@@ -319,7 +318,7 @@ subsection show show(): showing a FIGURE object, possibly with updated paramters
 subsection plot3d plot3d() 3d plot 
 !
 section spline Splines, stem splines,  and volume functions
-	!	
+
 subsection tautspline tautspline()
 subsection stemspline stemspline()
 subsection stempolar stempolar(): stem curve in polar coorniates
@@ -341,7 +340,7 @@ subsection closures clusures(): convex closures
 	
 section  misc Misc. utility functions
 !	
-subsection value value()
+!subsection value value()
 subsection properties properties()
 subsection cpu cpu()
 subsection seconds seconds()
@@ -356,7 +355,7 @@ subsubsection realo
 subsubsection charo
 subsubsection logical0
 
-subsubsection logicalo
+!subsubsection logicalo
 
 
 
@@ -387,7 +386,7 @@ subsection logic
 subsection arfu
 
 
-section matrixsection
+!section matrixsection
 subsubsection matrixo
 subsection matrixf
 subsection matrix

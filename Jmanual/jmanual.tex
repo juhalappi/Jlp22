@@ -1,681 +1,3 @@
-\section{Preface}
-\label{preface1}
-I will here describe the history of \textbf{J} in this preface in unusual
-length and detail. Readers interested ony in the use of the current
-software can perhasp look briefly the subsection Freedom. The reason
-why I'm going through in detail
-the difficulties with Luke is that I think that the leaders of Luke did not
-treat me as researchers should be treated. I think also that the leaders of Luke
-were willing to waste large amount of taxpayers' money when the prevented the
-development and timely publication of \textbf{J} software. I hope that this part of the
-preface gets some attention also outside the potential users of the software e.g.
-in the ministry. As an amateur actor, I also hope that some play writer would
-notice this and would make tragicomedy on the stage.
-\subsection{JLP and first version of \textbf{J}}
-\label{preface2}
-
-I started to develop \textbf{J} software as a successor of the linear programming software
-\textbf{J}LP \cite{JLP} around
-2004. I had also done several programs for statistical computing (AKTA and Jakta)
-since late seventies
-when there was not
-easy to use software even for ordinary linear regression.
-Later I had to write own software
-for mixed linear models. AKTA, Jakta, and JLP contained  means to use script files and
-make new variables described in arithmetic expressions. The starting idea in \textbf{J} was to put all my
-previous software developments into one program.
-Version 0.9.3 of \textbf{J} was published in August 2004.
-
-In JLP the crucial property was the utilization of the generalized upper bound (GUB) technique which
-I invented and, which I could later find also in the literature (\cite{dant}), as I expected. GUB is
-just the right technique which is
-needed in foreast management planning. JLP made it possible to solve
-significantly larger LP problems significantly faster
-than using standard commercial LP software. In JLP I programmed all the necessary matrix
-operations needed to change columns of the basis matrix in the revised simplex method.
-I updated the inverse of the basis matrix explicitly,
-instead of using factorization procedures as is the standard way in LP.
-I treated nonbinding constraints in a nonstandard way
-by reducing the dimension of the basis matrix instead of using residual
-basic variables, as is normally done.
-
-When I started to develop J, I thought that it might be good idea to use matrix routines
-based on factorizations and developed by a professional in this field.
-I found the LP software bqbd by Fletcher
-based on \cite{flet}. The bqbd software was meant to use 'as is' software for linear and quadratic programming.
-When I told Fletcher that I plan to separate the matrix routines needed in the GUB algorithm,
-he told he is certain that I will not succeed, as his Fortran code did not have any comments.
-He wrote that he will not have any time to help me.
-However, it was not that difficult becasue his code was divided
-to proper subroutines. His code did computations in
-single precision, and it was necessary to change computations
-into double precision. Because I do not have
-a proper training in the rounding error business,
-I had hoped his advice in changing the several tolerance
-parameters to correspont double precision computations. In the development of the original JLP algorith,
-I spent two-three times more time to fight rounding errors than to
-get the code mathematically correct. Now I understood the rounding errors better, but
-anyhow they are the permanent nuisance. The fundamental question
-with respect to rounding errors is: is a small-looking number zero or non-zero.
-
-When I later told him how large problems and how fast my algorithm could solve,
-his attitude towards
-my efforts clearly changed.
-
-Even Bergseng from NMBU started to use \textbf{J} in forest management problems
-in a quite premature
-stage, and we had quite tough time to keep his project in time.
-It took some time to clear a bug in Fletcher
-code which every now and then took the optimization into a wrong path.
-I had a quite slow computer, and the
-data transwer between Norway and Finland was slow. The bug was such that
-it had never caused problems in
-standard applications of bqbd software. In forest planning problems
-it can happen that after many
-pivot operations only residual variables corresponding nonbinding
-constrains are in the basis.
-And when \textbf{J} refactorized of the basis after fixed number of pivot operations,
-as is the common procedure, the basis became slightly corrupted.
-In such a case, the refactorization is not needed. NMBU started to use \textbf{J}
-together with their GAYA simulator, and called the whole system GAYA-J,
-as the previous system was called GAYA-JLP.
-I appreciate that they have acknowledged our co-operation this way.
-\textbf{J} version 0.9.3 was published in
-August 2004.
-
-\textbf{J} contained also a simulator language by which one describe a simulator
-which can be used to geneate
-treatment schedules which are later optimized with the
-LP funtions of J. When Simosol started
-to develop sofware which would compete with the Mela, which had had a
-monopoly status in planning software
-in Finland, and had all the problems which are inevitable in all monopoly projects.
-Simosol made first simulator developments using J, but moved to other solutions before first
-published version of Simo software. Simosol however used the
-linear programming routines
-of J. Jussi Rasinmaki presented the software of Simosol
-in the seminar 21.9.2018 celebrating the work of Pekka Kilkki.
-When he did not mention J, which continues the work of Pekka Kilkki,
-and I did not
-find anything about \textbf{J} in the web pages of Simosol,
-I asked whether they have stopped to use J.
-RasinmÃ¤ki told that they are still using J, and he promised to mention the
-co-operation in their web pages. I think that in co-operation
-between research and
-business, it would be necessary that the impact of research
-would be openly recocnized by the business partners so
-that the funders of research know that the research has been useful.
-Now Simsol is part of Afry.
-\subsection{\textbf{J} with factories: J2.0}
-\label{preface3}
-For me the most disturbing feature of \textbf{J} and JLP was that they were not able to treat factories.
-I thought that the clever heuristic DTRAN algorithm of Howard Hoganson
-(\cite{dtran} and \cite{howard} showed
-that it should be possible to extend basic ideas of the
-\textbf{J}LP algorithm to treat with factory
-problems. I was able to derive the needed equations (see \cite{lappilem}).
-Reetta Lempinen started to work with me to implement the formulas. Reetta has professional
-training in programming, while I'm a self-learning amateur. The necessary
-data structures were quite complicated.
-I had made some wrong decisions which made the data structes even
-more complicated than was necessary.
-Reetta had a clear head to keep data structures in order.
-It was a nice new experience to
-work together through video connection on the code which both could
-see simultaneously.
-I just gave commands, but it was not necessary to give detailed
-instructions because Reetta
-understood from a half word what to do. An important
-contribution of her was that when there were several dead ends,
-and I started to doubt whether we can really
-do what we were aiming at, she told, 'listen Juuso, we can solve this problem as we have
-solved all previous problems'. Interestingly, the problems were usually not in any programming errors,
-but the path could be found by raising to a little upper level and going to the main ideas.
-Reetta's role was essential in the factory optimization. Also later she has been helpful in
-minor technical matters, in writing the manual, testing the new developments etc. Recently she
-adviced me how to use Git and Github. Reetta has also been
-solidary during the painful Luke years, when she was not
-allowed to work with \textbf{J} as she had liked
-to do. I appreciate her contibution very much. She is the second author of this
-manual and the paper \cite{lappilem} for good reasons. However, I use word 'I'
-for such situtions where Reetta has not been involved in the decisions how to proceed. The factory optimization was implemeted in
-\textbf{J} version 2.0. published in 2013.
-\subsection{Battle over open-source J3.0 in Luke starts}
-\label{preface4}
-
-Initially I made the software so that only I could understand the structure and the code.
-When Reetta started to work with me in factory problems,
-I learned what are the weakest points in the software if it should be maintained
-by a group of people. But as I was always able to tell Reetta how the software worked,
-only very slight improvements in the documentation and comments of the code etc. were made.
-When I realized that my retirement age is approaching,
-I started to worry how the software could be maintained and developed after my retirement.
-
-I had worked for Finnish Forest Research Institute (Metla) with small Academy
-and University of Joensuu brakes since 1978. In 2015 Metla and
-two other institutes were merged into Institute of Natural Resources Finland (Luke).
-Based on my long service in a government organization, I expected that
-the new organization would mean
-new leaders, new lawyers, new bureaucrats, and  much more bureaucracy,
-and less time
-for researchers to do research, as always happens when
-government organizations simplify
-their administration and make it more efficient.
-My expectations were in the right direction, but even in my worst
-nightmares I could not have imagined
-what Luke would mean to me personally.
-
-Lauri MehtÃ¤talo and I had agreed with an international publisher to
-make a book about forest biometry. In Metla this kind of agreement had been
-considered as a merit to Metla. But Luke forbad me to put any working time
-to this book project. After retirement I was free to prepare this book with Lauri.
-On the back-cover of the book I presented myself as a researcher of Metla
-in order to give the affilation credit to Metla.
-The co-operation
-among statisticians of Luke, led by Juha Heikkinen, the continued co-operation
-with Jaana Luoranen, and the support of the whole personell
-of the Research Station of Suonenjoki when the leaders of Luke
-started to humillate me
-were my only positive experiences at Luke.
-
-I started to clean and reorganize the \textbf{J} code so that it would be easier to maintain it.
-My superior Olli Salminen forbad me to continue that effort because
-he was certain that I would
-never get that work ready. I didn't obey, of course not. The eternity of
-this first cleaning round lasted two and
-half weeks. Reorganization of files took 2-3 days, but programming
-of a precompiler took
-two weeks. In JLP I already had learned that a precompiler could help to manage
-data areas of JLP. In J, the precompiler has greatly helped to manage
-global variables.
-The precompiler allows the users access global module variables
-without knowing where they are. To separate the global variables
-from local variables, the global variables have
-j\_ or jlp\_ prefix. By changing the data structures,
-\textbf{J} also became significantly faster
-(main reason was that allocatable pointers were changed into allocatable arrays).
-
-
-In 2014 when we were looking at how \textbf{J} could be utilized in Mela software, I encountered
-old JLP concept â€˜own functionâ€™, which was the method for allowing users of JLP to
-add own (arithmetic) functions if they had access to the source code. I thought that this
-idea would be useful also with respect to J. So, I organized \textbf{J} so that
-different users could add their own \textbf{J} functions,
-object types and options.
-
-I was then convinced that the best way to utilize these improvements would be to
-make the soft-ware open source. This would also allow me to continue my work freely
-with \textbf{J} after my retirement.
-
-
-The leaders of Luke agreed with me that the open-source \textbf{J} is a good idea.
-Unfortunately they
-also thought that open \textbf{J} is so important for Luke that the leaders could not
-allow me to take care of the publication and prepare and present
-the necessary decisions for their approval, or even participate as
-member in the group which
-started to hustle with the publication.
-The leaders wanted themselves take care of the publication. Unfortunately, none
-of the leaders involved
-considered that the publication of \textbf{J} would be even so
-important that he/she
-had taken care that \textbf{J} would be eventually published.
-They just wanted keep important
-in the process. This absurd deadlock lasted almost seven years.
-
-The previous version utilized some subroutines of IMSL package and from
-the â€˜Numerical Recipes in Fortranâ€™ book. I replaced these subroutines mainly by
-open access routines from Lapack and Ranlib packages from the Netlib library.
-Roger Fletcher allowed to distribute his linear programming sub-routines in
-the open \textbf{J} package. Fletcher gave a very liberal permission to use
-his subroutines in open source distribution (the
-price of his bqbd sofware was perhaps 100-200 Euros).
-But the lawyers of Luke studied his permission
-so long that he died before giving permission with better formulation.
-A permission with
-better formualations was obtained from his department in Dundee University.
-But the leading
-laywer of Luke, Emilia Katajajuuri was not satisfied, she wanted make
-sure that the
-legal position of the person
-who gave the new permission was such that he could give the permission.
-
-
-
-The following persons were involved in
-process: PÃ¤ivi Eskelinen, Olli Salminen, Kari T. Korhonen, Kimmo Kukkavuori,
-Tuula Packalen, Sirpa Thessler, Sari Forsman-Hugg, Emilia Katajajuuri and Johanna
-Buchert. Iikka Sainio was an outside legal consult.
-
-The leading lawyer of Emilia Katajuuri made my position clear
-in a video meeting to which I also was accidentally invited to
-listen their new instructions.
-When I accidentally said 'could we decide that..', she interrupted me and said:
-'Listen Juha,
-you do not decide anything in this matter'. Their message was that
-I have done my part, and now
-I should keep out and not disturb their play with their new conquest.
-
-When it was evident that the leaders of Luke wanted to get rid of me,
-I threatened that I will not retire before the opening decision is done.
-Sari Forsman-Hugg told she will make the decision. But as my threat
-seemed to make no influence,
-I retried at the beginning of 2017. When I despite of all
-the humiliation and frustration still hoped that
-some kind a co-operation with Luke would be possible,
-I applied the position outside researcher,
-which had provided me access to Luke's e-mail and library services. Sari Forsman-Hugg was not
-able to make a decision also with recpect to my application.
-I did withdraw my application
-when my e-mail connections were interrupted two times.
-
-Later I heard from Reetta that Luke had made the opening decision but
-she did not know what kind decsion and
-I was not informed of the decision either, in disargeeent with the distribution list
-of the decision, as I noticed in when I finally could see the decision after
-three years.
-\subsection{Retired and still waiting for open \textbf{J}}
-\label{preface5}
-After my retirement I was still hoping that some kind of co-operation
-without outside researcher status with Luke would be possible, and I
-participated in the application of factory optimization which was published in \ref{pekka}.
-Prof. Packalen told late 2017 that the publication of \textbf{J} is approaching.
-When I asked about the opening decision, she 'did not
-remember' what it contained but promised to check it out, which she
-did forget to do or atl least forget to tell me what the decision contained.
-Prof. Packalen was planning a very high level launch of
-\textbf{J} with prominent international guests. I wrote that such
-seminar would not probably be worth of
-for trans-Atlantic flights. I was so stupid that
-I believed her promise that the publication of \textbf{J} was approaching
-and I submitted a correction to a bug which produced some amount of negative timber
-quantities.
-
-During 2018-2021 I made some small parameter adjustments for Simosol and Norway and made some additions
-for my own research. Prof. Packalen had lost all interest in the publication,
-and she did not allow Reetta to
-develop the publication documents. When I heard 2020 that prof Packalen
-had left Luke and could
-not prevent publication any more, I asked Reetta to
-ask her superiors whether she could continue
-the preparation of manuals. She got the permission to use some time for that.
-This work with all style details was not very nice for her as she
-had already done big part of the work for the previous format of
-Lukes's report series.
-The report series had changed the formats, and Reetta had to do
-such tedious work she already had done once before.
-Reetta's superiors did never  discuss with me anything related to the
-manuals or to the code. This
-way they had been free to pretent that I have not contributed to
-the work if \textbf{J} had been some time published.
-
-
-In spring 2021 Hannu Salminen from Luke contacted me. He had memory
-problems with a very large data set. I made a rapid fix for his acute
-problem and did develop
-more permanent solutions for large data sets using direct access files.
-Actually that work was
-unncessary as Viktor Strimbu from  NMBU  adviced me later how to make
-\textbf{J} a 64-bit
-application using MSYS2 environment. The Gfortran environment I had
-used before did not
-support 64-bit applications. The 64-bit program allows to put the whole country
-into one run aslo in factory optimization. Hannu organized a video
-meeting where we discussed the
-development and utilization of the \textbf{J} software. He was the first person
-in Lukes six years history who
-was willing to discuss with me such things.
-
-I started to work with \textbf{J} again. Reetta had told that \textbf{J} had could
-collapse after some hours of computations in  large data sets in factory optimization.
-I asked Luke to get the problematic
-data sets so that I could try to fix the problem. I got the answer that Luke is not allowed to send the
-data sets, and the answer did  not indicate
-that Luke would do anything to get such permission.
-I was quite upset from such answer,
-and I started to think how to open the deadlock situation. Later I got the data,
-and I was able to fix the problem, which was not exactly
-a clear bug but rather a thin-ice place in the algorithm sot that \textbf{J} did drop
-throug the ice when going over the place repeatedly.
-\subsection{Operation Charles XII}
-\label{preface6}
-When I strarted to think how I could find a way out from the deadlock,
-I remembered Charles XII,
-the king of Sweden (wich included  also Finland). He was in war with Denmark
-and he decided to fight Denmark by attacking Norway, which belonged to Denmark.
-He failed as almost his solders died in snowstorms
-in Northern Norway and he was shot by his own soldier.
-I was in conflict with Luke, even if Luke did
-acknowledge that such confilict existed
-because Luke insisted that in a legal sense,
-I did not even exist in this \textbf{J} affair.
-I thought to conquer Norway with nice \textbf{J} codes.
-Renovation of my co-operation with GAYA group
-suited their plans as they were rebuilding their simulator.
-
-I wrote to Johanna Buchert, director general of Luke (who was already in the group of
-Luke leaders hustling in the publication of \textbf{J} when I was in Luke)
-Antti Asikainen, research director of Luke,  and Kari T. Korhonen, who has
-been involved in this \textbf{J} affair and was the superior of Reetta, and
-told that I will not send to Luke new \textbf{J} codes including working
-factory optimization codes without a written co-operation agreement.
-I wrote also to registry-office and asked for the opening decision, and
-to a lawyer of Luke and asked what kind of legal actions
-Luke will take agaisnt me if I started to publish factory optimization
-things with GAYA group using codes which I would not give to Luke.
-The leaders did not comment in any way my co-operation proposal. The research director
-just wrote that
-all codes done in METLA are property of Luke. Buchert did not respond, but
-the the Senior Vice President Ilkka P. Laurila answered that Luke regrets
-for the delays in the publication of \textbf{J} caused by personell changes
-(a funny expression for the fact that the publication process
-could just start in 2020
-when prof Packalen left Luke)
-and
-that Luke has started to prepare the publication and will publish the \textbf{J} on its
-web pages. Kari T Korhonen did not respond.
-
-Thus the leaders of Luke insisted that Luke will publish tens of thousands code
-and manual lines I had written, and insisted that it has no reason
-or obligation to discuss with
-me what and in what form it will these lines publish.
-It is evident that Luke had not been able to publish
-\textbf{J} in my life time (I'm over 70 yrs and I have a heart disease).
-But if I had been alive when Luke had
-published \textbf{J} under my name, I had made a lawsuit againt Luke
-for shaming my researcher honor
-by publishing something I had not accepted for publication. Or perhaps
-Luke had followed
-the previous  custom of  Romania where all chemistry
-research was published under the the name of Elena CeauÈ™escu,
-and had published the the software and
-manuals under the name of some equivalent to Elena.
-Also in that case I had made a lawsuit
-against Luke (if I had been alive). When the director general of Luke,
-the research director of Luke, the Senior Vice President of Luke
-and the lawyers of Luke
-decided that Luke has absolutely no interest in
-working factory optimization \textbf{J} codes or
-other up to date \textbf{J} codes, did they discuss with any researchers?
-
-After getting such a reponse to my co-opertation suggestion, it was evident that
-I would not give Luke any new codes, and would require Luke to remove all codes I had
-submitted after my retirement as Luke would not akckowledge that
-it had got any codes from me after my retirement, and it would publish my codes
-as if they were developed in Luke. So I would continue my Charles XII operation.
-Unfortunately NMBU did not have factory and transportation cost data ready.  In Norway
-the transportation costs can not be estimated as easily from coordinates as in Finland.
-
-Laurila did send the decision to publish \textbf{J} as a open source software
-after the lawyers of Luke
-had considered two weeks whether Luke should do that. The decision was
-signed by the research director Johanna Buchert 30.8. 2017.
-The process of trying to
-get permission to use Fletchers codes after his death was not described properly.
-It was written
-that after Fletchers death the university of Dundee did not
-respond to queries of Luke. As decribed above, the things did not go that way.
-When Luke was not satisfied with the corrected  permission sent
-by the university, the university had probably decided that
-it is vain to continue correspondece with Luke. However,
-the university wanted to communicate with me,
-when they asked my statement about the importance of Flethers
-code in planning of natural resources.
-The government wanted to figure out whether the
-university is doing something useful. I think that my statement
-was more valuable for
-the university than the euros the university would loose when
-not getting payments for the bqbd code.
-
-The decision told that \textbf{J} is published under licence AGPLv3.
-The licence is specially
-planned for programs which provide computing services through the net.
-Luke has not done anything to develop such net work services, as it has not
-developed \textbf{J} in any way after my retirement in 2017.
-The leaders of Luke did not discuss with
-me the license matters, of cource not.
-
-The decision nominated prof Packalen to take care of the launch of the software.
-Unfortunately she could not organize the lauch, as \textbf{J} was not ready to publication
-because prof Packalen did not allow Reetta to do the necessary
-preparations with respect to the code and manuals.
-
-The lawyers of Luke did not tell anything of the plans of Luke to make lawsuits
-against me if I would co-operate with Norway and would not send new codes to Luke.
-
-Lauri MehtÃ¤talo became Professor in Mathematical Modeling for Forest Planning
-in Luke in Mai 2021.
-Coming from an university environment, he is interested
-in the development of science
-and research. He wanted to get \textbf{J} finally published after 6 year deadlock.
-Lauri did have anything againts that I would take care
-of the publication. Lauri even thought that it
-would be good for science and research that I would
-work without payment. It was a refreshing new attitude in Luke
-to put science into priority.
-Lauri told that he would try to convince the leaders of Luke
-that it would not harm Luke's interests that I would
-take care of the publication of
-the software I had made (for most part). Lauri told initially that
-he wants to persuade
-me to give all new codes to Luke. When I protested his choice of words,
-he apologized, and used thereafter the word 'negotiate'. When Lauri started to 'negotiate' with
-me, I consider that Luke first time in its history acknowledged that I do exist
-as an legal entity is this \textbf{J} affair.
-
-Lauri was able to rotate the head of the research director 180 degrees. The research director even told
-that he would be interested to become a coauthor in the publication dealing the factory
-optimization. It was, however, not mentally feasible for me, as
-he did not even
-answer my previous co-operation suggestion, but just told that Luke has everything
-it needs. Being a researcher, Lauri understood what
-were my aims and was able to get approval of the research director.
-So it seemed that
-the agreement was about ready. But then the agreement was
-stuck on the table of the research director.
-\subsection{Last battle, victory and peace in Olavinlinna}
-\label{preface7}
-I was invited to the 100 year anniversary celebration of the Finnish National Forest Inventory
-as I had worked also in the NFI group. I was interested to see my former colleagues,
-but it started to disturb me
-that I would not know whether I would be a guest of my enemy
-or my co-operations partner.
-I had a very exciting video meeting with the GAYA people. They promised me access
-to the Norwegian supercomputers needed in large factory optimizations, funding for traveling
-and for any consulting work. I started to think that have been stupid
-when I spent years of my short residual life waiting for such co-operation
-with Luke. As Lauri had tried
-to establish such co-operation between me and Luke,
-I decided to give Luke a last chance.
-I made an ultimatum that if we do not get a agreement with Luke within a week,
-I would break all negotiations with Luke and would continue only with Norwegian people,
-even if Luke might try to make a lawsuit against me.
-Twenty-four hours before the time
-limit Lauri called that Luke is willing to make treaty with me.
-The lawyers of Luke did finalize the treaty
-two hours before the NFI celebration.
-
-Antti Asikainen, the research director of Luke and I signed the co-opertation treaty in the king's hall in
-Olavinlinna (St. Olaf's Castle) in Savonlinna 7.10. 2021.
-In the treaty I got almost everything I had
-fighted for: The \textbf{J} software will be published, and I have
-full responsibility of the code and manuals.
-Luke will provide me data of factory locations, simulated treatment schedules for
-all inventory plots for the whole country, and the matrix of distances between the
-factories and inventory plots. Luke will also provide me access to CSC
-supercomputers which are necessary for the whole country optimizations. CSC does not allow
-independent retirees to use its computers. I'm allowed to make a methodological
-paper from developments, whereafter I will provide Luke all the
-new and improved \textbf{J} functions and the developed \textbf{J} scripts. I had hoped that
-Luke had promised me access to Mela so I could study how Mela is doing interest
-rate computations, as I have suspects that these computations are not in order.
-I had asked Olli Salminen some Mela results to study my suspects, but he told, after some
-day considerations, that Luke is not willing to make such computations.
-I suspect that the reason is
-Luke wants to keep all possible Mela problems secret. I did not insist to get
-such permissions as Lauri thought that this would delay and complicat
-the \textbf{J} process. In the treaty it
-is said that the code files state that Juha Lappi
-and Natural Resources Institute Finland have the copyright for the code.
-In the last minutes
-before the signatures
-the lawyers tried to reverse the order of copyright owners. I did not, of course,
-accept the reveresed order, bacause I have made the \textbf{J} really operable after my retirement,
-Now, the recent developments have made Lukes or Metlas contribution
-even smaller, and the overall influence of Luke has been negative.
-It must, however to be taken into account that Pekka M\"akinen has done valuable
-work in collecting data of factories and
-transportation costs, and this data greatly helps my work when I'm now allowed
-to start to develop factory optimization for the whole Finland.
-\subsection{Total balance with Luke}
-\label{preface8}
-At the signing of the peace treaty, Johanna Buchert told that there has not been any
-disagreement in this \textbf{J} busisness, and let bygones be bygones.
-From my point of view, I had six and half years fight to get permission to
-publish the results of my research.  For Luke, there was no
-disagreement because Luke did not acknowledge that I even existed as a
-legal entity. How could Luke
-have disagreement with something which does not even exist? For me,
-the behavior of the leaders of Luke was a 'me too' experience. In
-the heart of my researcher
-identity is the conviction that every researcher, at least in a government
-research institute, has the right and even the obligation to publish the
-results of his research let it be a stastistical method or computer code or
-ordinary research publication.
-The leaders of Luke denied
-me the right to publish the results of my statistical work
-in our biometry book and the results of my software development.  In this \textbf{J} case,
-the reason was that they
-wanted to publish my results themselves.  This has been a very traumatic
-harrasment experience. All the victims of sexual harassment are also
-told that 'let bygones be bygones'.
-As in the peace treaty I was given all responsibility of manuals, I'm
-now utilizing this responsibility in this preface hoping the leaders of
-Luke and perhaps also others
-would be more careful when making decisions which may not tolerate daylight,
-similarly
-as bosses are slowly learning to keep better control of
-their hands which would like
-to grope the bottoms of their subordinates.
-
-From the legal perspective, the leaders of Luke have insisted that
-Luke has full copyright to all work I've done in Mela or Luke. So they can freely
-follow their whims and waste hundreds of thousands of euros
-taxpayers money used in the \textbf{J} project.
-With Lukes overhead multipliers we may speak about millions.
-Perhaps they should also pay
-attention to the by-law telling what is the duty of Luke. How has
-Luke promoted forest research and its utilization by prevented
-the development and
-utilization of \textbf{J} software for over six years?
-Perhaps the ministry should  give
-the leaders of Luke training about the duties of Luke. The leaders
-of Luke never gave any rational justification why Luke should prevent me
-to take care of the publication.
-
-If I had been allowed to publish and develop \textbf{J} as I wanted,
-Luke and forest industry would have
-now available methods to analyze e.g. what can be done
-when timber import from Russia suddenly stops.
-Luke is also still doing static regional sustainability analyzes,
-which are not reasonable
-as they do not take factories into account. Mentally Luke
-is stuck to the German foresters from
-1800's who rotated a fixed cutting area for each year.
-If Luke had let me publish the open-source software in 2015
-Luke had been a forerunner in the open source publication, and I had praised it
-for its progressive attitude. Now Luke has
-has establised its status in the history of open-source as an institute which
-decided to open a software
-but keeps the decision and the code locked for several years because
-it did not allow the principal
-author to take care of or even participate in the publication.
-\subsection{Freedom}
-\label{preface9}
-After the Olavinlinna peace treaty, I thought initially that
-I would like to publish the software before Christmas 2021.
-But when the iron cage around me disappeared, the pressure which had increased
-in my mind for seven years did burst in intensive code development.
-This development had already started when negotiations with Lauri started to look promising,
-and I developed the program to make Latex files for manuals and script files
-for examples automatically from comments embedded within the code or from a
-separate text files.
-
-After the peace treaty I have rewritten all the central parts of the
-software using simpler and more easily maintained solutions,
-and added many new properties. The most important was the rewriting
-of the interpreter
-which interprets the \textbf{J} code generated using the input programming capabilities.
-I had been shamed if the previous interpreter had be offered to the eyes of
-professional programmers. I did rewrite the precompiler so it takes only some
-seconds to do the precompilation, and if the precompiled file
-does not change the new precompiled file is deleted so that the compiler
-does not do any more unnecessary compilation. I did put the matrix computations
-into a new level implementing
-all properties I had found useful in Matlab when providing a method for a client
-using Matlab codes. I added new tools for debugging
-and code development. Now \textbf{J} can treat nicely submatrices and do
-all arithmetic operations and logical operations
-on matrices in addition to scalars. The previous version of  \textbf{J} could make rough
-figures using a separate program written in Intel
-fortran, which I do no more have available. Publication level
-figures could be done using R sripts generated by J.
-Now \textbf{J} is producing figures using Gnuplot which is automatically run from within J.
-Currently only basic 2D and 3D figures
-can be done, but this Gnuplot connection makes it possible to develop \textbf{J}
-into full scale interface to all Gnuplot properties. \textbf{J} can now generate random numbers from any
-continuous or discrete distibution providing new possiblities to study the
-effects of random errors in the simulation of treatment schedules or in
-optimization. It is now  possible to run R scripts from within J.
-Now \textbf{J} can be used easily also as a subroutine. Lauri has utilized this property
-by calling \textbf{J} from R. This offers many new possiblities,
-which we will utilize when
-continuing the co-operation with the GAYA-group.
-
-I made first cleaning of the important \textcolor{VioletRed}{jlp}() function in the spring of 2021
-when correcting
-the fragility which prevented the solution of large problems which take several hours in
-a ordinary PC. There are many things to be done in \textcolor{VioletRed}{jlp}() function, but I start
-to work with them when developing factory optimization in CSC supercomputers.
-I know already how parallel computations can be utilized in \textcolor{VioletRed}{jlp}()-function.
-Previous versions of \textbf{J} had special functions for developing forest simulators and
-computing the simulated schedules. Now all simulators can be developed and utilized
-using standard properties of \textbf{J} transformations either for using stand level
-or tree level variables
-I have not yet made good examples to demonstrate these properties. Because the new \textbf{J} provides
-a platform for making all kind of new devlopments, including
-integer optimization (i.e preventing treatment unit to be divided among several
-schedules), nonlinear objective function
-(which would utlize the capability of \textbf{J} to compute derivatives
-according to analytic derivation rules), it was difficult to breathe a little and make the
-new codes available for users. The codes now published contain many errors.
-I invite the users to help me to correct them. First users should have some
-patience with respect to errors. I claime that the bug percentage is smaller than
-estimated 23-27\% bug percentage in the first version
-of Windows 1, which accintally happened be the same as the bug percentage
-Soviet masons used in the mortar they used when masoning the US embassy in Moscow.
-Currently I can correct most bugs
-causing system crash in 5-10 minutes. It should be emphasized that
-Luke does not have any kind of responsibility of the errors.
-I take the full moral responsibilty of the errors. Similarly, it should
-be emphasized that Luke has no responsibility of the code which works correctly.
-I take the main responsibility of the correctly working code,
-giving Reetta her fair
-share. It is easier for me to correct the errors while alive.
-This fundamental fact of life
-was ignored by Luke when it prevented the publication for seven years.
-
-During the intensive work period after the Olavinlinna peace treaty, my deep
-'me too' traumas have started to heal slowly. Probably this healing process takes
-a long time, and I cannot very soon say let bygones be bygones.
-
-\subsection{Changes from previous versions}
-\label{changes}
-The software is almost  completely rewritten. There are many new
-functions and properties. All the previous users should  look at the
-new properties.  If an old user has difficulties to run their old scripts they should
-contact J.L. Note that graphics now assumes that Gnuplot is installed.
-
 \section{Introduction}
 \label{intro}
 The \textbf{J} software can be used as is, i.e. using exe files. The User guide concentrates
@@ -2331,7 +1653,7 @@ variables then both sides should have equal numbers of object names, then
 then copies of the input objects are put into output objects.
 
 
-\end{itemize)
+\end{itemize}
 \begin{example}[assignex]Examples of assignments\\
 \label{assignex}
 a=\textcolor{VioletRed}{matrix}(2,3);\\
@@ -3081,7 +2403,7 @@ To be documented later
 \subsection{\textcolor{VioletRed}{len}() lengths of different lists or vectors}\index{len()}
 \label{len}
 \textcolor{VioletRed}{len}(\textcolor{teal}{arg}) gives the following lenghts for different argument types
-\begin{itemize)
+\begin{itemize}
 \item[\textbf{J}\.] \textcolor{teal}{arg} is MATRIX => len=the size of the matrix, i.e.
 \textcolor{VioletRed}{nrows}(\textcolor{teal}{arg})*ncols(\textcolor{teal}{arg})
 
@@ -3853,6 +3175,36 @@ Negative diagonal eleemnt produces error, value zero correaltion 9,99.
 \section{Functions for DATA objects}
 \label{dataf}
 \textbf{J} contains now the following Functions for DATA objects.
+\subsection{n datahead}
+\label{datahead}
+Data can be analyzed and processed either using matrix computations
+or using DATA objects. A DATA object is compound object
+linked to a data MATRIX and LIST object containing variable (column) names,
+some other information.
+When data ere used via DATA object in statistical or linear programming
+functions, the data are processed observarion by observation.
+It is possible to work using DATA object or using directly the data matrix, wharever is more
+convenient. It is posible make new data objects or new matrices
+by to extracting  columns of data matrix, computing matrices with matrix computations.
+It is possible to use data in hierarcchila way, This property is inherited fro JLP.
+There are two \textbf{J} functions which create DATA objects from files, \textcolor{VioletRed}{data}() and
+exceldta(). \textcolor{VioletRed}{data}() can create hierarchical data objects. Function \textcolor{VioletRed}{newdata}() creates  DATA object from matrices, which temselfs can be
+picked from data objects. Function \textcolor{VioletRed}{linkdata}() can link two data sets to make a hierarchical data.
+\begin{note}
+If a data file contains columns which are referred with variable names and some vectors,
+the it is practical to read data first into a matrix using \textcolor{VioletRed}{matrix}() function and then
+use matrix operations and \textcolor{VioletRed}{newdata}() to make DATA object with variable names and matrices.
+See Simulator section for an example.
+\end{note}
+\begin{note}
+\textcolor{VioletRed}{transdata}() function goes through DATA object similarly as statitical functions, but
+does not serve a specific purpose, just transforamtions defined in the TRANS object refreed with
+\textcolor{blue}{trans->} option are computed. See again the simulator section.
+\end{note}
+\begin{note}
+In earlier versions it was possible to give several data sets as arguments for \textcolor{blue}{data->} option.
+This festure is now deleted as it is possible to stack several data matrices and then use \textcolor{VioletRed}{newdata}() function to create a single data set.
+\end{note}
 \subsection{\textcolor{VioletRed}{data}()}\index{data()}
 \label{data}
 Data objects are created with the \textcolor{VioletRed}{data}() function. Two linked data objects can be created with the
@@ -4544,3 +3896,2491 @@ treedata=\textcolor{VioletRed}{newdata}(treedata,x1\#stand\%mean,x2\#stand\%mean
 \textcolor{blue}{maketrans->}tr)
 \end{example}
 
+\subsection{\textcolor{VioletRed}{values}() extracts values of class variables}\index{values()}
+\label{values}
+Extracting values of class variables: \textcolor{VioletRed}{values}( ).
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output \tabto{3cm} 1 \tabto{5cm}  VECTOR \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  the vector getting differen values
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{arg} \tabto{3cm} 1 \tabto{5cm}  REALV \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  variables whose values obtained
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{data} \tabto{3cm} 1 \tabto{5cm}  DATA \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The data set.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+The values found will be sorted in an increasing order.
+\end{note}
+\begin{note}
+After getting the values into a vector,
+the number of different values can be obtained
+using \textcolor{VioletRed}{nrows}() function.
+\end{note}
+
+\begin{note}
+\textcolor{VioletRed}{values}() function can be utilized e.g. in generating domains for all different
+owners or regions found in data.
+\end{note}
+\subsection{\textcolor{VioletRed}{transdata}() own transformations for data}\index{transdata()}
+\label{transdata}
+\textcolor{VioletRed}{transdata}() is useful when all necassy computions are put into a TRANS
+object, and a DATA object is gone throug obsevation by observation.
+This is useful e.g. when simulating harvesting schdules using a simulator which is defined
+as an ordinary TRANS object. The whole function is written below to indicate
+how users' own functions dealing with data could be developped.
+@@data
+\hline
+\vspace{0.2cm}
+
+\color{Green}
+\begin{verbatim}
+subroutine transdata(iob,io)
+call j_getdataobject(iob,io)
+if(j_err)return
+call j_clearoption(iob,io)  ! subroutine
+
+do iobs=j_dfrom,j_duntil
+call j_getobs(iobs)
+if(j_err)return
+end do !do iobs=j_dfrom,j_duntil
+
+if(j_depilog.gt.0)call dotrans(j_depilog,1)
+
+return
+\end{verbatim}
+\color{Black}
+\section{Statitical functions}
+\label{statistical}
+There are curretly avalailable following stasttical functions.
+\subsection{\textcolor{VioletRed}{stat}()}\index{stat()}
+\label{stat}
+Computes and prints basic statistics from data objects.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output \tabto{3cm} 0-1 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  kokopo
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Args  \tabto{3cm}  0-99 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent variables for which the statistics are computed,
+the default is all variables in the data (all variables in the data matrix plus the output variables of the associated transformation object) and all output variables of the tran
+
+@@data
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{data}  \tabto{3cm}  -1,99  \tabto{5cm}   Data  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent 	data objects , see section Common options for default\textcolor{green}{!\,weight\,	gives\,the\,weight\,of\,each\,observations\,if\,weighted\,means\,and\,variances\,are\,computed.\,The\,weigh}
+transformation or it can be a variable in the data object
+@@seecom
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{min}  \tabto{3cm}  -1,99 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent 	defines to which variables the minima are stored.
+If the value is character constant or character variable,
+then the name is formed by concatenating the character with the name of the argument
+variable. E.g. \textcolor{VioletRed}{stat}(x1,x2,\textcolor{blue}{min->}'\%pien') stores minimums into variables
+x1\%pien and x2\%pien. The default value for min  is '\%min'.
+If the values of the \textcolor{blue}{min->} option are variables,
+then the minima are stored into these variables.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{max}  \tabto{3cm} -1,99 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  maxima are stored, works as \textcolor{blue}{min->}
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{mean}  \tabto{3cm} -1,99 \tabto{5cm}  REAL  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  means are stored
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{var}  \tabto{3cm} -1,99 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  variances are stored
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{sd}  \tabto{3cm} -1,99 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  standard deviations are stored
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{sum}  \tabto{3cm} -1,99 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent 	sums are stored, (note that sums are not printed automatically)
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{nobs}  \tabto{3cm} -1 | 1 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent 	gives variable which will get the number of accepted observations, default is variable 'Nnobs'. If all observations are rejected due to \textcolor{blue}{filter->} or \textcolor{blue}{reject->} opt
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{trans}  \tabto{3cm} -1 | 1 \tabto{5cm}  TRANS \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent 	transformation object which is executed for each observation. If there is a transformation object associated with the data object, those transformations are
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{filter}  \tabto{3cm} -1 | 1 \tabto{5cm}  Code \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  logical or arithmetic statement (nonzero value indicating True) describing which observations will be accepted. \textcolor{blue}{trans->} transformations are computed before u
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{reject}  \tabto{3cm} -1 | 1 \tabto{5cm}  Code \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent \noindent reject  \tabto{3cm} -1 | 1 \tabto{5cm}  Code \tabto{7cm}
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent transafter  \tabto{3cm} -1 | 1 \tabto{5cm}   TRANS \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  transformation object which is executed for each observation which has passed the filter and is not rejected by the \textcolor{blue}{reject->}-option.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+1: \textcolor{VioletRed}{stat}() function prints min, max, means, sd and sd of the mean computed
+as sd/\textcolor{VioletRed}{sqrt}(number of observations)
+\end{note}
+\begin{note}
+2: If the value of a variable is greater than or equal to 1.7e19,
+then that observation is rejected when computing statistics for that variable.
+\end{note}
+\begin{example}[statex]stat() computes minimums, maximums, means and std devaitons\\
+\label{statex}
+;if(\textcolor{VioletRed}{type}(data1).ne.DATA)dataex\\
+\textcolor{VioletRed}{stat}()\\
+\textcolor{VioletRed}{stat}(area,\textcolor{blue}{data->}cd,\textcolor{blue}{sum->}bon20,\textcolor{blue}{filter->}(site.ge.18.5))\\
+\textcolor{VioletRed}{stat}(ba,\textcolor{blue}{data->}cd,\textcolor{blue}{weight->}area)\\
+\textcolor{VioletRed}{stat}(vol,\textcolor{blue}{weight->}(1/dbh***2))
+\end{example}
+\subsection{\textcolor{VioletRed}{cov}():  covariance matrix}\index{cov()}
+\label{cov}
+\textcolor{VioletRed}{cov}() computes the covariance matrix of variables in DATA.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent output \tabto{3cm} 1 \tabto{5cm}  MATRIX \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  symmetric aoutput matrix.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{arg} \tabto{3cm}  1-N \tabto{5cm}  LIST or REALV \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  variables for which covarianes are computed, listing
+individually or given as a LIST.
+@@data
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{weight} \tabto{3cm} -1|1 \tabto{5cm}  CODE \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Codeoption for weight of each observation.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+the output is not automaticall printed, but it can be printed using ';'
+at the end of line.
+\end{note}
+\begin{note}
+The covariance matrix can changed into correaltion matrix with \textcolor{VioletRed}{corrmatrix}()
+function.
+\end{note}
+\begin{note}
+If variable \textcolor{teal}{w} in the data is used as the weigth, this can be expressed as
+\textcolor{blue}{weight->}w
+\end{note}
+\begin{example}[covex]Example of covariance\\
+\label{covex}
+X1=\textcolor{VioletRed}{matrix}(200)\\
+X1=\textcolor{VioletRed}{rann}()\\
+\textcolor{Red}{;do}(i,2,6)\\
+ad=\textcolor{VioletRed}{matrix}(200)\\
+ad=\textcolor{VioletRed}{rann}()\\
+X"i"=X"i-1"+0.6*ad\\
+\textcolor{Red}{;enddo}\\
+dat=\textcolor{VioletRed}{newdata}(X1...X6,\textcolor{blue}{read->}(x1...x5))\\
+co=\textcolor{VioletRed}{cov}(x1...x5);\\
+co=\textcolor{VioletRed}{cov}(dat\%keep);
+\end{example}
+\subsection{\textcolor{VioletRed}{corr}() computes a correlation matrix.}\index{corr()}
+\label{corr}
+\textcolor{VioletRed}{corr}(1) works similarly as \textcolor{VioletRed}{cov}()
+\subsection{\textcolor{VioletRed}{regr}(): linear regression.}\index{regr()}
+\label{regr}
+Ordinary or stepwise linear regrwession can be computed using \textcolor{VioletRed}{regr}().
+
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent output \tabto{3cm} 1 \tabto{5cm}  REGR \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  sRegression object..
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{arg} \tabto{3cm}  1-N \tabto{5cm}  LIST or REALV \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  y-variable and x-variables variables listing them
+individually or given as a LIST.
+@@data
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{noint} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  \textcolor{blue}{noint->} implies that the model does not include intercept
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{step} \tabto{3cm} -1|1  \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  t-value limit for stepwise regression. Regression variables are droped one-by-one
+until the absolute value of t-value is at least as large as the limit given.
+intercept is not considered.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{var} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  if \textcolor{blue}{var->} is present \textcolor{VioletRed}{regr}() generated matrix ]output\%var[ for
+the variance-covariance matrix of the coeffcient estimates.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{corr} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  if vcorr-> is present \textcolor{VioletRed}{regr}() generated matrix ]output\%corr[ for
+the correlation matrix of the coeffcient estimates. Standard deviations
+are put to the diagonal.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+If the DATA object contains variables Regr and Resid, then the values of
+the regression function and resduals are put into these columns. Space for these e
+coluns cab reserved with \textcolor{blue}{extra->} option in \textcolor{VioletRed}{data}() or in \textcolor{VioletRed}{newdata}()
+\end{note}
+\begin{note}
+If \textcolor{teal}{re} is the output of the \textcolor{VioletRed}{regr}() then function re() can be used to compute
+the value of the regression function. re() can contain from zero arguments up to the
+total number of arguments as arguments. The rest of arguments get
+the value they happen to have at the moment when teh function is called.
+\end{note}
+Information from the REGR object can be obtained with the following functions.
+let \textcolor{teal}{re} be the name of the REGR object.
+\begin{itemize}
+\item[\textbf{J}\.]  \textcolor{VioletRed}{coef}(\textcolor{teal}{re},xvar) = coefficient of variable xvar
+\item[\textbf{J}\.]  \textcolor{VioletRed}{coef}(\textcolor{teal}{re},xvar,any) = returns zero if the variable is dropped from
+the equation in the setwise procsedure of
+due to linear dependencies.
+\item[\textbf{J}\.] \textcolor{VioletRed}{coef}(\textcolor{teal}{re},1) or \textcolor{VioletRed}{coef}(]re(,\$1) returns the intercept
+\item[\textbf{J}\.] \textcolor{VioletRed}{se}(\textcolor{teal}{re},xvar) standard error of a coeffcient
+\item[\textbf{J}\.] \textcolor{VioletRed}{mse}(\textcolor{teal}{re}) MSE of the regression
+\item[\textbf{J}\.] \textcolor{VioletRed}{rmse}(\textcolor{teal}{re}) RMSE of the regression
+\item[\textbf{J}\.]	\textcolor{VioletRed}{r2}(\textcolor{teal}{re}) adjusted R2. If the intercept is not present this can be negative.
+\item[\textbf{J}\.]	\textcolor{VioletRed}{nobs}(\textcolor{teal}{re}) number of observations used
+\item[\textbf{J}\.]	\textcolor{VioletRed}{len}(\textcolor{teal}{re}) number of independent variables (including intercept) used
+\end{itemize}
+\subsection{\textcolor{VioletRed}{nonlin}():: nonlinear regression}\index{nonlin()}
+\label{nonlin}
+To be raported later, see old manual
+\subsection{\textcolor{VioletRed}{varcomp}(): variance and covariance components}\index{varcomp()}
+\label{varcomp}
+TO BE RAPORTED LATER, see old manual
+\subsection{\textcolor{VioletRed}{classify}()}\index{classify()}
+\label{classify}
+Classifies data with respect to one or two variables, get class
+frequencies,
+means and standard deviations of
+argument variables.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output \tabto{3cm}  1 \tabto{5cm}  Matrix \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent \noindent Output \tabto{3cm}  1 \tabto{5cm}  Matrix \tabto{7cm}
+A matrix containing class information (details given below)
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Args \tabto{3cm} 1- \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent \noindent Args \tabto{3cm} 1- \tabto{5cm}  REAL \tabto{7cm}
+Variables for which class means are computed.
+
+@@data
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{x}  \tabto{3cm} 1 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent The first variable defining classes.
+minobs minimum number of observation in a class, obtained by merging classes. Does
+not work if \textcolor{blue}{z->} is given
+
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{xrange} \tabto{3cm}  -1|0|2 \tabto{5cm}  Real \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Defines the range of x variable. If \textcolor{blue}{xrange->} is given without
+arguments and \textbf{J} variables x\%min and x\%max exist, they are used, and
+if they do not exist an error occurs. Note that these variables can be
+generate with \textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->}). Either xtrange-> or \textcolor{blue}{any->} must be presente.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{any} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent Indicates that each value of the x-variables foms a separate class.
+either \textcolor{blue}{xrange->} or nay-> must be present.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{classes} \tabto{3cm} -1|1 \tabto{5cm}  Real \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Number of classes, If \textcolor{blue}{dx->} is not given, the default is that range is
+divided into 7 classes.
+\textcolor{blue}{minobs->} minimum number of observations in one class. Classes are merged so that this can
+be obtained. Does not work if \textcolor{blue}{z->} is present.
+!
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{z} \tabto{3cm} -1|1 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The second variable (z variable) defining classes in two dimensional classification.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{zrange}  \tabto{3cm} -1|0|2 \tabto{5cm}  Real \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Defines the range and class width for a continuous z
+variable. If \textbf{J} variables x\%min and x\%max exist,
+provided by \textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->}), they are used.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{dz}  \tabto{3cm} -1|1 \tabto{5cm}  Real \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Defines the class width for a continuous z variable.
+mean if z variable is given, class means are stored in a matrix given in the \textcolor{blue}{mean->}
+option
+classes number of classes, has effect if dx is not defined in xrangedx->. The default is
+\textcolor{blue}{classes->}7. If z is given then, there can be a second argument, which gives the
+number of classes for z, the default being 7.
+@@trans
+@@filter
+@@reject
+
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{print} \tabto{3cm} -1|1 \tabto{5cm}  Real \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  By setting \textcolor{blue}{print->}0, the classification matrix is not printed.
+The matrix can be utilized directly in \textcolor{VioletRed}{drawclass}() function.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+If z variable is not given then first column in printed output and the first row in the output
+matrix (if given) contains class means of the x variable. In the output matrix the last element is
+zero. Second column an TARKASTA VOISIKO VAIHTAArow shows number of observations in
+class, and the last element is the total number of observations. Third row shows the class means
+of the argument variable. The fourth row in the output matrix shows the class standard
+deviations, and the last element is the overall standard deviation
+\end{note}
+\begin{note}
+Variable Accepted gives the number of accepted obsevations.
+\end{note}
+\subsection{\textcolor{VioletRed}{class}()}\index{class()}
+\label{class}
+Function \textcolor{VioletRed}{class}() computes the the class of given value when classifying values
+similarly as done in \textcolor{VioletRed}{classify}().
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output \tabto{3cm} 1 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent The class number.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Args \tabto{3cm} 1 \tabto{5cm}  Real \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent The value whose class is determined.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{xrange} \tabto{3cm} 2 \tabto{5cm}  Real \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent The range of values.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{dx} \tabto{3cm} N|1 \tabto{5cm}  Real \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent The class width.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{classes} \tabto{3cm} N|1 \tabto{5cm}  Real \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent The number of classes.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+Either \textcolor{blue}{dx->} or \textcolor{blue}{classes->} must be given. If both are given, \textcolor{blue}{dx->} dominates.
+\end{note}
+\begin{note}
+If \textcolor{VioletRed}{stat}() is used earlier for variables including Var1 and
+options \textcolor{blue}{min->} and \textcolor{blue}{max->} are present, then
+\textcolor{blue}{xrange->}(Var1\%min,Var1\%max) is assumed.
+\end{note}
+\section{Linear programming functions}
+\label{jlpintro}
+The linear programming (LP) functions are called jlp-functions. The jlp-functions can be used to define
+linear programming problems, solve them and access the results.
+The jlp-problems are defined using \textcolor{VioletRed}{problem}() function, and the problems can be solved using
+\textcolor{VioletRed}{jlp}() function. There are several ways to access the results.
+The main interest in jlp-functions may be in the forest planning problems, where
+a simualator has generate treatment schedules.
+There are four different applications of \textcolor{VioletRed}{jlp}() function.
+\begin{itemize}
+\item[\textbf{J}] Small ordinary LP problems with text input.
+\item[\textbf{J}] Large ordinary LP problems with MATRIX input.
+\item[\textbf{J}] Forest planning problems without factories.
+\item[\textbf{J}] Forest palnning problems with factories.
+\end{itemize}
+The problem definition for each case is generated with \textcolor{VioletRed}{problem}() function.
+These applications are presented in different subsections
+\subsection{Problem definition object}
+\label{problemo}
+Problem definition object is a compound object produced by the \textcolor{VioletRed}{problem}() function, and it is
+described in Linear programming.
+\subsection{\textcolor{VioletRed}{problem}() defines a Lp-problem}\index{problem()}
+\label{problem}
+An LP-problem is defined in similar way as a TEXT object//
+\textcolor{VioletRed}{problem}([repeatdomains->])//
+…
+/
+\color{Green}
+\begin{verbatim}
+Define a lp problem for jlp() function.
+Output:
+a problem definition object
+OOption:
+repeatdomains
+if this option is given then the same domain definition can be in several places of
+the problem definition, otherwise having the same domain in different places
+causes an error (as this is usually not what was intended). If the same domain
+definition is in several places is slightly inefficient in computations, e.g. jlp()
+function computes and prints the values of x-variables for each domain definition
+even if the same values have been computed and printed for earlier occurrence
+of the domain definition.
+The problem definition paragraph can have two types of lines: problem rows and domain rows.
+Examples of problem definitions showing the syntax.
+pr=problem() !ordinary lp-problem
+7*z2+6*z3-z4==min
+2*z1+6.1*z2 >2 <8+ !both lower and upper bound is possible
+(a+log(b))*z5-z8=0
+-z7+z1>8
+/
+prx=problem() ! timber management planning problem
+All:
+npv.0==max
+sitetype.eq.2: domain7:
+income.2-income.1>0
+/
+In the above example domain7 is a data variable. Unit belongs to domain if the value of the
+variable domain7 is anything else than zero.
+The objective row must be the first row. The objective must always be present. If the purpose
+is to just get a feasible solution without objective, this can be obtained by minimizing a zvariable which does not otherwise appear in the problem (remember z-> option in the jlp()
+function.
+In problems having large number of variables in a row it is possible to give the coefficients as
+a vector and variables as a list e.g.
+ESIMERKKI
+In problems with x-variables it is possible to maximize or minimize the objective without any
+constraints. In factory problems this would also be quite straightforward to implement, but i
+In problems with x-variables it is possible to maximize or minimize the objective without any
+constraints. In factory problems this would also be quite straightforward to implement, but it
+does not come as a side effect of computations as in the case of maximization of x-variables,
+and thus it has not been implemented. The maximization of a factory objective without
+constraints can be obtained by adding to the problem constraints which require that the
+amounts of transported timber assortments to different factories are greater than or equal to
+zero.
+Function problem() interprets the problem paragraph, and extracts the coefficients of
+variables in the object row and in constraint rows. The coefficients can be defined using
+arithmetic statements utilizing the input programming "-sequence or enclosing the coefficient
+in parenthesis. The right hand side can utilize arithmetic computations without parenthesis.
+The values are computed immediately. So if the variables used in coefficients change their
+values later, the problem() function must be computed again in order to get updated
+coefficients. Note that a problem definition does not yet define a JLP task. Final interpretation
+is possibly only when the problem definition and simulated data are linked in a call to jlp()
+function. At the problem definition stage it is not yet known which variables are z-variables,
+which are x-variables and which are factory variables (see Lappi 1992).
+NNote that ‘<’ means less or equal, and ‘>’ means greater or equal. The equality is always
+part of linear programming constraints.
+The logic of jlp() function is the same as in the old JLP software. There is one difference
+which makes the life a little easier with J. In J the problem definition can use c-variables which
+are defined in the stand data. These are used similarly as if they would become from the xdata. It does not make any sense to have on a problem row only c-variables, but there can be
+constraints like
+vol#1-vol#0>0
+where vol#0 is the initial volume, i.e. a c-variable, and vol#1 is the volume during first period.
+In old JLP these initial values had to be put into the x-data.
+NNote also that problem definition rows are not in one-to-one relation to the constraint rows in
+the final lp problem. A problem definition row may belong to several domains, thus several lpconstraint rows may be generated from one problem definition row. The problem obtained by
+taking multiple domains in domain definition rows into account is called ‘expanded problem’.
+Domain definitions describe logical or arithmetic statements indicating for what management
+units the following rows apply. Problem will generate problem definition object, which is
+described below.
+Starting from J3.0 it is also possible to specify the period of the row for each row containing xvariables. The period is given between two ‘#’ signs at the beginning of the row, e.g.
+#2# income.2-income.1 >0
+If the row contains x variables from several periods, the period of the row is the last period of
+the x variables. If the period is given for some rows containing x variables, it must be given for
+all except for the objective row. The period of the objective is assumed to be the last period as
+having any other period for the objective would not make any sense. If wrong period is given
+for a row, J computes the correct solution but not as efficiently as with correct periods.
+If periods are given for rows, J is utilizing the tree structure of schedules in the optimization.
+This leads to smaller amount of additions and multiplications as the computation of the valu
+of a branch of the tree can for each node utilize the value of branch before that node.
+Unfortunately this was not more efficient e.g. in test problems with five periods.
+NNote 1: Only maximization is allowed in problems including factories. To change a
+minimization problem to a maximization problem, multiply the objective function by -1.
+*** We may later add the possibility to define also minimization problems.
+NNote 2: If optimization problem includes factories (see chapter 11.2 Optimization problem
+including factories), there have to be variables in the objective function or at least in one
+constraint row. Example of problem definition including factories can be found in chapter 11.12
+JLP Examples.
+NNote 3: An ordinary linear programming problem contains only z-variables.
+NNote 4: It is not necessary to define problem() function if the problem includes only zvariables. In jlp() function you can use zmatrix-> option instead of problem-> option.
+For more information see chapter 11.8 Solving a large problem with z-variables: jlp( ).
+NNote 5: If the problem contains harvest/area constraints for several domains, it saves memory,
+if the constraints are written in form
+harvest < area_of_domain*constant
+instead of
+(1/area_of_domain)*harvest < constant.
+The latter formulation takes the number of domains times more memory than the former
+formulation.
+\end{verbatim}
+\color{Black}
+\subsection{Solving large problems without schedule data.}
+\label{jlp}
+When solving problems including only a large number of z-variables, it is possible to feed the
+coefficients as a matrix with \textcolor{blue}{zmatrix->} option. Unit and schedule data (c- and x-variables)
+are not allowed when \textcolor{blue}{zmatrix->} is used.
+=\textcolor{VioletRed}{jlp}(\textcolor{blue}{zmatrix->},\textcolor{blue}{max->}|min->[,\textcolor{blue}{rhs->}][,\textcolor{blue}{rhs2->}][,\textcolor{blue}{tole->}]
+[,\textcolor{blue}{print->}][,\textcolor{blue}{maxiter->}][,\textcolor{blue}{test->}][,\textcolor{blue}{debug->}])
+Output:
+Function \textcolor{VioletRed}{jlp}() generates output row vectors output\%zvalues, output\%redcost and
+output column vectors output\%rows, output\%shprice output is the name of the output.
+Options:
+zmatrix Matrix containing coefficients of z-variables for each constraint row.
+max Vector containing coefficients of z-variables for the objective row of a
+maximization problem. Either \textcolor{blue}{max->} or \textcolor{blue}{min->} option has to be defined but not
+both.
+min Vector containing coefficients of z-variables for the objective row of a
+minimization problem. Either \textcolor{blue}{max->} or \textcolor{blue}{min->} option has to be defined but not
+both.
+rhs Vector containing lower bound for each constraint row. Value 1.7e37 is used to
+indicate the absence of the lower bound in a row. Either or both of the bound
+options (\textcolor{blue}{rhs->}, \textcolor{blue}{rhs2->}) has to be defined.
+rhs2 Vector containing upper bound for each constraint row. Value 1.7e37 is used to
+indicate the absence of the upper bound in a row. Either or both of the bound
+options (\textcolor{blue}{rhs->}, \textcolor{blue}{rhs2->}) has to be defined.
+Other options described above in chapter Solving a problem: \textcolor{VioletRed}{jlp}( ).
+NNote. When \textcolor{blue}{zmatrix->} option is used, the solution is not automatically printed. Use jlp
+solution objects to access solution. For more information see chapter 11.10 Objects for the JL
+enEdnote
+
+
+There are two versions of \textcolor{VioletRed}{jlp}() function call: one with problems-> option for problems
+defined by \textcolor{VioletRed}{problem}() function and the other with \textcolor{blue}{zmatrix->} option for large ordinary
+linear programming problems with z-variable coefficients defined by matrix.
+A lp problem defined by \textcolor{VioletRed}{problem}() function can be solved using \textcolor{VioletRed}{jlp}() function:
+[=]jlp(\textcolor{blue}{problem->}[,\textcolor{blue}{data->}][,\textcolor{blue}{z->}][,\textcolor{blue}{trans->}][,\textcolor{blue}{subtrans->}]
+[,\textcolor{blue}{tole->}][,\textcolor{blue}{subfilter->}][,\textcolor{blue}{subreject->}][,\textcolor{blue}{class->}]
+[,\textcolor{blue}{area->}][,\textcolor{blue}{notareavars->}][,\textcolor{blue}{print->}][,\textcolor{blue}{report->}]
+[,\textcolor{blue}{maxiter->}][,\textcolor{blue}{refac->}][,\textcolor{blue}{slow->}][,\textcolor{blue}{warm->}][,\textcolor{blue}{finterval->}]
+[,\textcolor{blue}{fastrounds->}][fastpercent->][,swap->][,\textcolor{blue}{test->}][,\textcolor{blue}{debug->}]
+[,\textcolor{blue}{memory->}])
+Output:
+Necessary for factory problems, otherwise optional. If output is given then function generates
+several matrices and lists associated with the solution (e.g. the values of the constraint rows,
+the shadow prices of the rows, the values of the z-variables, the reduced costs of z-variables,
+the sums of all x-variables of the data in all domains and their shadow prices, lists telling how
+problem variables are interpreted. See Objects for the JLP solution for more detailed
+description.
+Options:
+problem problem definition generated by \textcolor{VioletRed}{problem}() function
+data data set describing the stand (management unit) data or the schedules data. The
+unit data set must be linked to schedule data either using sub-options in the
+\textcolor{VioletRed}{data}() function or using \textcolor{VioletRed}{linkdata}() function. Following the JLP terminology,
+the unit data is called cdata, and the schedule data is called xdata. The \textcolor{VioletRed}{jlp}()
+function tries if it can find a subdata for the data set given. If it finds, it will assume
+that the data set is the unitdata. If subdata is not found, it tries to find the upper
+level data. If it finds it, then it assumes that the data set given is the schedules
+data. If \textcolor{blue}{data->} is not given, then the problem describes an ordinary lp-problem,
+and all variables are z-variables. If \textcolor{blue}{data->} option is given but no variable found
+in problem is in the schedules data set, then an error occurs.
+z If the \textcolor{blue}{data->} option is given then the default is that there are no z-variables in
+the problem. The existence of z-variables must be indicated with \textcolor{blue}{z->} option
+(later the user can specify exactly what are the z variables, but now it is not
+possible). The reason for having this option is that the most jlp-problems do not
+have z variables, and variables which \textbf{J} interprets as z-variables are just
+accidentally missing from the data sets.
+trans transformation set which is executed for each unit.
+subtrans transformation set which is executed for each schedule.
+NNote: the subtrans transformations can utilize the variables in the unit data and
+the output variables of \textcolor{blue}{trans->} transformations.
+NNote: transformations already associated with cdata and xdata are taken
+automatically into account and they are executed before transformations defined
+in \textcolor{blue}{trans->} or \textcolor{blue}{subtrans->} options.
+*** Later we may add the possibility to have several data sets (note that several files can be
+read into one data object in the \textcolor{VioletRed}{data}()function)
+tole the default tolerances are multiplied with the value of the \textcolor{blue}{tole->} option (default
+is thus one). Smaller tolerances mean that smaller numerical differences are
+interpreted as significant. If it is suspected that \textcolor{VioletRed}{jlp}() has not found the
+optimum, use e.g. \textcolor{blue}{tole->}0.1 ,\textcolor{blue}{tole->}0.01 or \textcolor{blue}{tole->}10.
+subfilter logical or arithmetic statement (nonzero value indicating True) describing which
+schedules will be included in the optimization. If all schedules are rejected, an
+error occurs. Examples: \textcolor{blue}{filter->}(.not.clearcut) , filter-
+>(ncuts.ge.5), \textcolor{blue}{filter->}harvest (which is equivalent to: filter-
+>(harvest.ne.0)). If the subfilter statement cannot be defined nicely using
+one statement, the procedure can be put into a transformation set which can be
+then executed using value() function.
+subreject logical or arithmetic statement (nonzero value indicating True) describing which
+schedules will not be included in the optimization. If \textcolor{blue}{subfilter->} is given then
+test applied only for such schedules which pass the subfilter test. If the subreject
+statement cannot be defined nicely using one statement, the procedure can be
+put into a transformation set which can be then executed using value()
+function.
+Kommentoinut [LR(46]: Repon puolelle
+Kommentoinut [LR(47]: Repon puolelle[Natural resources and bioeconomy studies XX/20XX]
+95
+class \textcolor{blue}{class->}(cvar, cval) Only those treatment units where the variable cvar gets
+value cval are accepted into the optimization. The units within the same class
+must be consecutive.
+area gives the variable in cdata which tells for each stand the area of the stand. It is
+then assumed that all variables of cdata or xdata used in the problem rows are
+expressed as per are values. In optimization the proper values of variables are
+obtained by multiplying area and per area values. Variables of cdata used in
+domain definitions are used as they are, i.e. without multiplying with area.
+Variables which are not treated as per area values are given with the
+\textcolor{blue}{notareavars->} option.
+notareavars
+If \textcolor{blue}{area->} option is given then this option gives variables which will not be
+multiplied with area.
+print of output printed, 1 => summary of optimization steps, 2=> also the problem
+rows are printed, 3=> also the values of x-variables are printed, 9= the pivot
+steps and the point of code where pivoting is done and the value of objective
+function are written to fort.16 file (or similar file depending on the operating
+system). The value 9 can be used in the case where jlp seems to be stuck. From
+fort.16 file one can then infer at what point debugging should be put on. Some
+cycling situations are now detected, so it should be rather unlikely that jlp is stuck.
+report the standard written output is written into the file given in \textcolor{blue}{report->} option
+(.e.g. \textcolor{blue}{report->}'result.txt'). The file remain open and can be written by
+several jlp-functions or by additional \textcolor{VioletRed}{write}() functions. Use \textcolor{VioletRed}{close}() function
+to close it explicitly if you want to open it with other program.
+maxiter maximum number of rounds through all units (default 10000).
+refac after refac pivot steps the basis matrix is refactorized. The default value is 1000.
+New option since J3.0. Actually refactorization was present in the first version of
+\textbf{J} but it had to be dropped because the refactorization corrupted some times the
+factors of the basis matrix. The reason was found and corrected for J3.0. The
+reason for misbehavior of the refactorization algorithm of Fletcher was such that
+it never caused problems in ordinary linear programming problems for which
+Fletcher designed his algorithms.
+slow if improvement of the solution in one round through all units is smaller than value
+given in \textcolor{blue}{slow->} option, then \textbf{J} terminates under condition ‘slow improvement’.
+New option since J3.0. Earlier slow improvement is computed from the tolerances
+of the problem, and if the \textcolor{blue}{slow->} option is not present these tolerances are still
+used. If \textcolor{blue}{slow->} option gives negative value, then the absolute value of the
+option indicates per cent change. Note that in large problems the solution is
+often very long time quite close the actual optimum, and hence the optimization
+time can be decreased with rather low loss in accuracy using the \textcolor{blue}{slow->} option.
+If \textcolor{blue}{slow->} option is give value zero it is equivalent to omitting the option and
+hence the slow improvement is determined from the tolerances.
+warm If option is present in ordinary problems with x-variables then the key schedules
+of previous solution are used as the starting values of the key schedules. In factory[Natural resources and bioeconomy studies XX/20XX]
+96
+problems also the previous key factories are used as starting values. If there is no
+previous solution available or the dimension of the key schedules vector (number
+of treatment units) or the dimensions of the key factories matrix (number of
+treatment units and number of factories) do not agree with the current problem,
+warm option is ignored. Thus it is usually safe to use the option always, the only
+exception is that the factories and number of units do agree with the previous
+problem even if factories or schedule data are changes. The warm start may
+reduce solution time perhaps 40-80\%.
+finterval In factory problems the transportations to new factories are checked if the round
+number is divisible with finterval. The default value is 3. When there have not
+been improvements during the last round, the value is changed into 1.
+fastrounds
+The shadow prices are used to select an active set of schedules which are
+considered as entering schedules. fastrounds gives the number of rounds using
+the same active set. The default is 10. When there have not been improvements
+during the last round, all schedules are used as the active set.
+fastpercent
+A schedule belongs to the active set if its shadow price is at least fastpercent \%
+of the shadow price of the best schedule. The default is 90.
+swap If option is present, the schedules data matrix is written to a direct access binary
+file. This option may help if virtual memory overflow occurs. The data needs to
+be used from the file until all inquiry function calls are computed. Thereafter the
+data can be loaded again into memory using function unswap(). If this does not
+happen ordinary functions using this data object work a little slower. If a new
+problem is solved with the swap-> option, there is no need to unswap() before
+that. In an Intel Fortran application the swap-> option is given without
+arguments. In a Gfortran application the option must be given in form swap->4.
+If there is shortage of virtual memory, read note 5 for \textcolor{VioletRed}{problem}() function before
+starting to use swap->.
+test If option is present then \textcolor{VioletRed}{jlp}() is checking the consistency of the intermediate
+results after each pivot step of the algorithm. Takes time but helps in debugging.
+debug determines after which pivot steps \textcolor{VioletRed}{jlp}() starts and stops to print debugging
+information to fort.16 file. If no value given, the debugging starts immediately
+(produces much output, so it may be good to use step number which is close to
+the step where problems started (print variable Pivots at the error return).
+\textcolor{blue}{debug->}(ip1,ip2,ip3) indicates that debugging is put on at pivot step ip1,
+off at pivot ip2 and the again on at pivot ip3.
+memory gives the amount of memory in millions of real numbers that can be used to store
+data needed in solving the problem. In factory problems also the xdata stored in
+a direct access file are loaded into memory as much as possible. It is not possible
+to figure out how large number memory option can give, so it must be
+determined with experimentation. Using disk-> option in \textcolor{VioletRed}{data}() function and
+\textcolor{blue}{memory->} option in \textcolor{VioletRed}{jlp}() function makes it in principle possible to solve
+arbitrary large problems. In practise the ability of double precision numbers
+cannot store accurately the needed quantities in very huge problems.
+Kommentoinut [LR(48]: Vain gfortran käännös?
+Kommentoinut [LR(49]: Lisätty. Oliko tämä mukana
+julkaistavassa versiossa?[Natural resources and bioeconomy studies XX/20XX]
+97
+Function \textcolor{VioletRed}{jlp}() is generating output (amount is dependent on the \textcolor{blue}{print->} option) plus a
+\textbf{J}LP-solution stored in special data structures which can be accessed with special \textbf{J} functions
+described below and if output is given then several output objects are created (see Objects for
+the JLP solution).
+NNote 1: a feasible solution (without an objective) can be found by minimizing a z-variable
+(remember \textcolor{blue}{z->} option), or by maximizing a unit variable (which is constant for all schedules in
+a unit).
+NNote 2: If virtual memory overflow occurs, see first Note 5 for \textcolor{VioletRed}{problem}() function and then
+\subsection{weigts() weights of schdules}
+\label{weights}
+TO BE RAPORTED LATER
+\section{Plotting figures}
+\label{Plotting}
+The graphiscs of the current version of \textbf{J} is produced Gnuplot. \textbf{J} offers nowan alternative interface
+to Gnuplot, and it is quite easy to add more plotinng routines later.
+\subsection{Scatterplot: \textcolor{VioletRed}{plotyx}()}\index{plotyx()}
+\label{plotyx}
+\textcolor{VioletRed}{plotyx}() makes scatterplot.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output  \tabto{3cm}  1 \tabto{5cm}   FIGURE  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The FIGURE object created or updated.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Args  \tabto{3cm}  1 | 2  \tabto{5cm}   REAL  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  y and x-variable, if \textcolor{blue}{func->} is not present.
+In case y-variable is given with \textcolor{blue}{func->}only,  x-variable is given as argument.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N | 1  \tabto{5cm}   DATA  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Data object used, default the last data object created or the dta given
+with data=\textcolor{VioletRed}{list}().
+@@figu
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{mark}  \tabto{3cm}  N | 1  \tabto{5cm}   REAL | CHAR  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The mark used in the plot. Numeric values refer to
+mark types of Gnuplot. The mark can be given also as CHAR varible or constant.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{func} \tabto{3cm}  N | 1  \tabto{5cm}   Code  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent   Code option telling how the y-variable is computed.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{example}[plotyxex]plotyx()\\
+\label{plotyxex}
+xmat=\textcolor{VioletRed}{matrix}(\textcolor{blue}{do->}(0,10,0.001))\\
+tr=\textcolor{VioletRed}{trans}()\\
+y=2+3*x+0.4*x*x+4*rann()\\
+/\\
+da=\textcolor{VioletRed}{newdata}(xmat,\textcolor{blue}{read->}x,\textcolor{blue}{maketrans->}tr,\textcolor{blue}{extra->}(Regf,Resid))\\
+fi=\textcolor{VioletRed}{plotyx}(y,x,\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{plotyx}(x,\textcolor{blue}{func->}tr(y),\textcolor{blue}{mark->}3,\textcolor{blue}{color->}Orange,\textcolor{blue}{continue->}fcont)\\
+reg=\textcolor{VioletRed}{regr}(y,x)\\
+fi=\textcolor{VioletRed}{plotyx}(y,x,\textcolor{blue}{show->}0)\\
+fi=\textcolor{VioletRed}{plotyx}(Regf,x,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
+fir=\textcolor{VioletRed}{plotyx}(Resid,x,\textcolor{blue}{continue->}fcont)
+\end{example}
+\begin{note}
+With data with integer values, the default ranges of Gnuplot may be hide point at
+borderlines.
+\end{note}
+\begin{note}
+\textcolor{teal}{fi}=\textcolor{VioletRed}{plotyx}() produces or updates file \textcolor{teal}{fi}.jfig] which contains
+Gnuplot commands and file \textcolor{teal}{fi}.jfi0 containg data.
+\end{note}
+\subsection{Draw a function: \textcolor{VioletRed}{draw}()}\index{draw()}
+\label{draw}
+\textcolor{VioletRed}{draw}() draws a function.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output  \tabto{3cm}  1 \tabto{5cm}   FIGURE  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The FIGURE object created or updated.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{func} \tabto{3cm}  N | 1  \tabto{5cm}   Code  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent   Code option telling how the y-variable is computed.
+@@draw
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{mark}  \tabto{3cm}  N | 1  \tabto{5cm}   REAL | CHAR  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The mark used in the plot.
+Numeric values refer to.
+mark types of Gnuplot. The mark can be given also as CHAR varible or constant.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{width}  \tabto{3cm}  0 | 1  \tabto{5cm}   REAL  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  the width of the line
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{example}[drawex]Example of \textcolor{VioletRed}{draw}()\\
+\label{drawex}
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x),\textcolor{blue}{xrange->}(0,2*Pi),\textcolor{blue}{color->}Blue,\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{cos}(x),\textcolor{blue}{xrange->}(0,2*Pi),\textcolor{blue}{color->}Red,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
+\textcolor{VioletRed}{if}(\textcolor{VioletRed}{type}(figyx).ne.FIGURE)plotyxex\\
+\textcolor{VioletRed}{show}(figyx,cont->fcont)\\
+reg0=\textcolor{VioletRed}{regr}(y,x)\\
+\textcolor{VioletRed}{stat}(\textcolor{blue}{data->}datyx,\textcolor{blue}{min->},\textcolor{blue}{max->})\\
+figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}reg0(),\textcolor{blue}{x->}x,\textcolor{blue}{xrange->},\textcolor{blue}{color->}Violet,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
+tr=\textcolor{VioletRed}{trans}()\\
+x2=x*x\\
+fu=reg2()\\
+/\\
+reg2=\textcolor{VioletRed}{regr}(y,x,x2,\textcolor{blue}{data->}datyx,\textcolor{blue}{trans->}tr)\\
+figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}tr(fu),\textcolor{blue}{xrange->},\textcolor{blue}{color->}Orange,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
+Continue=1 \,\textcolor{green}{!Errors}\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x),\textcolor{blue}{x->}x)\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{xrange->}(1,100),\textcolor{blue}{func->}Sin(x),\textcolor{blue}{x->}x)\\
+Continue=0
+\end{example}
+\begin{note}
+\textcolor{teal}{fi}=\textcolor{VioletRed}{draw}() produces or updates file \textcolor{teal}{fi}.jfig] which contains
+Gnuplot commands and file \textcolor{teal}{fi}.jfi0 containg data.
+\end{note}
+\subsection{Draw values in a matrix generated with \textcolor{VioletRed}{classify}(): \textc}\index{classify()drawclass()}
+\label{drawclass}
+\textcolor{VioletRed}{drawclass}() can plot class means and/or lines connecting class means, with
+or without standard errors of class means, within class standard deviations,
+within class variances, frequency histograms, which can be scaled so that
+density funtions can be drawn in the same figure.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output  \tabto{3cm} 1  \tabto{5cm}   FIGURE  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  FIGURE object updated or generated.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Arg  \tabto{3cm}  1 \tabto{5cm}   MATRIX  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  A MATRIX generated with \textcolor{VioletRed}{classify}().
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{se}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent Presence of option tells to include that error bars showing standard errors
+of class means computed as \textcolor{VioletRed}{sqrt}(sample\_within-class\_variance)/number\_of\_obs)
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{sd}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Within-calss standard deviations are drawn.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{var}  \tabto{3cm}  N | 0  \tabto{5cm}     \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent Within-class sample variances are drawn.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent histo  \tabto{3cm}   N | 0  \tabto{5cm}     \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent Within-class sample variances are drawn.abto{5cm}
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{freq}  \tabto{3cm}  N | 0  \tabto{5cm}     \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent Cumulative  frequences are drawn.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{area}  \tabto{3cm}  N |0  \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent the histogram is scaled so that that it can be overlayed to density function
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{example}[drawclassex]Examples of \textcolor{VioletRed}{drawclass}()\\
+\label{drawclassex}
+X=\textcolor{VioletRed}{matrix}(\textcolor{blue}{do->}(1,100,0.1))\\
+e=\textcolor{VioletRed}{matrix}(\textcolor{VioletRed}{nrows}(X))\\
+e=\textcolor{VioletRed}{rann}()\\
+X2=0.01*x*.x \textcolor{green}{!elementwise\,product}\\
+Y=2*x+0.01*X2+(1+0.3*X)*.e \,\textcolor{green}{!nonequal\,error\,variance,quadratic\,function}\\
+dat=\textcolor{VioletRed}{newdata}(x,y,x2,\textcolor{blue}{read->}(x,y,x2),\textcolor{blue}{extra->}(Regf,Resid))\\
+\textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->})\\
+reg=\textcolor{VioletRed}{regr}(y,x) \textcolor{green}{!\,Regf\,and\,resid\,are\,put\,into\,the\,data}\\
+fi=\textcolor{VioletRed}{plotyx}(y,x,\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{drawline}(x\%min,x\%max,reg(x\%min),reg(x\%max),\textcolor{blue}{width->}3,\textcolor{blue}{color->}Cyan,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
+cl=\textcolor{VioletRed}{classify}(Resid,\textcolor{blue}{x->}x,\textcolor{blue}{xrange->},\textcolor{blue}{classes->}5)\\
+fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{color->}Blue,\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{var->},\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{drawclass}(cl,histo->,\textcolor{blue}{area->},\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{pdf}(0,\textcolor{VioletRed}{rmse}(reg)),\textcolor{blue}{x->}x,\textcolor{blue}{xrange->},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont) \textcolor{green}{!\,xrange\,comes\,from\,\textcolor{VioletRed}{stat}()}
+\end{example}
+\begin{note}
+In previous versions of \textbf{J} if \textcolor{blue}{se->} and \textcolor{blue}{sd->} were both present, the error
+bot bars were plotted. This possibility will be included later.
+\end{note}
+\subsection{Draw a polygon through points: \textcolor{VioletRed}{drawline}()}\index{drawline()}
+\label{drawline}
+\textcolor{VioletRed}{drawline}() draws a function through points.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output  \tabto{3cm}  1 \tabto{5cm}   FIGURE  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The FIGURE object created or updated.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Args \tabto{3cm} 1-  \tabto{5cm}  REAL | MATRIX  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The points which are connected:
+\begin{itemize}
+\item[\textbf{J}\.] x1,...,xn,y1,...,yn The x-coordinates and y-coordinates,
+\$n \geq 1\$
+\item[\textbf{J}\.]  If there is only one argument which is a
+matrix object having two rows, then the first row is assumed to give the x values
+and the second row the y values.
+\item[\textbf{J}\.]  If there are two matrix (vector) arguments, then
+the first matrix gives the x-values and the second matrix gives the y-values.
+It does not matter if arguments are row or column vectors.
+\end{itemize}
+@@figure
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{label}  \tabto{3cm}  N | 1  \tabto{5cm}   CHAR  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Label written to the end of line. If arguments define only one point,
+then with \textcolor{blue}{label->} option one can write text to any point.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{mark}  \tabto{3cm}  N | 1  \tabto{5cm}   REAL | CHAR  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The mark used in the plot.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{break}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The line is broken when a x-value is smaller than the previous one.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{set}  \tabto{3cm}  N|1  \tabto{5cm}   REAL<6  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Set to which lines are put. If the option is not present,
+then a separate Gnuplot plot command with possible color and width information
+is generated for each \textcolor{VioletRed}{drawline}() and data points are stored
+in file \textcolor{teal}{fi}.jfi0, i.e. the same file used by \textcolor{VioletRed}{plotyx}().
+If set is given e.g as \textcolor{blue}{set->}3, then it is possible to plot a large number of lines
+with the same width and color. The data points are stored into file \textcolor{teal}{fi}.jfi3. This is
+useful e.g. when drawing figures showing transportation of timber to factories
+for huge number of sample plots.
+Numeric values refer to Gnuplot mar types.
+The mark can be given also as CHAR varible or constant.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{width}  \tabto{3cm}  0 | 1  \tabto{5cm}   REAL  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  the width of the line. Default: \textcolor{blue}{width->}1
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{label} \tabto{3cm}  N |1  \tabto{5cm}  CHAR  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Text plotted to the end of line.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{example}[drawlineex]Example of \textcolor{VioletRed}{drawline}()\\
+\label{drawlineex}
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x),\textcolor{blue}{xrange->}(0,2*Pi),\textcolor{blue}{color->}Blue,\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{drawline}(Pi,\textcolor{VioletRed}{sin}(Pi)+0.1,\textcolor{blue}{label->}'\textcolor{VioletRed}{sin}()',\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
+xval=\textcolor{VioletRed}{matrix}(\textcolor{blue}{do->}(1,100))\\
+mat=\textcolor{VioletRed}{matrix}(\textcolor{blue}{values->}(xval,xval+1,xval,xval+2,xval,xval+3))\\
+fi=\textcolor{VioletRed}{drawline}(mat,\textcolor{blue}{color->}Red)\\
+fi=\textcolor{VioletRed}{drawline}(mat,break,\textcolor{blue}{color->}Orange,\textcolor{blue}{break->},\textcolor{blue}{continue->}fcont)\\
+x=\textcolor{VioletRed}{matrix}(\textcolor{blue}{do->}(0,100,1)\\
+e=\textcolor{VioletRed}{matrix}(101)\\
+e=\textcolor{VioletRed}{rann}()\\
+y=2*x+0.4+e\\
+da=\textcolor{VioletRed}{newdata}(x,y,\textcolor{blue}{read->}(x,y))\\
+reg=\textcolor{VioletRed}{regr}(y,x)
+\\
+\textcolor{VioletRed}{if}(\textcolor{VioletRed}{type}(figyx).ne.FIGURE)plotyxex\\
+\textcolor{VioletRed}{show}(figyx)\\
+reg0=\textcolor{VioletRed}{regr}(y,x)\\
+\textcolor{VioletRed}{stat}(\textcolor{blue}{data->}datyx,\textcolor{blue}{min->},\textcolor{blue}{max->})\\
+figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}reg0(),\textcolor{blue}{x->}x,\textcolor{blue}{xrange->},\textcolor{blue}{color->}Violet,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
+tr=\textcolor{VioletRed}{trans}()\\
+x2=x*x\\
+fu=reg2()\\
+/\\
+reg2=\textcolor{VioletRed}{regr}(y,x,x2,\textcolor{blue}{data->}datyx,\textcolor{blue}{trans->}tr)\\
+figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}tr(fu),\textcolor{blue}{xrange->},\textcolor{blue}{color->}Orange,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
+Continue=1 \,\textcolor{green}{!Errors}\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x),\textcolor{blue}{x->}x)\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{xrange->}(1,100),\textcolor{blue}{func->}Sin(x),\textcolor{blue}{x->}x)\\
+Continue=0
+\end{example}
+\begin{note}
+if a line is not visible, this may be caused by the fact that
+the starting or ending point is outside the range specified by \textcolor{blue}{xrange->} or \textcolor{blue}{yrange->}.
+\end{note}
+\subsection{Show figure: \textcolor{VioletRed}{show}()}\index{show()}
+\label{show}
+An figure stored in a figure object or in Gnuplot file can be plotted. If the
+argument is FIGURE, the
+parameters of the figure can be changed. If the argument is the name of
+Gnuplot file, the file must be edited.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Args  \tabto{3cm}  1 \tabto{5cm}   FIGURE | CHAR  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The figure object or the name of the file containg Gnuplot commans,
+@@figure
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+If the argument is the file name with .jfig extension, and you edit the file, its is safe to change the name,
+becase if an figure with teh same name is generated, the edited fike is autimatically
+deleted. If the file refers other files, it is wise to rename also these files and change
+the names in the beginning of the .jfig file.
+\end{note}
+\begin{note}
+You may wish to use show also if you cnange the window size
+\end{note}
+
+\begin{example}[showex]Example of \textcolor{VioletRed}{show}()\\
+\label{showex}
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sqrt2}(x),\textcolor{blue}{x->}x,\textcolor{blue}{xrange->}(-50,50),\textcolor{blue}{continue->}fcont)\\
+\textcolor{VioletRed}{show}(fi,\textcolor{blue}{xrange->}(-60,60),\textcolor{blue}{xlabel->}'NEWX',\textcolor{blue}{ylabel->}'NEWY')\\
+\textcolor{VioletRed}{show}(fi,\textcolor{blue}{axes->}10)\\
+\textcolor{VioletRed}{show}(fi,\textcolor{blue}{axes->}01)\\
+\textcolor{VioletRed}{show}(fi(\textcolor{blue}{axes->}00)\\
+Window='400,800'\\
+\textcolor{VioletRed}{show}(fi)\\
+Window='700,700'\\
+fi=\textcolor{VioletRed}{drawline}(1,10,3,1,\textcolor{blue}{color->}Red,\textcolor{blue}{continue->}fcont)\\
+\textcolor{VioletRed}{show}(fi,\textcolor{blue}{xrange->}(1.1,11)) \textcolor{green}{!the\,line\,is\,not\,visible}\\
+dat=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(x,y),\textcolor{blue}{in->})\\
+1,4\\
+2,6\\
+3,2\\
+5,1\\
+/\\
+\textcolor{VioletRed}{stat}()\\
+fi=\textcolor{VioletRed}{plotyx}(y,x,\textcolor{blue}{continue->}fcont) \,\textcolor{green}{!\,Gnuplot\,hides\,points\,at\,border}\\
+\textcolor{VioletRed}{show}(fi,\textcolor{blue}{xrange->}(0,6),\textcolor{blue}{yrange->}(0,7))
+
+\end{example}
+
+\subsection{Plot 3d-figure: \textcolor{VioletRed}{plot3d}()}\index{plot3d()}
+\label{plot3d}
+Plot 3d-figure with indicater contours  with colours.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output  \tabto{3cm}  1   \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  \textcolor{teal}{fi}=\textcolor{VioletRed}{plot3d}() generates Gnuplot file \textcolor{teal}{fi}.jfig.
+No figure object is produced.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Args \tabto{3cm}  1  \tabto{5cm}   MATRIX  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The argument is a matrix having 3 columns for x,y and z.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{sorted}  \tabto{3cm}  N | 1  \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent \textcolor{VioletRed}{plot3d}() uses the Gnuplot function splot, which requires that the data
+is sorted withe respect to the x-variable. \textcolor{blue}{sorted->} indicates that the argument matrix is sorted
+either natrurally or with \textcolor{VioletRed}{sort}() function. If \textcolor{blue}{sort->} is not presented, plot3
+sorts the data.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{example}[plot3dex]plot3d() example see p.  328 in Mehtatalo & Lappi 2020\\
+\label{plot3dex}
+mat=\textcolor{VioletRed}{matrix}(1000000,3)\\
+mat2=\textcolor{VioletRed}{matrix}(1000000,3)\\
+tr=\textcolor{VioletRed}{trans}() \textcolor{green}{!second\,order\,response\,surface}\\
+x=0\\
+x2=0\\
+xy=0\\
+irow=1\\
+\textcolor{VioletRed}{do}(ix,1,1000)\\
+y=0\\
+y2=0\\
+xy=0\\
+\textcolor{VioletRed}{do}(iy,1,1000)\\
+mat(irow,1)=x\\
+mat(irow,2)=y\\
+mat(irow,3)=12+8*x-7*x2+124*y+8*xy-13*y2\\
+mat2(irow,1)=x\\
+mat2(irow,2)=y\\
+mat2(irow,3)=50+160*x-5*x2-40*y-20*xy+10*y2\\
+irow=irow+1\\
+y=y+0.01\\
+y2=y*y\\
+xy=x*y\\
+enddo\\
+x=x+0.01\\
+x2=x*x\\
+enddo\\
+/\\
+\textcolor{VioletRed}{call}(tr)\\
+fi=\textcolor{VioletRed}{plot3d}(mat,\textcolor{blue}{sorted->})\\
+fi=\textcolor{VioletRed}{plot3d}(mat2,\textcolor{blue}{sorted->})
+\end{example}
+
+\section{Splines, stem splines,  and volume functions}
+\label{spline}
+There are several spline functions.
+\subsection{\textcolor{VioletRed}{tautspline}()}\index{tautspline()}
+\label{tautspline}
+\textcolor{VioletRed}{tautspline}(x1,â€¦,xn,y1,â€¦,yn[,\textcolor{blue}{par->}][,\textcolor{blue}{sort->}][,\textcolor{blue}{print->}])//
+Output://
+An interpolating cubic spline, which is more robust than an ordinary cubic spline. To prevent
+oscillation (which can happen with splines) the function adds automatically additional knots
+where needed.//
+Arguments://
+x1,â€¦,xn the x values//
+d1,â€¦,dn the y values.//
+There must be at least 3 knot point, i.e. 6 arguments.//
+Options://
+par gives the parameter determining the smoothness of the curve. The default is zero,
+which produces ordinary cubic spline. A typical value may 2.5. Larger values mean
+that the spline is more closely linear between knot points.//
+sort the default is that the xâ€™s are increasing, if not then \textcolor{blue}{sort->} option must be given//
+print if \textcolor{blue}{print->} option is given, the knot points are printed (after possible sorting).
+The resulting spline can be utilized using value() function.
+The taut spline algorithm is published by de Boor (1978) on pages 310-314. The source code
+was loaded from Netlib.
+\subsection{\textcolor{VioletRed}{stemspline}(): splines for stems}\index{stemspline()}
+\label{stemspline}
+TO bE REPORTED LATER,  see old manual
+\subsection{\textcolor{VioletRed}{stempolar}(): polar coordinates}\index{stempolar()}
+\label{stempolar}
+TO bE REPORTED LATER, see old manual
+\subsection{\textcolor{VioletRed}{laasvol}(): svolume eqaitions of Laasasenaho}\index{laasvol()}
+\label{laasvol}
+TO bE REPORTED LATER,  see old manual
+\subsection{\textcolor{VioletRed}{laaspoly}(): polynomila stem curves of Laasasenaho}\index{laaspoly()}
+\label{laaspoly}
+TO bE REPORTED LATER,  see old manual
+\subsection{\textcolor{VioletRed}{integrate}(): integrate}\index{integrate()}
+\label{integrate}
+TO bE REPORTED LATER,  see old manual
+\section{Bit functions}
+\label{bit}
+bit functions help to store large amound of binary variables in small space.
+These functions are used in domain calcualtions
+\subsection{Bitmatrix}
+\label{bitmatrixo}
+A BITMATRIX is an object which can store in small memory space large matrices
+used to indicate logical values. A BITMATRIX object is produced by \textcolor{VioletRed}{bitmatrix}()
+function or by closures() function from an existing bitmatrix. Bitmatrix values
+can be read from the input stream or file or set by setvalue() function. The
+values of bitmatrix elements can be accessed with value() function.
+\begin{note}
+Also ordinary real variable can be used to store bits. See bit functions.
+\end{note}
+\subsection{\textcolor{VioletRed}{setbits}(): setting bits on}\index{setbits()}
+\label{setbits}
+To be reported alter
+\subsection{\textcolor{VioletRed}{clearbits}(): clearing bits}\index{clearbits()}
+\label{clearbits}
+To be reported alter
+\subsection{\textcolor{VioletRed}{getbit}() : get bit value}\index{getbit()}
+\label{getbit}
+To be reported later, see old manual
+\subsection{\textcolor{VioletRed}{getbitch}() : get bit value}\index{getbitch()}
+\label{getbitch}
+To be reported later, see old manual
+\subsection{\textcolor{VioletRed}{bitmatrix}() : define a matrix for bits}\index{bitmatrix()}
+\label{bitmatrix}
+To be reported later,  see old manual
+\subsection{setvalue() : set value for a bitmatrix}
+\label{setvalue}
+To be reported later,  see old manual
+\subsection{closures/) :convex closures}
+\label{closures}
+To be desrribed later,  see old manual
+\section{Misc. functions}
+\label{misc}
+There are some functions which do not belong to previous classes.
+\subsection{properties(): defining properties of some subjects.}
+\label{properties}
+This function has been used to define properties of factories.
+It will replaced with othe means in later versions.
+\subsection{cpu() gives the elapsed cpu time}
+\label{cpu}
+\begin{example}[cpuex]Example of cpu-timing\\
+\label{cpuex}
+cpu0=cpu()\\
+a=\textcolor{VioletRed}{matrix}(100000)\\
+a=\textcolor{VioletRed}{ran}() \textcolor{green}{!uniform}\\
+\textcolor{VioletRed}{mean}(a),\textcolor{VioletRed}{sd}(a),\textcolor{VioletRed}{min}(a),\textcolor{VioletRed}{max}(a);\\
+cpu1=cpu()\\
+elapsed=cpu1-cpu0;
+\end{example}
+\subsection{seconds() gives the elapsed clock time}
+\label{seconds}
+\begin{example}[secondsex]Example of elapsed time\\
+\label{secondsex}
+cpu0=cpu()\\
+sec0=seconds()\\
+a=\textcolor{VioletRed}{matrix}(100000)\\
+a=\textcolor{VioletRed}{ran}() \textcolor{green}{!uniform}\\
+\textcolor{VioletRed}{mean}(a),\textcolor{VioletRed}{sd}(a),\textcolor{VioletRed}{min}(a),\textcolor{VioletRed}{max}(a);\\
+cpu1=cpu()\\
+sec1=seconds()\\
+elapsed=cpu1-cpu0;\\
+selapsed=sec1-sec0;
+\end{example}
+\subsection{Object names}
+\label{onames}
+Object names start with letter or with '\$'. Object names can contain any of
+symbols '\#.\%Â§$\backslash$\_'. \textbf{J} is using '\%' to name objects related to some other objects.
+E.g. function \textcolor{VioletRed}{stat}(x1,x2,\textcolor{blue}{mean->}) will store means of variables x1 and x2 into
+variables x1\%mean and x2\%mean. Objects with name starting with '\$' are not
+stored in the automatically created lists of input and output variables when
+defining transformation objects. The variable Result which
+is the output variable, if no output is given, is not put into these lists.
+Object names can contain special characters (e.g. +-*=()) if these are closed
+within â€˜[â€˜ and â€˜]â€™, e.g. a[2+3]. This possibility to include additional information
+is borrowed from Markku Siitonen, the developer of Mela software.
+If an transformation object is created with \textcolor{VioletRed}{trans}() function, and the
+intended global arguments are given in the list of arguments,
+then a  local object {ob} created e.g. with transformation object {tr} have prefix
+{tr$\backslash$} yelding {tr\textcolor{green}{!\ob}.\,Actually\,also\,these\,objects\,are\,global,\,but\,their\,prefix}
+protects them so that they do not intervene with objects having the same name in the
+calling transformation objec.
+There are many objects intitilized automatically.
+Some of these are locked so that the users cannot change them.
+Names of objects having a predefined interpretation start with capital letter.
+The user can freely use lower or upper case letters. \textbf{J} is case sensitive.
+All objects known at a given point of a \textbf{J} session can be listed by command:
+\textcolor{VioletRed}{print}(Names)
+\subsection{Copying object: a=b}
+\label{copy}
+A copy of object can be made by the assignment statement a=b.
+\subsection{Deleting objects: delete\_o()}
+\label{delete}
+When an object with a given name is created, the name cannot be removed. With
+delete\_0() function one can free all memory allocated for data structures needed
+by general objects:
+delete\_o(obj1,â€¦,objn)
+After deleting an object, the name refers to a real variable (which is
+initialized by the delete\_o() function into zero).
+\begin{note}
+Other objects except matrices can equivalently be deleted by giving
+command
+obj1,â€¦,objn = 0
+This is because the output objects of any functions are first deleted before
+defining them anew. Usually an object is automatically deleted if the object
+name is as an output object for other functions.
+\end{note}
+\begin{note}
+One can see how much memory each object is using \textcolor{VioletRed}{print}(Names).mes
+\end{note}
+\begin{note}
+Deleting a compound object deletes also such
+subobjects which have no meaning when the main object is deleted. But e.g. if a
+data object is deleted then the as-sociated transformation object is not
+deleted as the transformation can be used independently.
+\end{note}
+\begin{note}
+Files can be deleted with delete\_f(file). See IO-functions for
+details.
+\end{note}
+\begin{note}
+If the user has defined own new compound objects in the open source
+\textbf{J} software she/he needs to define the associated delete function.
+\end{note}
+\subsection{Object types}
+\label{otypes}
+The following description describes shortly different object types available in
+\textbf{J}. More detailed descriptions are given in connection of \textbf{J} functions which
+create the objects and in Developers' guide.
+\subsubsection{Real variables and constants}
+\label{realo}
+A REAL variable is a named object associated with a single
+double precision value. Before version J3.0 the values were in single
+precision, and thus this objecttype is still called REAL.
+The
+value can be directly defined at the command level, or the variable can get
+the value from data structures.  E.g.
+\\
+\textcolor{VioletRed}{stat}(D,H,\textcolor{blue}{min->},\textcolor{blue}{max->}) &\textcolor{green}{!\,Here\,arguments\,must\,be\,variable\,names}
+\\
+\\
+a = \textcolor{VioletRed}{sin}(2.4) &\textcolor{green}{!\,argument\,is\,in\,radians\,\textcolor{VioletRed}{sind}()\,is\,for\,degrees}
+\\
+h = \textcolor{VioletRed}{data}(\textcolor{blue}{read->}(x1â€¦x4))  & \textcolor{green}{!\,x1,\,x2\,,x3,\,x4\,are\,variables\,in\,the\,data\,set,\,and}
+\\
+get their values when doing operations for the data.
+\\
+
+
+\begin{note}
+All objects have also an associated REAL value. In order to make
+arithmetic operations fast, the argument types in simple arithmetic functions
+are not checked. If a general object is used as an argument in an arithmetic
+operation, then the REAL value associated with the object is used. This will
+usually prevent the program to stop due to Fortran errors, but will produce
+unintended results.
+\end{note}
+
+\begin{note}
+In this manual 'variable' refers to a \textbf{J} object whose type is REAL.
+\end{note}
+\subsubsection{Character constants and variables}
+\label{charo}
+Character constants are generated by closing text within apostrophe signs ( '
+). Apostrophe character ( ' ) within a character constant is indicated with ($\sim$)
+(if the character $\sim$\,is\,not\,present\,in\,the\,keyboard,\,it\,can\,be\,produced\,by\,<Alt
+>126, where numbers are entered from the numeric keyboard) Character constants are used e.g.  in I/O functions for file names, formats
+and to define text to be written.  , e.g
+\\
+a = \textcolor{VioletRed}{data}(\textcolor{blue}{in->}'file1.dat', \textcolor{blue}{read->}(x1,x2)) &
+\\
+
+\\
+\textcolor{VioletRed}{write}('output.txt', '($\sim$kukkuu=$\sim$,4f7.0)', \textcolor{VioletRed}{sqrt}(a)) &
+\\
+Character variables are pointers to character constants. An example of a
+character variable definition:
+
+
+\\
+cvar='file1.dat' &
+\\
+After defining a character variable, it can be used exactly as the character
+constants.
+\begin{note}
+The quotation mark (") has special meaning in the input programming. See
+Input programming how to use character constants within character constants.
+\end{note}
+\subsubsection{Logical values}
+\label{logical0}
+There is no special object type for logical variables. Results of logical
+operations are stored into temporary or named real variables so that 0 means
+False and 1 means True. In logical tests all non-zero values will mean True.
+Thus e.g. \textcolor{VioletRed}{if}(6)b=7 is legal statement, and variable b will get value 7. E.g.
+\\
+\textcolor{Red}{sit>}h=a.lt.b.and.b.le.8 &
+\\
+\textcolor{Red}{sit>}\textcolor{VioletRed}{print}(h) &
+\\
+h=   1.00000 &
+\\
+\subsection{Predefined objects}
+\label{pref}
+The following objects are generated during the initilaization.
+
+
+\noindent \textcolor{teal}{Names} \tabto{25mm }   Text \tabto{45mm }   Text object containg the names of named objects
+
+
+\noindent \textcolor{teal}{Pi} \tabto{25mm }  REAL \tabto{45mm }  The value of Pi (=3.1415926535897931)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\noindent \$\textcolor{teal}{Cursor}\$ \tabto{25mm }   TRANS  \tabto{45mm }   The transformation object used to run \textcolor{Red}{sit>} prompt
+
+
+\noindent \$\textcolor{teal}{Cursor2}\$ \tabto{25mm }   TRANS  \tabto{45mm }   Another transformation object used to run \\
+\tabto{45mm } \textcolor{Red}{sit>} prompt
+
+
+\noindent \textcolor{teal}{Val} \tabto{25mm }  TRANS \tabto{45mm }   Transformation object used to extract values of mathematical statements, used,
+
+
+\noindent \textcolor{teal}{Round}  \tabto{25mm }  REAL \tabto{45mm }   \textcolor{VioletRed}{jlp}(): The current round through treatment units in \textcolor{VioletRed}{jlp}() function.
+
+
+\noindent \textcolor{teal}{Change} \tabto{25mm }  REAL \tabto{45mm }   \textcolor{VioletRed}{jlp}(): The change of objective in \textcolor{VioletRed}{jlp}()  in one round before finding feasible and thereafter
+
+
+\noindent \textcolor{teal}{Imp} \tabto{25mm }  REAL \tabto{45mm }   \textcolor{VioletRed}{jlp}(): The number of improvements obtained from schedules outside the current active
+
+
+\noindent \$\textcolor{teal}{Data}\$  \tabto{25mm }   List \tabto{45mm }   Default data set name for a new data set created by \textcolor{VioletRed}{data}()-function.
+
+
+
+
+
+\noindent \textcolor{teal}{Obs} \tabto{25mm }   REAL  \tabto{45mm }   The default name of variable obtaining the the number of
+
+\noindent \textcolor{teal}{Maxnamed}  \tabto{25mm }  REAL \tabto{45mm }   The maximum number of named objects. Determined via j.par in
+
+
+\noindent \textcolor{teal}{Record} \tabto{25mm }   REAL  \tabto{45mm }   The name of variable obtaining the the number of
+
+
+\noindent \textcolor{teal}{Subecord} \tabto{25mm }   REAL  \tabto{45mm }   The name of variable obtaining the the number of
+
+
+\noindent \textcolor{teal}{Duplicate} \tabto{25mm }   REAL \tabto{45mm }   A special variable used in \textcolor{VioletRed}{data}() function when duplicating observations
+
+
+\noindent \textcolor{teal}{LastaData}  \tabto{25mm }  List \tabto{45mm }  	A list object referring to the last data set made, used as default data set.
+
+
+\noindent \$\textcolor{teal}{Buffer} \tabto{25mm }  Char \tabto{45mm }   A special character object used by the \textcolor{VioletRed}{write}() function.
+
+
+\noindent \$\textcolor{teal}{Input}\$ \tabto{25mm }   Text  \tabto{45mm }   Text object used for original input line.
+
+
+\noindent \textcolor{teal}{1}\$Input1\$  \tabto{25mm }  Text \tabto{45mm }   Text object for input line after removing blanks and comments.
+
+
+\noindent \textcolor{teal}{Data}  \tabto{25mm }  List \tabto{45mm }    List object used to indicate current data setsDat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\noindent \$ \\textcolor{teal}{tabto{25mm} }  REAL \tabto{45mm }   Object name used to indicate console and '*' format in reading and writing
+
+
+
+\noindent \textcolor{teal}{x}\# \tabto{25mm }  REAL \tabto{45mm }   Variable used when drawing functions.
+
+\noindent \textcolor{teal}{Selected} \tabto{25mm }   REAL  \tabto{45mm }  Variable used to indicate the simulator selected in simulations
+
+\noindent \textcolor{teal}{Printinput} \tabto{25mm }   REAL \tabto{45mm }   Variable used to specify how input lines are printed. Not properly used.
+
+\noindent \textcolor{teal}{Prinoutpu} \tabto{25mm }   REAL \tabto{45mm }   Variable used to indicate how much output is printed. Not properly used.
+
+
+
+
+
+
+\noindent \$\textcolor{teal}{Debug} \tabto{25mm }  REAL \tabto{45mm }   Variable used to put debugging mode on.
+
+
+
+
+
+
+
+
+
+\noindent \textcolor{teal}{Accepted}  \tabto{25mm }  REAL \tabto{45mm }   The number of accepted observations in functions using data sets.
+
+
+\noindent \textcolor{teal}{Arg} \tabto{25mm }   REAL  \tabto{45mm }   The default argument name when using transformation object as a function.
+
+
+
+\noindent \textcolor{teal}{Continue}  \tabto{25mm }  REAL \tabto{45mm }   If Continue has nonzero value then the control does not return to the
+
+
+
+\noindent \textcolor{teal}{Err} \tabto{25mm }  REAL \tabto{45mm }   If Continue prevents the control from returning to \textcolor{Red}{sit>} prompt
+
+
+
+
+
+
+
+\noindent \textcolor{teal}{Result} \tabto{25mm }   ?  \tabto{45mm }   The default name of output object.
+
+\subsubsection{Transformation object}
+\label{transo}
+A transformation object groups several operation commands together so that they
+can be used for different purposes by \textbf{J} functions and \textbf{J} objects. A
+transformation object contains the interpreted transformations. For more details
+see \textbf{J} function for defining transformation objects: \textcolor{VioletRed}{trans}().
+Transformation objects can be called using \textcolor{VioletRed}{call}() function, so that all
+transformations defined in the object are done once. Function result() also calls
+transformations but is also returning a value. When transformation objects are
+linked to data objects, then the transformations defined in trans-formation object
+are done separately for each observation.
+There is an implicit transformation object \$Cursor\$ which is used to run the
+command level. The name \$Cursor\$ may appear in error messages when doing
+commands at command level.  An-other transformation object \$Val\$ which is used to
+take care of the substitutions of "-sequences in the input programming. Some \textbf{J}
+functions use also implicitly transformations object \$Cursor2\$.
+\subsubsection{Simulator}
+\label{simulatoro}
+A simulator is a transformation object with a few additional parameters. The
+simulator is described in the Simulator chapter.
+\subsection{Code options}
+\label{codeopt}
+There are some special options which do not refer to object names or values. Some options
+define a small one-statement transformations to be used to compute something repeatedly.
+As these one-statement can use transformation objects as functions, the code option can actually
+execute long computations.
+\begin{example}[codeoptex]Codeoptions\\
+\label{codeoptex}
+dat=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(D,H),\textcolor{blue}{in->})\\
+3,2\\
+2,4\\
+4,1\\
+/\\
+\textcolor{VioletRed}{stat}(D,H,\textcolor{blue}{filter->}(H.gt.D)) \textcolor{green}{!\,only\,those\,observations\,are\,accepted\,which\,pass\,the\,filter}\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(\textcolor{VioletRed}{sin}(\$x)+1),\textcolor{blue}{x->}\$x,\textcolor{blue}{xrange->}(0,10),\textcolor{blue}{color->}Red,\textcolor{blue}{ylabel->}'\textcolor{VioletRed}{sin}(x)+1',\textcolor{blue}{xlabel->}'x',\textcolor{blue}{width->}2) \textcolor{green}{!\,the\,\textcolor{blue}{func->}\,option\,transmits\,the\,function\,to\,be\,drawn\,not
+\end{example}
+\subsection{Common options}
+\label{comoptions}
+There are some options which are used in many \textbf{J} functions. Such options are e.g.
+@@in2
+@@data
+All data sets will be
+treated logically as a single data set.
+If the function is using data sets, the daenta sets are given in \textcolor{blue}{data->} option. All data sets will be
+treated logically as a single data set. If a \textbf{J} function needs to access data, and the \textcolor{blue}{data->}
+option is not given then \textbf{J} uses default data which is determined as follows.
+If the user has defined an object list Data consisting of one or more data sets, then these will
+be used as the default data set. E.g.
+Data=\textcolor{VioletRed}{list}(dataa,datab)
+When a data set is created, it will automatically become the only element in LastData list. If
+the Data list has not been defined and there is no \textcolor{blue}{data->} option, then the LastData dataset
+will be used.
+@@trans
+In all functions which are using data sets, \textcolor{blue}{trans->} option defines a
+transformation set which is used in this function.
+@@filter
+\hline
+\vspace{0.2cm}
+\begin{example}[comoptex]data1\\
+\label{comoptex}
+dat=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(x,y),\textcolor{blue}{in->})\\
+1,2\\
+3,4\\
+5,6\\
+/\\
+tr=\textcolor{VioletRed}{trans}()\\
+xy=x*y\\
+x,y,xy;\\
+/\\
+\textcolor{VioletRed}{stat}(\textcolor{blue}{trans->}tr)
+\end{example}
+\subsection{Excuting transformation object explicitly \textcolor{VioletRed}{call}()}\index{call()}
+\label{call}
+
+Interpreted transformations in a transformation object can be automatically executed by other \textbf{J}
+functions or they can be executed explicitly using \textcolor{VioletRed}{call}() function.
+
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Arg \tabto{3cm} 1 \tabto{5cm}  TRANS \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The transformation object executed.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+
+\begin{note}
+A transformation objects can be used recursively, i.e. a transformation can be called from
+itself. The depth of recursion is not controlled by J, so going too deep in recursion will
+eventually lead to a system error.
+\end{note}
+\begin{example}[recursion]Recursion produces system crash.\\
+\label{recursion}
+tr=\textcolor{VioletRed}{trans}() \textcolor{green}{!level\,will\,be\,initialized\,as\,zero}\\
+level;\\
+level=level+1\\
+\textcolor{VioletRed}{call}(tr)\\
+/\\
+Continue=1 \,\textcolor{green}{!error\,is\,produced}\\
+\textcolor{VioletRed}{call}(tr)\\
+Continue=0
+\end{example}
+\subsection{\textbf{J} transformations}
+\label{jtrans}
+Most operation commands affecting \textbf{J} objects can be entered directly at the command level or
+packed into transformation object. In both cases the syntax and working is the same. A
+command line can define arithmetic operations for real variables or matrices, or they can
+include functions which operate on other \textbf{J} objects. General \textbf{J} functions can have arithmetic
+statements in their arguments or in the option values. In some cases the arguments must be
+object names. In principle it is possible to combine several general \textbf{J} functions in the same
+operation command line, but there may not be any useful applications yet, and possibly some
+error conditions would be generated.
+Definition: A numeric function is a \textbf{J} function which returns a single real value. These functions
+can be used within other transformations similarly as ordinary arithmetic functions. E.g.
+\textcolor{VioletRed}{weights}() is a numeric function returning the number of schedules having nonzero weight
+in a JLP-solution. Then \textcolor{VioletRed}{print}(\textcolor{VioletRed}{sqrt}(\textcolor{VioletRed}{weights}())+Pi) is a legal transformation.
+\subsection{Generating a transformation object \textcolor{VioletRed}{trans}()}\index{trans()}
+\label{trans}
+\textcolor{VioletRed}{trans}() function interprets lines from input paragraph following the \textcolor{VioletRed}{trans}() command and puts the
+interpreted code into an integer vector, which can be excuted in several places.
+If there are no arguments in the function, the all objected used within the
+transforamations are global. This may cause conflicts if there are several recursive
+functions operating at the same time with same objects. \textbf{J} checks some of
+these conflict situations, but not all.  These conflicts can be avoided by giving
+intended global arguments  in the list of arguments.
+Then an object 'ob' created e.g. with transformation object \textcolor{teal}{tr} have prefix
+]tr$\backslash$[ yelding ]tr$\backslash$ob[. Actually also these objects are global, but their prefix
+protects them so that they do not intervene with objects having the same name in the
+calling transformation objec.
+
+Each line in the input paragraph is read and interpreted and packed into a transformation
+object, and associated tr\%input and tr\%output lists are created for input and output
+variables. Objects can be in both lists. Objects having names starting
+with '\$' are not put into the input or output lists. The source code is saved in a text object
+tr\%source. List tr\%arg contains all arguments.
+!
+If a semicolon ';'  is at the end of an input line, then
+the output is printed if REAL variable Prindebug has value 1 or value>2 at
+the execution time. If the double semicolon ';;' is at the end then the output is
+printed if Printresult>1. If there is no output, but just list of objects, then these
+objects will be printed with semicolns.
+
+!
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output \tabto{3cm} 1 \tabto{5cm}  Data \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent The TRANS object generated.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Args \tabto{3cm} N|1- \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  Global objects.
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+Options \textcolor{blue}{input->}, \textcolor{blue}{local->}, \textcolor{blue}{matrix->}, \textcolor{blue}{arg->}, \textcolor{blue}{result->}, \textcolor{blue}{source->} of previous
+versions are obsolte.
+\end{note}
+\begin{note}
+The user can intervene the execution from console if the code calls \textcolor{VioletRed}{read}(\$,),
+\textcolor{VioletRed}{ask}(), \textcolor{VioletRed}{askc}() or \textcolor{VioletRed}{pause}() functions. During the pause one can give any command excepts
+such input programming command as \textcolor{Red}{;incl}.
+\end{note}
+\begin{note}
+The value of Printresult can be changed in other parts of the transformation, or
+in other transforamations called or during execution of \textcolor{VioletRed}{pause}().
+\end{note}
+
+\begin{note}
+Output variables in \textcolor{blue}{maketrans->} transformations whose name start with \$ are not put into the new data object.
+\end{note}
+\begin{example}[transex]Demonstrates also error handling\\
+\label{transex}
+tr=\textcolor{VioletRed}{trans}()\\
+\$x3=x1+3\\
+x2=2/\$x3;\\
+/\\
+tr\%input,tr\%output,tr\%source;\\
+x1=8\\
+\textcolor{VioletRed}{call}(tr)\\
+tr2=\textcolor{VioletRed}{trans}(x1,x2)\\
+\$x3=x1+3\\
+x2=2/\$x3;\\
+x3=x1+x2+\$x3;\\
+/\\
+tr2\%input,tr2\%output,tr2\%source;\\
+\textcolor{VioletRed}{call}(tr2)\\
+tr2\x3; \,\,\textcolor{green}{!x3\,is\,now\,local}\\
+tr3=\textcolor{VioletRed}{trans}()\\
+x1=-3\\
+\textcolor{VioletRed}{call}(tr) \textcolor{green}{!this\,is\,causing\,division\,by\,zero}\\
+/\\
+Continue=1 \,\,\textcolor{green}{!\,continue\,after\,error}\\
+\textcolor{VioletRed}{call}(tr3)
+\end{example}
+\color{Green}
+\begin{verbatim}
+sit>transex
+<;incl(exfile,from->transex)
+
+
+<tr=trans()
+<$x3=x1+3
+<x2=2/$x3;
+</
+<tr%input,tr%output,tr%source;
+tr%input is list with            2  elements:
+x1 $x3
+tr%output is list with            1  elements:
+x2
+tr%source is text object:
+1 $x3=x1+3
+2 x2=2/$x3;
+3 /
+///end of text object
+
+<x1=8
+
+
+<call(tr)
+x2=0.18181818
+
+<tr2=trans(x1,x2)
+<$x3=x1+3
+<x2=2/$x3;
+<x3=x1+x2+$x3;
+</
+<tr2%input,tr2%output,tr2%source;
+tr2%input is list with            1  elements:
+x1
+tr2%output is list with            1  elements:
+x2
+tr2%source is text object:
+1 $x3=x1+3
+2 x2=2/$x3;
+3 x3=x1+x2+$x3;
+4 /
+///end of text object
+
+<call(tr2)
+x2=0.18181818
+
+tr2\x3=19.1818181
+
+<tr2\x3;
+tr2\x3=19.1818181
+
+<tr3=trans()
+<x1=-3
+<call(tr)
+</
+<Continue=1
+<call(tr3)
+*division by zero
+*****error on row            2  in tr%source
+x2=2/$x3;
+recursion level set to    3.0000000000000000
+
+*****error on row            2  in tr3%source
+call(tr)
+recursion level set to    2.0000000000000000
+
+*err* transformation set=$Cursor$
+recursion level set to    1.0000000000000000
+****cleaned input
+call(tr3)
+*Continue even if error has occured
+<;return
+\end{verbatim}
+\color{Black}
+\subsection{Using a transformation object as a function}
+\label{transfunc}
+It is now possible to use a transformation object as a function which computes new
+objects when generating arguments for functions or options,
+or values of code options, or in any place within a transformation object.
+If {tr} is a transformation and the transformation computes an object {A} then
+{tr(A)} is first calling transformation {tr} and provides then object {A} into this place.
+As the transformation computes also other objects which are computed within it, also thes objects
+are available. At this point it is important to note that arguments of
+a transformation line are computed from right to left, because options must be computed before
+entering into a function.
+\begin{example}[transfunc]Transformation as a function\\
+\label{transfunc}
+delete\_o(a,c)\\
+tra=\textcolor{VioletRed}{trans}()\\
+a=8;\\
+c=2;\\
+/\\
+trb=\textcolor{VioletRed}{trans}()\\
+a=5;\\
+c=1;\\
+/\\
+c=2\\
+a=c+trb(a)+c+tra(a);
+\end{example}
+\subsection{Transformation control structures}
+\label{transcont}
+Within \textbf{J} transformations, there can be similar controls structures as in the input programming.
+The  difference  is  that  these  will  remain  as  part  of  the  transformation  set.  Only  the
+'\textcolor{VioletRed}{if}()output=â€¦'structure is allowed at the command level, other are possible only within a
+transformations set.
+\subsubsection{\textcolor{VioletRed}{if}()}\index{if()}
+\label{if}
+
+\textcolor{VioletRed}{if}()j\_statementâ€¦ \newline
+The one line if-statement.
+\subsubsection{\textcolor{VioletRed}{if}() elseif() else endif}\index{if()}
+\label{ifthen}
+There can be 4 nested \textcolor{VioletRed}{if}()then structures. If-then-structures are not
+allowed at command level.
+
+\\
+\textcolor{VioletRed}{if}()then
+\\
+â€¦.
+\\
+elseif()then
+\\
+â€¦
+\\
+else
+\\
+â€¦.
+\\
+endif
+\\
+\subsection{Loops and control strucures}
+\label{loops}
+This section describes nonstadard functions.
+\subsection{return}
+\label{return}
+Return from a transformation set to the transformation object where \textcolor{VioletRed}{call}()
+function was, or  to the include file with \textcolor{VioletRed}{call}(), or to the \textcolor{Red}{sit>} promt,
+is \textcolor{VioletRed}{call}() was at \textcolor{Red}{sit>}.
+\begin{example}[retex]example of return and goto ()\\
+\label{retex}
+tr=\textcolor{VioletRed}{trans}()\\
+ad1:r=\textcolor{VioletRed}{ran}();\\
+\textcolor{VioletRed}{if}(r.lt.0.2)return\\
+\textcolor{VioletRed}{goto}(ad1)\\
+/\\
+\textcolor{VioletRed}{call}(tr)
+\end{example}
+\begin{note}
+return is automatically put to the end of transformation object.
+\end{note}
+\begin{note}
+Labels in a transformation object are without ';' as the addresses in an include file start with ';'.
+\end{note}
+
+\subsection{\textcolor{VioletRed}{errexit}()}\index{errexit()}
+\label{errexit}
+Function \textcolor{VioletRed}{errexit}() returns the control to \textcolor{Red}{sit>} prompt with a message similarly
+as when an error occurs.
+
+\begin{example}[errexitex]itex\\
+\label{errexitex}
+tr=\textcolor{VioletRed}{trans}()\\
+\textcolor{VioletRed}{if}(a.eq.0)\textcolor{VioletRed}{errexit}('illegal value ',a)\\
+s=3/a; \textcolor{green}{!\,division\,with\,zero\,is\,teste\,automatically}\\
+/\\
+a=3.7\\
+\textcolor{VioletRed}{call}(tr)\\
+tr(s); \textcolor{green}{!tr\,can\,also\,be\,used\,as\,a\,function}\\
+a=0\\
+Continue=1 \,\textcolor{green}{!Do\,not\,stop\,in\,thsi\,seflmade\,error}\\
+\textcolor{VioletRed}{call}(tr)\\
+Continue=0
+\end{example}
+\subsection{\textcolor{VioletRed}{goto}()}\index{goto()}
+\label{goto}
+Control can be transfered to a line in a transformation set with \textcolor{VioletRed}{goto}().
+\begin{example}[gotoex]\\
+\label{gotoex}
+tr=\textcolor{VioletRed}{trans}()\\
+i=0\\
+\textcolor{VioletRed}{if}(i.eq.0)\textcolor{VioletRed}{goto}(koe)\\
+'here';\\
+koe:ch='here2';\\
+/\\
+\textcolor{VioletRed}{call}(tr)\\
+ch;
+
+\end{example}
+
+\begin{note}
+It is not allowed to jump in to a loop or into if -then structure. This is
+checked already in in the interpreter.
+\end{note}
+\begin{note}
+It is not yet possible to continue within an include file using Continue=1.
+\end{note}
+\begin{note}
+It is not recommended to use \textcolor{VioletRed}{goto}() according to modern computation practices.
+However, it was easier to implement cycle and exitdo with \textcolor{VioletRed}{goto}(), especially if
+cycle or exitdo does not apply hte innermost do-loop.
+\end{note}
+\subsection{Numeric operations}
+\label{numer}
+An arithmetic expression consisting of ordinary arithmetic operations is formed in
+the standard way. The operations are in the order of their precedence.
+\begin{itemize}
+\item[\textbf{J}] - unary minus
+\item[\textbf{J}] *** integer power
+\item[\textbf{J}] ** or \^ real power
+\item[\textbf{J}] * multiplication
+\item[\textbf{J}] / division
+\item[\textbf{J}] + addition
+\item[\textbf{J}] - subtraction
+\end{itemize}
+
+The reason for having a different integer power is that it is faster to compute and a negative
+value can have an integer power but not a real power.
+
+In matrix computations there are two addtional opertations.
+
+\begin{itemize}
+\item[\textbf{J}] *. elementwise product (Hadamard product)
+\item[\textbf{J}] /. elementwise division
+\end{itemize}
+
+The matrix operations are explained in section ?. Their operation rules extent
+the standard rules.
+\subsection{Logical and relational expressions}
+\label{logic}
+There are following relational and logical operations. The first alternatives
+follow Fortan style:
+\begin{itemize}
+\item[\textbf{J}] .eq. == equal to
+\item[\textbf{J}] .ne. <> not equal
+\item[\textbf{J}] .gt. > greater than
+\item[\textbf{J}] .ge. >= greater or equal
+\item[\textbf{J}].lt. < less than
+\item[\textbf{J}] .le. <= less or equal
+\item[\textbf{J}].not. $\sim$\,negation
+\item[\textbf{J}] .and. & conjunction
+\item[\textbf{J}] .or. disjunction
+\item[\textbf{J}] .eqv. equivalent.
+\item[\textbf{J}] .neqv. not equivalent
+\end{itemize}
+
+The relational and logical expressions produce value 1 for True and value 0 for False.
+Note: Testing equivalence can be done also using 'equal to' and 'not equal', as the same truth
+value is expressed with the same numeric value.
+\begin{note}
+when the truth value of an expression is tested with \textcolor{VioletRed}{if}(), then all nonzero real values
+means that the expression is true.
+\end{note}
+
+
+\subsection{Arithmetic functions}
+\label{arfu}
+The arithmetic functions return single REAL value or a MATRIX.
+\textcolor{VioletRed}{sqrt}(), \textcolor{VioletRed}{sqrt2}(), \textcolor{VioletRed}{exp}(), \textcolor{VioletRed}{log}(), \textcolor{VioletRed}{log10}(), \textcolor{VioletRed}{abs}()
+\begin{itemize}
+\item[\textbf{J}] \textcolor{VioletRed}{sqrt}(x) square root, \textcolor{VioletRed}{sqrt}(0) is defined to be 0, negative argument produce error.
+If {x} is matrix, then an error occurs if any elemet is negative.
+\item[\textbf{J}] \textcolor{VioletRed}{sqrt2}(x) If {x} or an element of {x} is negative then \$\textcolor{VioletRed}{sqrt2}()=-\textcolor{VioletRed}{sqrt}()\$. Actually \textcolor{VioletRed}{sqrt2}() might be a
+useful sigmoidal function in modeling context.
+\item[\textbf{J}] \textcolor{VioletRed}{exp}(x) \$e\$ to power {x}. If {x}>88, then \textbf{J} produces error in order to avoid system
+crash.
+\item[\textbf{J}] \textcolor{VioletRed}{log}(x) natural logarithm
+\item[\textbf{J}] \textcolor{VioletRed}{log10}(x) base 10 logarithm
+\item[\textbf{J}] \textcolor{VioletRed}{abs}(x) absolute value
+\end{itemize}
+
+Real to integer conversion
+\begin{itemize}
+\item[\textbf{J}] \textcolor{VioletRed}{nint}(x) nearest integer value
+\item[\textbf{J}] \textcolor{VioletRed}{nint}(x,modulo) returns modulo*nint(x/modulo) ,e.g.\textcolor{VioletRed}{nint}(48,5)=50; \textcolor{VioletRed}{nint}(47,5)=45;
+\item[\textbf{J}] \textcolor{VioletRed}{int}(x) integer value obtained by truncation
+\item[\textbf{J}] \textcolor{VioletRed}{int}(x,modulo) returns modulo*int(x/modulo), e.g. \textcolor{VioletRed}{int}(48,5)=45
+\item[\textbf{J}] \textcolor{VioletRed}{ceiling}(x) smallest integer greater than or equal to {x}.
+\item[\textbf{J}] \textcolor{VioletRed}{ceiling}(x,modulo) returns modulo*ceiling(x/modulo), e.g. \textcolor{VioletRed}{ceiling}(47,5)=50.
+\item[\textbf{J}] \textcolor{VioletRed}{floor}(x) greatest integer smaller than or equal to {x}.
+\item[\textbf{J}] \textcolor{VioletRed}{floor}(x,modulo) returns modulo*floor(x/modulo), e.g. \textcolor{VioletRed}{floor}(47,5)=45.
+\end{itemize}
+
+The following rules apply both for \textcolor{VioletRed}{min}() and \textcolor{VioletRed}{max}(). The rules are presented here only for \textcolor{VioletRed}{min}().
+\begin{itemize}
+\item[\textbf{J}] \textcolor{VioletRed}{min}(x1,...,xn): \$n>1\$ and all arguments are REAL, \textcolor{teal}{Result} is REAL.
+\item[\textbf{J}] \textcolor{VioletRed}{min}(A): If \textcolor{teal}{A} is matrix then the result result is row vector containg minumum
+of each column. If \textcolor{teal}{A} is a column vector, \textcolor{teal}{Result} is REAL.
+\item[\textbf{J}] \textcolor{VioletRed}{min}(A,\textcolor{blue}{any->}) If \textcolor{teal}{A} is matrix, then \textcolor{teal}{Result} minimum over all elements.
+\item[\textbf{J}] \textcolor{VioletRed}{min}(x,A) If \textcolor{teal}{x} is REAL and \textcolor{teal}{A} is matrix, then \textcolor{teal}{Result} is
+matrix with the same dimensions as \textcolor{teal}{A} and
+\textcolor{teal}{Result}(i,j)=\textcolor{VioletRed}{max}(\textcolor{teal}{x},\textcolor{teal}{A}(i,j)). The order of arguments does not matter.
+\item[\textbf{J}] \textcolor{VioletRed}{min}(A,B), \textcolor{teal}{A} and \textcolor{teal}{B} compatible matrices. \textcolor{teal}{Result} is amatrix with the same dimesnions containg elementwise
+minimums.
+\end{itemize}
+\subsubsection{Matrices and vectors}
+\label{matrixo}
+Matrices and vectors are generated with the \textcolor{VioletRed}{matrix}() function or they are
+produced by matrix operations, matrix functions or by other \textbf{J} functions. E.g.
+the \textcolor{VioletRed}{data}() function is producing a data matrix as a part of the compound data
+object. Matrix elements can be used in arithmetic operations as input or output
+in similar way as real variables.
+See Matrix computations.
+\subsection{Matrix functions}
+\label{matrixf}
+There are matrix function which can create matrices (objects with type Matrix), take submatrices from larger matrices,
+make matrices from submatrices, compute statitics from matrices, solve linear equations,
+compute inverse and transpose of a matrix.
+Sums, differences and products of matrices are defined using ordinary arithmetic
+operations +,- and *. Arithmetic operations can combine scalars and matrices in the normal way.
+Now all matrices are in double precision.
+
+The arithemetic operations work for matrices as follows for arguments \textcolor{teal}{a1} and \textcolor{teal}{a2}
+\begin{itemize}
+\item[\textbf{J}] \textcolor{teal}{a1} + \textcolor{teal}{a2}
+\begin{itemize}
+\item[\textbf{J}] \textcolor{teal}{a1} and \textcolor{teal}{a2} can be compatibe matrices
+\item[\textbf{J}] \textcolor{teal}{a1} or \textcolor{teal}{a2} can be scalar (REAL) and the other argument is MATRIX.
+\item[\textbf{J}] \textcolor{teal}{a1} or \textcolor{teal}{a2} can be row vector and the other argument
+can be matrix having the same number
+of columns. Then the row vector is added to each row of the matrix. This is NONSTADARD.
+Similarly the other argument can be a colun vector and the other argument matrix having the same number of rows.
+Then the vector is added to each column of the matrix. NONSTANDARD.
+\end{itemize}
+
+\end{itemize}
+
+The same computation rules apply for operations -, *. (elementwise product), and
+/. (elemetwise division). The same rules apply also for logical operations,
+except the nonstandard rules do not apply.
+
+For multiplication \textcolor{teal}{a1} * \textcolor{teal}{a2}, either of the arguments can be scalar,
+and the other matrix or LIST of REAL objects.
+When \textcolor{teal}{a1} and \textcolor{teal}{a2} are matrices, standar matrix multiplication rules apply.
+
+When \textcolor{teal}{a1} or \textcolor{teal}{a2} is LIST of REAL values then, it works exacty as
+a column vector, when it is on the input side.  The elements are eqaul
+to the values of the REAL elements. When a LIST is an output of matrix
+computaions, the an error occurs if the output of the matrix operation is
+not comaptibel with the number of elemets in the LIST.
+
+
+\begin{example}[matrixop]Matrix operations\\
+\label{matrixop}
+A=\textcolor{VioletRed}{matrix}(3,4,\textcolor{blue}{do->});\\
+A+2;\\
+A-1;\\
+2*A;\\
+A*.\textcolor{VioletRed}{matrix}(3,4,\textcolor{blue}{do->}2);\\
+A/.A;\\
+b=\textcolor{VioletRed}{matrix}(4,\textcolor{blue}{values->}(1,3,6,8));\\
+A*b;\\
+Continue=1 \,\textcolor{green}{!Error}\\
+A*.b;\\
+A+b(1,-3); \,\textcolor{green}{!\,NONSTANDARD}\\
+B=\textcolor{VioletRed}{matrix}(3,4,\textcolor{blue}{values->}2);\\
+A;\\
+A.eq.B;\\
+li=\textcolor{VioletRed}{list}(x1...x3)\\
+li=4,5,7;\\
+A+li;\\
+li=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{do->});\\
+@li;\\
+A+li;\\
+b*A;\\
+A+\textcolor{VioletRed}{t}(b);\\
+li=\textcolor{VioletRed}{matrix}(4,\textcolor{blue}{do->});\\
+Continue=0
+\end{example}
+\subsection{Create a matrix: \textcolor{VioletRed}{matrix}()}\index{matrix()}
+\label{matrix}
+Function \textcolor{VioletRed}{matrix}() creates a matrix and puts REAL values to the elements. Element values
+can be read from the input paragraph, file, or the values can be generated
+using \textcolor{blue}{values->} option, or sequential values can be generated
+using \textcolor{blue}{do->} option. Function \textcolor{VioletRed}{matrix}() can generate a diagonal and block diagonal matrix.
+A matrix can be generated from submatrices by using matrices as arguments
+of the  \textcolor{blue}{values->} option. It should be noted that matrices are stored in row order.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output \tabto{3cm}  1 \tabto{5cm}   MATRIX | REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  If a 1x1 matrix is defined, the output will be REAL.
+The output can be a temporary matrix without name, if \textcolor{VioletRed}{matrix}() is an argument
+of an arithmetic function  or matrix function. If no element values are
+given in \textcolor{blue}{values->} or obtained from \textcolor{blue}{in->} input, all elemets get value zero.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Args \tabto{3cm} 0-2 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The dimension of the matrix. The first argument gives the number of rows,
+the second argument, if present, the number of columns.  If the matrix is generated from submatrices given in \textcolor{blue}{values->}, then the dimensions
+refer to the submatrix rows and submatrix columns. If there are no arguments, then the
+it should be possible to infer the dimensions from \textcolor{blue}{values->} option. If the
+first argument is \textcolor{teal}{Inf}, the the number of rows is determined by the number
+number of lines in source determined by \textcolor{blue}{in->}.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{in} \tabto{3cm} N|0|1 \tabto{5cm}  CHAR \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The input for values. \textcolor{blue}{in->} means that values are read in from
+the following input paragraps, \textcolor{blue}{in->}\textcolor{teal}{file} means that the values are read from file.
+in both cases a record must contain one row for the matrix.
+If there is reading error and values are read from the terminal, \textbf{J} gives
+possibility to continue with better luck, otherwise an error occurs.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{values} \tabto{3cm} N|1- \tabto{5cm}   REAL  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent values or MATRIX objects put to the matrix. The argumenst of
+\textcolor{blue}{values->} option go in the regular way
+through the interpreter, so the values can be obtained by computations. If only one REAL value is
+given then all diagonal elements are put equal to the value (ohers will be zero),
+if \textcolor{blue}{diag->} option is present, otherwise all elements are put equal to this value. If matrix dimensions
+are given, and there are fewer values than is the size the matrix, matrix is
+filled row by row using all values given in
+\textcolor{blue}{values->}. If there are more values as is the size, an error occurs unless there is
+\textcolor{blue}{any->} option present.
+Thus \textcolor{VioletRed}{matrix}(N,N,\textcolor{blue}{values->}1) generates the identity matrix.
+If value-> refers to one MATRIX,and \textcolor{blue}{diag->} is present then a block diagonal
+matrix is generated. Without \textcolor{blue}{diag->}, a partitioned matrix is generated having all
+submatrices equal
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{do}  \tabto{3cm} N|0-3 \tabto{5cm}  REAL   \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  A matrix of number sequences is generated, as followsws: \newline
+\textcolor{blue}{do->} Values 1,2,...,\textcolor{teal}{arg1} x \textcolor{teal}{arg2} are put into the matrix in the row order. \newline
+\textcolor{blue}{do->}5 Values 5,6,...,\textcolor{teal}{arg1} x \textcolor{teal}{arg2}+4 are put into the matrix \newline
+\textcolor{blue}{do->}
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{example}[matrixex]Example of generating matrices\\
+\label{matrixex}
+A=\textcolor{VioletRed}{matrix}(3,
+
+\end{example}
+
+\subsection{\textcolor{VioletRed}{getelem}(): extracting information from an object}\index{getelem()}
+\label{getelems}
+The origin of this function is the function which was used in previous versions
+to take an matrix element, which explains the name. Now it is used to extract
+also submatrices (e.g. a(1,-3,All)) , or to get value of an regression
+function or to compute
+a transforamtion and then take argument object as the result. E.g. if \textcolor{teal}{tr} is a transformation
+then the result of  \textcolor{teal}{tr}(\textcolor{teal}{a}) is object \textcolor{teal}{a} after calling \textcolor{teal}{tr}.
+\begin{note}
+If someone starts to use the own function property of the open source J, she/he
+probably would like to get the possiblity to extract information from her/his object types
+also. To implement this property requires some co-operation from my side.
+\end{note}
+\section{n datahead}
+\label{datahead}
+Data can be analyzed and processed either using matrix computations
+or using DATA objects. A DATA object is compound object
+linked to a data MATRIX and LIST object containing variable (column) names,
+some other information.
+When data ere used via DATA object in statistical or linear programming
+functions, the data are processed observarion by observation.
+It is possible to work using DATA object or using directly the data matrix, wharever is more
+convenient. It is posible make new data objects or new matrices
+by to extracting  columns of data matrix, computing matrices with matrix computations.
+It is possible to use data in hierarcchila way, This property is inherited fro JLP.
+There are two \textbf{J} functions which create DATA objects from files, \textcolor{VioletRed}{data}() and
+exceldta(). \textcolor{VioletRed}{data}() can create hierarchical data objects. Function \textcolor{VioletRed}{newdata}() creates  DATA object from matrices, which temselfs can be
+picked from data objects. Function \textcolor{VioletRed}{linkdata}() can link two data sets to make a hierarchical data.
+\begin{note}
+If a data file contains columns which are referred with variable names and some vectors,
+the it is practical to read data first into a matrix using \textcolor{VioletRed}{matrix}() function and then
+use matrix operations and \textcolor{VioletRed}{newdata}() to make DATA object with variable names and matrices.
+See Simulator section for an example.
+\end{note}
+\begin{note}
+\textcolor{VioletRed}{transdata}() function goes through DATA object similarly as statitical functions, but
+does not serve a specific purpose, just transforamtions defined in the TRANS object refreed with
+\textcolor{blue}{trans->} option are computed. See again the simulator section.
+\end{note}
+\begin{note}
+In earlier versions it was possible to give several data sets as arguments for \textcolor{blue}{data->} option.
+This festure is now deleted as it is possible to stack several data matrices and then use \textcolor{VioletRed}{newdata}() function to create a single data set.
+\end{note}
+\subsubsection{Text objects}
+\label{textob}
+Currently there are two text object types, the old text object TEXT and the new
+TXT. The TEXT object stores text in a long vector of single characters. The TXT
+object stores text in lines of 132 characters. The TEXT objects save memory but
+are not so easy to modify and use. Several \textbf{J}
+functions create associated text objects. \textbf{J} functions \textcolor{VioletRed}{text}() and \textcolor{VioletRed}{txt}()
+can be used to
+create text objects directly. All the names of \textbf{J} objects are also stored in a
+TEXT object called Names. The number of lines in a text objects can be obtained
+with \textcolor{VioletRed}{nrows}() function and the total number of characters can be obtained with
+\textcolor{VioletRed}{len}() function.
+\section{Figures}
+\label{figu}
+Figures are made using Gnuplot. \textbf{J} transmits information into Gnuplot using text files.
+\textbf{J} generates the files using .jfig extension. Necessary files are generated  by deleting old
+files without asking permission. If \textcolor{teal}{fig} is the output of a figure function, then
+\textbf{J} creates always, except in 3D, file with name \textcolor{teal}{fig}.jfig and possibly other files with
+.jfi0, jfi1  etc extensions.
+All figure functions use the following options.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output  \tabto{3cm}  1 \tabto{5cm}   FIGURE  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The FIGURE object created or updated
+@@figure
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+is possible to show a figure using \textcolor{VioletRed}{show}() function. It can have either the \textcolor{teal}{fig} object as the
+argument or the file name of \textcolor{teal}{fig}.jfig -file. Thus it is possible
+to edit the file using Gnuplot capabilites.
+\end{note}
+\begin{note}
+It is possible to change the terminal type used by Gnuplot by giving
+the name of the terminal to the predefine CHAR variable \textcolor{teal}{Terminal}.
+The default is \newline \textcolor{teal}{Terminal}='qt'.
+\end{note}
+\begin{note}
+The default writte by Gnuplot does not look nice and is not implemented.
+The user can write own legends using \textcolor{blue}{label->} option in \textcolor{VioletRed}{drawline}().
+\end{note}
+\begin{note}
+Easiest way to delete an nonmatrix object \textcolor{teal}{fi} is \textcolor{teal}{fi}=0, which makes it possible
+to use \textcolor{blue}{append->} also for an \textcolor{teal}{fi} wihtout the need to construct if then-
+structures.
+\end{note}
+\subsubsection{Figure object}
+\label{figureo}
+Graphic functions produce FIGURE objects. Each FIGURE object can consist of
+several subfigures. Each FIGURE object stores information of x- and y axes, the
+range of all x- and y-values, and for each sub-figure information of the ranges
+of x and y in the subfigure plus the subfigure type and the needed data values.
+Currently, when Gnuplot is used for graphics, most data values are stored
+in text files which Gnuplot reads. Function \textcolor{VioletRed}{plot3d}() is plotting 3-d figures without making a FIGURE object.
+See Plotting figures for more information.
+\section{Linear programming functions}
+\label{jlpintro}
+The linear programming (LP) functions are called jlp-functions. The jlp-functions can be used to define
+linear programming problems, solve them and access the results.
+The jlp-problems are defined using \textcolor{VioletRed}{problem}() function, and the problems can be solved using
+\textcolor{VioletRed}{jlp}() function. There are several ways to access the results.
+The main interest in jlp-functions may be in the forest planning problems, where
+a simualator has generate treatment schedules.
+There are four different applications of \textcolor{VioletRed}{jlp}() function.
+\begin{itemize}
+\item[\textbf{J}] Small ordinary LP problems with text input.
+\item[\textbf{J}] Large ordinary LP problems with MATRIX input.
+\item[\textbf{J}] Forest planning problems without factories.
+\item[\textbf{J}] Forest palnning problems with factories.
+\end{itemize}
+The problem definition for each case is generated with \textcolor{VioletRed}{problem}() function.
+These applications are presented in different subsections
+\section{Statistical functions}
+\label{statistics}
+There are several statistical functions which can be used to compute basic statistics
+linear and and nonlinear regression, class means, standard deviations and standard errors
+in one or two dimensional tables using data sets. There are also functions
+which can be used to compute statistics from matrices, but these are described
+in Section  \ref{matrix}
+\subsection{The main components of \textbf{J} program}
+\label{compo}
+The structure of \textbf{J} program
+\begin{itemize}
+\item[\textbf{J}] Input programming which generates text input for the interpreter (subroutine
+j\_getinput). \textbf{J} commands are obtained:
+\begin{itemize}
+\item[\textbf{J}] from \textcolor{Red}{sit>} prompt
+\item[\textbf{J}] form possibly nested include files
+\end{itemize}
+\item[\textbf{J}] Interpreter which generates from text lines integer vectors containing function indices,
+option indices and object indices (subroutine j\_interpret).
+\item[\textbf{J}] Function driver which executes the code in the interpreted integer vector
+(subroutine dotrans). The the function driver is using:
+\begin{itemize}
+\item[\textbf{J}] \textbf{J} functions which operate on arguments which are determined either as formal arguments or
+via options.
+\item[\textbf{J}] \textbf{J} objects
+\item[\textbf{J}] Global variables and matrices
+\item[\textbf{J}] Utility subroutines
+\end{itemize}
+
+
+\end{itemize}
+A user of \textbf{J} needs only input programming and \textbf{J} functions, but understanding of
+the other properties may help to understand waht is going on in a \textbf{J} session.
+\subsection{stributions}
+\label{distributions}
+Currently there are sepcial functions for the density funtion \textcolor{VioletRed}{pdf}() of normal distribution,
+cumulative distribution function \textcolor{VioletRed}{cdf}() for normal and chi2 distributions,
+frequncy funtion for binomial distribution, and frequnce funtion \textcolor{VioletRed}{negbin}() for the
+negative binomial distribution (providing Poisson as a special case).

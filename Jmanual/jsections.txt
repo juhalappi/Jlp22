@@ -1975,7 +1975,7 @@ s which need to be available. Tehy can be in the same folder as the exe files of
 ! then copies of the input objects are put into output objects. 
 
 
-! \end{itemize)
+! \end{itemize}
 ! endheader
 ! Ex assignex Examples of assignments 
 ! a=matrix(2,3);
@@ -2215,17 +2215,9 @@ a call to function assone()
 ! linear programming routines
 ! of J. Jussi Rasinmaki presented the software of Simosol 
 ! in the seminar 21.9.2018 celebrating the work of Pekka Kilkki.
-! When he did not mention J, which continues the work of Pekka Kilkki, 
-! and I did not 
-! find anything about J in the web pages of Simosol, 
+! When he did not mention J, which continues the work of Pekka Kilkki,  
 ! I asked whether they have stopped to use J.
-! Rasinmäki told that they are still using J, and he promised to mention the
- ! co-operation in their web pages. I think that in co-operation
- ! between research and 
- ! business, it would be necessary that the impact of research
- ! would be openly recocnized by the business partners so 
- ! that the funders of research know that the research has been useful. 
- ! Now Simsol is part of Afry.
+! Rasinmäki told that they are still using J. I do not know waht is the situation today.
  !endsection
  
 !Section preface3 J with factories: J2.0
@@ -2398,7 +2390,7 @@ a call to function assone()
  ! three years.
  !endsection
  
- !Section preface5 Retired and still waiting for open J
+ !Section preface5 Retired, frozen conflict
  ! After my retirement I was still hoping that some kind of co-operation
  ! without outside researcher status with Luke would be possible, and I
  ! participated in the application of factory optimization which was published in \ref{pekka}. 
@@ -2901,3 +2893,30 @@ a call to function assone()
 !Section dataf Functions for DATA objects
 !J contains now the following Functions for DATA objects.
 !endsection
+
+! Section statistical Statitical functions
+! There are curretly avalailable following stasttical functions.
+! endsection
+
+! Section lp Linear programming (JLP) functions
+! There are linear programming functions for defining an ordinaryt LP-problem or
+! LP problems found in forest manament planning.
+! endsection
+
+! Section Plotting Plotting figures
+! The graphiscs of the current version of J is produced Gnuplot. J offers nowan alternative interface
+! to Gnuplot, and it is quite easy to add more plotinng routines later.
+! endsection
+
+! Section spline Splines, stem splines,  and volume functions
+! There are several spline functions.
+!endsection
+
+!Section bit Bit functions
+! bit functions help to store large amound of binary variables in small space. 
+! These functions are used in domain calcualtions
+! endsection
+
+!Section misc Misc. functions
+! There are some functions which do not belong to previous classes.
+! endsection
