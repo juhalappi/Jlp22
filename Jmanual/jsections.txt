@@ -2274,11 +2274,7 @@ a call to function assone()
 ! Simosol made first simulator developments using J, but moved to other solutions before first
 ! published version of Simo software. Simosol however used the 
 ! linear programming routines
-! of J. Jussi Rasinmaki presented the software of Simosol 
-! in the seminar 21.9.2018 celebrating the work of Pekka Kilkki.
-! When he did not mention J, which continues the work of Pekka Kilkki,  
-! I asked whether they have stopped to use J.
-! Rasinmäki told that they are still using J. I do not know waht is the situation today.
+! of J.  They are still using J when being part of Afry.
  !endsection
  
 !Section preface3 J with factories: J2.0
