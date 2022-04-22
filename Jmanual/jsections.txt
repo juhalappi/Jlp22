@@ -568,7 +568,7 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 ! setoption() function in a special way. 
 !endsection
 
-!Section getelems getelem(): extracting information from an object
+!Section getelem0 getelem(): extracting information from an object
 ! The origin of this function is the function which was used in previous versions
 !to take an matrix element, which explains the name. Now it is used to extract 
 ! also submatrices (e.g. a(1,-3,All)) , or to get value of an regression 
@@ -693,24 +693,90 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
  ! the other properties may help to understand waht is going on in a J session.
 !endsection
 
-!Section pack The components of the software package available in Github
+!Section git Github
+! The package at github.com/juhalappi/j contains the following components
+!\begin{itemize}
+!\item[\textbf{J}] Data: \hspace{1cm} folder for data files
+!\begin{itemize}
+!\item[\textbf{J}] test.cda \hspace{1cm}example unit data file for small jlp() example
+!\item[\textbf{J}] test.xda \hspace{1cm}example schedule file for small jlp() example
+!\item[\textbf{J}]  test.inc \hspace{1cm}include file for the jlp() test
+
+!\end{itemize}
+!\item[\textbf{J}] J_R: \hspace{1cm} using J from R, courtesy of Lauri Meht\"atalo.
+!
+!\begin{itemize}
+!\item[\textbf{J}] j.par \hspace{1cm}decaul include file for starting J
+!\item[\textbf{J}] JR_0.0.tar.gz \hspace{1cm} File neede to us fortran subroutines in R
+!\item[\textbf{J}] testr.cda
+!\item[\textbf{J}] test.xda
+!\item[\textbf{J}] testr.inc \hspace{1cm} include file an jlp-example
+
+!\item[\textbf{J}] testr.inc
+
+
+!\end{itemize}
+
+!\item[\textbf{J}] Jbin:\hspace{1cm} binary .exe files and dll files
+!\begin{itemize}
+! \item[\textbf{J}] j3d.exe \hspace{1cm} Debug version of J, release version is 
+! provided after some testing period
+! \item[\textbf{J}] jindent.exe \hspace{1cm} indentation
+! \item[\textbf{J}] jmanual.exe \hspace{1cm} makes the latex code file jmanual.tex
+! \item[\textbf{J}] jpre.exe \hspace{1cm} the precompiler which generates the code 
+! for accessing variables in module
+! \item[\textbf{J}] dll:\hspace{1cm} libgcc_s_seh-1.dll, libgfortran-5.dll, libquadmath-0.dll and
+!  libwinpthread-1.dll which must be available in the path. e.g., in the same folder as the exe
+
+!\end{itemize}
+!\item[\textbf{J}] Jdoc_demo \hspace{1cm}documents and include file for running examples fro User's guide
+!\begin{itemize}
+! \item[\textbf{J}] hyvonenetal2019.pdf \hspace{1cm}facotory optimiazation paper
+! \item[\textbf{J}] J3.0_userguide_2021.pdf \hspace{1cm} old version of the manual, explains better some functions thant j3.pdf
+! \item[\textbf{J}]	J3.pdf \hspace{1cm} Users guide made with Latex
+! \item[\textbf{J}]	 J3_setup_development.docx \hspace{1cm} not up-to-date manual for developers
+! \item[\textbf{J}] jexamples.inc \hspace{1cm}include file which can be used to run all examples in the manual
+! and which is generated with jmanual.exe
+! \item[\textbf{J}] jlp92.pdf \hspace{1cm}Manual of old JLP which explains the theory behind the jlp algorithm
+! \item[\textbf{J}] lappilempinen.pdf \hspace{1cm}
+!\end{itemize}
+!\item[\textbf{J}] Jmanual: \hspace{1cm} Source files for making Latex code for 
+!the manual and the include file for running examples
+!\begin{itemize}
+! \item[\textbf{J}] jmanual.f90 \hspace{1cm}source for making the Latex code and jexamples.inc
+! \item[\textbf{J}] jmanual.tex \hspace{1cm}Latex code genrated with jmanual.exe
+! \item[\textbf{J}] jsections.txt \hspace{1cm}describes such manual sections not in source files
+! \item[\textbf{J}] jsections2.txt \hspace{1cm}tells in what order sections foun in jsections.txt 
+!and source files are put into the manual and what is the level of the sections
+! \item[\textbf{J}] main.tex main tex \hspace{1cm}code containd Latex definitions
+! \item[\textbf{J}] Makefile_debug \hspace{1cm}Makefile for making jmanual.exe
+!\end{itemize}
 ! 
-!endheader
-! \begin{itemize}
-! \item[\textbf{J}] Binary files for J found in Github folder Jbin
-	! \begin{itemize}
-	! \item[\textbf{J}] j3.0.exe: Fastest version of J.
-	! \item[\textbf{J}] j3.0_debug.exe: Version of J which shows which source lines are causing
-! 	memory limit violations.
-!\item[\textbf{J}] msys-2.0.dll, msys-gcc_s-seh-1.dll, msys-gfortran-5.dll, and
-! msys-quadmath-0.dll:  Msys dll
-s which need to be available. Tehy can be in the same folder as the exe files of J 
-	!\item[\textbf{J}] jmanual.exe: The program for generating the Latex code file jmanual.tex which produces this manual
-	! and the file jexample.inc which can be used to run all example in this guide.
-	!\item[\textbf{J}] jpre.exe: The precompler which gnerates code for accessing global variables.
-	! \item[\textbf{J}] jindent.exe: Program which makes indentation to source files and writes comments
-! that help to see how control structures are nested. 
-	! \end{itemize}
+!\item[\textbf{J}] Source :\hspace{1cm} source code before precompilation
+!\begin{itemize}
+!\item[\textbf{J}] fletcherd.for \hspace{1cm}Fletchers subroutines turned into double precision
+! \item[\textbf{J}] j.f90 \hspace{1cm}code for J functions
+! \item[\textbf{J}] jlp.f90 \hspace{1cm}code for linear programming
+! \item[\textbf{J}] j.main \hspace{1cm}main prorgam for calling J when used as is, if J is used as 
+!a subroutine then this must be made a subroutine
+! \item[\textbf{J}] jmodules.f90 \hspace{1cm}data structure definitions 
+! \item[\textbf{J}] jutilities.f90 \hspace{1cm}subroutines for handling objects etc.
+! \item[\textbf{J}] jsysdep_gfortran.f90 \hspace{1cm}system dependent routines
+! \item[\textbf{J}] matsub.f \hspace{1cm}subroutines obtainde from other sources, e.g. from Netlib
+! \item[\textbf{J}] other subroutines for setting up users own  function
+
+!\end{itemize}
+!\item[\textbf{J}] Source2 :\hspace{1cm} source code files after precompilation
+! in addition to files in Source (such files which are not precompiled are put in both folders)
+!\begin{itemize}
+! \item[\textbf{J}] makefile_debug \hspace{1cm}makefile for making debug- version
+!! \item[\textbf{J}] makefile_release\hspace{1cm} makefile for making release- version
+!\end{itemize}
+!\item[\textbf{J}] LICENSE:the license file
+!\item[\textbf{J}] README.m :readme file
+
+!\end{itemize}
+! 
 !endsection
 
 
@@ -1051,10 +1117,6 @@ s which need to be available. Tehy can be in the same folder as the exe files of
 ! functions use also implicitly transformations object $Cursor2$.
 !endsection
 
-!Section simulatoro	Simulator
-! A simulator is a transformation object with a few additional parameters. The 
-! simulator is described in the Simulator chapter.
-!endsection
 
 
 
@@ -1412,12 +1474,7 @@ s which need to be available. Tehy can be in the same folder as the exe files of
 ! statistical functions. 
 !endsection 
 
-!Section distributions
-! Currently there are sepcial functions for the density funtion pdf() of normal distribution,
-! cumulative distribution function cdf() for normal and chi2 distributions,
-! frequncy funtion for binomial distribution, and frequnce funtion negbin() for the
-! negative binomial distribution (providing Poisson as a special case).
-! endsection
+
 
 
 !Section Data Data functions 
@@ -2035,7 +2092,7 @@ a call to function assone()
 !endnote
 ! endsection
 
-!Section joperation 
+!Section joperation Operation of J
 !In this section the main tools in code devlopment in a project are presented. It is usefule to organize
 ! the project sript into one script file, which conatians swections starting with a lable and ending
 ! with ;return. 
@@ -2119,12 +2176,16 @@ a call to function assone()
 ! with the jmanual program shows an examle.
 
 !Section preface1 Preface
+! First I thank my grand daughter for the permission to use the portrait
+! she drawed for my 70 yr birthday. \\
+
 ! I will here describe the history of J in this preface in unusual
 ! length and detail. Readers interested ony in the use of the current 
 ! software can perhasp look briefly the subsection Freedom. The reason
 !  why I'm going through in detail
-! the difficulties with Luke is that I think that the leaders of Luke did not
-! treat me as researchers should be treated. I think also that the leaders of Luke 
+! the difficulties with Luke is that I think that the policy insisted by the leaders of Luke
+! that the researchers of Luke do not have any moral or legal right to publish the results of their 
+!research should be discussed. I think also that the leaders of Luke 
 ! were willing to waste large amount of taxpayers' money when the prevented the
 ! development and timely publication of J software. I hope that this part of the
 !preface gets some attention also outside the potential users of the software e.g. 
@@ -2255,7 +2316,7 @@ a call to function assone()
 ! J version 2.0. published in 2013.
 !endsection
 
-!Section preface4 Battle over open-source J3.0 in Luke starts
+!Section preface4 Battle over open-source J3.0  starts in Luke
 
  ! Initially I made the software so that only I could understand the structure and the code. 
  ! When Reetta started to work with me in factory problems,
@@ -2788,6 +2849,8 @@ a call to function assone()
 	! 'me too' traumas have started to heal slowly. Probably this healing process takes 
 ! a long time, and I cannot very soon say let bygones be bygones.
 
+! Juha Lappi, Suonenjoki 22.4.2022 
+
 ! endsection
 
 !Section own Own functions:  o1_o1_funcs(), o2_funcs() and o3_funcs()
@@ -2854,10 +2917,17 @@ a call to function assone()
  ! The following list functions are available
  ! endsection
  
+ !Section JR Co-operation between J and R
+ !Is is possible to run R scripst from J and J scripts from R. 
+!endsection
 
-
-
-
+!Section  Rcalls Calling J-scripts from R
+! File JR_0.0.tar.gz in the folder J_R contains R tarball for taking J  subroutines into R.
+! With R command JR(”testr.inc”) the example jp problem can be solved from R.
+! Later lauri Mehtat\"alo will develop this cooention further so tha R can directly access also 
+! matrices in the J memory.
+!For further information contakt lauri.mehtatalo@luke.fi
+!endsection
 
 ! Section texts Creating two types of text objects
 ! The are now two object types for text.
@@ -2890,13 +2960,7 @@ a call to function assone()
 !J contains now the following matrix functions.
 !endsection
 
-!Section dataf Functions for DATA objects
-!J contains now the following Functions for DATA objects.
-!endsection
 
-! Section statistical Statitical functions
-! There are curretly avalailable following stasttical functions.
-! endsection
 
 ! Section lp Linear programming (JLP) functions
 ! There are linear programming functions for defining an ordinaryt LP-problem or
@@ -2919,4 +2983,83 @@ a call to function assone()
 
 !Section misc Misc. functions
 ! There are some functions which do not belong to previous classes.
+! endsection
+
+! Section jbib LATEX
+! endheader
+! Latex 
+! \begin{thebibliography}{9}
+
+! \bibitem{dan}
+   !  Dantzig, G.B. and VanSlyke, R.M.  (1967)
+    ! \emph{Generalized upper bounding techniques}
+    ! J Compt Sys Sci 1(10),213-226
+				
+ ! \bibitem{flet}Fletcher,R.  1996. Dense factors of Sparse matrices. Dundee
+ ! Numerical Analysis Report NA/170.
+ 
+  
+! \bibitem{howard}, 
+    ! Hoganson, H.M. and Rose, D.W.  (1984),
+    ! \emph{A simulation approach for optimal timber management scheduling}
+   ! Forest Science, 30:220-238
+	  
+ ! \bibitem{dtran}Hoganson, H.M. and Kapple,  D.C. (1991),
+    ! \emph{DTRAN version 1.0. A multi-market timber supply model. Users’ guide}
+   ! Minneapolis: University of Minnesota Department of Forest
+! Resources Staff Series Paper 82,
+
+! \bibitem{pekka}
+!  Hyv\"onen, Pekka, Lempinen, Reetta,  
+		! Lappi, Juha, Laitila, Juha  and Packalen, Tuula (2019)
+   ! \emph{Joining up optimisation of wood supply chains with forest},
+    ! Forestry an international journal of forestry,
+    ! 93(1):163--177,
+    ! DOI = https://doi.org/10.1093/forestry/cpz058
+	
+ ! \bibitem{JLP} Lappi, Juha (1992) \emph{JLP – a linear programming package for
+! management planning} Finnish Forest Research Institute
+! Research papers; 414, 134 p.
+  
+ 
+ 
+ ! \bibitem{LL},
+    !Lappi, Juha and Lempinen, Reetta (2014)
+    ! \emph{A linear programming algorithm and software 
+		! for forest-level planning problems
+   ! including factories}
+    ! Scandinavian Journal of Forest Research,29 Supplement 178–-184",
+   
+		! DOI =  http://dx.doi.org/10.1080/02827581.2014.886714
+ 
+ 
+ 
+ 
+
+    
+! \end{thebibliography}
+! endlatex
+! endsection
+
+! Section future Future development
+! I think that the current version of J provides many possibilities for future developments.
+! For instance:
+! \begin{itemize}
+! \item\item[\textbf{J}] The current version does not have any special functions 
+! for making simulators. The new goto() commands, possibility to work with submatrices, 
+! and the new transdata() function provide muc more efficient ways to develop simulators.
+! Examples will be provided shortly.
+! \item[\textbf{J}] Using the possibility to compute derivatives using the analytic derivates makes it quite straightforward
+! to make it possible to have a nonlinear objective function
+! \item[\textbf{J}] It would be quite easy to develop J so that integer solution is produced with respect to the 
+! schedule weight.
+! \item[\textbf{J}] It would be interesting to see how J can put to work with Heureka.
+! \item[\textbf{J}] The possiblity to run R scripts from J and J scripts from R provide new possiblities.
+! \item[\textbf{J}] J can now be used as an interface to Gnuplot. Google search show how many possiblities Gnuplot provides.
+! It is quite straightforward to implement these grpahs if it is not currently possible.
+! \item[\textbf{J}] The possibility to generate random numbers from any discrete or continuous distribution provide new 
+! possibilities to stdy the effects of random errors in the optimization.
+! \item[\textbf{J}] The new tools for analyzing grouped data are usefulf when studying the grouped data. it would
+! be straightforward to implement mixed model methods based on expected means squares.
+! \end{itemize}
 ! endsection

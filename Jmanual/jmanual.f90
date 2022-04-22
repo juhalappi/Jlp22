@@ -325,6 +325,7 @@ goto 235
 	
 !		write(20,'(a)')';if(wait);pause'
 		write(20,'(a)')';return'
+		write(20,'(a)')' '
 		do ine=1,nexample
 		lef=len_trim(exfile(ine))
 			write(20,'(a)')' '
@@ -336,6 +337,7 @@ goto 235
 			enddo	
 			write(20,'(a)')';if(wait);pause'
 			write(20,'(a)')';return'
+			write(20,'(a)')' '
 			
 		enddo
 		
@@ -377,32 +379,34 @@ goto 235
 			if(sectionlabel(isec)(1:lelabel).eq.line(ifirst(2):ilast(2)))then
 				lesec=j_len_trim(section(isec))
 				leni=len_trim(sectionindex(isec))
-			!	if(isec.eq.54)write(6,*)'isec ',isec,sectionindex(isec),leni
-				!if(isec.eq.54) stop 'kdkkd'
-				if(line(le:le).eq.'*')then
-					if(leni.gt.0)then
-					
-						write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'*{'//&
-						section(isec)(1:lesec)//'} \index{'// &
-						sectionindex(isec)(1:leni)//'}  % '//line(ifirst(2):ilast(2))
+				if(section(isec)(1:5).ne.'LATEX')then
+				!	if(isec.eq.54)write(6,*)'isec ',isec,sectionindex(isec),leni
+					!if(isec.eq.54) stop 'kdkkd'
+					if(line(le:le).eq.'*')then
+						if(leni.gt.0)then
+						
+							write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'*{'//&
+							section(isec)(1:lesec)//'} \index{'// &
+							sectionindex(isec)(1:leni)//'}  % '//line(ifirst(2):ilast(2))
+						else
+							!if(leni.gt.0)then
+							write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'*{'//section(isec)(1:lesec)//'} ' // &
+							' % '//line(ifirst(2):ilast(2))
+						
+						endif
+						write(20,'(a)')'	\addcontentsline{toc}{section}{'//section(isec)(1:lesec)//'}'
 					else
-						!if(leni.gt.0)then
-						write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'*{'//section(isec)(1:lesec)//'} ' // &
-						' % '//line(ifirst(2):ilast(2))
+						if(leni.gt.0)then
+							write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}'//&
+						 '\index{'//sectionindex(isec)(1:leni)//'}'
+						else
+							write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}'
+						endif
+					endif
 					
-					endif
-					write(20,'(a)')'	\addcontentsline{toc}{section}{'//section(isec)(1:lesec)//'}'
-				else
-					if(leni.gt.0)then
-						write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}'//&
-					 '\index{'//sectionindex(isec)(1:leni)//'}'
-					else
-						write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}'
-					endif
+					
+					write(20,'(a)')'\label{'//sectionlabel(isec)(1:lelabel)//'}'
 				endif
-				
-				
-				write(20,'(a)')'\label{'//sectionlabel(isec)(1:lelabel)//'}'
 				nl2=nl2+2
 				write(6,*)'     writing section ',isec, ' ',sectionlabel(isec)(1:lelabel),'  ',lsection(isec)+2,' lines'
 				do j=1,lsection(isec)
@@ -421,17 +425,20 @@ goto 235
 		stop 'section not found'
 !		goto 700
 999	 write(6,*)' ' 
-	
+	nonw=0
 	do isec=1,nsection
 	lelabel=j_len_trim(sectionlabel(isec))
 	if(.not.written(isec))then
 		write(6,*)'**Section ',isec,' ',sectionlabel(isec)(1:lelabel),' not written earlier'
 		lesec=j_len_trim(section(isec))
+		nonw=nonw+1
 1000 format(a,$)
-	if(nonw.eq.0)then
+	if(nonw.eq.1)then
 		write(6,1000)'are sections not written earlie written now (y/n)'
 		read(5,'(a)')yesno
-		if(yesno.ne.'y'.and.yesno.ne.'Y')exit
+		if(yesno.ne.'y'.and.yesno.ne.'Y')cycle
+	else
+		if(yesno.ne.'y'.and.yesno.ne.'Y')cycle
 	endif
 		write(20,'(a)')'\section*{'//section(isec)(1:lesec)//'}' 
 		write(20,'(a)')'EXTRAAAAAAAAAAAAAAA'
@@ -636,6 +643,10 @@ goto 790
 	endif
 	
 756	if(line(ifirst(1):ilast(1)).eq.'Section')then
+	if(nwords.lt.3)then
+		 write(6,*)'line ',nl,' in ',infile(1:linfile), ' section does not have title '
+		 stop 'no title'
+	endif
 		call testblock()
 		nlsection=nl
 !		if(nlsection.gt.nlblock)then

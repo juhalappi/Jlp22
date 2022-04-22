@@ -61,7 +61,7 @@ ALL=';incl(exfile,from->ALL)'
 ;return
  
 ;inpuparag:  
-! Example of inputparagraph (line   1153 file jsections.txt)
+! Example of inputparagraph (line   1215 file jsections.txt)
 tr=trans()
 a=log(b)
 write($,'(~sinlog is=~,f4.0)',sin(a))
@@ -74,7 +74,7 @@ b=matrix(2,3,in->)
 ;return
  
 ;shortex:  
-! Example of using shortcuts and include files (line   1171 file jsections.txt)
+! Example of using shortcuts and include files (line   1233 file jsections.txt)
 short1='sin(Pi)+cos(Pi);'
 short1
 te=text()
@@ -101,7 +101,7 @@ te=0 !delete also text object te
 ;return
  
 ;dotsex:  
-! Example of dots construct (line   1301 file jsections.txt)
+! Example of dots construct (line   1363 file jsections.txt)
 dat=data(read->(x4...x7),in->)
 1,2,3,4
 11,12,13,14
@@ -119,7 +119,7 @@ Continue=0
 ;return
  
 ;jfuncex:  
-! Examples of J-functions (line   1473 file jsections.txt)
+! Examples of J-functions (line   1530 file jsections.txt)
 a = sin(cos(c)+b) ! Usual arithmetic functions have numeric values as arguments
 ! here the value of the argument of cos is obtained by 'computing' the value of real variable c.
 Dm=matrix(do->(0.1,40))
@@ -138,7 +138,7 @@ c = inverse(h+t(g)); ! The argument can be intermediate result from matrix compu
 ;return
  
 ;codeoptex:  
-! Codeoptions (line   1499 file jsections.txt)
+! Codeoptions (line   1556 file jsections.txt)
 dat=data(read->(D,H),in->)
 3,2
 2,4
@@ -150,7 +150,7 @@ fi=draw(func->(sin($x)+1),x->$x,xrange->(0,10),color->Red,ylabel->'sin(x)+1',xla
 ;return
  
 ;comoptex:  
-! data1 (line   1564 file jsections.txt)
+! data1 (line   1621 file jsections.txt)
 dat=data(read->(x,y),in->)
 1,2
 3,4
@@ -165,7 +165,7 @@ stat(trans->tr)
 ;return
  
 ;recursion:  
-! Recursion produces system crash. (line   1603 file jsections.txt)
+! Recursion produces system crash. (line   1660 file jsections.txt)
 tr=trans() !level will be initialized as zero
 level;
 level=level+1
@@ -178,7 +178,7 @@ Continue=0
 ;return
  
 ;transfunc:  
-! Transformation as a function (line   1626 file jsections.txt)
+! Transformation as a function (line   1683 file jsections.txt)
 delete_o(a,c)
 tra=trans()
 a=8;
@@ -194,7 +194,7 @@ a=c+trb(a)+c+tra(a);
 ;return
  
 ;matrixop:  
-! Matrix operations (line   1794 file jsections.txt)
+! Matrix operations (line   1851 file jsections.txt)
 A=matrix(3,4,do->);
 A+2;
 A-1;
@@ -223,7 +223,7 @@ Continue=0
 ;return
  
 ;doex:  
-! do-loop (line   1869 file jsections.txt)
+! do-loop (line   1926 file jsections.txt)
 'begin';
 tr=trans()
 do(i,1,5)
@@ -240,7 +240,7 @@ call(tr)
 ;return
  
 ;retex:  
-! example of return and goto () (line   1890 file jsections.txt)
+! example of return and goto () (line   1947 file jsections.txt)
 tr=trans()
 ad1:r=ran();
 if(r.lt.0.2)return
@@ -251,7 +251,7 @@ call(tr)
 ;return
  
 ;errexitex:  
-! (line   1910 file jsections.txt)
+! (line   1967 file jsections.txt)
 tr=trans()
 if(a.eq.0)errexit('illegal value ',a)
 s=3/a; ! division with zero is teste automatically
@@ -267,7 +267,7 @@ Continue=0
 ;return
  
 ;gotoex:  
-! (line   1929 file jsections.txt)
+! (line   1986 file jsections.txt)
 tr=trans()
 i=0
 if(i.eq.0)goto(koe)
@@ -280,7 +280,7 @@ ch;
 ;return
  
 ;assignex:  
-! Examples of assignments (line   1980 file jsections.txt)
+! Examples of assignments (line   2037 file jsections.txt)
 a=matrix(2,3);
 a=4;
 a=rann();
@@ -293,7 +293,7 @@ Continue=0
 ;return
  
 ;operexr:  
-! Exapmple of operation of J. (line   2097 file jsections.txt)
+! Exapmple of operation of J. (line   2154 file jsections.txt)
 ;if(wait);pause
 ;return
  
@@ -405,7 +405,7 @@ type(cttt,content->);
 ;return
  
 ;whichex:  
-! Example of which() (line   3605 file c:/j3/j.f90)
+! Example of which() (line   3607 file c:/j3/j.f90)
 c=9
 which(a.eg.3.or.c.gt.8,5,a.eq.7,55);
 a=7
@@ -417,7 +417,7 @@ which(a.eg.3.or.c.gt.8,5,a.eq.7,55,108);
 ;return
  
 ;findex:  
-! Example of find, illustrating also rann() (line   6388 file c:/j3/j.f90)
+! Example of find, illustrating also rann() (line   6390 file c:/j3/j.f90)
 !Repeating the example, different results will be obtained
 rm=matrix(100)
 m,s=2,3
@@ -431,7 +431,7 @@ print(first,100*nrows(large)/nrows(rm),100*sum(large2)/nrows(rm))
 ;return
  
 ;newdataex:  
-! newdata() generates a new data object. (line   6799 file c:/j3/j.f90)
+! newdata() generates a new data object. (line   6801 file c:/j3/j.f90)
 data1=data(read->(x1...x3),in->)
 1,2,3
 4,5,6
@@ -455,7 +455,7 @@ print(new)
 ;return
  
 ;newclassdata:  
-! Making class level data object (line   7467 file c:/j3/j.f90)
+! Making class level data object (line   7469 file c:/j3/j.f90)
 classvector(x1,x2,class->stand,data->treedata,mean->,min->)
 standdata=newdata(x1#stand%mean,x2#stand%mean,x1#stand%min,x2#stand%min,
 read->(x1,x2,x1min,x2min))
@@ -463,7 +463,7 @@ read->(x1,x2,x1min,x2min))
 ;return
  
 ;addingclass:  
-! Adding class means and deviations from class means (line   7472 file c:/j3/j.f90)
+! Adding class means and deviations from class means (line   7474 file c:/j3/j.f90)
 classvector(x1,x2,class->stand,data->treedata,mean->,expand->)
 tr=trans()
 relx1=x1-x1mean
@@ -475,7 +475,7 @@ maketrans->tr)
 ;return
  
 ;logisticex:  
-! Example of logistic function (line   8210 file c:/j3/j.f90)
+! Example of logistic function (line   8212 file c:/j3/j.f90)
 tr=trans()
 der(a,x0)
 f=logistic(a*(x-x0));
@@ -486,7 +486,7 @@ d[a],d[x],tr(d[x0]);
 ;return
  
 ;showex:  
-! Example of show() (line   9760 file c:/j3/j.f90)
+! Example of show() (line   9762 file c:/j3/j.f90)
 fi=draw(func->sqrt2(x),x->x,xrange->(-50,50),continue->fcont)
 show(fi,xrange->(-60,60),xlabel->'NEWX',ylabel->'NEWY')
 show(fi,axes->10)
@@ -510,7 +510,7 @@ show(fi,xrange->(0,6),yrange->(0,7))
 ;return
  
 ;plot3dex:  
-! plot3d() example see p.  328 in Mehtatalo & Lappi 2020 (line   9818 file c:/j3/j.f90)
+! plot3d() example see p.  328 in Mehtatalo & Lappi 2020 (line   9820 file c:/j3/j.f90)
 mat=matrix(1000000,3)
 mat2=matrix(1000000,3)
 tr=trans() !second order response surface
@@ -545,7 +545,7 @@ fi=plot3d(mat2,sorted->)
 ;return
  
 ;ranex:  
-! (line  12129 file c:/j3/j.f90)
+! (line  12133 file c:/j3/j.f90)
 ran();
 ran();
 cpu0=cpu()
@@ -564,14 +564,14 @@ cpu()-cpu0;
 ;return
  
 ;selectex:  
-! Random selection (line  12184 file c:/j3/j.f90)
+! Random selection (line  12188 file c:/j3/j.f90)
 S=select(500,10000)
 mean(S),sum(S),500/10000;
 ;if(wait);pause
 ;return
  
 ;rannex:  
-! Random normal variates, illustrating also find (line  12352 file c:/j3/j.f90)
+! Random normal variates, illustrating also find (line  12356 file c:/j3/j.f90)
 rx=rann()  !Output is REAL
 rm=matrix(100)
 print(mean(rm),sd(rm),min(rm),max(rm))
@@ -589,7 +589,7 @@ print(100*nrows(large)/nrows(rm))
 ;return
  
 ;ranbinex:  
-! (line  12458 file c:/j3/j.f90)
+! (line  12462 file c:/j3/j.f90)
 ranbin(10,0.1);
 ranbin(10,0.1);
 !
@@ -606,7 +606,7 @@ fi=drawclass(cl,histogram->,color->Red,append->,continue->fcont)
 ;return
  
 ;cpuex:  
-! Example of cpu-timing (line  12527 file c:/j3/j.f90)
+! Example of cpu-timing (line  12531 file c:/j3/j.f90)
 cpu0=cpu()
 a=matrix(100000)
 a=ran() !uniform
@@ -617,7 +617,7 @@ elapsed=cpu1-cpu0;
 ;return
  
 ;secondsex:  
-! Example of elapsed time (line  12555 file c:/j3/j.f90)
+! Example of elapsed time (line  12559 file c:/j3/j.f90)
 cpu0=cpu()
 sec0=seconds()
 a=matrix(100000)
@@ -631,7 +631,7 @@ selapsed=sec1-sec0;
 ;return
  
 ;drawex:  
-! Example of draw() (line  13424 file c:/j3/j.f90)
+! Example of draw() (line  13441 file c:/j3/j.f90)
 fi=draw(func->sin(x),xrange->(0,2*Pi),color->Blue,continue->fcont)
 fi=draw(func->cos(x),xrange->(0,2*Pi),color->Red,append->,continue->fcont)
 if(type(figyx).ne.FIGURE)plotyxex
@@ -653,7 +653,7 @@ Continue=0
 ;return
  
 ;drawlineex:  
-! Example of drawline() (line  13614 file c:/j3/j.f90)
+! Example of drawline() (line  13631 file c:/j3/j.f90)
 fi=draw(func->sin(x),xrange->(0,2*Pi),color->Blue,continue->fcont)
 fi=drawline(Pi,sin(Pi)+0.1,label->'sin()',append->,continue->fcont)
 xval=matrix(do->(1,100))
@@ -685,7 +685,7 @@ Continue=0
 ;return
  
 ;drawclassex:  
-! Examples of drawclass() (line  14044 file c:/j3/j.f90)
+! Examples of drawclass() (line  14061 file c:/j3/j.f90)
 X=matrix(do->(1,100,0.1))
 e=matrix(nrows(X))
 e=rann()
@@ -707,7 +707,7 @@ fi=draw(func->pdf(0,rmse(reg)),x->x,xrange->,append->,continue->fcont) ! xrange 
 ;return
  
 ;plotyxex:  
-! plotyx() (line  14263 file c:/j3/j.f90)
+! plotyx() (line  14280 file c:/j3/j.f90)
 xmat=matrix(do->(0,10,0.001))
 tr=trans()
 y=2+3*x+0.4*x*x+4*rann()
@@ -723,7 +723,7 @@ fir=plotyx(Resid,x,continue->fcont)
 ;return
  
 ;askex:  
-! Examples for ask() (line  14753 file c:/j3/j.f90)
+! Examples for ask() (line  14770 file c:/j3/j.f90)
 a=ask(default->8)
 ask(a,default->8)
 print(ask()+ask()) ! ask without argument is a numeric function
@@ -732,7 +732,7 @@ ask(v,q->'Give v>')
 ;return
  
 ;mergex:  
-! Merging list (line  16091 file c:/j3/j.f90)
+! Merging list (line  16108 file c:/j3/j.f90)
 x1...x3=1,2,3
 mat=matrix(3,values->(4,5,6))
 lis0=list(x2,x1)
@@ -742,7 +742,7 @@ print(lis2)
 ;return
  
 ;dataex:  
-! data() generates a new data object by reading data. (line  17011 file c:/j3/j.f90)
+! data() generates a new data object by reading data. (line  17028 file c:/j3/j.f90)
 data1=data(read->(x1...x3),in->)
 1,2,3
 4,5,6
@@ -752,7 +752,7 @@ data1=data(read->(x1...x3),in->)
 ;return
  
 ;statex:  
-! stat() computes minimums, maximums, means and std devaitons (line  17928 file c:/j3/j.f90)
+! stat() computes minimums, maximums, means and std devaitons (line  17945 file c:/j3/j.f90)
 ;if(type(data1).ne.DATA)dataex
 stat()
 stat(area,data->cd,sum->bon20,filter->(site.ge.18.5))
@@ -762,7 +762,7 @@ stat(vol,weight->(1/dbh***2))
 ;return
  
 ;covex:  
-! Example of covariance (line  18197 file c:/j3/j.f90)
+! Example of covariance (line  18214 file c:/j3/j.f90)
 X1=matrix(200)
 X1=rann()
 ;do(i,2,6)
@@ -777,13 +777,13 @@ co=cov(dat%keep);
 ;return
  
 ;matrixex:  
-! Example of generating matrices (line  18410 file c:/j3/j.f90)
+! Example of generating matrices (line  18427 file c:/j3/j.f90)
 A=matrix(3,
 ;if(wait);pause
 ;return
  
 ;transex:  
-! Demonstrates also error handling (line  19153 file c:/j3/j.f90)
+! Demonstrates also error handling (line  19170 file c:/j3/j.f90)
 tr=trans()
 $x3=x1+3
 x2=2/$x3;
@@ -809,7 +809,7 @@ call(tr3)
 ;return
  
 ;list2ex:  
-! (line  19520 file c:/j3/j.f90)
+! (line  19537 file c:/j3/j.f90)
 all=list();  ! empty list
 sub=list();
 nper=3
@@ -823,7 +823,7 @@ sub=list(@sub,@sub#"i")
 ;return
  
 ;Rex:  
-! Example of Rscript (line  20636 file c:/j3/j.f90)
+! Example of Rscript (line  20653 file c:/j3/j.f90)
 rscript=text()
 # A simple R-script that generates a small data to file mydat.txt
 wd<-"C:/j3/"
@@ -840,7 +840,7 @@ print('mydat.txt')
 ;return
  
 ;diffex:  
-! (line  21399 file c:/j3/j.f90)
+! (line  21417 file c:/j3/j.f90)
 lis=list(x1...x3,z3..z5);
 lis2=list(x1,z5);
 liso=difference(lis,lis2);
@@ -853,7 +853,7 @@ Continue=0
 ;return
  
 ;derex:  
-! Derivatives with der() (line  21732 file c:/j3/j.f90)
+! Derivatives with der() (line  21750 file c:/j3/j.f90)
 tr=trans()
 der(x)
 f=(1+x)*cos(x)
@@ -864,7 +864,7 @@ fi=draw(func->tr(f),x->x,xrange->(0,10),color->Cyan,append->,continue->fcont)
 ;return
  
 ;derex2:  
-! (line  21740 file c:/j3/j.f90)
+! (line  21758 file c:/j3/j.f90)
 X=matrix(do->(0,1000,10))
 e=matrix(nrows(X))
 e=rann(0,2);
@@ -890,7 +890,7 @@ fi=draw(func->(rect(f)),x->I,xrange->(0,1000),color->Violet,append->,continue->f
 ;return
  
 ;densityex:  
-! Example of distributions (line  22668 file c:/j3/j.f90)
+! Example of distributions (line  22686 file c:/j3/j.f90)
 ber=density(func->(1-p+(2*p-1)*$),xrange->(0,1),discrete->); Bernoully
 bim=matrix(100)
 bim=random(ber)

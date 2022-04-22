@@ -13169,7 +13169,11 @@ subroutine j_interpret(input,ivteku)
  
  
 		oneline=.true.
-		ip6=3
+		if(j_ninc.eq.1)then
+			ip6=3
+		else
+			ip6=6
+		endif
 		lopw=lop
 	!	if(input(lop:lop).eq.';')lopw=lopw-1
 	
@@ -13776,7 +13780,7 @@ subroutine j_interpret(input,ivteku)
 			if(p)write(6,*)'setelem li,nar,li+2+nar',li,nar,li+2+nar
 		endif !if(node3.eq.j_fsetelem)then
 		if(printout)then
-			if(p2)write(6,*)'node(3:4)',node3,node4,j_fsetelem
+			if(p2)write(6,*)'node(3:4)',node3,node4,j_fsetelem,'j_fbio+ip6',j_fbio,ip6
 			teku(nteku+1)=j_fbio+ip6
 			if(.not.oneline.and.printout2)teku(nteku+1)=j_fbio+7
 			if(node3.eq.j_fsetelem)then

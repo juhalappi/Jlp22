@@ -1,4 +1,4 @@
-# Gfortran makefile for release version of J3.0, result j3.0.exe
+# Gfortran makefile for release version of j3, result j3.exe
 # use this file: make -f Makefile_release
 # The compiler
 FC = gfortran
@@ -16,12 +16,12 @@ FCFLAGS = -ggdb -O0 -g -fmax-errors=6
 # FCFLAGS += -I/usr/include
 
 # List of executables to be built within the package
-PROGRAMS = j3.0.exe
+PROGRAMS = j3.exe
 
 # "make" builds all
 all: $(PROGRAMS)
 
-j3.0.exe : jmodules.o\
+j3.exe : jmodules.o\
 		 	 own1mod_2.o\
 		 own2mod_2.o\
 		 own3mod_2.o\
@@ -38,7 +38,7 @@ j3.0.exe : jmodules.o\
 
 
 
-	$(FC) $(FCFLAGS) -o j3.0.exe \
+	$(FC) $(FCFLAGS) -o j3.exe \
 			jmodules.o\
 		 own1mod_2.o\
 		 own2mod_2.o\

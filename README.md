@@ -22,9 +22,11 @@ which are faste to compute. The user can
  can be used to run all examples in the manual. J can run R scripts, and Lauri Metätalo has made a R package which 
  can run J srripts.
  
- Theere are folders in Github:
+ There are following folders in Github:
  
 Data folder for data used in forest management linear programming.
+
+J_R folder for example 
 
 Jbin binaries, including dlls
 

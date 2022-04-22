@@ -1,3 +1,679 @@
+\section{Preface}
+\label{preface1}
+First I thank my grand daughter for the permission to use the portrait
+she drawed for my 70 yr birthday. \\
+
+I will here describe the history of \textbf{J} in this preface in unusual
+length and detail. Readers interested ony in the use of the current
+software can perhasp look briefly the subsection Freedom. The reason
+why I'm going through in detail
+the difficulties with Luke is that I think that the policy insisted by the leaders of Luke
+that the researchers of Luke do not have any moral or legal right to publish the results of their
+research should be discussed. I think also that the leaders of Luke
+were willing to waste large amount of taxpayers' money when the prevented the
+development and timely publication of \textbf{J} software. I hope that this part of the
+preface gets some attention also outside the potential users of the software e.g.
+in the ministry. As an amateur actor, I also hope that some play writer would
+notice this and would make tragicomedy on the stage.
+\subsection{JLP and first version of \textbf{J}}
+\label{preface2}
+
+I started to develop \textbf{J} software as a successor of the linear programming software
+\textbf{J}LP \cite{JLP} around
+2004. I had also done several programs for statistical computing (AKTA and Jakta)
+since late seventies
+when there was not
+easy to use software even for ordinary linear regression.
+Later I had to write own software
+for mixed linear models. AKTA, Jakta, and JLP contained  means to use script files and
+make new variables described in arithmetic expressions. The starting idea in \textbf{J} was to put all my
+previous software developments into one program.
+Version 0.9.3 of \textbf{J} was published in August 2004.
+
+In JLP the crucial property was the utilization of the generalized upper bound (GUB) technique which
+I invented and, which I could later find also in the literature (\cite{dant}), as I expected. GUB is
+just the right technique which is
+needed in foreast management planning. JLP made it possible to solve
+significantly larger LP problems significantly faster
+than using standard commercial LP software. In JLP I programmed all the necessary matrix
+operations needed to change columns of the basis matrix in the revised simplex method.
+I updated the inverse of the basis matrix explicitly,
+instead of using factorization procedures as is the standard way in LP.
+I treated nonbinding constraints in a nonstandard way
+by reducing the dimension of the basis matrix instead of using residual
+basic variables, as is normally done.
+
+When I started to develop J, I thought that it might be good idea to use matrix routines
+based on factorizations and developed by a professional in this field.
+I found the LP software bqbd by Fletcher
+based on \cite{flet}. The bqbd software was meant to use 'as is' software for linear and quadratic programming.
+When I told Fletcher that I plan to separate the matrix routines needed in the GUB algorithm,
+he told he is certain that I will not succeed, as his Fortran code did not have any comments.
+He wrote that he will not have any time to help me.
+However, it was not that difficult becasue his code was divided
+to proper subroutines. His code did computations in
+single precision, and it was necessary to change computations
+into double precision. Because I do not have
+a proper training in the rounding error business,
+I had hoped his advice in changing the several tolerance
+parameters to correspont double precision computations. In the development of the original JLP algorith,
+I spent two-three times more time to fight rounding errors than to
+get the code mathematically correct. Now I understood the rounding errors better, but
+anyhow they are the permanent nuisance. The fundamental question
+with respect to rounding errors is: is a small-looking number zero or non-zero.
+
+When I later told him how large problems and how fast my algorithm could solve,
+his attitude towards
+my efforts clearly changed.
+
+Even Bergseng from NMBU started to use \textbf{J} in forest management problems
+in a quite premature
+stage, and we had quite tough time to keep his project in time.
+It took some time to clear a bug in Fletcher
+code which every now and then took the optimization into a wrong path.
+I had a quite slow computer, and the
+data transwer between Norway and Finland was slow. The bug was such that
+it had never caused problems in
+standard applications of bqbd software. In forest planning problems
+it can happen that after many
+pivot operations only residual variables corresponding nonbinding
+constrains are in the basis.
+And when \textbf{J} refactorized of the basis after fixed number of pivot operations,
+as is the common procedure, the basis became slightly corrupted.
+In such a case, the refactorization is not needed. NMBU started to use \textbf{J}
+together with their GAYA simulator, and called the whole system GAYA-J,
+as the previous system was called GAYA-JLP.
+I appreciate that they have acknowledged our co-operation this way.
+\textbf{J} version 0.9.3 was published in
+August 2004.
+
+\textbf{J} contained also a simulator language by which one describe a simulator
+which can be used to geneate
+treatment schedules which are later optimized with the
+LP funtions of J. When Simosol started
+to develop sofware which would compete with the Mela, which had had a
+monopoly status in planning software
+in Finland, and had all the problems which are inevitable in all monopoly projects.
+Simosol made first simulator developments using J, but moved to other solutions before first
+published version of Simo software. Simosol however used the
+linear programming routines
+of J. Jussi Rasinmaki presented the software of Simosol
+in the seminar 21.9.2018 celebrating the work of Pekka Kilkki.
+When he did not mention J, which continues the work of Pekka Kilkki,
+I asked whether they have stopped to use J.
+Rasinmäki told that they are still using J. I do not know waht is the situation today.
+\subsection{\textbf{J} with factories: J2.0}
+\label{preface3}
+For me the most disturbing feature of \textbf{J} and JLP was that they were not able to treat factories.
+I thought that the clever heuristic DTRAN algorithm of Howard Hoganson
+(\cite{dtran} and \cite{howard} showed
+that it should be possible to extend basic ideas of the
+\textbf{J}LP algorithm to treat with factory
+problems. I was able to derive the needed equations (see \cite{lappilem}).
+Reetta Lempinen started to work with me to implement the formulas. Reetta has professional
+training in programming, while I'm a self-learning amateur. The necessary
+data structures were quite complicated.
+I had made some wrong decisions which made the data structes even
+more complicated than was necessary.
+Reetta had a clear head to keep data structures in order.
+It was a nice new experience to
+work together through video connection on the code which both could
+see simultaneously.
+I just gave commands, but it was not necessary to give detailed
+instructions because Reetta
+understood from a half word what to do. An important
+contribution of her was that when there were several dead ends,
+and I started to doubt whether we can really
+do what we were aiming at, she told, 'listen Juuso, we can solve this problem as we have
+solved all previous problems'. Interestingly, the problems were usually not in any programming errors,
+but the path could be found by raising to a little upper level and going to the main ideas.
+Reetta's role was essential in the factory optimization. Also later she has been helpful in
+minor technical matters, in writing the manual, testing the new developments etc. Recently she
+adviced me how to use Git and Github. Reetta has also been
+solidary during the painful Luke years, when she was not
+allowed to work with \textbf{J} as she had liked
+to do. I appreciate her contibution very much. She is the second author of this
+manual and the paper \cite{lappilem} for good reasons. However, I use word 'I'
+for such situtions where Reetta has not been involved in the decisions how to proceed. The factory optimization was implemeted in
+\textbf{J} version 2.0. published in 2013.
+\subsection{Battle over open-source J3.0  starts in Luke}
+\label{preface4}
+
+Initially I made the software so that only I could understand the structure and the code.
+When Reetta started to work with me in factory problems,
+I learned what are the weakest points in the software if it should be maintained
+by a group of people. But as I was always able to tell Reetta how the software worked,
+only very slight improvements in the documentation and comments of the code etc. were made.
+When I realized that my retirement age is approaching,
+I started to worry how the software could be maintained and developed after my retirement.
+
+I had worked for Finnish Forest Research Institute (Metla) with small Academy
+and University of Joensuu brakes since 1978. In 2015 Metla and
+two other institutes were merged into Institute of Natural Resources Finland (Luke).
+Based on my long service in a government organization, I expected that
+the new organization would mean
+new leaders, new lawyers, new bureaucrats, and  much more bureaucracy,
+and less time
+for researchers to do research, as always happens when
+government organizations simplify
+their administration and make it more efficient.
+My expectations were in the right direction, but even in my worst
+nightmares I could not have imagined
+what Luke would mean to me personally.
+
+Lauri Mehtätalo and I had agreed with an international publisher to
+make a book about forest biometry. In Metla this kind of agreement had been
+considered as a merit to Metla. But Luke forbad me to put any working time
+to this book project. After retirement I was free to prepare this book with Lauri.
+On the back-cover of the book I presented myself as a researcher of Metla
+in order to give the affilation credit to Metla.
+The co-operation
+among statisticians of Luke, led by Juha Heikkinen, the continued co-operation
+with Jaana Luoranen, and the support of the whole personell
+of the Research Station of Suonenjoki when the leaders of Luke
+started to humillate me
+were my only positive experiences at Luke.
+
+I started to clean and reorganize the \textbf{J} code so that it would be easier to maintain it.
+My superior Olli Salminen forbad me to continue that effort because
+he was certain that I would
+never get that work ready. I didn't obey, of course not. The eternity of
+this first cleaning round lasted two and
+half weeks. Reorganization of files took 2-3 days, but programming
+of a precompiler took
+two weeks. In JLP I already had learned that a precompiler could help to manage
+data areas of JLP. In J, the precompiler has greatly helped to manage
+global variables.
+The precompiler allows the users access global module variables
+without knowing where they are. To separate the global variables
+from local variables, the global variables have
+j\_ or jlp\_ prefix. By changing the data structures,
+\textbf{J} also became significantly faster
+(main reason was that allocatable pointers were changed into allocatable arrays).
+
+
+In 2014 when we were looking at how \textbf{J} could be utilized in Mela software, I encountered
+old JLP concept ‘own function’, which was the method for allowing users of JLP to
+add own (arithmetic) functions if they had access to the source code. I thought that this
+idea would be useful also with respect to J. So, I organized \textbf{J} so that
+different users could add their own \textbf{J} functions,
+object types and options.
+
+I was then convinced that the best way to utilize these improvements would be to
+make the soft-ware open source. This would also allow me to continue my work freely
+with \textbf{J} after my retirement.
+
+
+The leaders of Luke agreed with me that the open-source \textbf{J} is a good idea.
+Unfortunately they
+also thought that open \textbf{J} is so important for Luke that the leaders could not
+allow me to take care of the publication and prepare and present
+the necessary decisions for their approval, or even participate as
+member in the group which
+started to hustle with the publication.
+The leaders wanted themselves take care of the publication. Unfortunately, none
+of the leaders involved
+considered that the publication of \textbf{J} would be even so
+important that he/she
+had taken care that \textbf{J} would be eventually published.
+They just wanted keep important
+in the process. This absurd deadlock lasted almost seven years.
+
+The previous version utilized some subroutines of IMSL package and from
+the ‘Numerical Recipes in Fortran’ book. I replaced these subroutines mainly by
+open access routines from Lapack and Ranlib packages from the Netlib library.
+Roger Fletcher allowed to distribute his linear programming sub-routines in
+the open \textbf{J} package. Fletcher gave a very liberal permission to use
+his subroutines in open source distribution (the
+price of his bqbd sofware was perhaps 100-200 Euros).
+But the lawyers of Luke studied his permission
+so long that he died before giving permission with better formulation.
+A permission with
+better formualations was obtained from his department in Dundee University.
+But the leading
+laywer of Luke, Emilia Katajajuuri was not satisfied, she wanted make
+sure that the
+legal position of the person
+who gave the new permission was such that he could give the permission.
+
+
+
+The following persons were involved in
+process: Päivi Eskelinen, Olli Salminen, Kari T. Korhonen, Kimmo Kukkavuori,
+Tuula Packalen, Sirpa Thessler, Sari Forsman-Hugg, Emilia Katajajuuri and Johanna
+Buchert. Iikka Sainio was an outside legal consult.
+
+The leading lawyer of Emilia Katajuuri made my position clear
+in a video meeting to which I also was accidentally invited to
+listen their new instructions.
+When I accidentally said 'could we decide that..', she interrupted me and said:
+'Listen Juha,
+you do not decide anything in this matter'. Their message was that
+I have done my part, and now
+I should keep out and not disturb their play with their new conquest.
+
+When it was evident that the leaders of Luke wanted to get rid of me,
+I threatened that I will not retire before the opening decision is done.
+Sari Forsman-Hugg told she will make the decision. But as my threat
+seemed to make no influence,
+I retried at the beginning of 2017. When I despite of all
+the humiliation and frustration still hoped that
+some kind a co-operation with Luke would be possible,
+I applied the position outside researcher,
+which had provided me access to Luke's e-mail and library services. Sari Forsman-Hugg was not
+able to make a decision also with recpect to my application.
+I did withdraw my application
+when my e-mail connections were interrupted two times.
+
+Later I heard from Reetta that Luke had made the opening decision but
+she did not know what kind decsion and
+I was not informed of the decision either, in disargeeent with the distribution list
+of the decision, as I noticed in when I finally could see the decision after
+three years.
+\subsection{Retired, frozen conflict}
+\label{preface5}
+After my retirement I was still hoping that some kind of co-operation
+without outside researcher status with Luke would be possible, and I
+participated in the application of factory optimization which was published in \ref{pekka}.
+Prof. Packalen told late 2017 that the publication of \textbf{J} is approaching.
+When I asked about the opening decision, she 'did not
+remember' what it contained but promised to check it out, which she
+did forget to do or atl least forget to tell me what the decision contained.
+Prof. Packalen was planning a very high level launch of
+\textbf{J} with prominent international guests. I wrote that such
+seminar would not probably be worth of
+for trans-Atlantic flights. I was so stupid that
+I believed her promise that the publication of \textbf{J} was approaching
+and I submitted a correction to a bug which produced some amount of negative timber
+quantities.
+
+During 2018-2021 I made some small parameter adjustments for Simosol and Norway and made some additions
+for my own research. Prof. Packalen had lost all interest in the publication,
+and she did not allow Reetta to
+develop the publication documents. When I heard 2020 that prof Packalen
+had left Luke and could
+not prevent publication any more, I asked Reetta to
+ask her superiors whether she could continue
+the preparation of manuals. She got the permission to use some time for that.
+This work with all style details was not very nice for her as she
+had already done big part of the work for the previous format of
+Lukes's report series.
+The report series had changed the formats, and Reetta had to do
+such tedious work she already had done once before.
+Reetta's superiors did never  discuss with me anything related to the
+manuals or to the code. This
+way they had been free to pretent that I have not contributed to
+the work if \textbf{J} had been some time published.
+
+
+In spring 2021 Hannu Salminen from Luke contacted me. He had memory
+problems with a very large data set. I made a rapid fix for his acute
+problem and did develop
+more permanent solutions for large data sets using direct access files.
+Actually that work was
+unncessary as Viktor Strimbu from  NMBU  adviced me later how to make
+\textbf{J} a 64-bit
+application using MSYS2 environment. The Gfortran environment I had
+used before did not
+support 64-bit applications. The 64-bit program allows to put the whole country
+into one run aslo in factory optimization. Hannu organized a video
+meeting where we discussed the
+development and utilization of the \textbf{J} software. He was the first person
+in Lukes six years history who
+was willing to discuss with me such things.
+
+I started to work with \textbf{J} again. Reetta had told that \textbf{J} had could
+collapse after some hours of computations in  large data sets in factory optimization.
+I asked Luke to get the problematic
+data sets so that I could try to fix the problem. I got the answer that Luke is not allowed to send the
+data sets, and the answer did  not indicate
+that Luke would do anything to get such permission.
+I was quite upset from such answer,
+and I started to think how to open the deadlock situation. Later I got the data,
+and I was able to fix the problem, which was not exactly
+a clear bug but rather a thin-ice place in the algorithm sot that \textbf{J} did drop
+throug the ice when going over the place repeatedly.
+\subsection{Operation Charles XII}
+\label{preface6}
+When I strarted to think how I could find a way out from the deadlock,
+I remembered Charles XII,
+the king of Sweden (wich included  also Finland). He was in war with Denmark
+and he decided to fight Denmark by attacking Norway, which belonged to Denmark.
+He failed as almost his solders died in snowstorms
+in Northern Norway and he was shot by his own soldier.
+I was in conflict with Luke, even if Luke did
+acknowledge that such confilict existed
+because Luke insisted that in a legal sense,
+I did not even exist in this \textbf{J} affair.
+I thought to conquer Norway with nice \textbf{J} codes.
+Renovation of my co-operation with GAYA group
+suited their plans as they were rebuilding their simulator.
+
+I wrote to Johanna Buchert, director general of Luke (who was already in the group of
+Luke leaders hustling in the publication of \textbf{J} when I was in Luke)
+Antti Asikainen, research director of Luke,  and Kari T. Korhonen, who has
+been involved in this \textbf{J} affair and was the superior of Reetta, and
+told that I will not send to Luke new \textbf{J} codes including working
+factory optimization codes without a written co-operation agreement.
+I wrote also to registry-office and asked for the opening decision, and
+to a lawyer of Luke and asked what kind of legal actions
+Luke will take agaisnt me if I started to publish factory optimization
+things with GAYA group using codes which I would not give to Luke.
+The leaders did not comment in any way my co-operation proposal. The research director
+just wrote that
+all codes done in METLA are property of Luke. Buchert did not respond, but
+the the Senior Vice President Ilkka P. Laurila answered that Luke regrets
+for the delays in the publication of \textbf{J} caused by personell changes
+(a funny expression for the fact that the publication process
+could just start in 2020
+when prof Packalen left Luke)
+and
+that Luke has started to prepare the publication and will publish the \textbf{J} on its
+web pages. Kari T Korhonen did not respond.
+
+Thus the leaders of Luke insisted that Luke will publish tens of thousands code
+and manual lines I had written, and insisted that it has no reason
+or obligation to discuss with
+me what and in what form it will these lines publish.
+It is evident that Luke had not been able to publish
+\textbf{J} in my life time (I'm over 70 yrs and I have a heart disease).
+But if I had been alive when Luke had
+published \textbf{J} under my name, I had made a lawsuit againt Luke
+for shaming my researcher honor
+by publishing something I had not accepted for publication. Or perhaps
+Luke had followed
+the previous  custom of  Romania where all chemistry
+research was published under the the name of Elena Ceaușescu,
+and had published the the software and
+manuals under the name of some equivalent to Elena.
+Also in that case I had made a lawsuit
+against Luke (if I had been alive). When the director general of Luke,
+the research director of Luke, the Senior Vice President of Luke
+and the lawyers of Luke
+decided that Luke has absolutely no interest in
+working factory optimization \textbf{J} codes or
+other up to date \textbf{J} codes, did they discuss with any researchers?
+
+After getting such a reponse to my co-opertation suggestion, it was evident that
+I would not give Luke any new codes, and would require Luke to remove all codes I had
+submitted after my retirement as Luke would not akckowledge that
+it had got any codes from me after my retirement, and it would publish my codes
+as if they were developed in Luke. So I would continue my Charles XII operation.
+Unfortunately NMBU did not have factory and transportation cost data ready.  In Norway
+the transportation costs can not be estimated as easily from coordinates as in Finland.
+
+Laurila did send the decision to publish \textbf{J} as a open source software
+after the lawyers of Luke
+had considered two weeks whether Luke should do that. The decision was
+signed by the research director Johanna Buchert 30.8. 2017.
+The process of trying to
+get permission to use Fletchers codes after his death was not described properly.
+It was written
+that after Fletchers death the university of Dundee did not
+respond to queries of Luke. As decribed above, the things did not go that way.
+When Luke was not satisfied with the corrected  permission sent
+by the university, the university had probably decided that
+it is vain to continue correspondece with Luke. However,
+the university wanted to communicate with me,
+when they asked my statement about the importance of Flethers
+code in planning of natural resources.
+The government wanted to figure out whether the
+university is doing something useful. I think that my statement
+was more valuable for
+the university than the euros the university would loose when
+not getting payments for the bqbd code.
+
+The decision told that \textbf{J} is published under licence AGPLv3.
+The licence is specially
+planned for programs which provide computing services through the net.
+Luke has not done anything to develop such net work services, as it has not
+developed \textbf{J} in any way after my retirement in 2017.
+The leaders of Luke did not discuss with
+me the license matters, of cource not.
+
+The decision nominated prof Packalen to take care of the launch of the software.
+Unfortunately she could not organize the lauch, as \textbf{J} was not ready to publication
+because prof Packalen did not allow Reetta to do the necessary
+preparations with respect to the code and manuals.
+
+The lawyers of Luke did not tell anything of the plans of Luke to make lawsuits
+against me if I would co-operate with Norway and would not send new codes to Luke.
+
+Lauri Mehtätalo became Professor in Mathematical Modeling for Forest Planning
+in Luke in Mai 2021.
+Coming from an university environment, he is interested
+in the development of science
+and research. He wanted to get \textbf{J} finally published after 6 year deadlock.
+Lauri did have anything againts that I would take care
+of the publication. Lauri even thought that it
+would be good for science and research that I would
+work without payment. It was a refreshing new attitude in Luke
+to put science into priority.
+Lauri told that he would try to convince the leaders of Luke
+that it would not harm Luke's interests that I would
+take care of the publication of
+the software I had made (for most part). Lauri told initially that
+he wants to persuade
+me to give all new codes to Luke. When I protested his choice of words,
+he apologized, and used thereafter the word 'negotiate'. When Lauri started to 'negotiate' with
+me, I consider that Luke first time in its history acknowledged that I do exist
+as an legal entity is this \textbf{J} affair.
+
+Lauri was able to rotate the head of the research director 180 degrees. The research director even told
+that he would be interested to become a coauthor in the publication dealing the factory
+optimization. It was, however, not mentally feasible for me, as
+he did not even
+answer my previous co-operation suggestion, but just told that Luke has everything
+it needs. Being a researcher, Lauri understood what
+were my aims and was able to get approval of the research director.
+So it seemed that
+the agreement was about ready. But then the agreement was
+stuck on the table of the research director.
+\subsection{Last battle, victory and peace in Olavinlinna}
+\label{preface7}
+I was invited to the 100 year anniversary celebration of the Finnish National Forest Inventory
+as I had worked also in the NFI group. I was interested to see my former colleagues,
+but it started to disturb me
+that I would not know whether I would be a guest of my enemy
+or my co-operations partner.
+I had a very exciting video meeting with the GAYA people. They promised me access
+to the Norwegian supercomputers needed in large factory optimizations, funding for traveling
+and for any consulting work. I started to think that have been stupid
+when I spent years of my short residual life waiting for such co-operation
+with Luke. As Lauri had tried
+to establish such co-operation between me and Luke,
+I decided to give Luke a last chance.
+I made an ultimatum that if we do not get a agreement with Luke within a week,
+I would break all negotiations with Luke and would continue only with Norwegian people,
+even if Luke might try to make a lawsuit against me.
+Twenty-four hours before the time
+limit Lauri called that Luke is willing to make treaty with me.
+The lawyers of Luke did finalize the treaty
+two hours before the NFI celebration.
+
+Antti Asikainen, the research director of Luke and I signed the co-opertation treaty in the king's hall in
+Olavinlinna (St. Olaf's Castle) in Savonlinna 7.10. 2021.
+In the treaty I got almost everything I had
+fighted for: The \textbf{J} software will be published, and I have
+full responsibility of the code and manuals.
+Luke will provide me data of factory locations, simulated treatment schedules for
+all inventory plots for the whole country, and the matrix of distances between the
+factories and inventory plots. Luke will also provide me access to CSC
+supercomputers which are necessary for the whole country optimizations. CSC does not allow
+independent retirees to use its computers. I'm allowed to make a methodological
+paper from developments, whereafter I will provide Luke all the
+new and improved \textbf{J} functions and the developed \textbf{J} scripts. I had hoped that
+Luke had promised me access to Mela so I could study how Mela is doing interest
+rate computations, as I have suspects that these computations are not in order.
+I had asked Olli Salminen some Mela results to study my suspects, but he told, after some
+day considerations, that Luke is not willing to make such computations.
+I suspect that the reason is
+Luke wants to keep all possible Mela problems secret. I did not insist to get
+such permissions as Lauri thought that this would delay and complicat
+the \textbf{J} process. In the treaty it
+is said that the code files state that Juha Lappi
+and Natural Resources Institute Finland have the copyright for the code.
+In the last minutes
+before the signatures
+the lawyers tried to reverse the order of copyright owners. I did not, of course,
+accept the reveresed order, bacause I have made the \textbf{J} really operable after my retirement,
+Now, the recent developments have made Lukes or Metlas contribution
+even smaller, and the overall influence of Luke has been negative.
+It must, however to be taken into account that Pekka M\"akinen has done valuable
+work in collecting data of factories and
+transportation costs, and this data greatly helps my work when I'm now allowed
+to start to develop factory optimization for the whole Finland.
+\subsection{Total balance with Luke}
+\label{preface8}
+At the signing of the peace treaty, Johanna Buchert told that there has not been any
+disagreement in this \textbf{J} busisness, and let bygones be bygones.
+From my point of view, I had six and half years fight to get permission to
+publish the results of my research.  For Luke, there was no
+disagreement because Luke did not acknowledge that I even existed as a
+legal entity. How could Luke
+have disagreement with something which does not even exist? For me,
+the behavior of the leaders of Luke was a 'me too' experience. In
+the heart of my researcher
+identity is the conviction that every researcher, at least in a government
+research institute, has the right and even the obligation to publish the
+results of his research let it be a stastistical method or computer code or
+ordinary research publication.
+The leaders of Luke denied
+me the right to publish the results of my statistical work
+in our biometry book and the results of my software development.  In this \textbf{J} case,
+the reason was that they
+wanted to publish my results themselves.  This has been a very traumatic
+harrasment experience. All the victims of sexual harassment are also
+told that 'let bygones be bygones'.
+As in the peace treaty I was given all responsibility of manuals, I'm
+now utilizing this responsibility in this preface hoping the leaders of
+Luke and perhaps also others
+would be more careful when making decisions which may not tolerate daylight,
+similarly
+as bosses are slowly learning to keep better control of
+their hands which would like
+to grope the bottoms of their subordinates.
+
+From the legal perspective, the leaders of Luke have insisted that
+Luke has full copyright to all work I've done in Mela or Luke. So they can freely
+follow their whims and waste hundreds of thousands of euros
+taxpayers money used in the \textbf{J} project.
+With Lukes overhead multipliers we may speak about millions.
+Perhaps they should also pay
+attention to the by-law telling what is the duty of Luke. How has
+Luke promoted forest research and its utilization by prevented
+the development and
+utilization of \textbf{J} software for over six years?
+Perhaps the ministry should  give
+the leaders of Luke training about the duties of Luke. The leaders
+of Luke never gave any rational justification why Luke should prevent me
+to take care of the publication.
+
+If I had been allowed to publish and develop \textbf{J} as I wanted,
+Luke and forest industry would have
+now available methods to analyze e.g. what can be done
+when timber import from Russia suddenly stops.
+Luke is also still doing static regional sustainability analyzes,
+which are not reasonable
+as they do not take factories into account. Mentally Luke
+is stuck to the German foresters from
+1800's who rotated a fixed cutting area for each year.
+If Luke had let me publish the open-source software in 2015
+Luke had been a forerunner in the open source publication, and I had praised it
+for its progressive attitude. Now Luke has
+has establised its status in the history of open-source as an institute which
+decided to open a software
+but keeps the decision and the code locked for several years because
+it did not allow the principal
+author to take care of or even participate in the publication.
+\subsection{Freedom}
+\label{preface9}
+After the Olavinlinna peace treaty, I thought initially that
+I would like to publish the software before Christmas 2021.
+But when the iron cage around me disappeared, the pressure which had increased
+in my mind for seven years did burst in intensive code development.
+This development had already started when negotiations with Lauri started to look promising,
+and I developed the program to make Latex files for manuals and script files
+for examples automatically from comments embedded within the code or from a
+separate text files.
+
+After the peace treaty I have rewritten all the central parts of the
+software using simpler and more easily maintained solutions,
+and added many new properties. The most important was the rewriting
+of the interpreter
+which interprets the \textbf{J} code generated using the input programming capabilities.
+I had been shamed if the previous interpreter had be offered to the eyes of
+professional programmers. I did rewrite the precompiler so it takes only some
+seconds to do the precompilation, and if the precompiled file
+does not change the new precompiled file is deleted so that the compiler
+does not do any more unnecessary compilation. I did put the matrix computations
+into a new level implementing
+all properties I had found useful in Matlab when providing a method for a client
+using Matlab codes. I added new tools for debugging
+and code development. Now \textbf{J} can treat nicely submatrices and do
+all arithmetic operations and logical operations
+on matrices in addition to scalars. The previous version of  \textbf{J} could make rough
+figures using a separate program written in Intel
+fortran, which I do no more have available. Publication level
+figures could be done using R sripts generated by J.
+Now \textbf{J} is producing figures using Gnuplot which is automatically run from within J.
+Currently only basic 2D and 3D figures
+can be done, but this Gnuplot connection makes it possible to develop \textbf{J}
+into full scale interface to all Gnuplot properties. \textbf{J} can now generate random numbers from any
+continuous or discrete distibution providing new possiblities to study the
+effects of random errors in the simulation of treatment schedules or in
+optimization. It is now  possible to run R scripts from within J.
+Now \textbf{J} can be used easily also as a subroutine. Lauri has utilized this property
+by calling \textbf{J} from R. This offers many new possiblities,
+which we will utilize when
+continuing the co-operation with the GAYA-group.
+
+I made first cleaning of the important \textcolor{VioletRed}{jlp}() function in the spring of 2021
+when correcting
+the fragility which prevented the solution of large problems which take several hours in
+a ordinary PC. There are many things to be done in \textcolor{VioletRed}{jlp}() function, but I start
+to work with them when developing factory optimization in CSC supercomputers.
+I know already how parallel computations can be utilized in \textcolor{VioletRed}{jlp}()-function.
+Previous versions of \textbf{J} had special functions for developing forest simulators and
+computing the simulated schedules. Now all simulators can be developed and utilized
+using standard properties of \textbf{J} transformations either for using stand level
+or tree level variables
+I have not yet made good examples to demonstrate these properties. Because the new \textbf{J} provides
+a platform for making all kind of new devlopments, including
+integer optimization (i.e preventing treatment unit to be divided among several
+schedules), nonlinear objective function
+(which would utlize the capability of \textbf{J} to compute derivatives
+according to analytic derivation rules), it was difficult to breathe a little and make the
+new codes available for users. The codes now published contain many errors.
+I invite the users to help me to correct them. First users should have some
+patience with respect to errors. I claime that the bug percentage is smaller than
+estimated 23-27\% bug percentage in the first version
+of Windows 1, which accintally happened be the same as the bug percentage
+Soviet masons used in the mortar they used when masoning the US embassy in Moscow.
+Currently I can correct most bugs
+causing system crash in 5-10 minutes. It should be emphasized that
+Luke does not have any kind of responsibility of the errors.
+I take the full moral responsibilty of the errors. Similarly, it should
+be emphasized that Luke has no responsibility of the code which works correctly.
+I take the main responsibility of the correctly working code,
+giving Reetta her fair
+share. It is easier for me to correct the errors while alive.
+This fundamental fact of life
+was ignored by Luke when it prevented the publication for seven years.
+
+During the intensive work period after the Olavinlinna peace treaty, my deep
+'me too' traumas have started to heal slowly. Probably this healing process takes
+a long time, and I cannot very soon say let bygones be bygones.
+
+\textbf{J}uha Lappi, Suonenjoki 22.4.2022
+
+\subsection{Changes from previous versions}
+\label{changes}
+The software is almost  completely rewritten. There are many new
+functions and properties. All the previous users should  look at the
+new properties.  If an old user has difficulties to run their old scripts they should
+contact J.L. Note that graphics now assumes that Gnuplot is installed.
+
 \section{Introduction}
 \label{intro}
 The \textbf{J} software can be used as is, i.e. using exe files. The User guide concentrates
@@ -63,8 +739,90 @@ code options contain a short peice of code which is computed several times form 
 E.g. \textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x) can tells the \textcolor{VioletRed}{draw}() function waht is the function to be drawn. If
 computation of the codeoption rquires several lines, then thes lines can be
 then the \textcolor{blue}{func->}tr(\textcolor{teal}{res}) is used to tell how the function value is computed.
-\subsection{The components of the software package available in Github}
-\label{pack}
+\subsection{Github}
+\label{git}
+The package at github.com/juhalappi/j contains the following components
+\begin{itemize}
+\item[\textbf{J}] Data: \hspace{1cm} folder for data files
+\begin{itemize}
+\item[\textbf{J}] test.cda \hspace{1cm}example unit data file for small \textcolor{VioletRed}{jlp}() example
+\item[\textbf{J}] test.xda \hspace{1cm}example schedule file for small \textcolor{VioletRed}{jlp}() example
+\item[\textbf{J}]  test.inc \hspace{1cm}include file for the \textcolor{VioletRed}{jlp}() test
+
+\end{itemize}
+\item[\textbf{J}] J\_R: \hspace{1cm} using \textbf{J} from R, courtesy of Lauri Meht\"atalo.
+!
+\begin{itemize}
+\item[\textbf{J}] j.par \hspace{1cm}decaul include file for starting \textbf{J}
+\item[\textbf{J}] JR\_0.0.tar.gz \hspace{1cm} File neede to us fortran subroutines in R
+\item[\textbf{J}] testr.cda
+\item[\textbf{J}] test.xda
+\item[\textbf{J}] testr.inc \hspace{1cm} include file an jlp-example
+
+\item[\textbf{J}] testr.inc
+
+
+\end{itemize}
+
+\item[\textbf{J}] Jbin:\hspace{1cm} binary .exe files and dll files
+\begin{itemize}
+\item[\textbf{J}] j3d.exe \hspace{1cm} Debug version of J, release version is
+provided after some testing period
+\item[\textbf{J}] jindent.exe \hspace{1cm} indentation
+\item[\textbf{J}] jmanual.exe \hspace{1cm} makes the latex code file jmanual.tex
+\item[\textbf{J}] jpre.exe \hspace{1cm} the precompiler which generates the code
+for accessing variables in module
+\item[\textbf{J}] dll:\hspace{1cm} libgcc\_s\_seh-1.dll, libgfortran-5.dll, libquadmath-0.dll and
+libwinpthread-1.dll which must be available in the path. e.g., in the same folder as the exe
+
+\end{itemize}
+\item[\textbf{J}] Jdoc\_demo \hspace{1cm}documents and include file for running examples fro User's guide
+\begin{itemize}
+\item[\textbf{J}] hyvonenetal2019.pdf \hspace{1cm}facotory optimiazation paper
+\item[\textbf{J}] J3.0\_userguide\_2021.pdf \hspace{1cm} old version of the manual, explains better some functions thant j3.pdf
+\item[\textbf{J}]	J3.pdf \hspace{1cm} Users guide made with Latex
+\item[\textbf{J}]	 J3\_setup\_development.docx \hspace{1cm} not up-to-date manual for developers
+\item[\textbf{J}] jexamples.inc \hspace{1cm}include file which can be used to run all examples in the manual
+and which is generated with jmanual.exe
+\item[\textbf{J}] jlp92.pdf \hspace{1cm}Manual of old JLP which explains the theory behind the jlp algorithm
+\item[\textbf{J}] lappilempinen.pdf \hspace{1cm}
+\end{itemize}
+\item[\textbf{J}] Jmanual: \hspace{1cm} Source files for making Latex code for
+the manual and the include file for running examples
+\begin{itemize}
+\item[\textbf{J}] jmanual.f90 \hspace{1cm}source for making the Latex code and jexamples.inc
+\item[\textbf{J}] jmanual.tex \hspace{1cm}Latex code genrated with jmanual.exe
+\item[\textbf{J}] jsections.txt \hspace{1cm}describes such manual sections not in source files
+\item[\textbf{J}] jsections2.txt \hspace{1cm}tells in what order sections foun in jsections.txt
+and source files are put into the manual and what is the level of the sections
+\item[\textbf{J}] main.tex main tex \hspace{1cm}code containd Latex definitions
+\item[\textbf{J}] Makefile\_debug \hspace{1cm}Makefile for making jmanual.exe
+\end{itemize}
+!
+\item[\textbf{J}] Source :\hspace{1cm} source code before precompilation
+\begin{itemize}
+\item[\textbf{J}] fletcherd.for \hspace{1cm}Fletchers subroutines turned into double precision
+\item[\textbf{J}] j.f90 \hspace{1cm}code for \textbf{J} functions
+\item[\textbf{J}] jlp.f90 \hspace{1cm}code for linear programming
+\item[\textbf{J}] j.main \hspace{1cm}main prorgam for calling \textbf{J} when used as is, if \textbf{J} is used as
+a subroutine then this must be made a subroutine
+\item[\textbf{J}] jmodules.f90 \hspace{1cm}data structure definitions
+\item[\textbf{J}] jutilities.f90 \hspace{1cm}subroutines for handling objects etc.
+\item[\textbf{J}] jsysdep\_gfortran.f90 \hspace{1cm}system dependent routines
+\item[\textbf{J}] matsub.f \hspace{1cm}subroutines obtainde from other sources, e.g. from Netlib
+\item[\textbf{J}] other subroutines for setting up users own  function
+
+\end{itemize}
+\item[\textbf{J}] Source2 :\hspace{1cm} source code files after precompilation
+in addition to files in Source (such files which are not precompiled are put in both folders)
+\begin{itemize}
+\item[\textbf{J}] makefile\_debug \hspace{1cm}makefile for making debug- version
+\textcolor{green}{!\,\item[\textbf{J}]\,makefile\_release\hspace{1cm}\,makefile\,for\,making\,release-\,version}
+\end{itemize}
+\item[\textbf{J}] LICENSE:the license file
+\item[\textbf{J}] README.m :readme file
+
+\end{itemize}
 !
 \subsection{\textbf{J} functions}
 \label{jfuncs0}
@@ -356,7 +1114,7 @@ Lapack matrix routines
 \item[\textbf{J}] Several subroutines from www.netlib.org/lapack
 licence : http://www.netlib.org/lapack/LICENSE.txt
 \end{itemize}
-\subsection{ joperation}
+\subsection{Operation of \textbf{J}}
 \label{joperation}
 In this section the main tools in code devlopment in a project are presented. It is usefule to organize
 the project sript into one script file, which conatians swections starting with a lable and ending
@@ -1145,7 +1903,20 @@ When a function has an option then the interpreter generates first code
 \textcolor{VioletRed}{setoption}(...) where the arguments of the option are interpred in the similar way as
 arguments of all functions. Then the interpreter genarates the code for
 \textcolor{VioletRed}{setoption}() function in a special way.
-\subsection{Get or set a matrix element or submratrix}
+\subsection{\textcolor{VioletRed}{getelem}(): extracting information from an object}\index{getelem()}
+\label{getelem0}
+The origin of this function is the function which was used in previous versions
+to take an matrix element, which explains the name. Now it is used to extract
+also submatrices (e.g. a(1,-3,All)) , or to get value of an regression
+function or to compute
+a transforamtion and then take argument object as the result. E.g. if \textcolor{teal}{tr} is a transformation
+then the result of  \textcolor{teal}{tr}(\textcolor{teal}{a}) is object \textcolor{teal}{a} after calling \textcolor{teal}{tr}.
+\begin{note}
+If someone starts to use the own function property of the open source J, she/he
+probably would like to get the possiblity to extract information from her/his object types
+also. To implement this property requires some co-operation from my side.
+\end{note}
+\subsubsection{Get or set a matrix element or submratrix}
 \label{getelem}
 Matrix elements or submatrices can be accessed using the same syntax as
 accesing \textbf{J} functions.
@@ -1559,7 +2330,10 @@ active. This may be used for testing purposes.
 When \textbf{J} processes options in different funtions, it varies at which point
 options are cleared and number of options decreases
 \end{note}
-\subsection{executing an R-script: \textcolor{VioletRed}{R}()}\index{R()}
+\section{Co-operation between \textbf{J} and R}
+\label{JR}
+Is is possible to run R scripst from \textbf{J} and \textbf{J} scripts from R.
+\subsection{\textcolor{VioletRed}{R}() executes an R-script}\index{R()}
 \label{R}
 An R script can be executed with \textcolor{VioletRed}{R}(script) where script is CHAR object
 defining the script text file. The function is calling //
@@ -1580,13 +2354,13 @@ write.table(mydat,file=paste(wd,"/mydat.txt",sep=""))\\
 \textcolor{VioletRed}{R}('miniscript.r')\\
 \textcolor{VioletRed}{print}('mydat.txt')
 \end{example}
-
-
-
-
-
-
-
+\subsection{Calling J-scripts from R}
+\label{Rcalls}
+File JR\_0.0.tar.gz in the folder J\_R contains R tarball for taking \textbf{J}  subroutines into R.
+With R command JR(”testr.inc”) the example jp problem can be solved from R.
+Later lauri Mehtat\"alo will develop this cooention further so tha R can directly access also
+matrices in the \textbf{J} memory.
+For further information contakt lauri.mehtatalo@luke.fi
 \section{Loops and control strucures}
 \label{loops}
 This section describes nonstadard functions.
@@ -1665,8 +2439,10 @@ Continue=1 \,\textcolor{green}{!\,ERROR}\\
 v1..3=1,5;\\
 Continue=0
 \end{example}
-\subsection{Selecting a value based on conditions. Usage://}
+\subsection{Selecting a value based on conditions.}
 \label{which}
+
+Usage://
 
 output=\textcolor{VioletRed}{which}(condition1,value1,...,conditionn,valuen) //
 or//
@@ -1774,6 +2550,18 @@ weigted mean of the vector,weights being in vector wvector.
 weighted mean of each column, weights being in vector wvector, result is row vector.
 
 \end{itemize}
+\subsection{\textcolor{VioletRed}{mean}(): means or weighted means of matrix columns}\index{mean()}
+\label{mean}
+See section matrixstat for details
+\subsection{\textcolor{VioletRed}{sd}(): sd's or weighted sd's of matrix columns}\index{sd()}
+\label{sd}
+See section matrixstat for details
+\subsection{\textcolor{VioletRed}{var}(): Sample variances or weighted variances of matrix c}\index{var()}
+\label{var}
+See section matrixstat for details
+\subsection{\textcolor{VioletRed}{sum}(): sums or weighted sums of matrix columns}\index{sum()}
+\label{sum}
+See section matrixstat for details
 \section{Special arithmetic functions}
 \label{Special}
 \textbf{J} has the following arithmetic functions producing REAL values.These functions cannot yet have
@@ -2032,7 +2820,7 @@ Random number generators are taken from Ranlib library of Netlib.
 They can produce single REAL variables or random MATRIX objects.
 Random matrices are produced by defining first a matrix with \textcolor{VioletRed}{matrix}()
 funtion and putting that as the output.
-\subsection{Generate an uniform random number}
+\subsection{\textcolor{VioletRed}{ran}(): uniform random number}\index{ran()}
 \label{ran}
 Uniform random numbers between 0 and 1 are generating usig Netlib function ranf.
 \vspace{0.3cm}
@@ -2064,7 +2852,7 @@ cpu()-cpu0;
 
 \end{example}
 
-\subsection{\textcolor{VioletRed}{rann}()}\index{rann()}
+\subsection{\textcolor{VioletRed}{rann}(): normal random variate}\index{rann()}
 \label{rann}
 Computes normally distributed pseudo random numbers into a REAL variable or
 into MATRIX.
@@ -2113,7 +2901,7 @@ would produce a REAL value rm.
 \label{ranpoi}
 \textcolor{VioletRed}{ranpoi}(\textcolor{teal}{myy}//
 returns a random Poisson variable with expected value and variance \textcolor{teal}{myy}
-\subsection{Generate random binomial values}
+\subsection{\textcolor{VioletRed}{ranbin}(): random binomial values}\index{ranbin()}
 \label{ranbin}
 
 Binomial random numbers between 0 and n are generating usig Netlib
@@ -2155,7 +2943,7 @@ cl=\textcolor{VioletRed}{classify}(1,\textcolor{blue}{x->}s2)\\
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{histogram->},\textcolor{blue}{color->}Red,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)
 \end{example}
 
-\subsection{Generate negative binomial variates: \textcolor{VioletRed}{rannegbin}()}\index{rannegbin()}
+\subsection{\textcolor{VioletRed}{rannegbin}(): negative binomial variates}\index{rannegbin()}
 \label{rannegbin}
 The  function  returns  random  number  distributed  according to the
 negative binomila distribution.
@@ -2194,7 +2982,7 @@ interpretation of the distribution, but it is compatible with interpreting negat
 distribution as a compound gamma-Poisson distribution and it is useful when simulating
 overdispersed Poisson distributions.
 \end{note}
-\subsection{Random selection of elemets}
+\subsection{\textcolor{VioletRed}{select}(): Random selection of elements}\index{select()}
 \label{select}
 \vspace{0.3cm}
 \hline
@@ -2220,14 +3008,14 @@ thus elements of the output are 1 or 0..
 S=\textcolor{VioletRed}{select}(500,10000)\\
 \textcolor{VioletRed}{mean}(S),\textcolor{VioletRed}{sum}(S),500/10000;
 \end{example}
-\subsection{\textcolor{VioletRed}{random}(): generate random scalrs or matrices defined with}\index{random()density()}
+\subsection{\textcolor{VioletRed}{random}():  random variates from any distribution}\index{random()}
 \label{random}
 usage \textcolor{VioletRed}{random}(\textcolor{teal}{dist}) where \textcolor{teal}{dist} is the density defined in \textcolor{VioletRed}{density}().
 See \textcolor{VioletRed}{density}() for examples.
 \section{Functions for interpolation}
 \label{inter}
 The following functions can be used for interpolation
-\subsection{interpolate}
+\subsection{\textcolor{VioletRed}{interpolate}(): linear interpolation}\index{interpolate()}
 \label{interpolate}
 Usage://
 \textcolor{VioletRed}{interpolate}(x0,x1[,x2],y0,y1[,y2],x]//
@@ -2414,7 +3202,7 @@ To be documented later
 \end{itemize}
 If \textcolor{teal}{arg} does not have a legal type for \textcolor{VioletRed}{len}(), then \textcolor{VioletRed}{len}(\textcolor{teal}{arg})=-1 if \textcolor{VioletRed}{len}() has
 option \textcolor{blue}{any->}, otherwise an error is produced.
-\subsection{List of integers}
+\subsection{\textcolor{VioletRed}{ilist}(): list of integers}\index{ilist()}
 \label{ilist}
 Generates a list of integers which can be used as indexes. This function
 is used implicitly with {}.
@@ -2798,7 +3586,15 @@ which just test the value of
 \section{Matrix functions}
 \label{matrixs}
 \textbf{J} contains now the following matrix functions.
-\subsection{Create a matrix: \textcolor{VioletRed}{matrix}()}\index{matrix()}
+\subsection{Matrices and vectors}
+\label{matrixo}
+Matrices and vectors are generated with the \textcolor{VioletRed}{matrix}() function or they are
+produced by matrix operations, matrix functions or by other \textbf{J} functions. E.g.
+the \textcolor{VioletRed}{data}() function is producing a data matrix as a part of the compound data
+object. Matrix elements can be used in arithmetic operations as input or output
+in similar way as real variables.
+See Matrix computations.
+\subsection{\textcolor{VioletRed}{matrix}(): create a matrix:}\index{matrix()}
 \label{matrix}
 Function \textcolor{VioletRed}{matrix}() creates a matrix and puts REAL values to the elements. Element values
 can be read from the input paragraph, file, or the values can be generated
@@ -2876,8 +3672,9 @@ A=\textcolor{VioletRed}{matrix}(3,
 
 \end{example}
 
-\subsection{\textcolor{VioletRed}{nrows}() can be used as:}\index{nrows()}
+\subsection{\textcolor{VioletRed}{nrows}(): number of rows in MATRIX, TEXT or BITMATRIX}\index{nrows()}
 \label{nrows}
+can be used as:
 \begin{itemize}
 \item[\textbf{J}\.] \textcolor{VioletRed}{nrows}(MATRIX)
 \item[\textbf{J}\.] \textcolor{VioletRed}{nrows}(TEXT)
@@ -2886,8 +3683,9 @@ A=\textcolor{VioletRed}{matrix}(3,
 \begin{note}
 If the argument has another object type, and error occurs
 \end{note}
-\subsection{\textcolor{VioletRed}{ncols}() can be used as:}\index{ncols()}
+\subsection{\textcolor{VioletRed}{ncols}(): number of columns in MATRIX or BITMATRIX}\index{ncols()}
 \label{ncols}
+can be used as:
 \begin{itemize}
 \item[\textbf{J}\.] \textcolor{VioletRed}{nrows}(MATRIX)
 \item[\textbf{J}\.] \textcolor{VioletRed}{nrows}(BITMATRIX)
@@ -3172,10 +3970,7 @@ Negative diagonal eleemnt produces error, value zero correaltion 9,99.
 \end {changemargin}
 \hline
 \vspace{0.2cm}
-\section{Functions for DATA objects}
-\label{dataf}
-\textbf{J} contains now the following Functions for DATA objects.
-\subsection{n datahead}
+\section{Working with DATA objects}
 \label{datahead}
 Data can be analyzed and processed either using matrix computations
 or using DATA objects. A DATA object is compound object
@@ -3963,9 +4758,13 @@ if(j_depilog.gt.0)call dotrans(j_depilog,1)
 return
 \end{verbatim}
 \color{Black}
-\section{Statitical functions}
-\label{statistical}
-There are curretly avalailable following stasttical functions.
+\section{Statistical functions}
+\label{statistics}
+There are several statistical functions which can be used to compute basic statistics
+linear and and nonlinear regression, class means, standard deviations and standard errors
+in one or two dimensional tables using data sets. There are also functions
+which can be used to compute statistics from matrices, but these are described
+in Section  \ref{matrix}
 \subsection{\textcolor{VioletRed}{stat}()}\index{stat()}
 \label{stat}
 Computes and prints basic statistics from data objects.
@@ -4730,10 +5529,59 @@ NNote 2: If virtual memory overflow occurs, see first Note 5 for \textcolor{Viol
 \subsection{weigts() weights of schdules}
 \label{weights}
 TO BE RAPORTED LATER
+\subsection{\textcolor{VioletRed}{partweight}() weights of split schedules}\index{partweight()}
+\label{partweights}
+TO BE RAPORTED LATER
 \section{Plotting figures}
 \label{Plotting}
 The graphiscs of the current version of \textbf{J} is produced Gnuplot. \textbf{J} offers nowan alternative interface
 to Gnuplot, and it is quite easy to add more plotinng routines later.
+\subsection{Figures}
+\label{figu}
+Figures are made using Gnuplot. \textbf{J} transmits information into Gnuplot using text files.
+\textbf{J} generates the files using .jfig extension. Necessary files are generated  by deleting old
+files without asking permission. If \textcolor{teal}{fig} is the output of a figure function, then
+\textbf{J} creates always, except in 3D, file with name \textcolor{teal}{fig}.jfig and possibly other files with
+.jfi0, jfi1  etc extensions.
+All figure functions use the following options.
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent Output  \tabto{3cm}  1 \tabto{5cm}   FIGURE  \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  The FIGURE object created or updated
+@@figure
+\end {changemargin}
+\hline
+\vspace{0.2cm}
+\begin{note}
+is possible to show a figure using \textcolor{VioletRed}{show}() function. It can have either the \textcolor{teal}{fig} object as the
+argument or the file name of \textcolor{teal}{fig}.jfig -file. Thus it is possible
+to edit the file using Gnuplot capabilites.
+\end{note}
+\begin{note}
+It is possible to change the terminal type used by Gnuplot by giving
+the name of the terminal to the predefine CHAR variable \textcolor{teal}{Terminal}.
+The default is \newline \textcolor{teal}{Terminal}='qt'.
+\end{note}
+\begin{note}
+The default writte by Gnuplot does not look nice and is not implemented.
+The user can write own legends using \textcolor{blue}{label->} option in \textcolor{VioletRed}{drawline}().
+\end{note}
+\begin{note}
+Easiest way to delete an nonmatrix object \textcolor{teal}{fi} is \textcolor{teal}{fi}=0, which makes it possible
+to use \textcolor{blue}{append->} also for an \textcolor{teal}{fi} wihtout the need to construct if then-
+structures.
+\end{note}
+\subsubsection{Figure object}
+\label{figureo}
+Graphic functions produce FIGURE objects. Each FIGURE object can consist of
+several subfigures. Each FIGURE object stores information of x- and y axes, the
+range of all x- and y-values, and for each sub-figure information of the ranges
+of x and y in the subfigure plus the subfigure type and the needed data values.
+Currently, when Gnuplot is used for graphics, most data values are stored
+in text files which Gnuplot reads. Function \textcolor{VioletRed}{plot3d}() is plotting 3-d figures without making a FIGURE object.
+See Plotting figures for more information.
 \subsection{Scatterplot: \textcolor{VioletRed}{plotyx}()}\index{plotyx()}
 \label{plotyx}
 \textcolor{VioletRed}{plotyx}() makes scatterplot.
@@ -5250,7 +6098,7 @@ To be reported later,  see old manual
 \subsection{setvalue() : set value for a bitmatrix}
 \label{setvalue}
 To be reported later,  see old manual
-\subsection{closures/) :convex closures}
+\subsection{closures() :convex closures}
 \label{closures}
 To be desrribed later,  see old manual
 \section{Misc. functions}
@@ -5595,10 +6443,6 @@ command level. The name \$Cursor\$ may appear in error messages when doing
 commands at command level.  An-other transformation object \$Val\$ which is used to
 take care of the substitutions of "-sequences in the input programming. Some \textbf{J}
 functions use also implicitly transformations object \$Cursor2\$.
-\subsubsection{Simulator}
-\label{simulatoro}
-A simulator is a transformation object with a few additional parameters. The
-simulator is described in the Simulator chapter.
 \subsection{Code options}
 \label{codeopt}
 There are some special options which do not refer to object names or values. Some options
@@ -6075,201 +6919,6 @@ matrix with the same dimensions as \textcolor{teal}{A} and
 \item[\textbf{J}] \textcolor{VioletRed}{min}(A,B), \textcolor{teal}{A} and \textcolor{teal}{B} compatible matrices. \textcolor{teal}{Result} is amatrix with the same dimesnions containg elementwise
 minimums.
 \end{itemize}
-\subsubsection{Matrices and vectors}
-\label{matrixo}
-Matrices and vectors are generated with the \textcolor{VioletRed}{matrix}() function or they are
-produced by matrix operations, matrix functions or by other \textbf{J} functions. E.g.
-the \textcolor{VioletRed}{data}() function is producing a data matrix as a part of the compound data
-object. Matrix elements can be used in arithmetic operations as input or output
-in similar way as real variables.
-See Matrix computations.
-\subsection{Matrix functions}
-\label{matrixf}
-There are matrix function which can create matrices (objects with type Matrix), take submatrices from larger matrices,
-make matrices from submatrices, compute statitics from matrices, solve linear equations,
-compute inverse and transpose of a matrix.
-Sums, differences and products of matrices are defined using ordinary arithmetic
-operations +,- and *. Arithmetic operations can combine scalars and matrices in the normal way.
-Now all matrices are in double precision.
-
-The arithemetic operations work for matrices as follows for arguments \textcolor{teal}{a1} and \textcolor{teal}{a2}
-\begin{itemize}
-\item[\textbf{J}] \textcolor{teal}{a1} + \textcolor{teal}{a2}
-\begin{itemize}
-\item[\textbf{J}] \textcolor{teal}{a1} and \textcolor{teal}{a2} can be compatibe matrices
-\item[\textbf{J}] \textcolor{teal}{a1} or \textcolor{teal}{a2} can be scalar (REAL) and the other argument is MATRIX.
-\item[\textbf{J}] \textcolor{teal}{a1} or \textcolor{teal}{a2} can be row vector and the other argument
-can be matrix having the same number
-of columns. Then the row vector is added to each row of the matrix. This is NONSTADARD.
-Similarly the other argument can be a colun vector and the other argument matrix having the same number of rows.
-Then the vector is added to each column of the matrix. NONSTANDARD.
-\end{itemize}
-
-\end{itemize}
-
-The same computation rules apply for operations -, *. (elementwise product), and
-/. (elemetwise division). The same rules apply also for logical operations,
-except the nonstandard rules do not apply.
-
-For multiplication \textcolor{teal}{a1} * \textcolor{teal}{a2}, either of the arguments can be scalar,
-and the other matrix or LIST of REAL objects.
-When \textcolor{teal}{a1} and \textcolor{teal}{a2} are matrices, standar matrix multiplication rules apply.
-
-When \textcolor{teal}{a1} or \textcolor{teal}{a2} is LIST of REAL values then, it works exacty as
-a column vector, when it is on the input side.  The elements are eqaul
-to the values of the REAL elements. When a LIST is an output of matrix
-computaions, the an error occurs if the output of the matrix operation is
-not comaptibel with the number of elemets in the LIST.
-
-
-\begin{example}[matrixop]Matrix operations\\
-\label{matrixop}
-A=\textcolor{VioletRed}{matrix}(3,4,\textcolor{blue}{do->});\\
-A+2;\\
-A-1;\\
-2*A;\\
-A*.\textcolor{VioletRed}{matrix}(3,4,\textcolor{blue}{do->}2);\\
-A/.A;\\
-b=\textcolor{VioletRed}{matrix}(4,\textcolor{blue}{values->}(1,3,6,8));\\
-A*b;\\
-Continue=1 \,\textcolor{green}{!Error}\\
-A*.b;\\
-A+b(1,-3); \,\textcolor{green}{!\,NONSTANDARD}\\
-B=\textcolor{VioletRed}{matrix}(3,4,\textcolor{blue}{values->}2);\\
-A;\\
-A.eq.B;\\
-li=\textcolor{VioletRed}{list}(x1...x3)\\
-li=4,5,7;\\
-A+li;\\
-li=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{do->});\\
-@li;\\
-A+li;\\
-b*A;\\
-A+\textcolor{VioletRed}{t}(b);\\
-li=\textcolor{VioletRed}{matrix}(4,\textcolor{blue}{do->});\\
-Continue=0
-\end{example}
-\subsection{Create a matrix: \textcolor{VioletRed}{matrix}()}\index{matrix()}
-\label{matrix}
-Function \textcolor{VioletRed}{matrix}() creates a matrix and puts REAL values to the elements. Element values
-can be read from the input paragraph, file, or the values can be generated
-using \textcolor{blue}{values->} option, or sequential values can be generated
-using \textcolor{blue}{do->} option. Function \textcolor{VioletRed}{matrix}() can generate a diagonal and block diagonal matrix.
-A matrix can be generated from submatrices by using matrices as arguments
-of the  \textcolor{blue}{values->} option. It should be noted that matrices are stored in row order.
-\vspace{0.3cm}
-\hline
-\vspace{0.3cm}
-\noindent Output \tabto{3cm}  1 \tabto{5cm}   MATRIX | REAL \tabto{7cm}
-\begin{changemargin}{3cm}{0cm}
-\noindent  If a 1x1 matrix is defined, the output will be REAL.
-The output can be a temporary matrix without name, if \textcolor{VioletRed}{matrix}() is an argument
-of an arithmetic function  or matrix function. If no element values are
-given in \textcolor{blue}{values->} or obtained from \textcolor{blue}{in->} input, all elemets get value zero.
-\end{changemargin}
-\vspace{0.3cm}
-\hline
-\vspace{0.3cm}
-\noindent Args \tabto{3cm} 0-2 \tabto{5cm}  REAL \tabto{7cm}
-\begin{changemargin}{3cm}{0cm}
-\noindent  The dimension of the matrix. The first argument gives the number of rows,
-the second argument, if present, the number of columns.  If the matrix is generated from submatrices given in \textcolor{blue}{values->}, then the dimensions
-refer to the submatrix rows and submatrix columns. If there are no arguments, then the
-it should be possible to infer the dimensions from \textcolor{blue}{values->} option. If the
-first argument is \textcolor{teal}{Inf}, the the number of rows is determined by the number
-number of lines in source determined by \textcolor{blue}{in->}.
-\end{changemargin}
-\vspace{0.3cm}
-\hline
-\vspace{0.3cm}
-\noindent \textcolor{blue}{in} \tabto{3cm} N|0|1 \tabto{5cm}  CHAR \tabto{7cm}
-\begin{changemargin}{3cm}{0cm}
-\noindent  The input for values. \textcolor{blue}{in->} means that values are read in from
-the following input paragraps, \textcolor{blue}{in->}\textcolor{teal}{file} means that the values are read from file.
-in both cases a record must contain one row for the matrix.
-If there is reading error and values are read from the terminal, \textbf{J} gives
-possibility to continue with better luck, otherwise an error occurs.
-\end{changemargin}
-\vspace{0.3cm}
-\hline
-\vspace{0.3cm}
-\noindent \textcolor{blue}{values} \tabto{3cm} N|1- \tabto{5cm}   REAL  \tabto{7cm}
-\begin{changemargin}{3cm}{0cm}
-\noindent values or MATRIX objects put to the matrix. The argumenst of
-\textcolor{blue}{values->} option go in the regular way
-through the interpreter, so the values can be obtained by computations. If only one REAL value is
-given then all diagonal elements are put equal to the value (ohers will be zero),
-if \textcolor{blue}{diag->} option is present, otherwise all elements are put equal to this value. If matrix dimensions
-are given, and there are fewer values than is the size the matrix, matrix is
-filled row by row using all values given in
-\textcolor{blue}{values->}. If there are more values as is the size, an error occurs unless there is
-\textcolor{blue}{any->} option present.
-Thus \textcolor{VioletRed}{matrix}(N,N,\textcolor{blue}{values->}1) generates the identity matrix.
-If value-> refers to one MATRIX,and \textcolor{blue}{diag->} is present then a block diagonal
-matrix is generated. Without \textcolor{blue}{diag->}, a partitioned matrix is generated having all
-submatrices equal
-\end{changemargin}
-\vspace{0.3cm}
-\hline
-\vspace{0.3cm}
-\noindent \textcolor{blue}{do}  \tabto{3cm} N|0-3 \tabto{5cm}  REAL   \tabto{7cm}
-\begin{changemargin}{3cm}{0cm}
-\noindent  A matrix of number sequences is generated, as followsws: \newline
-\textcolor{blue}{do->} Values 1,2,...,\textcolor{teal}{arg1} x \textcolor{teal}{arg2} are put into the matrix in the row order. \newline
-\textcolor{blue}{do->}5 Values 5,6,...,\textcolor{teal}{arg1} x \textcolor{teal}{arg2}+4 are put into the matrix \newline
-\textcolor{blue}{do->}
-\end {changemargin}
-\hline
-\vspace{0.2cm}
-\begin{example}[matrixex]Example of generating matrices\\
-\label{matrixex}
-A=\textcolor{VioletRed}{matrix}(3,
-
-\end{example}
-
-\subsection{\textcolor{VioletRed}{getelem}(): extracting information from an object}\index{getelem()}
-\label{getelems}
-The origin of this function is the function which was used in previous versions
-to take an matrix element, which explains the name. Now it is used to extract
-also submatrices (e.g. a(1,-3,All)) , or to get value of an regression
-function or to compute
-a transforamtion and then take argument object as the result. E.g. if \textcolor{teal}{tr} is a transformation
-then the result of  \textcolor{teal}{tr}(\textcolor{teal}{a}) is object \textcolor{teal}{a} after calling \textcolor{teal}{tr}.
-\begin{note}
-If someone starts to use the own function property of the open source J, she/he
-probably would like to get the possiblity to extract information from her/his object types
-also. To implement this property requires some co-operation from my side.
-\end{note}
-\section{n datahead}
-\label{datahead}
-Data can be analyzed and processed either using matrix computations
-or using DATA objects. A DATA object is compound object
-linked to a data MATRIX and LIST object containing variable (column) names,
-some other information.
-When data ere used via DATA object in statistical or linear programming
-functions, the data are processed observarion by observation.
-It is possible to work using DATA object or using directly the data matrix, wharever is more
-convenient. It is posible make new data objects or new matrices
-by to extracting  columns of data matrix, computing matrices with matrix computations.
-It is possible to use data in hierarcchila way, This property is inherited fro JLP.
-There are two \textbf{J} functions which create DATA objects from files, \textcolor{VioletRed}{data}() and
-exceldta(). \textcolor{VioletRed}{data}() can create hierarchical data objects. Function \textcolor{VioletRed}{newdata}() creates  DATA object from matrices, which temselfs can be
-picked from data objects. Function \textcolor{VioletRed}{linkdata}() can link two data sets to make a hierarchical data.
-\begin{note}
-If a data file contains columns which are referred with variable names and some vectors,
-the it is practical to read data first into a matrix using \textcolor{VioletRed}{matrix}() function and then
-use matrix operations and \textcolor{VioletRed}{newdata}() to make DATA object with variable names and matrices.
-See Simulator section for an example.
-\end{note}
-\begin{note}
-\textcolor{VioletRed}{transdata}() function goes through DATA object similarly as statitical functions, but
-does not serve a specific purpose, just transforamtions defined in the TRANS object refreed with
-\textcolor{blue}{trans->} option are computed. See again the simulator section.
-\end{note}
-\begin{note}
-In earlier versions it was possible to give several data sets as arguments for \textcolor{blue}{data->} option.
-This festure is now deleted as it is possible to stack several data matrices and then use \textcolor{VioletRed}{newdata}() function to create a single data set.
-\end{note}
 \subsubsection{Text objects}
 \label{textob}
 Currently there are two text object types, the old text object TEXT and the new
@@ -6282,76 +6931,6 @@ create text objects directly. All the names of \textbf{J} objects are also store
 TEXT object called Names. The number of lines in a text objects can be obtained
 with \textcolor{VioletRed}{nrows}() function and the total number of characters can be obtained with
 \textcolor{VioletRed}{len}() function.
-\section{Figures}
-\label{figu}
-Figures are made using Gnuplot. \textbf{J} transmits information into Gnuplot using text files.
-\textbf{J} generates the files using .jfig extension. Necessary files are generated  by deleting old
-files without asking permission. If \textcolor{teal}{fig} is the output of a figure function, then
-\textbf{J} creates always, except in 3D, file with name \textcolor{teal}{fig}.jfig and possibly other files with
-.jfi0, jfi1  etc extensions.
-All figure functions use the following options.
-\vspace{0.3cm}
-\hline
-\vspace{0.3cm}
-\noindent Output  \tabto{3cm}  1 \tabto{5cm}   FIGURE  \tabto{7cm}
-\begin{changemargin}{3cm}{0cm}
-\noindent  The FIGURE object created or updated
-@@figure
-\end {changemargin}
-\hline
-\vspace{0.2cm}
-\begin{note}
-is possible to show a figure using \textcolor{VioletRed}{show}() function. It can have either the \textcolor{teal}{fig} object as the
-argument or the file name of \textcolor{teal}{fig}.jfig -file. Thus it is possible
-to edit the file using Gnuplot capabilites.
-\end{note}
-\begin{note}
-It is possible to change the terminal type used by Gnuplot by giving
-the name of the terminal to the predefine CHAR variable \textcolor{teal}{Terminal}.
-The default is \newline \textcolor{teal}{Terminal}='qt'.
-\end{note}
-\begin{note}
-The default writte by Gnuplot does not look nice and is not implemented.
-The user can write own legends using \textcolor{blue}{label->} option in \textcolor{VioletRed}{drawline}().
-\end{note}
-\begin{note}
-Easiest way to delete an nonmatrix object \textcolor{teal}{fi} is \textcolor{teal}{fi}=0, which makes it possible
-to use \textcolor{blue}{append->} also for an \textcolor{teal}{fi} wihtout the need to construct if then-
-structures.
-\end{note}
-\subsubsection{Figure object}
-\label{figureo}
-Graphic functions produce FIGURE objects. Each FIGURE object can consist of
-several subfigures. Each FIGURE object stores information of x- and y axes, the
-range of all x- and y-values, and for each sub-figure information of the ranges
-of x and y in the subfigure plus the subfigure type and the needed data values.
-Currently, when Gnuplot is used for graphics, most data values are stored
-in text files which Gnuplot reads. Function \textcolor{VioletRed}{plot3d}() is plotting 3-d figures without making a FIGURE object.
-See Plotting figures for more information.
-\section{Linear programming functions}
-\label{jlpintro}
-The linear programming (LP) functions are called jlp-functions. The jlp-functions can be used to define
-linear programming problems, solve them and access the results.
-The jlp-problems are defined using \textcolor{VioletRed}{problem}() function, and the problems can be solved using
-\textcolor{VioletRed}{jlp}() function. There are several ways to access the results.
-The main interest in jlp-functions may be in the forest planning problems, where
-a simualator has generate treatment schedules.
-There are four different applications of \textcolor{VioletRed}{jlp}() function.
-\begin{itemize}
-\item[\textbf{J}] Small ordinary LP problems with text input.
-\item[\textbf{J}] Large ordinary LP problems with MATRIX input.
-\item[\textbf{J}] Forest planning problems without factories.
-\item[\textbf{J}] Forest palnning problems with factories.
-\end{itemize}
-The problem definition for each case is generated with \textcolor{VioletRed}{problem}() function.
-These applications are presented in different subsections
-\section{Statistical functions}
-\label{statistics}
-There are several statistical functions which can be used to compute basic statistics
-linear and and nonlinear regression, class means, standard deviations and standard errors
-in one or two dimensional tables using data sets. There are also functions
-which can be used to compute statistics from matrices, but these are described
-in Section  \ref{matrix}
 \subsection{The main components of \textbf{J} program}
 \label{compo}
 The structure of \textbf{J} program
@@ -6378,9 +6957,75 @@ via options.
 \end{itemize}
 A user of \textbf{J} needs only input programming and \textbf{J} functions, but understanding of
 the other properties may help to understand waht is going on in a \textbf{J} session.
-\subsection{stributions}
-\label{distributions}
-Currently there are sepcial functions for the density funtion \textcolor{VioletRed}{pdf}() of normal distribution,
-cumulative distribution function \textcolor{VioletRed}{cdf}() for normal and chi2 distributions,
-frequncy funtion for binomial distribution, and frequnce funtion \textcolor{VioletRed}{negbin}() for the
-negative binomial distribution (providing Poisson as a special case).
+\section{Future development}
+\label{future}
+I think that the current version of \textbf{J} provides many possibilities for future developments.
+For instance:
+\begin{itemize}
+\item\item[\textbf{J}] The current version does not have any special functions
+for making simulators. The new \textcolor{VioletRed}{goto}() commands, possibility to work with submatrices,
+and the new \textcolor{VioletRed}{transdata}() function provide muc more efficient ways to develop simulators.
+Examples will be provided shortly.
+\item[\textbf{J}] Using the possibility to compute derivatives using the analytic derivates makes it quite straightforward
+to make it possible to have a nonlinear objective function
+\item[\textbf{J}] It would be quite easy to develop \textbf{J} so that integer solution is produced with respect to the
+schedule weight.
+\item[\textbf{J}] It would be interesting to see how \textbf{J} can put to work with Heureka.
+\item[\textbf{J}] The possiblity to run R scripts from \textbf{J} and \textbf{J} scripts from R provide new possiblities.
+\item[\textbf{J}] \textbf{J} can now be used as an interface to Gnuplot. Google search show how many possiblities Gnuplot provides.
+It is quite straightforward to implement these grpahs if it is not currently possible.
+\item[\textbf{J}] The possibility to generate random numbers from any discrete or continuous distribution provide new
+possibilities to stdy the effects of random errors in the optimization.
+\item[\textbf{J}] The new tools for analyzing grouped data are usefulf when studying the grouped data. it would
+be straightforward to implement mixed model methods based on expected means squares.
+\end{itemize}
+\begin{thebibliography}{9}
+
+\bibitem{dan}
+Dantzig, G.B. and VanSlyke, R.M.  (1967)
+\emph{Generalized upper bounding techniques}
+\textbf{J} Compt Sys Sci 1(10),213-226
+
+\bibitem{flet}Fletcher,R.  1996. Dense factors of Sparse matrices. Dundee
+Numerical Analysis Report NA/170.
+
+
+\bibitem{howard},
+Hoganson, H.M. and Rose, D.W.  (1984),
+\emph{A simulation approach for optimal timber management scheduling}
+Forest Science, 30:220-238
+
+\bibitem{dtran}Hoganson, H.M. and Kapple,  D.C. (1991),
+\emph{DTRAN version 1.0. A multi-market timber supply model. Users’ guide}
+Minneapolis: University of Minnesota Department of Forest
+Resources Staff Series Paper 82,
+
+\bibitem{pekka}
+Hyv\"onen, Pekka, Lempinen, Reetta,
+Lappi, Juha, Laitila, Juha  and Packalen, Tuula (2019)
+\emph{Joining up optimisation of wood supply chains with forest},
+Forestry an international journal of forestry,
+93(1):163--177,
+DOI = https://doi.org/10.1093/forestry/cpz058
+
+\bibitem{JLP} Lappi, Juha (1992) \emph{JLP – a linear programming package for
+management planning} Finnish Forest Research Institute
+Research papers; 414, 134 p.
+
+
+
+\bibitem{LL},
+Lappi, Juha and Lempinen, Reetta (2014)
+\emph{A linear programming algorithm and software
+for forest-level planning problems
+including factories}
+Scandinavian Journal of Forest Research,29 Supplement 178–-184",
+
+DOI =  http://dx.doi.org/10.1080/02827581.2014.886714
+
+
+
+
+
+
+\end{thebibliography}

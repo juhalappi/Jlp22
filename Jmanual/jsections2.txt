@@ -9,20 +9,20 @@ outfile jexamples.inc
 outfile jmanual.tex
 !!subsection matrix
 !!;return
-! section preface1 
-! subsection preface2 
-! subsection preface3 
-! subsection preface4 
-! subsection preface5 
-! subsection preface6 
-! subsection preface7
-! subsection preface8
-! subsection preface9
-! subsection changes 
+section preface1 
+subsection preface2 
+subsection preface3 
+subsection preface4 
+subsection preface5 
+subsection preface6 
+subsection preface7
+subsection preface8
+subsection preface9
+subsection changes 
 
 section intro
 subsection intro1
-subsection pack
+subsection git
 !!!;return
 !!!ubsection compo
 subsection jfuncs0
@@ -59,7 +59,8 @@ section jfuncs
 section  special Special functions
 
 subsection setoption setoption()
-subsection getelem getelem()
+subsection getelem0
+subsubsection getelem getelem()
 subsection setelem setelem()
 subsection list20 list2()
 subsection setcode setcodeopt()
@@ -78,7 +79,10 @@ subsection trans trans()
 subsection call call()
 subsection pause pause()
 subsection noptions noptions()
+
+section JR
 subsection R R()
+subsection Rcalls
 
 
 section loops Loops and controls structures
@@ -88,7 +92,7 @@ subsection do do()
 subsection if if()
 subsection ASSIGN ASSIGN()
 !!section sit
-subsection which which()
+subsection which 
 subsection errexit errexit()
 subsection goto goto()
 
@@ -128,6 +132,10 @@ section arit Arithmetic and logical operations after converting to the polish no
 subsection minmax  min() and max()
 
 section matrixstat 
+subsection mean
+subsection sd
+subsection var
+subsection sum
 
 
 ! subsection max
@@ -235,7 +243,7 @@ subsection printresult
 !
 	
 section  matrixs functions for matrices
-
+subsection matrixo
 subsection matrix matrix()
 subsection nrows nrows()
 subsection ncols ncols()
@@ -253,12 +261,11 @@ subsection var var() variance of matrix elements
 subsection sd sd() standard deviation of matrix elements
 subsection minloc minloc() location of minimum value
 subsection maxloc maxloc() location of maximum value 
-subsection cumsum cumsum() cumulative sum
+subsection cumsum cumsum(): cumulative sum
 subsection corrmatrix corramtrix() correlation matrix from variance matrix
 !
-	
-section dataf Data functions
-subsection datahead
+!section dataf Data functions
+section datahead
 subsection data data() creating a DATA object or two hierarchical data objects
 subsection newdata newdata(): making a new DATA from matrices posssibly with transformations
 subsection exceldata exeldata(): making DATA from excel file 
@@ -269,7 +276,7 @@ subsection classvector classvector(): extracting information from grouped data
 subsection values values(): getting different values of a variable in DATA
 subsection transdata transdata() going through data and computing tranformations
 
-section statistical Statistical functions
+section statistics Statistical functions
 
 subsection stat stat():computing minimums, maximums, means and standard deviations from DATA
 subsection cov cov(): covariance MATRIX
@@ -291,6 +298,7 @@ subsection problemo PROBLEM object
 subsection problem problem(): defining a a PROBLEM object
 subsection jlp jlp(): solving a PROBLEB in DATA
 subsection weights weights() weights of schedules
+subsection partweights
 !subsection unit unit() unit of a schedule
 ! subsection schedcum schedcum(): cumulative schedule number
 ! subsection schedw schedw(): within unit schedule number
@@ -310,6 +318,8 @@ subsection weights weights() weights of schedules
 !
 	
 section Plotting figures
+subsection figu
+subsubsection figureo
 subsection plotyx plotyx(): scatterplot
 subsection draw draw() drawing a function
 subsection drawclass drawclass() drawing classmeans and possibly se's of class means
@@ -365,7 +375,7 @@ subsection pref
 
 
 subsubsection transo
-subsubsection simulatoro
+
 
 subsection codeopt
 subsection comoptions
@@ -387,32 +397,27 @@ subsection arfu
 
 
 !section matrixsection
-subsubsection matrixo
-subsection matrixf
-subsection matrix
 
-subsection getelems
+! subsection matrixf
 
-section datahead
+
 
 
 subsubsection textob
-
-
-section figu
-subsubsection figureo
-
-section jlpintro
-
-
-section statistics
-
-
-
-
-
 subsection compo
-subsection distributions
+
+
+section future
+
+
+
+
+
+
+
+
+
+section jbib
 
 ;return
 
