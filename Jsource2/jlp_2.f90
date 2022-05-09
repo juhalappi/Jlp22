@@ -2735,6 +2735,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: jlp_valuek_af
 	use jmod, only: j_trans_output
 	use jmod, only: j_ivnames
+	use jmod, only: j_getname
+	use jmod, only: j_oname
+	use jmod, only: j_loname
 	use jmod, only: j_inlist1
 	use jmod, only: j_puti
 	use jmod, only: jlp_xpresent2
@@ -2876,7 +2879,6 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: jlp_nsumx
 	use jmod, only: jlp_shpx
 	use jmod, only: jlp_sumxi
-	use jmod, only: j_getname
 	use jmod, only: jlp_post
 	use jmod, only: jlp_vxpack2
 	use jmod, only: jlp_ixpack2
@@ -4179,7 +4181,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					!iv2 is variable, test if it is in xdata-matrix
 					ijo=j_inlistobject( iv2, jlp_ivkeepx)
 					if(ijo.le.0)then
-						call j_printname('**variable ',iv2,' is not in x-data matrix')
+						call j_printname('***variable ',iv2,' is not in x-data matrix')
 						j_err=.true.
 						return
 					endif !if(ijo.le.0)then
@@ -4196,10 +4198,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				else !if(itrans.eq.0) then
 					ntrans = ntrans+1
 					jlp_itransv(ntrans)=itrans
-					do ij=1,j_o(iv2)%i2(1)
-						ijo=j_inlistobject( j_o(iv2)%i(ij), j_o(ivxdata)%i(2))
+					do ij=1,j_o(iv2)%i(1)
+						ijo=j_inlistobject( j_o(iv2)%i2(ij), j_o(ivxdata)%i(2))
 						if(ijo.le.0)then
-							call j_printname('**variable ',j_o(iv2)%i2(ij),' is not in x-data matrix ')
+							call j_printname('*variable ',j_o(iv2)%i2(ij),' is not in x-data matrix ')
+	
 							j_err=.true.
 							return
 						endif !if(ijo.le.0)then
@@ -4381,8 +4384,13 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 						do ii=1,j_o(iv2)%i(1)
 							iv2el=j_o(iv2)%i2(ii)
 							lentrim=j_o(j_ivnames)%i(iv2el+1)-j_o(j_ivnames)%i(iv2el)
-							lxk = j_inlistobject(j_o(iv2)%i(ii),jlp_ivxkyk) !muuttujan j‰rjestysnro xkyk listassa
- 
+							lxk = j_inlistobject(j_o(iv2)%i2(ii),jlp_ivxkyk) !muuttujan j‰rjestysnro xkyk listassa
+							if(lxk.eq.0)then
+								call j_getname(iv2,j_o(iv2)%i2(ii))
+								write(6,*)'4646',j_oname(1:j_loname),' ',j_oname(1:j_loname)
+								call j_getname(jlp_ivxkyk)
+								write(6,*)'4647',j_oname(1:j_loname)
+							endif
 							!testattava lˆytyykˆ iv2el datasta >> testattu yll‰  do ij=1,o(iv2)%i(0) -silmukassa??
 							!ivel2 talteen xkyk-listaan
  
@@ -4391,7 +4399,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 								iv3el=j_o(iv3)%i2(jj)
 								len3=j_o(j_ivnames)%i(iv3el+1)-j_o(j_ivnames)%i(iv3el)
  
-								lff = j_inlistobject(j_o(iv3)%i(jj),jlp_ivfact)
+								lff = j_inlistobject(j_o(iv3)%i2(jj),jlp_ivfact)
  
 								! Tarkistetaan, ettei tehdasta ole jo lis‰tty ko muuttujalle
 								do inx=1,jlp_nxkfact(lxk)
@@ -4476,7 +4484,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 										do ii=1,j_o(iv2)%i(1)
 											iv2elpos=j_inlistobject(j_o(iv2)%i2(ii),jlp_ivkeepx)
 											if(iv2elpos.le.0) then
-												call j_printname('**variable ',iv2el,' is not in x-data matrix')
+												call j_printname('**variable ',j_o(iv2)%i2(ii),' is not in x-data matrix')
+												do ij=1,j_o(jlp_ivkeepx)%i(1)
+													write(6,*)j_o(iv2)%i2(ii),j_o(jlp_ivkeepx)%i2(ij),&
+													j_o(iv2)%i2(ii).eq.j_o(jlp_ivkeepx)%i2(ij)
+												enddo
 												j_err=.true.
 												return
 											endif !if(iv2elpos.le.0) then
@@ -4830,7 +4842,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
 			nyxkf_ = 0	! xk/tehdas -yhdistelmien kokonaism‰‰r‰ yk-esiintymiss‰
 			do i_ = 1, count(jlp_isfyval)
-				nyxkf_ = nyxkf_ + j_o(jlp_irowfyvars(i_))%i(0)*j_o(jlp_irowfyfact(i_))%i(0)
+				nyxkf_ = nyxkf_ + j_o(jlp_irowfyvars(i_))%i(1)*j_o(jlp_irowfyfact(i_))%i(1)
 			enddo !do i_ = 1, count(j_isfyval)
 			nfxfyexp=nfxval+ nyxkf_
 			if(allocated(jlp_xkykrowvars))deallocate(jlp_xkykrowvars)
@@ -5768,7 +5780,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					k_ = j_inlistobject(ivxk_,jlp_ivkeepx)
 				!	iba_=0
 				!		do while(iba_ < (j_o(ivxmat)%i(1)*j_o(ivxmat)%i(2)))
-					if (j_o(ivxmat)%r(ibaobs+k_) < 0) then   !jxmatiba
+					if (j_o(ivxmat)%d(ibaobs+k_) < 0) then   !jxmatiba
 					! datassa negat. tehdas-xk-mja
 						write(6,*)'**Negative fact xk in data: ixkyk,ivxk,iba,k, xk',&
 							ixk_,ivxk_,iba_,k_,j_o(ivxmat)%d(ibaobs+k_) !jxmatiba
@@ -8182,6 +8194,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			!call j_defmatrix(ivoutresult,'%problemrows',jlp_nrow,1,j_matreg,ivout)
  
 			!	j_o(ivout)%d = jlp_irowrow(1:jlp_nrow)
+			if(jlp_nrow.gt.0)then
 				call j_defmatrix(ivoutresult,'%rhs',jlp_nrow,1,j_matreg,ivout)
  
 				j_o(ivout)%d = jlp_rhs
@@ -8194,6 +8207,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				enddo !do i_=1,j_nrow
 				call j_defmatrix(ivoutresult,'%shprice',jlp_nrow,1,j_matreg,ivout2_)
 				j_o(ivout2_)%d = jlp_vc(1:jlp_nrow)
+			endif
 	
 		endif !if(j_xpresent.and.ivoutresult.ne.j_ivresult) then
  

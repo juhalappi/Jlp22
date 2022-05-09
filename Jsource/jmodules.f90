@@ -58,7 +58,7 @@ logical ::j_inited=.false.
 	double precision,parameter::j_todeg=180.d0/j_pi !korjaa !makes radians to degrees
 	double precision,parameter::j_e=2.718281828459045
 	!options
-	character*80 :: j_title='j: j3.0 6.11.2021 (c) Juha Lappi and Natural Resources Institute Finland'
+	character*80 :: j_title='j: j3.0 22.4.2022 (c) Juha Lappi and Natural Resources Institute Finland'
 
 		!functions
 	integer, parameter :: j_nfspec=8 
@@ -263,7 +263,7 @@ logical ::j_inited=.false.
 	'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
 	
 	!! Misc. utility functions
-	'value','properties','cpu','seconds'/ !4
+	'value','properties','cpu','secnds'/ !4
 	
 	integer,dimension(j_nfunctions_) :: j_minarg_ ! = (/ &  !!!%function
 	data j_minarg_/ 1,1,1,1,1,1,1,2,&
@@ -359,7 +359,7 @@ logical ::j_inited=.false.
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 	'extra','subextra','mean', 'min','max',& ! 1-10
 'sd','var','warm','volsd','rhs','rhs2','w','obs', 'subobs','problem',& !11-20 MIXED UP
-'from','subdata','nobsw','subread','keep','subkeep','submaketrans','gaya','rows','subin', & !21-30
+'from','subdata','nobsw','subread','keep','subkeep','submaketrans','free','rows','subin', & !21-30
 'subform','filter','print','sum','duplicate','input','mask','maxiter','test','debug', & !31-40
 'default','classlink','x','maxlines','q','obsw','nobswcum','xrange','yrange','mark',& !41-50
 'keepperiod','nobs','append','variance','oldsubobs','noint','periods','period','unitdata','unitdataobs', & !51-60
@@ -653,6 +653,7 @@ logical ::j_inited=.false.
 	integer,parameter ::j_mxrecursion=100
 	integer,dimension(j_mxrecursion)::j_curline
 	integer ::j_recursion=0
+	
 ! integer ivdebug  ! ??
 
 !objects initialized in j_init
@@ -766,7 +767,8 @@ logical ::j_inited=.false.
 	integer,parameter::j_ivwindow=71
 	integer,parameter::j_ivall=72
 	integer,parameter ::j_ivdebugtrans=73
-	integer,parameter::j_predefined=73
+	integer,parameter ::j_ivbgaya=74
+	integer,parameter::j_predefined=74
 	
 	type j_basicobject  ! defines basic J-object types
 		real, dimension(:),allocatable ::r  ! real vector associated with each  object
@@ -776,6 +778,7 @@ logical ::j_inited=.false.
 		character*1,dimension(:), allocatable::ch ! character*1 -vector associated with each object
 		character*160,dimension(:),allocatable::txt
 	end type j_basicobject !type j_basicobject
+	
 	integer,parameter::j_txtlen=160
 	character*160,dimension(:),allocatable::j_temptxt
 	double precision,dimension(:),allocatable::j_tempvector
@@ -923,6 +926,7 @@ logical ::j_inited=.false.
 	integer::j_nextnode,j_nextnodeb
 	integer,dimension(:,:), allocatable::j_istarts
 	integer, dimension(:),allocatable::j_gettreevars,j_loctreevars
+	integer,dimension(:),allocatable:: j_dotlist
 ! tähän
 	integer j_ivtreedata,j_ivntree,j_itree1,j_itree2,j_ivkeeptree,j_ivtreemat
 	integer j_ivsimu   !current simulator
@@ -1408,7 +1412,7 @@ logical ::j_inited=.false.
 	integer :: j_ivswapm=0  !data matrix stored in file
 	type j_linkr
 		integer ::iout_trans  !used in trans so that iout must not store in recursion
-		real, dimension(:),pointer::rbuf=>null()
+		double precision, dimension(:),pointer::rbuf=>null()
 		type(j_linkr),pointer ::pnext=>null()
 	end type !type j_linkr
 !!end motule
@@ -1453,6 +1457,7 @@ logical ::j_inited=.false.
 	integer j_ndo
 	integer j_ials(0:20)  !satrting points in contianuation lines
 	INTEGER        j_iido(7,j_mxndo)
+	integer j_dostart(j_mxndo)
 ! integer j_printdo(j_mxndo)
 	logical :: j_printdo=.false.
 	logical,dimension (0:j_mxniifs)::j_bypa=.false.
@@ -1720,6 +1725,7 @@ logical ::j_inited=.false.
 		subroutine j_getsubin(iob,io,nu,ivform)
 			integer,intent(in)::iob,io
 			integer,intent(out)::nu,ivform
+			
 		end subroutine
 
 		subroutine j_getdat(ivdat,nobs,ivmat,ivkeep) !get links to data elements, used getobsiv, used in JLP
@@ -2063,8 +2069,9 @@ logical ::j_inited=.false.
 		end subroutine !subroutine j_printtext(iob,line)
 
 		!writetext(nu,iob,line) : print line of text object, if line=0 -> print all
-		subroutine j_writetext(nu,iob,line)
+		subroutine j_writetext(nu,iob,line,nonum)
 			integer, intent(in):: nu,iob, line
+			logical,intent(in),optional ::nonum
 		end subroutine !subroutine j_writetext(nu,iob,line)
 
 	! getline(iv,line,buffer,le) : get line line from text object iv into buffer
@@ -2619,11 +2626,9 @@ logical ::j_inited=.false.
 		end function !function j_nobs_data(ivdata)
 
 		!getdots(i1,i2,new,list,n) : get varaible list from ... , if(new) can generate vars
-		subroutine j_getdots(i1,i2,list,n,nmax)
+		subroutine j_getdots(i1,i2,n)
 			integer, intent(in)	:: i1, i2
 			integer, intent(out):: n
-			integer, intent(in):: nmax
-			integer, intent(out):: list(*)
 		end subroutine !subroutine j_getdots(i1,i2,new,list,n)
 
 		real function j_valuesspl(ifunc,arg) !compute the value of a smoothing spline
@@ -3025,9 +3030,9 @@ logical ::j_inited=.false.
 		
 	
 		
-		integer function j_linkoption(iob,io,mopt,clear)
+		integer function j_linkoption(iob,io,mopt,clear,link)
 			integer,intent(in)::iob,io,mopt
-			logical,optional,intent(in)::clear
+			logical,optional,intent(in)::clear,link
 		end function
 		
 		integer function j_intloc(ivec,lenvec,i)
@@ -3246,6 +3251,8 @@ end module jmod !!module getmod
 module gayamod
 	integer j_g_npvar,j_g_ngvar,j_g_maxvar,j_g_nvar,j_g_nvarre
 	integer :: j_g_maxvarold=0
-	real ,dimension(:), pointer::j_g_xx=>null(),j_g_p=>null(),j_g_var=>null()
-	integer ,dimension(:), pointer::j_g_ixl=>null()
+	real ,dimension(:),allocatable:: j_g_xx  !pointer::j_g_xx=>null(),j_g_p=>null(),j_g_var=>null()
+	real ,dimension(:),allocatable:: j_g_p
+	real ,dimension(:),allocatable:: j_g_var
+	integer ,dimension(:),allocatable:: j_g_ixl  !=>null()
 endmodule !module gayamod

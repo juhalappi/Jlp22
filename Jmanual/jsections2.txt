@@ -22,7 +22,13 @@ subsection changes
 
 section intro
 subsection intro1
-subsection git
+section git
+subsection gitpack
+subsection gitload
+
+section start
+subsection install
+subsection runex
 !!!;return
 !!!ubsection compo
 subsection jfuncs0
@@ -30,8 +36,8 @@ subsection jfunc
 
 subsection objintro
 subsection system
-subsection setup
-subsection firstuse
+!subsection setup
+!subsection firstuse
 subsection exit
 subsection typo
 subsectione license

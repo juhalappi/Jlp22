@@ -693,8 +693,17 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
  ! the other properties may help to understand waht is going on in a J session.
 !endsection
 
-!Section git Github
-! The package at github.com/juhalappi/j contains the following components
+!Section git  Installing J from Github 
+! The Github ditribution was made under the guidance of Reetta Lempinen. This section decribes the 
+! folders of the Github distribution and also how to 
+! isntall J and Gnuplot. 
+!endsection
+
+!Section gitpack Git package
+!The J  package can be loaded by pressing load zip button under the green
+! code button in the right side of the page github.com/juhalappi/j.  The package
+!contains the following components
+
 !\begin{itemize}
 !\item[\textbf{J}] Data: \hspace{1cm} folder for data files
 !\begin{itemize}
@@ -779,7 +788,94 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 ! 
 !endsection
 
+!Section gitload Loading the package
 
+! The installation is here described from the viewpoint of an user 
+!who just want to use J, not develop (yet).
+
+! The load zip button loads file J-master.zip. Copy this file into a proper folder.
+! Let it be Jgit. Clicking the J-master.zip icon shows folder J-master in 
+! 7Zip (if this is installed). Clicking unpack 7zip unpacks it to the folder Jgit. 
+! Too many folder levels are avoided, if everyhing in folder J-master is copied directly in
+ ! folder Jgit.
+ 
+ ! The j3d.exe is the debug version of J3. The debug version should be 
+ ! used as long as the most memory acces probems are solved. 
+  ! Let us assume that the working folder is jtest.
+!endsection
+ 
+ !Section start Starting to us J and Gnuplot
+ !This section tells how to install J so that the user can start running the example
+ !endsection
+	!Section install Istalling Gnuplot and J
+	! Let us then install Gnuplot. Go to page gnuplot.info, and select there download,
+	! and in the download page select green 'download latest vestion', which loads 
+	! 'gp543-min64-mingw.exe' (or similar), and if you let it install with usual yes-next procedures
+	! gnuplot is installed  in folder c:\program files\gnuplot. Open then command prompt.
+	! Give command gnuplot. If the compuler says that it is not operable command, 
+	! this means that gnuplot is not properly on the PATH of the system. I had some problems to get the PAT to work
+	! properly. When I edited the Environmental variable for system and added new item by adding C:\program files\gnuplot\bin having 
+	! space between program and files, I did get gnuplot to the path, and path command showed that it was
+	! actually two times, but anyhow it worked.
+	
+	! Also folder Jgit/Jbin  should be put on the PATH. This happens by adding item C:\jgit\Jbin to the 
+	! environmental system variable path.
+	! Restart then the computer.
+	
+	
+	! endsection
+	
+	! Section runex Running examples
+	
+	! Copy then jexamples.inc and j3.pdf  from jdoc_demo folder into the Jtest folder. 
+ ! It is not wise to start 
+ ! working in the Jdoc_demo folder, because if you load a new version of J in a similar way into Jgit folder
+ ! and allow the computer replace existing folders with the same name,
+ ! you would loose the work done in Jgit folder.
+ 
+ ! Open the command prompt and move to the directory 'jtest' by 'cd' commands. 
+ ! It is possible to use J also directly, but its necessary to use J through the command prompt 
+	! at this testing phase, bacause then, if J crashes, the error messages do not disappear.
+	! In first time, you may want to change 
+	! the colors etc of the commant prompt (color may take effect only after
+	! closing command prompt and reopening it). 
+ 
+ ! If you would like that when starting j3d in this folder, J immediately starts with examples,
+ ! make file j.par to folder jtest and write
+  ! to it
+	
+	! ;incl(jexamples.inc)
+ 
+ ! It is possible to write to the fisrts line of j.par 
+ 
+ ! *3000
+ 
+ ! which would mean that J would generate intially 3000 named objects.
+ 
+ 
+	! Then start j by giving command j3d at the command prompt.
+	! If you have not done j:par file, write at the sit> prompt:  ;incl(jexamples.inc).
+	! Alternatively you can diretly start in the jexamples.inc by launching J by\\
+!  J3d jexamples.inc	
+	
+	! J will then print all shortcuts available. You can run examples one by one by giving example shortcuts
+! individually, or you can run all examples by shortcut ALL. If you give shortcut ALL, J asks whether
+! a ;pause is generated after each example ('pause after each example(1/0)>'). 
+! Even if pause() is not generated after each example, it is generated after each plot. 
+! This can be prevented by giving at sit> promt 'fcont=1' before giving ALL. Examples in the ALL section can anyhow be started
+! at any point by putting label ';current:' to any point after label ;ALL: and giving shortcut
+! 'current'. This is also handy when examples have errors which break the execution. If the errors are made 
+! intentionally to demosntrate error situations, the interruption of excution after these intentional errors are
+! prevented so that the jexamples.inc have command Continue=1 before the intentional error. Theafter the normal
+! error handling is put on by command Continue=0.
+
+! It is useful to keep the manual open and follow simultaneously the manual and the execution of examples.
+	
+ 
+
+!endsection
+
+!
  !Section objintro J objects
  ! J objects have a simple yet efficient structure. Each object is associate with a double precision
  ! variable, two integer vectors, one single precision vector, one double precision vector, 
@@ -1396,6 +1492,67 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 !endsection
 
 !Section jfuncs0 J functions
+! The structure of J functions is easiest to explain using examples.
+!For instance a data object can be created with \\
+! data1=data(read->(x1...x3),maketrans->mt,in->) \\
+! Here ]data1[ is the output. read-> is an option which tells what are the variable names in the data.
+! Options can transmit object names or numeric values, here read-> transmits object names. 
+!maketras->mt tells that for each observation the trasformations defined in the trasformation
+! object mt are first computed and the output variables are included in the data object.
+! Option in-> tells that the data are read from the following input paragraph.
+
+!Let us then look at a function with arguments and codeoptions. Fuction \\
+! stat(x1,x3,min->,max->,filter->(x2.gt.3)) \\
+! Now the arguments x1 and x2 tell that stasistics are computed for variables  x1 and x2. 
+! The options min-> and max-> tell that the minimum of ]x1[ is stored in variable ]x1[%min and maximum in 
+! variable ]x1[%max. 
+
+! Option filter-> is a code option is trasmits a piece of code. filter->(x2.gt.3) tells that 
+! only such observations are accepted for which ]x[ is greater than 3. All operations
+! which look like logical operations are actually numeric operations which produce
+! value 1 for TRUE and value 0 for FALSE. Other options are 
+! interpreted only once when entering the function, but the code within a code option is here
+! computed repeatedly for all observations. If the code needed in a code option is long or must
+! be computed using several lines, the code can be put into a transformation object, and e.g.
+! filter->(tr(a).gt.3) is done so that transformation ]tr[ is first 
+! computed and ]tr[(]a[) trasmits the value of variable 
+! ]a[ after the transforamation is computed. 
+
+! stat() function does not produce an output object. 
+! For such function which produce output but the name of the output is not given, the name of the output
+! is Result. Try e.g. '1+1;' If an output is produced, the it is printed if the code line
+! ends with ';' or ';;' . See section \ref{joperation} how the printing is controlled with the
+! variable ]Printoutput[.
+
+! For an option which basically transmits on/off information, it may be necesssary to 
+! control wheter the option is on by a control variable. For instance, in plotting figures
+! option continue-> indicates that the execution continues without pause() 
+! when the figure is plotted. The option continue->fcont that the option is on when variable
+! fcont has non-zero value.
+
+! The value of an option needs to be put into parenthesis when it is not a single 
+! constant, object name or simple function call as in\\
+ ! fi=draw(func->sin(x),x->x,xrange->(0,10)).
+! Here there arguments can be computed using computations. For istansce \\
+ ! fi=draw(func->sin(x),x->x,xrange->(0,max(10*ran(),3)))\\
+ ! would compute a random upper range for the x-axes. Note here x->x means that the name 
+ ! of the x-axes variable is x, which used as the argument in sin([x[)
+ 
+! \textbf{In a function all the arguments must be before all options.}
+
+! The computations are done going through the parse tree form right to left. 
+! This should be taken into account when getting the values of option arguments 
+! using transformations, for instance if a and b are computed in transformation tr
+! then filter->(tr(a).gt.b) does not work in the intended way but filter->(a.gt.tr(b)) does.
+! The reason for this nonstandard direction for going through 
+! the parse tree is that the options mus be computed before entering the function, and it had
+! made the processing of the parse tree more complicated.
+
+! Some of the errors made by the user are noted at the time the function is interpreted, some
+! errors are noted after entering the function. Some errors are not recognized and
+! unintended results are obtained. In some cases the system will crash.
+
+
 ! The general (non arithmetic) J functions are used either in statements
 
 ! func(arg1,…,argn,opt1->value1,….,optm->valuem)
@@ -2178,6 +2335,10 @@ a call to function assone()
 !Section preface1 Preface
 ! First I thank my grand daughter for the permission to use the portrait
 ! she drawed for my 70 yr birthday. \\
+! J software version 3.0 is now publisched as a open source software. The preparation of the new version was
+!very complicated and frustrating process. The whole story of J is 
+!presented in section \ref{jstory} where I make also some critical comments on how Luke did
+!treat this process. I got 7.10.2021 in a co-operation agreement with Luke
 
 ! I will here describe the history of J in this preface in unusual
 ! length and detail. Readers interested ony in the use of the current 

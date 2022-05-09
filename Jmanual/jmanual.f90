@@ -310,8 +310,8 @@ goto 235
 	subroutine writeincl()
 		write(6,*)'writing ',nexample, ' examples as include file'
 		write(20,'(a)')'exfile=thisfile()'
-		write(20,'(a)')"ask(wait,q->'pause after each example(1/0)>')"
-		write(20,'(a)')"ask(fcont,q->'continue after each figure(1/0)>')"
+		
+		
 		write(20,'(a)')"current=';incl(exfile,from->current)'"
 		do ine=1,nexample
 		lef=len_trim(exfile(ine))
@@ -322,8 +322,10 @@ goto 235
 		enddo
 		write(20,'(a)')"AGAIN=';incl(exfile)'"
 		write(20,'(a)')"ALL=';incl(exfile,from->ALL)'"
-	
+!		write(20,'(a)')"ask(fcont,q->'continue after each figure(1/0)>')"
 !		write(20,'(a)')';if(wait);pause'
+		write(20,'(a)')'wait=0'
+			write(20,'(a)')'continue=1'
 		write(20,'(a)')';return'
 		write(20,'(a)')' '
 		do ine=1,nexample
@@ -343,6 +345,8 @@ goto 235
 		
 		write(20,*)' '
 		write(20,'(a)')';ALL:'
+		write(20,'(a)')"ask(wait,q->'pause after each example(1/0)>')"
+	!	write(20,'(a)')"ask(fcont,q->'continue after each figure(1/0)>')"
 		do ine=1,nexample
 		!	write(20,'(a)')' '
 		!	write(20,'(a)')';'//exlabel(ine)(1:lexlabel(ine))//':'
