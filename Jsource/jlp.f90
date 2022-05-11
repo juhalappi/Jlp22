@@ -383,7 +383,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	irowobj=0 !row where objective is
 	iall=0
 	1 call j_getinput('prob>',78) !)  !nprint)
-!write(6,*)'<77inp:',j_linp,j_inp(1:j_linp)
+! write(6,*)'<77inp:',j_linp,j_inp(1:j_linp)
 	ip=j_nextlim0(j_inp,1,j_linp,':')  !Mela
 	!if(index(j_inp(1:j_linp),'/').gt.0)write(6,*)'****/',j_linp,j_inp(1:j_linp),nset
 	if(nset.gt.0)then

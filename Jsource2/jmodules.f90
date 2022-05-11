@@ -268,58 +268,81 @@ logical ::j_inited=.false.
 	integer,dimension(j_nfunctions_) :: j_minarg_ ! = (/ &  !!!%function
 	data j_minarg_/ 1,1,1,1,1,1,1,2,&
 	! 'setoption','getelem','setelem','list2', 'o1_funcs','o2_funcs','o3_funcs','setcodeopt', &  ! 8n
+
 	1,1,1,1,&
 	! 'type','delete_o','exist_o','name',    &  !3
+
 	0,1,1,0,1,&
 	! 'trans','call','pause','noptions', &  !4
+
 2,1,2,0,2,0,1,1,1,0,0,0,0,2,0,2,2,1,&
 	! 'do', 'if','assign','sit','which','errexit', 'goto','itrace', 'trace','tracenow',  &
 	! 'itraceoff','traceoff','tracetest','assoneone','enddo','assmany','goto2','goto3',&  !16
+
 	2,2,2,2,2,2,1,  2,2,2,   2,2,2,1,2,2,2,2,2,&
 	!Arithmetic and logical operations after converting to the polish notation
 	!'HMULT','HDIV','IPOWER','MULT','DIV','PLUS','MINUS','EQ','NE','LE', &
 	!'LT','GE','GT','NOT','AND','OR','EQV','NEQV','POWER', & !19
+
 	1,1,2,31*1, &
 	! 'min','max','sign','mod',	'nint','int','ceiling','floor','sqrt','sqrt2', & ! sqrt2(-4)=-2
 	! 'log','log10','exp','sin','sind','cos','cosd','tan','tand','cotan', & !d indicates degree argument
 	! 'cotand','asin','asind','acos','acosd','atan','atand','acotan','acotand','sinh', & 
 	! 'cosh','tanh','fraction','abs', & !34
+
 1,1,1,1,2,&
 	! 'der','gamma','loggamma','logistic','npv', & !5
+
 1,1,2,2,0,&
 	! 'pdf','cdf','bin','negbin', 'density' ,&  !4
+
 0,0,0,1,2,1,1,&
 	! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
+
 1,4,4,&
 ! 'interpolate','plane','bilin', & !3
-1,2,2,1,2,1,1,2,&
+
+0,2,2,1,2,1,1,2,&
 	! 'list','merge','difference','index','index_v','len','ilist','putlist',& ! 8
+
 	0,0, &
 	! 'text','txt', & !2  text is old txt new
+
 	1,1,1,0,1,0,1,&
 	! 'exist_f','delete_f','close','showdir','setdir','thisfile', 'filestat',& ! 7
+
 	3,2,0,1,1,1,1,&
 	! 'read','write','print','ask','askc','printresult','printresult2', & ! 6 j_fbio
+
 	0,4*1,2,12*1,1,&
 	! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 	! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix',  & !19
+
+
 0,1,0,0,0,1,0,1,0,&
 	! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata',& !8
+
 0,1,1,1,1,1,2,1,1,2,  1,0,1,&
 	! 'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
 	! 'varcomp', 'classify', 'class', & !13
-	0,0,0,16*1,&
+
+	0,0,0,4*1,0,11*1,&
 	! 'problem','jlp','weights','unit','schedcum','schedw','weight','partweights','partunit','partschedcum', &
 	! 'partschedw','partweight','priceunit', 'weightschedcum','priceschedcum','priceschedw', &
 	! 'weightschedw','integerschedw','xkf',  & ! 19  (Note)
+
 0,1,1,0,0,0,&
 	! 'simulator','next','branch','simulate','cut','loadtrees', & ! 6
+
 	0,0,1,1,1,1,&
 	! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
+
 	1,2,2,2,2,2,&
 	! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate',  & ! 6
+
 	2,1,1,1,0,2,1,&
 	! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
+
 4*0/
 	! 'value','properties','cpu','seconds'/ !4
 
@@ -856,8 +879,9 @@ logical ::j_inited=.false.
 	double precision ::j_dapu  !for different purposes
 	character*3000 j_tempchar
 	character*3000 j_tempchar7   !used in j_interpret
-	character*400 j_tempchar2, j_tempchar3
-	character*50 j_varname1, j_varname2,j_oname,j_oname2
+	character*3000 j_tempchar2
+	character*400 j_tempchar3
+	character*60 j_varname1, j_varname2,j_oname,j_oname2
 	integer::j_loname,j_loname2
 !!end motule
 

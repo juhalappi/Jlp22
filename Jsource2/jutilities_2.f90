@@ -2861,7 +2861,7 @@ subroutine j_puttext(iv,text) ! put %%text into text %%object
  
 	do j=1,le; j_o(iv)%ch(ibas+j)=text(j:j) ;end do
 	j_o(iv)%i(0)=j_o(iv)%i(0)+1
-	if( j_o(iv)%i(0) .ge.ubound(j_o(iv)%i,dim=1))write(6,*)'<66565>',j_o(iv)%i(0),ubound(j_o(iv)%i,dim=1)
+!	if( j_o(iv)%i(0) .ge.ubound(j_o(iv)%i,dim=1))write(6,*)'<66565>',j_o(iv)%i(0),ubound(j_o(iv)%i,dim=1)
 	if( j_o(iv)%i(0) .ge.ubound(j_o(iv)%i,dim=1))call j_inci(iv,j_o(iv)%i(0))
 	j_o(iv)%i( j_o(iv)%i(0)+1 )=j_o(iv)%i( j_o(iv)%i(0))+len(text)
 	return
@@ -7005,7 +7005,7 @@ subroutine j_getdots(i1,i2,n) ! get varaible list from ... , if(new) can generat
 	ilop1=le1-k
 	ilop2=le2-k
  
-	write(6,*)'dot:ial,le1,le2',ial,le1,le2
+!	write(6,*)'dot:ial,le1,le2',ial,le1,le2
 	if(le1.eq.le2.and.ial.eq.le1.and.j_isletter(name1(ial:ial)).and. &
 		j_isletter(name2(ial:ial)))then
 		ii1=ichar(name1(le1:le1))
@@ -8497,7 +8497,7 @@ function j_isconst(name)   !0 =is not, -1 looks like but is not
  
 	if(name(1:1).eq.'.'.or.(name(1:1).ge.'0'.and.name(1:1).le.'9').or.name(1:1).eq.'-'.or. &
 		name(1:1).eq.'+')then
-		! write(6,*)'reading',name
+	!	 write(6,*)'reading',name,name(1:1).eq.'-'
 		read(name,*,err=99)r   !'(f12.0)',err=99)r
 		! nv mxnamedv+mxtemporalv
 		if(r.eq.j_1)then
@@ -8538,6 +8538,7 @@ function j_isconst(name)   !0 =is not, -1 looks like but is not
 		j_v(j_nv+j_nconstantv)=r
 		! write(6,*)'const',nv+nconstantv,r
 		j_isconst=j_nv+j_nconstantv
+		write(6,*)'<5isconst>',j_isconst
 	else !name(1:1).eq.'+')then
 		j_isconst=0
 	endif !name(1:1).eq.'+')then
@@ -9591,7 +9592,7 @@ subroutine j_getinput(prompt,inprint,nul0t)  ! gets next input line
 		!iald=1    ! ial
  
 	!	 write(16,*)'iald,linp,inp',j_linp,j_inp(1:j_linp)
-		call expandlist(j_inp,j_linp,edited)
+!		call expandlist(j_inp,j_linp,edited)
 		if(j_err)return
  
  
@@ -10876,6 +10877,8 @@ double precision function j_val(text) !subroutine compute the numeric value of a
 	character (len=*), intent(in):: text
  
 	iv=j_object(text)
+	le=len(text)
+	i2=min(2,le)
 	if(iv.gt.0)then
 		if(j_otype(iv).eq.j_ipreal)then
 			j_val=j_v(iv)
@@ -10884,7 +10887,13 @@ double precision function j_val(text) !subroutine compute the numeric value of a
 			j_err=.true.
 		endif !if(j_otype(iv).eq.j_ipreal)then
 		return
- 
+	elseif(iv.le.0.and.(text(1:1).eq.'-'.or.text(1:1).eq.'+').and.&
+	(text(i2:i2).eq.'.'.or.(text(i2:i2).ge.'0'.and.text(i2:i2).le.'9')))then
+		iv=j_isconst(text)
+		if(iv.gt.0)then
+			j_val=j_v(iv)
+			return
+		endif !if(iv.gt.0)then
 	elseif(iv.le.0.and.(text(1:1).eq.'.'.or.(text(1:1).ge.'0'.and.text(1:1).le.'9')))then !if(iv.gt.0)then
 		iv=j_isconst(text)
 		if(iv.gt.0)then
@@ -12993,10 +13002,11 @@ recursive subroutine j_interpret(input,ivteku)
 	use jomod, only: j_noptions
 	use jmod, only: j_functions
 	use jmod, only: j_nfunctions_
-	use jmod, only: j_getdots
-	use jmod, only: j_dotlist
-	use jmod, only: j_predefined
 	use jmod, only: j_otype
+	use jmod, only: j_iplist
+	use jmod, only: j_dotlist
+	use jmod, only: j_getdots
+	use jmod, only: j_predefined
 	use jmod, only: j_ipchar
 	use jmod, only: j_inlistobject
 	use jomod, only: j_minarg
@@ -14497,6 +14507,7 @@ recursive subroutine j_interpret(input,ivteku)
 	subroutine jparse(win,isoutput)
 		character*(*),intent(in):: win
 		logical,intent(in)::isoutput  !in output getelem is changed into setelem
+		logical :: isat
 		integer,dimension(200)::mothers  !last mother for each level
 		integer,parameter::nmax=200
 		integer,dimension(nmax)::list
@@ -14679,8 +14690,8 @@ recursive subroutine j_interpret(input,ivteku)
 				return
 			endif
  
- 
-			if(p)write(6,*)'TASSA OLLAAN, node ial, ir1',nn,ial,ir1
+			isat=win(ial:ial).eq.'@'
+			if(p)write(6,*)'TASSA OLLAAN, node ial, ir1',nn,ial,ir1,win(ial:ir1),win(1:lopw)
 		!	if(ial.gt.ir1.and.p2)write(6,*)'<778 ialgt.ir1 ,CYCLe ',win(ial:le)
 			if(ial.gt.ir1)then
 				nn=nn-1
@@ -14708,7 +14719,36 @@ recursive subroutine j_interpret(input,ivteku)
 					iir=ir1
 					if(idots.gt.0)iir=ial+idots-2
 					if(p)write(6,*)'ivbef',ial,iir,win(ial:iir)
-					call getiv(win(ial:iir),iv)
+	
+					if(isat)then
+	
+							iv= j_object(win(ial+1:iir))
+						if(iv.le.0)then
+							write(6,*)win(ial+1:iir),' is not an object'
+							j_err=.true.;return
+						endif
+						if(j_otype(iv).ne.j_iplist)then
+							call j_printname('* ',iv,' is not a list')
+							j_err=.true.;return
+						endif
+						nlist=j_o(iv)%i(1)
+							if(.not.allocated(j_dotlist))then
+								 allocate(j_dotlist(1:max(100,nlist)))
+							elseif(size(j_dotlist).lt.nlist)then
+								 deallocate(j_dotlist)
+								 allocate(j_dotlist(1:nlist))
+							endif
+	
+							j_dotlist(1:nlist)=j_o(iv)%i2(1:nlist)
+							if(p)write(6,*)'<7377@list',j_dotlist(1:nlist)
+							iv=j_dotlist(1)
+							ilist=1
+					else
+						nlist=0
+						call getiv(win(ial:iir),iv)
+						ilist=0
+					endif
+	
 					if(isgoto2.and.ila.gt.0.and.idots.gt.0)then
 						write(6,*)'dots .. does not work with labels (yet)'
 						j_err=.true.
@@ -14720,8 +14760,11 @@ recursive subroutine j_interpret(input,ivteku)
  
 				endif !if(win(ial:ial).ge.'0'.and.win(ial:ial).le.'9')then
  
-				nlist=0
-				ilist=0
+	
+	
+		!		write(6,*)'<5454 ',win(ial:ial)
+	
+	
 				if(idots.gt.0)then
 					iv0=iv
 			!	iv2=j_object(win(iir+4:ir1))
@@ -14737,13 +14780,14 @@ recursive subroutine j_interpret(input,ivteku)
 			!if(iv.le.0)call j_getobject(0,win(ial:ir1),j_ipreal,iv)
  
 !			endif
-			!write(6,*)'ilist,nlist,idots',ilist,nlist,idots
+			if(p)write(6,*)'ilist,nlist,idots',ilist,nlist,idots
 				do while(ilist.le.nlist)
 		!			write(6,*)'ilist,iv',ilist,nn,iv
 		! if(iv.eq.2814)p=.true.
 		! if(iv.eq.2814)p2=.true.
 		! if(iv.eq.2814)write(6,*)j_inp(1:j_linp)
 		! if(iv.eq.2814)j_v(j_ivdollar)=783.d0
+	
 					node(nn)=-iv
 					mother(nn)=mothers(level)
 			!		if(nn.eq.10)write(6,*)'mude%shhshshhh%level',mothers(level+1)
@@ -14759,6 +14803,7 @@ recursive subroutine j_interpret(input,ivteku)
 					endif !if(nchild(mutsi).eq.0)then
 					nchild(mutsi)=nchild(mutsi)+1
 					lastchild(mutsi)=nn
+	
 					ilist=ilist+1
 					if(ilist.le.nlist)then
 						iv=j_dotlist(ilist)
@@ -16233,7 +16278,7 @@ subroutine j_getin(iob,io,nu,ivform)  !get in-> file
 !	p=j_v(j_ivdebug).ne.j_0
 	j_incin=.false.
 	li=j_linkoption(iob,io,j_min)
-	write(6,*)'<777)',li
+!	write(6,*)'<777)',li
 	if(li.lt.0)then
 		nu=0;return
 	endif !if(li.lt.0)then

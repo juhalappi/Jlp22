@@ -11,13 +11,13 @@ program j
 !	call j_sub(remain,arg,error)
 		call j_sub(.true.,arg,error)
 	! if you want to clear the workspace of j call j_clear()	
-	write(6,*)'tultiin takas ,yritetään jatkaa ilman nollausta error ',error
-	call j_sub(.false.,arg,error)
-	write(6,*)'tultiin taas nyt nollataan, ja yritetään uudelleen'
-		call j_clear()
-		write(6,*)'afterclear '
-		call j_sub(.false.,arg,error)
-		write(6,*)'after new start'
+!	write(6,*)'tultiin takas ,yritetään jatkaa ilman nollausta error ',error
+!	call j_sub(.false.,arg,error)
+!	write(6,*)'tultiin taas nyt nollataan, ja yritetään uudelleen'
+!		call j_clear()
+!		write(6,*)'afterclear '
+!		call j_sub(.false.,arg,error)
+!		write(6,*)'after new start'
 		! first argument is .true. if the control remains in J after error 
 		! or after computing the attached script file
 		!if the first argument is .fasle. then just the scrip file is includedn
