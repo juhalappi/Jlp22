@@ -836,7 +836,8 @@ end subroutine !subroutine problem(iob,io)
 					jlp_nrowp=jlp_nrowp+1
 					jlp_ixcurrows(jlp_nrowp)=jcurix
 				endif !if(j_ix(jcurix).ne.0)then
-			enddo;return !do jcurix=0,j_nrow;j_ixcur(jcurix)=j_ix(jcurix)
+			enddo
+			return !do jcurix=0,j_nrow;j_ixcur(jcurix)=j_ix(jcurix)
 		endif !if(j_ndom.le.0)then
 
 		do jcurix=0,jlp_nrow
@@ -980,9 +981,10 @@ end subroutine !subroutine problem(iob,io)
 					jlp_ifycurrows(jlp_nrowpfy)=jcurix
 					jlp_ixcurfact(jcurix)=.true.
 				endif !if(j_nfyrow(j_irowrow(jcurix)).ne.0)then
-			enddo;return !do jcurix=0,j_nrow
+			enddo
+			return !do jcurix=0,j_nrow
 		endif !if(j_ndom.le.0)then
-
+!		write(6,*)'<88888 ',jlp_nrowpfy
 		! fdomain
 		do jcurix=0,jlp_nrow
 			if(jlp_nfyrow(jlp_irowrow(jcurix)).ne.0)then
@@ -1935,7 +1937,7 @@ subroutine xkf(iob,io) !!!!
 	allocate(sumxkf_(1:j_o(jlp_ivxkyk)%i(1),1:j_o(jlp_ivfact)%i(1)))
 
 	do iuni_ = 1,jlp_nunits
-		p=.false.
+		p=iuni_.le.2
 		kier=0
 		100		sumxkf_= 0.d0
 		if(jlp_ivtrans.gt.0)then
@@ -2552,7 +2554,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	double precision value_tree
 	!	double precision,dimension(:),allocatable ::valuetree
 	integer,dimension(j_maxjlpxvars) ::ixpack3
-	real, dimension(j_maxjlpxvars) ::vxpack3
+	double precision, dimension(j_maxjlpxvars) ::vxpack3
 	integer,dimension(:),allocatable ::idiff3
 !	double precision ::slow
 
@@ -2611,6 +2613,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! if the algorithm improves slowly it may be reasonable to take the schedule with the second
 	! highest value into the basis
 	double precision secondb  !the value of the second best schedule
+!	double precision ::rh_
 	logical tried2    ! are the second bests trie
 
 	logical tabu !will leaving schedule be put on fastreject list
@@ -4227,15 +4230,17 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 
 			!zerocapacity		   !!!!
 			do irowj_ = 2,irowp
+	!		write(6,*)'row ',irowj_,jlp_rhs2(irowj_-1),jlp_nfxrow(irowj_),jlp_nfyrow(irowj_),&
+		!	jlp_ix(irowj_-1)
 				if(jlp_nfxrow(irowj_).eq.1.and. jlp_nfyrow(irowj_).eq.0.and. &
 				jlp_ix(irowj_-1).eq.0)then !.and.j_ix(irowj_).eq.0)then !
 					!z-muuttujat tsekattva a-matriisista)
 
 					jxk=jlp_irowfxvars(jlp_ibafx(irowj_)+1)
 					jf = jlp_irowffact(jlp_ibafx(irowj_)+1)
-					rh_=jlp_rhs2(irowj_-1)
+					zeroc=jlp_rhs2(irowj_-1).eq.j_0
 
-					if(rh_.eq.0.)zeroc=.true.  !(jxk,jf)=.true.
+			!		if(rh_.eq.0.)zeroc=.true.  !(jxk,jf)=.true.
 
 					!20181116 #zeroc_z
 					do iz=1,nz
@@ -4687,8 +4692,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		! j_lopp=j_lopp
 	! endif
 
-		!write(6,*)'allocate xmat,',jlp_ntemp0*jlp_lopp/1.e6,' million'
+		write(6,*)'allocate xmat,',jlp_lopp,jlp_ntemp0,jlp_ntemp0*jlp_lopp/1.e6,' million'
 		if(allocated(jlp_xmat))deallocate(jlp_xmat)
+		
 		allocate(jlp_xmat(1:jlp_ntemp0*jlp_lopp))
 
 	  ! write(6,*)'data used from disk would need additional ',&
@@ -4879,6 +4885,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		
 		
 				ibas=0
+		do iik=1,keepx
+	!write(6,*)'477474',iik,j_o(ivxmat)%d(iik),j_o(ivxmat)%d(keepx+iik)
+		enddo		
 		do iunit=1,jlp_nunits
 	
 			if(ivunit.gt.0)then
@@ -4988,10 +4997,17 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					jlp_xmat(i+ibax)= &       ! make temporary variables
 						dot_product(jlp_coefx(iba+1:iba+jlp_nxrowtemp(i)), &
 						j_v(jlp_irowxvars(iba+1:iba+jlp_nxrowtemp(i))))
+						if(iunit.le.-1.and.i.eq.1)then
+							write(6,*)'j_nxrowtemp(i)',jlp_nxrowtemp(i)
+						do jj=1,jlp_nxrowtemp(i)
+						call j_getname(jlp_irowxvars(iba+jj))
+						write(6,*)jj,jlp_coefx(iba+jj),jlp_irowxvars(iba+jj),j_oname(1:j_loname),j_v(jlp_irowxvars(iba+jj))
+						enddo
+						endif
 					!	if(p2.and.nstot.eq.1)write(6,*)'itemp',i,' iba=',iba,' coef=',j_coefx(iba+1:iba+j_nxrowtemp(i)),&
 						!		' vars',j_irowxvars(iba+1:iba+j_nxrowtemp(i))
 				enddo !do i=1,j_ntemp0
-
+!if(iunit.gt.1)stop 'per'
 				!j_ix(0),j_ntemp0
 				if(.not.jlp_maxo.and.jlp_ix(0).ne.0) &
 				jlp_xmat(jlp_ix(0)+ibax)=-jlp_xmat(jlp_ix(0)+ibax)
@@ -5034,11 +5050,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		enddo !do iunit=1,jlp_nunits
 	!	write(6,*)'nunits ',jlp_nunits,jlp_ntemp0
 	!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
-	! iba=0
-	! do i=1,20
-	! write(6,*)jlp_xmat(iba+1:iba+jlp_ntemp0)
-	! iba=iba+jlp_ntemp0
-	! enddo
+	 iba=0
+	 do i=1,20
+	 write(6,*)i,jlp_xmat(iba+1:iba+jlp_ntemp0)
+	 iba=iba+jlp_ntemp0
+	 enddo
 	
 	
 	
@@ -5097,9 +5113,21 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 !if(j_o(ivxmat)%r(10261*keepx).eq.0.)stop 11
 	!tehdas xk-mjien ei-negatiivisuus-tarkistus !!!!
 		if(jlp_fpresent) then
-
+			ibaobs=0
+		!	write(6,*)'<6662 ',ivxmat,j_o(ivxmat)%i(1),j_o(jlp_ivxkyk)%i(1),jlp_ivkeepx
 			do iobs=1,j_o(ivxmat)%i(1)
-				ibaobs=jxmatiba(iobs)  !,1)
+	!			ibaobs=jxmatiba(iobs)  !,1)
+	
+				! if(iobs.le.2)then
+					! do ixk = 1,j_o(jlp_ivxkyk)%i(1) !tehdas xk-mjat
+						! ivxk = j_o(jlp_ivxkyk)%i2(ixk)
+						! kk = j_inlistobject(ivxk,jlp_ivkeepx)
+						k_ = j_inlistobject(ivxk_,jlp_ivkeepx)
+					! call j_getname(ivxk)
+					! write(6,*)iobs,ivxk,kk,j_oname(1:j_loname),j_o(ivxmat)%d(ibaobs+k_)
+				! enddo
+				
+				!endif
 
 				do ixk_ = 1,j_o(jlp_ivxkyk)%i(1) !tehdas xk-mjat
 					ivxk_ = j_o(jlp_ivxkyk)%i2(ixk_)
@@ -5108,14 +5136,17 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				!		do while(iba_ < (j_o(ivxmat)%i(1)*j_o(ivxmat)%i(2)))
 					if (j_o(ivxmat)%d(ibaobs+k_) < 0) then   !jxmatiba
 					! datassa negat. tehdas-xk-mja
-						write(6,*)'**Negative fact xk in data: ixkyk,ivxk,iba,k, xk',&
-							ixk_,ivxk_,iba_,k_,j_o(ivxmat)%d(ibaobs+k_) !jxmatiba
+						call j_getname(ivxk_)
+						write(6,*)'**Negative fact xk-variable ',j_oname(1:j_loname), ' in observation ',iobs ,j_o(ivxmat)%d(ibaobs+k_)
+						!in data: ixkyk,ivxk,iba,k, xk',&
+						!	ixk_,ivxk_,ibaobs,k_,j_o(ivxmat)%d(ibaobs+k_) !jxmatiba
 						j_err=.true.
 						return
 					endif !if (j_o(ivxmat)%r(ibaobs+k_) < 0) then
 				!		iba_=iba_+j_o(ivxmat)%i(2)
 				!		enddo !do while(iba_ < (j_o(ivxmat)%i(1)*j_o(ivxmat)%i(2)))
 				enddo !do ixk_ = 1,j_o(j_ivxkyk)%i(1)
+				ibaobs=ibaobs+keepx  !jlp_ntemp0
 			enddo !do iobs=1,j_o(ivxmat)%i(1)
 		!endif  !xdisk
 		endif !if(j_fpresent) then
@@ -5220,9 +5251,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				j=jlp_ixcurrows(jj)
 !xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
 				jlp_xps(j)=jlp_xps(j)+jlp_xmat(jlp_ix(j)+ibax) !v(ix(j)) !(ix(j)=0 -> no x in row
+			!	if(i.le.2.and.j.eq.0)write(6,*)'<555 ',i,ibax,jlp_ix(j),jlp_xmat(jlp_ix(j)+ibax),jlp_xps(j)
 			enddo !do jj=1,j_nrowp
 
 !tehdasmuuttujien xps-laskenta
+			if(i.eq.jlp_nunits)write(6,*)'<474774>',jlp_fpresent
 			if(jlp_fpresent) then
 !fdomain fcurix ja fcurixy t‰ytyy p‰ivitt‰‰
 				call jlpfcurix(i)
@@ -5232,7 +5265,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 
 				ibakey=jxmatiba(jlp_ibaunit(i)+key) !,2)
 
-!write(16,*)'ibakey ',ibakey
+if(i.le.2)write(16,*)'ibakey i',ibakey,i
 
 !if(j_o(ivxmat)%r(10261*keepx).eq.0.)then
 !write(16,*)ibakey,ibakey/keepx,j_ibaunit(i)+key
@@ -5251,6 +5284,8 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				enddo !do j=0, j_nrow
 
 				if(i.eq.jlp_nunits) then
+					write(n16,*)'jlp_nrowpfy',jlp_nrowpfy
+					write(n16,*)'jlp_nrowp',jlp_nrowp
 					write(n16,*)'nfxrow',jlp_nfxrow
 					write(n16,*)'irowfxvars: ',jlp_irowfxvars
 					write(n16,*)'irowffact: ',jlp_irowffact
@@ -5262,10 +5297,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					write(n16,*)'irowrow',jlp_irowrow
 					write(n16,*)'ifxcurrows',jlp_ifxcurrows
 					write(n16,*)'nfyrow',jlp_nfyrow
-					write(n16,*)'ifycurrows',jlp_ifycurrows
+					write(n16,*)'ifycurrows',jlp_ifycurrows(1:jlp_nrowpfy)
 				endif !if(p.and.i.eq.jlp_nunits) then
 !if(j_o(ivxmat)%r(10261*keepx).eq.0.)stop 49
 !xk-tehdasmuuttujat
+
 				do jj=1,jlp_nrowpf
 					j=jlp_ifxcurrows(jj) !domainissa olevat rivit
 					irowj = jlp_irowrow(j)
@@ -5278,9 +5314,14 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		!endif !if(p) then
 						if(jlp_keyfact(i,jlp_irowfxvars(jlp_ibafx(irowj)+k)).eq. &
 						jlp_irowffact(jlp_ibafx(irowj)+k))then
+						
+
+	
 							jlp_xps(j)=jlp_xps(j)+ jlp_coeffx(jlp_ibafx(irowj)+k)*&
 								j_o(ivxmat)%d(ibakey+jlp_irowfkeep(jlp_ibafx(irowj)+k)) !jxmatiba
-
+								
+!if(i.eq.1.and.j.eq.0)write(6,*)'<##',nfy,irowj,jlp_ibafx(irowj),k,jlp_ibafx(irowj)+k,jlp_coeffx(jlp_ibafx(irowj)+k),&
+! j_o(ivxmat)%d(ibakey+jlp_irowfkeep(jlp_ibafx(irowj)+k)),jlp_xps(j)
 						endif !if(j_keyfact(i,j_irowfxvars(j_ibafx(irowj)+k)).eq.j_irowffact(j_ibafx(irowj)+k))then
 					enddo !do k=1,j_nfxrow(irowj)
 				enddo !do jj=1,j_nrowpf
@@ -5310,13 +5351,16 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		! irowfxvars-> irowfyvars (huom! lista), vast irowffact->irowfyfact (huom! lista) , ibafx->ibafy
 						listy=jlp_irowfyvars(jlp_ibafy(irowj)+k)
 						listf=jlp_irowfyfact(jlp_ibafy(irowj)+k)
-
+						call j_getname(listy)
+if(i.le.2)write(6,*)'<88899 ',k,j_o(listy)%i(1),j_oname(1:j_loname)
 						do ivars_=1,j_o(listy)%i(1)
+				!		write(6,*)'<333 ',ivars_
 			!mjan xmat-sarake
 							iv2elpos = jlp_ifyvarskeep(jlp_ibafykeep(jlp_ibafy(irowj)+k)+ivars_-1)
 			!listy-listan ivars_:innen ptl-mjan paikka (j‰rjestysnumero) xkyk-listassa
 							iv2xykypos_ = jlp_ifyvarsxkyk(jlp_ibafykeep(jlp_ibafy(irowj)+k)+ivars_-1)
-
+	call j_getname(listf)
+!	if(i.le.2)write(6,*)'<688 ',j_oname(1:j_loname),' ',j_o(listf)%i(1)
 							do ifact_=1,j_o(listf)%i(1)
 				!onko tehdas (ifact_) puutavaralaji-muuttujan (ivars_) avaintehdas
 				!tehdas-y-mjaan liittyv‰nn muunnoksen outputmjien eli gamma-kertoimien poiminta v-vektorista
@@ -5325,12 +5369,22 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				!(ibafy(irowj)+k) tehtaiden j‰rjestysnumerot factories-listassa
 				! iv3factpos_ : tehdaslistan list ifact_:innen tehtaan paikka (j‰rjestysnumero) factories-listassa
 								iv3factpos_ = jlp_ifyfactfact(jlp_ibafyfact(jlp_ibafy(irowj)+k)+ifact_-1)
-
+		!						if(i.le.2)write(6,*)'<22 ',i,' iv3factpos_ ',iv3factpos_,jlp_keyfact(i,iv2xykypos_)
+		!						if(i.le.2)write(6,*)'<23 ',i,' ; ',jlp_keyfact(i,1:j_o(jlp_ivxkyk)%i(1))
+								
 								if(jlp_keyfact(i,iv2xykypos_).eq.iv3factpos_) then
 					!if(p)then
 					!endif !if(p)then
 									jlp_xps(j)=jlp_xps(j)+ j_v(jlp_fyfactout(iv2xykypos_,iv3factpos_))*&
 										j_o(ivxmat)%d(ibakey+iv2elpos)
+										
+										! if(j.eq.0.and.i.le.2)then
+										! call j_getname(j_o(jlp_ivkeepx)%i2(iv2elpos),jlp_fyfactout(iv2xykypos_,iv3factpos_))
+										
+										! write(6,*)'##& ',i, ibakey,j_oname(1:j_loname),'  ',j_oname2(1:j_loname2),&
+										! iv2elpos,j_o(ivxmat)%d(ibakey+iv2elpos),&
+										! j_v(jlp_fyfactout(iv2xykypos_,iv3factpos_)),jlp_xps(j)
+										! endif
 
 								endif !if(j_keyfact(i,iv2xykypos_).eq.iv3factpos_) then
 
@@ -5340,12 +5394,14 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					enddo !do k=1,j_nfyrow(irowj)
 				enddo !do jj=1,j_nrowpfy
 
-				if(p) then
+				if(p.or..true.) then
 					write(n16,*)'**fact** xps <38xx>',jlp_xps
 				endif !if(p) then
 
 			endif !if(j_fpresent) then
 		enddo !do i=1,jlp_nunits
+		
+		
 		if(ivprint7.gt.0)then
 			if(j_v(ivprint7).eq.6.)call printproblem()
 		endif !if(ivprint7.gt.0)then
@@ -5430,7 +5486,12 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 						do jj=1,jlp_nrowp
 							j=jlp_ixcurrows(jj)
 							curx=jlp_xmat(jlp_ix(j)+ibax)
+							
+							
 							jlp_xps(j)=jlp_xps(j)+curx-jlp_xmat(jlp_ix(j)+ibax2)
+							
+							! if(i.le.2.and.j.eq.0)write(6,*)'<47747',curx,ibax2,jlp_ix(j)+ibax2,&
+							! jlp_xmat(jlp_ix(j)+ibax2),jlp_xps(j)
 
 						enddo !do jj=1,j_nrowp
 						jlp_keys(i)=kopt
@@ -7965,7 +8026,7 @@ call j_getname(ivobjective2)
 					if(istree)then
 						ibax=jxmatiba(iobs) !,1)
 						do jj_=idiff3(idiff(iobs)),idiff3(idiff(iobs+1))-1,1
-							valuesums(jj_)=valuesums(jj_-1)+dprod(vxpack3(jj_),jlp_xmat(ixpack3(jj_)+ibax))
+			!				valuesums(jj_)=valuesums(jj_-1)+dprod(vxpack3(jj_),jlp_xmat(ixpack3(jj_)+ibax))
 						enddo !do jj_=idiff3(idiff(iobs)),idiff3(idiff(iobs+1))-1,1
 					endif !if(istree)then
 					cycle
@@ -7979,7 +8040,8 @@ call j_getname(ivobjective2)
 				if(istree)then
 					ibax=jxmatiba(iobs) !,1)
 					do jj_=idiff3(idiff(iobs)),idiff3(idiff(iobs+1))-1,1
-						valuesums(jj_)=valuesums(jj_-1)+dprod(vxpack3(jj_),jlp_xmat(ixpack3(jj_)+ibax))
+						valuesums(jj_)=valuesums(jj_-1)+&
+						vxpack3(jj_)*jlp_xmat(ixpack3(jj_)+ibax) !dprod(vxpack3(jj_),jlp_xmat(ixpack3(jj_)+ibax))
 					enddo !do jj_=idiff3(idiff(iobs)),idiff3(idiff(iobs+1))-1,1
 				endif !if(istree)then
 				if(fast.and..not.fastnow)fastvalues(i)=1.7e37
@@ -7990,7 +8052,7 @@ call j_getname(ivobjective2)
 				if(istree)then
 					ibax=jxmatiba(iobs) !,1)
 					do jj_=idiff3(idiff(iobs)),nxbas
-						valuesums(jj_)=valuesums(jj_-1)+dprod(vxpack3(jj_),jlp_xmat(ixpack3(jj_)+ibax))
+						valuesums(jj_)=valuesums(jj_-1)+vxpack3(jj_)*jlp_xmat(ixpack3(jj_)+ibax) !dprod(vxpack3(jj_),jlp_xmat(ixpack3(jj_)+ibax))
 
 					enddo !do jj_=idiff3(idiff(iobs)),nxbas
 					jlp_value=valuesums(nxbas)

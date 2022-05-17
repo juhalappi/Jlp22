@@ -148,6 +148,7 @@ subroutine j_jinit0(jparf)
 	use jmod, only: j_incl
 	use jmod, only: j_errexit
 	character*32,intent(inout)::jparf
+	
 	integer ::nerr=0
 	logical :: jpar=.false.
 	integer i_, it
@@ -160,6 +161,8 @@ subroutine j_jinit0(jparf)
 	!istcmd=j_nextlim(cmd(1:lencmd),1,lencmd,' ')
 	!write(6,*)'>44',lencmd,istcmd,cmd
 	if(.not.j_inited)then
+!the following is updated with the J-precompiler,DO NOT CHANGE ANYTHING
+		j_title='j: j3.0 17.  5. 2022 (c) Juha Lappi and Natural Resources Institute Finland'
 		write(6,*)j_title
 		write(6,1357)'j',j_nfunctions_,j_noptions_,j_nobjecttypes_
 		write(6,1357)o1_title,o1_nfunctions,o1_noptions,o1_nobjecttypes
@@ -443,7 +446,7 @@ subroutine j_jinit(jparf)
 	use jmod, only: j_ivprintoutput
 	use jmod, only: j_ivdebugconsole
 	use jmod, only: j_ivprintresult
-	use jmod, only: j_ivbgaya
+	use jmod, only: j_ivcursori
 	use jmod, only: j_stop
  
  
@@ -1008,8 +1011,10 @@ subroutine j_jinit(jparf)
 		j_v(ivout_)=j_0 !not zero in irnages of getelem
 		call j_defchar(0,'bgaya',ivout_)
 	!	write(6,*)'<77 ',ivout_
-	if(j_ivbgaya.ne.ivout_)then
-		write(6,*)'predefined variables are mixed up,j_ivbgaya=',j_ivbgaya,' but ivout_=',ivout_
+		call j_deftrans(0,'$Cursori$',ivout_,200,0,0,iii,iii,iii,0) !ivcursor2 !!!
+	
+	if(j_ivcursori.ne.ivout_)then
+		write(6,*)'predefined variables are mixed up,j_ivcursori=',j_ivcursori,' but ivout_=',ivout_
 	j_err=.true.
 	j_stop=.true.
 		return
@@ -1093,7 +1098,7 @@ recursive subroutine dotrans(iob,ioi)
 		291,292,293,294,295,296,& !    Figures
 		301,302,303,304,305,306, &  !   splines , stem
 		311,312,313,314,315,316,317, & ! bit functions
-		321,322,323,324/
+		321,322,323,324,325/
  
 	p=j_v(j_ivdollar).eq.784.d0
 	p4=j_v(j_ivdebug).ge.3.d0
@@ -1240,7 +1245,7 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 		291,292,293,294,295,296,& !    Figures
 		301,302,303,304,305,306, &  !   splines , stem
 		311,312,313,314,315,316,317, & ! bit functions
-		321,322,323,324)   j_o(iob)%i(io)
+		321,322,323,324,325)   j_o(iob)%i(io)
  
 	j_recursion=j_recursion-1
 	j_v(j_ivrecursion) = j_recursion
@@ -1969,7 +1974,9 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 323	call cpu(iob,io)
 		goto 1
  
-324	call seconds(iob,io)
+324	call secnds_(iob,io)
+		goto 1
+325 call where(iob,io)
 		goto 1
 	!!! o function
  
@@ -2223,6 +2230,7 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
 		integer:: ivmat,j,iar,nar2,iro2,mco,mro,nle,ionew,nargnew
 		double precision::dapu
 		logical :: isreal
+		integer narg12
 		p=j_v(j_ivdollar2).eq.56.d0.or.j_v(j_ivdollar2).eq.179.d0
 	
 	
@@ -2551,6 +2559,23 @@ if(p)write(6,*)'iiooo',io,j_o(iob)%i(io)
  
  
 		if(j_otype(imat).eq.j_iptrans)then
+	!	write(6,*)'narg1',narg1
+			if(narg1.gt.1)then
+	
+	
+				if(mod(narg,2).ne.0)then
+					call j_getname(imat)
+					write(6,*)'transformation ',j_oname(1:j_loname),' has more argument values than arguments '
+					j_err=.true.
+					return
+				endif
+				narg12=narg/2-1
+				do ii=1,narg12
+					call j_copy2(arg(1+narg12+ii),arg(1+ii))
+	
+				enddo
+			endif
+	
 			call trans()
 			return
 		elseif(j_otype(imat).eq.j_ipdata)then !if(j_otype(imat).eq.j_iptrans)then
@@ -14267,7 +14292,7 @@ character*40 filename
 		return
 	end subroutine cpu !subroutine cpu(iob,io)
 
-	subroutine seconds(iob,io) !J-function seconds()
+	subroutine secnds_(iob,io) !J-function secnds()
 	use jmod, only: j_o
 	use jmod, only: j_otype
 	use jmod, only: j_ipreal
@@ -14299,7 +14324,14 @@ character*40 filename
 		end if !if(narg.le.0)then
 	!io=io+narg+3
 		return
-	end subroutine seconds !subroutine seconds(iob,io)
+	end subroutine secnds_ !subroutine seconds(iob,io)
+
+	subroutine where(iob,io)
+	use jmod, only: j_where
+	
+	call j_where(iob,io)
+	return
+	end subroutine
 
 	subroutine jump(iob,io) ! J-function jump
 	use jmod, only: j_njump
@@ -19194,9 +19226,6 @@ character*40 filename
 	use jmod, only: j_defdata
 	use jmod, only: j_dlastdata
 	use jmod, only: j_ivlastdata
-	use jmod, only: j_getname
-	use jmod, only: j_oname
-	use jmod, only: j_loname
 	use jmod, only: j_getin
 	use jmod, only: j_getsubin
 	use jmod, only: j_ivb
@@ -19988,7 +20017,7 @@ iobs(1)=iobs(1)-nrejected(1)
 			nobs(2)=iobs(2)-nrejected(2)
 		!if data is on disk mattype2 =-idiskin2 or -idiksk1
 			if(.not.j_err)call j_defmatrix(iout(2),'%matrix',nobs(2),nkeep(2),j_matreg,ivmat(2))
-				write(6,*)'<373737 ',j_err,iout(2),ivmat(2)
+		!		write(6,*)'<373737 ',j_err,iout(2),ivmat(2)
 	!	write(6,*)'<2',idisk2,idiskin2,nobs2,nobs2f
  
 		!write(6,*)'<3'
@@ -20013,8 +20042,8 @@ iobs(1)=iobs(1)-nrejected(1)
 			if(.not.j_err)call j_defdata(iout(2),ivmat(2),ivkeep(2),&
 				0,0,iout(1),ivsubobs,ivobsw,0)
  
-call j_getname(iout(2))
-write(6,*)'<94949494',iout(2),j_oname(1:j_loname)
+!call j_getname(iout(2))
+!write(6,*)'<94949494',iout(2),j_oname(1:j_loname)
 	!	 j_defdata(iv,ivmat,ivkeep,ivsub,ivnobsw,ivup,ivobs,ivobsw,ivnobswcum)
  
 		end if !if(sub)then
@@ -21690,8 +21719,6 @@ write(6,*)'<94949494',iout(2),j_oname(1:j_loname)
 	use jmod, only: j_deflistobject
 	use jmod, only: j_deftrans
 	use jmod, only: j_o
-	use jmod, only: j_linkoption
-	use jmod, only: j_minput
 	use jmod, only: j_v
 	use jmod, only: j_ivprintinput
 	use jmod, only: j_igetopt
@@ -21857,12 +21884,15 @@ write(6,*)'<94949494',iout(2),j_oname(1:j_loname)
 		character*40 tname
 		integer,dimension(:),pointer::list=>null(),localin=>null(),localout=>null()
 !	integer,dimension(:),pointer::arg
-		logical::p
-		p=.false.
+		logical::p=.false.
+	!	p=j_v(j_ivdebug).ge.300
+	!	call j_getname(iob)
+!		write(6,*)'<33TRANS ',j_oname(1:j_loname)
 		call j_startfunction(iob,io,0,.true.,nm,j_optarg0,iout)
 	!write(6,*)'<88trans type ',j_otype(iout)
 	!write(6,*)'<88trans type ',allocated(j_o(iout)%i),allocated(j_o(iout)%i2),allocated(j_o(iout)%ch)
- 
+	
+	
  
 		if(j_err)return
 		iscall=.false.
@@ -21899,13 +21929,13 @@ write(6,*)'<94949494',iout(2),j_oname(1:j_loname)
 	!write(6,*)'<45 kuku'
 	!newin=.true.
 !	call j_printname('  <666>',ivtrans,' ')
-		if(j_linkoption(iob,io,j_minput).gt.0)then
+		! if(j_linkoption(iob,io,j_minput).gt.0)then
  
-			write(6,*)'input-> is obsolete'
+			! write(6,*)'input-> is obsolete'
  
-		end if !if(j_linkoption(iob,io,j_minput).gt.0)then
+		! end if !if(j_linkoption(iob,io,j_minput).gt.0)then
 	!if(j_linkoption(iob,io,j_mexist).gt.0)newin=.false.
-		if(p)write(6,*)'<34her'
+	!	write(6,*)'<34her,io',io
 	! if(j_linkoption(iob,io,j_mmatrix).gt.0)then
 		! nm=j_o(iob)%i(j_linkoption(iob,io,j_mmatrix))
 		! matrix=>j_o(iob)%i(j_linkoption(iob,io,j_mmatrix):j_linkoption(iob,io,j_mmatrix)+nm)
@@ -21950,7 +21980,7 @@ write(6,*)'<94949494',iout(2),j_oname(1:j_loname)
 	!return
 		call j_interpret('trans',ivtrans)
  
-		if(p)write(6,*)'<54>return from trans'
+	!	write(6,*)'<54>return from trans,io',io,j_o(iob)%i(0:15)
  
 	
 	end subroutine trans !subroutine trans(iob,io)

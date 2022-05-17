@@ -60,16 +60,7 @@ module sub
 	integer,dimension(10000)::subslines
 
 end module
-
-
-
-
-program jpre
-!use koemod,only: koe2
-!	use jeqmod
-	use pref
-	use writeout
-
+module main
 	character(len=300)inp,inp2
 	logical exis,exisout,exisout0
 	logical::end3
@@ -84,6 +75,22 @@ program jpre
 	character*60 outfile,outfile0
 
 	character*60::inpf
+	integer ::if1,lef
+
+
+
+
+end module
+
+
+
+
+program jpre
+!use koemod,only: koe2
+!	use jeqmod
+	use pref
+	use writeout
+	use main
 
  ! goto 175
 
@@ -234,8 +241,9 @@ program jpre
 		use sub
 		use writeout   !write4
 		use pref
+		use main, only:inpf,if1,lef
 !		use pref
-	
+		integer,dimension(8)::datevalues
 		integer ::le1
 
 		logical ::endmodule,issub,endsub,ok,inprogram,inmodule,insub
@@ -264,7 +272,7 @@ program jpre
 		return
 	30	read(2,'(a)',end=90)inp
 		linein=linein+1
-		p=linein.eq.2464.or.linein.eq.2503
+!		p=linein.eq.2464.or.linein.eq.2503
 		letot=len_trim_(inp)
 		icom=0
 		le=0
@@ -277,6 +285,15 @@ program jpre
 		else
 			le=letot
 			!write(16,*)'<3 ',inp(1:letot)
+		endif
+		if(inpf(if1:lef).eq.'j.f90')then
+			if(inp(3:10).eq.'j_title=')then
+			call date_and_time(values=datevalues)
+				idst=index(inp(1:30),'22.')
+				write(inp(idst:idst+1),'(i2)')datevalues(3)
+				write(inp(idst+4:idst+5),'(i2)')datevalues(2)
+				write(inp(idst+8:idst+11),'(i4)')datevalues(1)
+			endif
 		endif
 		le1=max(le,1)
 		

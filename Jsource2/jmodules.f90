@@ -58,8 +58,8 @@ logical ::j_inited=.false.
 	double precision,parameter::j_todeg=180.d0/j_pi !korjaa !makes radians to degrees
 	double precision,parameter::j_e=2.718281828459045
 	!options
-	character*80 :: j_title='j: j3.0 22.4.2022 (c) Juha Lappi and Natural Resources Institute Finland'
-
+	character*76 :: j_title  !='j: j3.0 22.04.2022 (c) Juha Lappi and Natural Resources Institute Finland'
+	!to be updated in j_init
 		!functions
 	integer, parameter :: j_nfspec=8 
 	integer, parameter :: j_nfobj=4
@@ -83,7 +83,7 @@ logical ::j_inited=.false.
 	integer, parameter :: j_nffig=6
 	integer, parameter :: j_nfspli=6 
 	integer, parameter :: j_nfbit=7 
-	integer, parameter :: j_nfmisc=4 
+	integer, parameter :: j_nfmisc=5 
 	
 	integer, parameter :: j_fbspec=0   !basis
 	integer, parameter :: j_fbobj=j_fbspec+j_nfspec
@@ -263,7 +263,7 @@ logical ::j_inited=.false.
 	'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
 	
 	!! Misc. utility functions
-	'value','properties','cpu','secnds'/ !4
+	'value','properties','cpu','secnds','where'/ !4
 	
 	integer,dimension(j_nfunctions_) :: j_minarg_ ! = (/ &  !!!%function
 	data j_minarg_/ 1,1,1,1,1,1,1,2,&
@@ -343,8 +343,8 @@ logical ::j_inited=.false.
 	2,1,1,1,0,2,1,&
 	! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
 
-4*0/
-	! 'value','properties','cpu','seconds'/ !4
+5*0/
+	! 'value','properties','cpu','seconds','where'/ !4
 
 
 	integer, dimension(j_nfunctions_):: j_maxarg_  !=  & !!%%function
@@ -383,14 +383,14 @@ logical ::j_inited=.false.
 	'extra','subextra','mean', 'min','max',& ! 1-10
 'sd','var','warm','volsd','rhs','rhs2','w','obs', 'subobs','problem',& !11-20 MIXED UP
 'from','subdata','nobsw','subread','keep','subkeep','submaketrans','free','rows','subin', & !21-30
-'subform','filter','print','sum','duplicate','input','mask','maxiter','test','debug', & !31-40
+'subform','filter','print','sum','duplicate','$FREE','mask','maxiter','test','debug', & !31-40
 'default','classlink','x','maxlines','q','obsw','nobswcum','xrange','yrange','mark',& !41-50
 'keepperiod','nobs','append','variance','oldsubobs','noint','periods','period','unitdata','unitdataobs', & !51-60
 'any','oldobsw','refac','tole','factories','class','key','sparse','row','show',& ! 61-70
 'style','color','func','title','z','out', 'zrange','reject', 'subfilter','subreject',& ! 71-80
 'se','matrix','treevars','plotvars','buffersize','maxtrees','report','modeldf', 'classes','degree',& !81-90
 'minvariance','dummy','sym','minobs','wish','origo','r','colmin','integer','y',&  !91-100
-'points','dx','dy','dz','arg','result','corr','corrb','until','angle', &  !101-110
+'points','dx','dy','dz','arg','Free4','corr','corrb','until','angle', &  !101-110
 'model','selector','area','notareavars','subtrans','repeatdomains','options','normal','err','stemcurves',& !111-120
 'relheight','weight','position','exit','iterations','histogram','freq','sort','label','continue','axes','index', & !121-130
 'column','source','diag','width','level','errexit','xlegend','ylegend', & !131-140
@@ -433,7 +433,7 @@ logical ::j_inited=.false.
 	parameter (j_mgot=181,j_mdo=182,j_mset=183,j_mxlabel=184,j_mylabel=185,j_mt=186,&
 	j_mcoef=187,j_msorted=188,j_msub=189,j_mdiscrete=190,j_mprolog=191,j_mepilog=192,j_munit=193)
 
-	integer,parameter :: j_nnamedoptarg=60
+	integer,parameter :: j_nnamedoptarg=59
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
 	data j_namedoptarg / & !%%options which should have named objects as arguments
 		'read','in','form','data','maketrans','trans', &
@@ -443,18 +443,18 @@ logical ::j_inited=.false.
 		'subin', &
 		'subform','duplicate','classlink','x','q','obsw','nobswcum','oldsubobs','period','unitdata',&
 		'unitdataobs','oldobsw','class','title','z','out','matrix','treevars','plotvars','report','dummy',&
-		'y','arg','result','selector','area','notareavars','subtrans','stemcurves','relheight',&
+		'y','arg','selector','area','notareavars','subtrans','stemcurves','relheight',&
 		'local','file','zmatrix','eof','list','ext' &
 		/
 
 
-	integer,parameter :: j_nnewvar=39
+	integer,parameter :: j_nnewvar=38
 	character*(j_lenoption), dimension(j_nnewvar)::j_newvar
 	data j_newvar / &  !can %%option arguments be generated if they do not exist
 		'read','mean','min','max','sd','var','obs','subobs','subdata', &
 		'nobsw','subread','sum','input','x','obsw','nobswcum','oldsubobs','periods', &
 		'period','unitdata','unitdataobs','oldobsw','func','out','matrix','treevars','plotvars','report', &
-		'dummy','r','y','arg','result','normal','iterations','local','eof','keep','list'&
+		'dummy','r','y','arg','normal','iterations','local','eof','keep','list'&
 		/
 
 	!object types
@@ -791,7 +791,8 @@ logical ::j_inited=.false.
 	integer,parameter::j_ivall=72
 	integer,parameter ::j_ivdebugtrans=73
 	integer,parameter ::j_ivbgaya=74
-	integer,parameter::j_predefined=74
+	integer,parameter::j_ivcursori=75  !transformation used in input programming
+	integer,parameter::j_predefined=75
 	
 	type j_basicobject  ! defines basic J-object types
 		real, dimension(:),allocatable ::r  ! real vector associated with each  object
@@ -1075,7 +1076,7 @@ logical ::j_inited=.false.
 	! irowrow tells the the initial row in the nonexpanded problem
 	integer ,dimension(:,:), allocatable::jlp_domainbits
 	!	real, dimension(:,:), allocatable ::j_xmat  !x-data matrix
-	real, dimension(:), allocatable ::jlp_xmat  !x-data matrix
+	double precision, dimension(:), allocatable ::jlp_xmat  !x-data matrix
 	logical*1,dimension(:),allocatable::jlp_rejects
 	integer jlp_nunits,jlp_ld0,jlp_ndom,jlp_ivdomain,jlp_nrow
 	integer jlp_ndiv
