@@ -1051,8 +1051,8 @@ logical ::j_inited=.false.
 	! keyschedule for each unit
 	integer, dimension(:),allocatable::jlp_keys
 	integer, dimension(:),allocatable::jlp_ibaunit
-	real, dimension(:),allocatable::jlp_vx,jlp_vxpack
-	real, dimension(j_maxjlpxvars):: jlp_vxpack2    !fixed
+	double precision, dimension(:),allocatable::jlp_vx,jlp_vxpack
+	double precision, dimension(j_maxjlpxvars):: jlp_vxpack2    !fixed
 	integer, dimension(:),allocatable::jlp_ixpack
 	integer, dimension(j_maxjlpxvars)::jlp_ixpack2
 	! ix(irow)= 0, no x in the row
@@ -1061,7 +1061,7 @@ logical ::j_inited=.false.
 	integer, dimension(:),allocatable::jlp_xvarlarea ! the list of areavars
 	integer, dimension(:),allocatable::jlp_xvarlareatot ! the list of areavars including all
 	integer, dimension(:),allocatable::jlp_cvarl
-	real, dimension(:),allocatable::jlp_cvar
+	double precision, dimension(:),allocatable::jlp_cvar
 	!****** definition:
 	! nonexpanded problem: rows are as in the original problem definition,
 	! expanded problem: the problem where the row is associated only with one domain
@@ -1082,7 +1082,7 @@ logical ::j_inited=.false.
 	integer jlp_ndiv
 	integer jlp_lopp
 	integer jlp_nrowp
-	real, dimension(:),allocatable::jlp_wdiv
+	double precision, dimension(:),allocatable::jlp_wdiv
 	integer, dimension(:),allocatable::jlp_iunitdiv,jlp_isdiv
 	integer jlp_lavec(1)
 
@@ -1092,7 +1092,7 @@ logical ::j_inited=.false.
 	! value of the (agrregated) x-variables
 	!		real jlp_xmin(0:la),jlp_xmax(0:la)	! smallest and largest value of x of a row
 	! for current unit
-	real, dimension(:),allocatable::jlp_xmin,jlp_xmax
+	double precision, dimension(:),allocatable::jlp_xmin,jlp_xmax
 	! problem formulation using Fletcher subroutines
 	!   Note: Fletchers's own LP is working differently,
 	!          here we utilize only matrix routines

@@ -760,7 +760,7 @@ subroutine j_jinit(jparf)
 !Selected& REAL &Variable used to indicate the simulator selected in simulations
 	call j_getobject(0,'Printinput',j_ipreal,ivout_) ! ivprintinput) !!!
 !Printinput& REAL& Variable used to specify how input lines are printed. Not properly used.
-	j_v(j_ivprintinput)=2.d0 !!!
+	j_v(j_ivprintinput)=1.d0 !!!
 	call j_getobject(0,'Printoutput',j_ipreal,ivout_) ! ivprintoutput) !!!
 !Prinoutpu& REAL& Variable used to indicate how much output is printed. Not properly used.
 	j_v(j_ivprintoutput)=2.d0 !!!
@@ -9176,7 +9176,14 @@ endif
 			if(j_err) goto 99
 		end do !do i=1,narg
 		read(j_inp(iip+1:j_linp),*,err=99,end=99)(j_v(linevar(j)),j=1,narg)
-		if(inprint.gt.0)write(6,*)j_inp(1:iip),(j_v(linevar(j)),j=1,narg)
+		if(inprint.gt.0)then
+		do j=1,narg
+			call j_getname(linevar(j))
+			write(6,*)j_oname(1:j_loname),j_v(linevar(j))
+		enddo
+		write(6,*)' '
+	!	write(6,*)j_inp(1:iip),(j_v(linevar(j)),j=1,narg)
+		endif
 		goto 1
 	90 continue !io=io+narg+3
 		deallocate(linevar)

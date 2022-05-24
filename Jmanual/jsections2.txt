@@ -9,19 +9,13 @@ outfile jexamples.inc
 outfile jmanual.tex
 !!subsection matrix
 !!;return
-section preface1 
-subsection preface2 
-subsection preface3 
-subsection preface4 
-subsection preface5 
-subsection preface6 
-subsection preface7
-subsection preface8
-subsection preface9
-subsection changes 
+section* preface0
+
 
 section intro
 subsection intro1
+subsection intro2
+
 section git
 subsection gitpack
 subsection gitload
@@ -415,6 +409,16 @@ subsection compo
 
 section future
 
+
+section preface1 
+subsection preface2 
+subsection preface3 
+subsection preface4 
+subsection preface5 
+subsection preface6 
+subsection preface7
+subsection preface8
+subsection preface9
 
 
 

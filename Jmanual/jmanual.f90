@@ -779,14 +779,19 @@ if(line(ifirst(1):ilast(1)).eq.'endubsection')then
 	goto 1
 	endif
 	
-	
+	iii1=max(ifirst(1)-1,1)
 	if(line(ifirst(1):ilast(1)).eq.'Option')then
-		call testblock()
-		wasoption=.false.
-		inoption=.true.
-		inoption0=.false.
-		nlblock=nl
+		if(line(iii1:iii1).eq.'+')then
+		 line(iii1:iii1)=' '
+		
+		else
+			call testblock()
+			wasoption=.false.
+			inoption=.true.
+			inoption0=.false.
+			nlblock=nl
 		goto 1
+		endif
 	endif
 	if(line(ifirst(1):ilast(1)).eq.'endoption')then
 		if(.not.inoption)then

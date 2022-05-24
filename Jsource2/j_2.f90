@@ -162,7 +162,7 @@ subroutine j_jinit0(jparf)
 	!write(6,*)'>44',lencmd,istcmd,cmd
 	if(.not.j_inited)then
 !the following is updated with the J-precompiler,DO NOT CHANGE ANYTHING
-		j_title='j: j3.0 17.  5. 2022 (c) Juha Lappi and Natural Resources Institute Finland'
+		j_title='j: j3.0 24.  5. 2022 (c) Juha Lappi and Natural Resources Institute Finland'
 		write(6,*)j_title
 		write(6,1357)'j',j_nfunctions_,j_noptions_,j_nobjecttypes_
 		write(6,1357)o1_title,o1_nfunctions,o1_noptions,o1_nobjecttypes
@@ -943,7 +943,7 @@ subroutine j_jinit(jparf)
 !Selected& REAL &Variable used to indicate the simulator selected in simulations
 	call j_getobject(0,'Printinput',j_ipreal,ivout_) ! ivprintinput) !!!
 !Printinput& REAL& Variable used to specify how input lines are printed. Not properly used.
-	j_v(j_ivprintinput)=2.d0 !!!
+	j_v(j_ivprintinput)=1.d0 !!!
 	call j_getobject(0,'Printoutput',j_ipreal,ivout_) ! ivprintoutput) !!!
 !Prinoutpu& REAL& Variable used to indicate how much output is printed. Not properly used.
 	j_v(j_ivprintoutput)=2.d0 !!!
@@ -10360,6 +10360,9 @@ endif
 	use jmod, only: j_ivnames
 	use jmod, only: j_getobject
 	use jmod, only: j_ipreal
+	use jmod, only: j_getname
+	use jmod, only: j_oname
+	use jmod, only: j_loname
 	
 	! Section properties properties(): defining properties of some subjects.
 	! This function has been used to define properties of factories.
@@ -10400,7 +10403,14 @@ endif
 			if(j_err) goto 99
 		end do !do i=1,narg
 		read(j_inp(iip+1:j_linp),*,err=99,end=99)(j_v(linevar(j)),j=1,narg)
-		if(inprint.gt.0)write(6,*)j_inp(1:iip),(j_v(linevar(j)),j=1,narg)
+		if(inprint.gt.0)then
+		do j=1,narg
+			call j_getname(linevar(j))
+			write(6,*)j_oname(1:j_loname),j_v(linevar(j))
+		enddo
+		write(6,*)' '
+	!	write(6,*)j_inp(1:iip),(j_v(linevar(j)),j=1,narg)
+		endif
 		goto 1
 	90 continue !io=io+narg+3
 		deallocate(linevar)

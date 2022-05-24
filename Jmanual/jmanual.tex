@@ -1,743 +1,100 @@
-\section{Preface}
-\label{preface1}
-First I thank my grand daughter for the permission to use the portrait
-she drawed for my 70 yr birthday. \\
+\section*{Preface}
+\label{preface0}
 
-I will here describe the history of \textbf{J} in this preface in unusual
-length and detail. Readers interested ony in the use of the current
-software can perhasp look briefly the subsection Freedom. The reason
-why I'm going through in detail
-the difficulties with Luke is that I think that the policy insisted by the leaders of Luke
-that the researchers of Luke do not have any moral or legal right to publish the results of their
-research should be discussed. I think also that the leaders of Luke
-were willing to waste large amount of taxpayers' money when the prevented the
-development and timely publication of \textbf{J} software. I hope that this part of the
-preface gets some attention also outside the potential users of the software e.g.
-in the ministry. As an amateur actor, I also hope that some play writer would
-notice this and would make tragicomedy on the stage.
-\subsection{JLP and first version of \textbf{J}}
-\label{preface2}
+The \textbf{J} software is the succsssor of the JLP software which has been used as the optimizer in the Mela software
+and in the Norwegian GAYA planning software which was then called GAYA-JLP.
+\textbf{J}LP was published 1992 and Finnish Forest Research Institute (Metla) started to distribute it
+version 0.9.3 was published in August 2004. The GAYA group was involved in the development and
+started to use \textbf{J} immediatemently in the planning system called thereafter GAYA-J. Mela has not
+included \textbf{J} as
+as the optimizer, but it is possible to pull out simulated schedules from Mela and then
+define and solve linear programming problems using J. Simosol started to use \textbf{J} as an
+optimizer from the beginning.
+\textbf{J} version 2.0. published in 2013 made it possible optimize simultatenously forestry and transportations to factories
+and factory production.
 
-I started to develop \textbf{J} software as a successor of the linear programming software
-\textbf{J}LP \cite{JLP} around
-2004. I had also done several programs for statistical computing (AKTA and Jakta)
-since late seventies
-when there was not
-easy to use software even for ordinary linear regression.
-Later I had to write own software
-for mixed linear models. AKTA, Jakta, and JLP contained  means to use script files and
-make new variables described in arithmetic expressions. The starting idea in \textbf{J} was to put all my
-previous software developments into one program.
-Version 0.9.3 of \textbf{J} was published in August 2004.
-
-In JLP the crucial property was the utilization of the generalized upper bound (GUB) technique which
-I invented and, which I could later find also in the literature (\cite{dant}), as I expected. GUB is
-just the right technique which is
-needed in foreast management planning. JLP made it possible to solve
-significantly larger LP problems significantly faster
-than using standard commercial LP software. In JLP I programmed all the necessary matrix
-operations needed to change columns of the basis matrix in the revised simplex method.
-I updated the inverse of the basis matrix explicitly,
-instead of using factorization procedures as is the standard way in LP.
-I treated nonbinding constraints in a nonstandard way
-by reducing the dimension of the basis matrix instead of using residual
-basic variables, as is normally done.
-
-When I started to develop J, I thought that it might be good idea to use matrix routines
-based on factorizations and developed by a professional in this field.
-I found the LP software bqbd by Fletcher
-based on \cite{flet}. The bqbd software was meant to use 'as is' software for linear and quadratic programming.
-When I told Fletcher that I plan to separate the matrix routines needed in the GUB algorithm,
-he told he is certain that I will not succeed, as his Fortran code did not have any comments.
-He wrote that he will not have any time to help me.
-However, it was not that difficult becasue his code was divided
-to proper subroutines. His code did computations in
-single precision, and it was necessary to change computations
-into double precision. Because I do not have
-a proper training in the rounding error business,
-I had hoped his advice in changing the several tolerance
-parameters to correspont double precision computations. In the development of the original JLP algorith,
-I spent two-three times more time to fight rounding errors than to
-get the code mathematically correct. Now I understood the rounding errors better, but
-anyhow they are the permanent nuisance. The fundamental question
-with respect to rounding errors is: is a small-looking number zero or non-zero.
-
-When I later told him how large problems and how fast my algorithm could solve,
-his attitude towards
-my efforts clearly changed.
-
-Even Bergseng from NMBU started to use \textbf{J} in forest management problems
-in a quite premature
-stage, and we had quite tough time to keep his project in time.
-It took some time to clear a bug in Fletcher
-code which every now and then took the optimization into a wrong path.
-I had a quite slow computer, and the
-data transwer between Norway and Finland was slow. The bug was such that
-it had never caused problems in
-standard applications of bqbd software. In forest planning problems
-it can happen that after many
-pivot operations only residual variables corresponding nonbinding
-constrains are in the basis.
-And when \textbf{J} refactorized of the basis after fixed number of pivot operations,
-as is the common procedure, the basis became slightly corrupted.
-In such a case, the refactorization is not needed. NMBU started to use \textbf{J}
-together with their GAYA simulator, and called the whole system GAYA-J,
-as the previous system was called GAYA-JLP.
-I appreciate that they have acknowledged our co-operation this way.
-\textbf{J} version 0.9.3 was published in
-August 2004.
-
-\textbf{J} contained also a simulator language by which one describe a simulator
-which can be used to geneate
-treatment schedules which are later optimized with the
-LP funtions of J. When Simosol started
-to develop sofware which would compete with the Mela, which had had a
-monopoly status in planning software
-in Finland, and had all the problems which are inevitable in all monopoly projects.
-Simosol made first simulator developments using J, but moved to other solutions before first
-published version of Simo software. Simosol however used the
-linear programming routines
-of J.  They are still using \textbf{J} when being part of Afry.
-\subsection{\textbf{J} with factories: J2.0}
-\label{preface3}
-For me the most disturbing feature of \textbf{J} and JLP was that they were not able to treat factories.
-I thought that the clever heuristic DTRAN algorithm of Howard Hoganson
-(\cite{dtran} and \cite{howard} showed
-that it should be possible to extend basic ideas of the
-\textbf{J}LP algorithm to treat with factory
-problems. I was able to derive the needed equations (see \cite{lappilem}).
-Reetta Lempinen started to work with me to implement the formulas. Reetta has professional
-training in programming, while I'm a self-learning amateur. The necessary
-data structures were quite complicated.
-I had made some wrong decisions which made the data structes even
-more complicated than was necessary.
-Reetta had a clear head to keep data structures in order.
-It was a nice new experience to
-work together through video connection on the code which both could
-see simultaneously.
-I just gave commands, but it was not necessary to give detailed
-instructions because Reetta
-understood from a half word what to do. An important
-contribution of her was that when there were several dead ends,
-and I started to doubt whether we can really
-do what we were aiming at, she told, 'listen Juuso, we can solve this problem as we have
-solved all previous problems'. Interestingly, the problems were usually not in any programming errors,
-but the path could be found by raising to a little upper level and going to the main ideas.
-Reetta's role was essential in the factory optimization. Also later she has been helpful in
-minor technical matters, in writing the manual, testing the new developments etc. Recently she
-adviced me how to use Git and Github. Reetta has also been
-solidary during the painful Luke years, when she was not
-allowed to work with \textbf{J} as she had liked
-to do. I appreciate her contibution very much. She is the second author of this
-manual and the paper \cite{lappilem} for good reasons. However, I use word 'I'
-for such situtions where Reetta has not been involved in the decisions how to proceed. The factory optimization was implemeted in
-\textbf{J} version 2.0. published in 2013.
-\subsection{Battle over open-source J3.0  starts in Luke}
-\label{preface4}
-
-Initially I made the software so that only I could understand the structure and the code.
-When Reetta started to work with me in factory problems,
-I learned what are the weakest points in the software if it should be maintained
-by a group of people. But as I was always able to tell Reetta how the software worked,
-only very slight improvements in the documentation and comments of the code etc. were made.
-When I realized that my retirement age is approaching,
-I started to worry how the software could be maintained and developed after my retirement.
-
-I had worked for Finnish Forest Research Institute (Metla) with small Academy
-and University of Joensuu brakes since 1978. In 2015 Metla and
+In 2015 Metla and
 two other institutes were merged into Institute of Natural Resources Finland (Luke).
-Based on my long service in a government organization, I expected that
-the new organization would mean
-new leaders, new lawyers, new bureaucrats, and  much more bureaucracy,
-and less time
-for researchers to do research, as always happens when
-government organizations simplify
-their administration and make it more efficient.
-My expectations were in the right direction, but even in my worst
-nightmares I could not have imagined
-what Luke would mean to me personally.
+When my retirement was approaching, I suggested Luke that \textbf{J} would be published as
+an open source software. The leaders of Luke told that this a good idea, and this is so important that
+Luke cannot let me take care of the publication but the leaders wanted to publish \textbf{J}
+themselves. This started a frustrating and humillating process which lasted until 1.10. 2021 when
+I got the permission to publish the software and manuals as I like. The development of JLP and \textbf{J} is
+decribed in some detail in section 'J story'.
 
-Lauri Mehtätalo and I had agreed with an international publisher to
-make a book about forest biometry. In Metla this kind of agreement had been
-considered as a merit to Metla. But Luke forbad me to put any working time
-to this book project. After retirement I was free to prepare this book with Lauri.
-On the back-cover of the book I presented myself as a researcher of Metla
-in order to give the affilation credit to Metla.
-The co-operation
-among statisticians of Luke, led by Juha Heikkinen, the continued co-operation
-with Jaana Luoranen, and the support of the whole personell
-of the Research Station of Suonenjoki when the leaders of Luke
-started to humillate me
-were my only positive experiences at Luke.
+When Luke did not prevent the development of \textbf{J} any more, I have rewritten all central parts
+of J. \textbf{J} is now a 64-bit application. And \textbf{J} is now finally published as an open source software
+at github.com/juhalappi/J. New versions are published there all the time (J contains still many bugs).
 
-I started to clean and reorganize the \textbf{J} code so that it would be easier to maintain it.
-My superior Olli Salminen forbad me to continue that effort because
-he was certain that I would
-never get that work ready. I didn't obey, of course not. The eternity of
-this first cleaning round lasted two and
-half weeks. Reorganization of files took 2-3 days, but programming
-of a precompiler took
-two weeks. In JLP I already had learned that a precompiler could help to manage
-data areas of JLP. In J, the precompiler has greatly helped to manage
-global variables.
-The precompiler allows the users access global module variables
-without knowing where they are. To separate the global variables
-from local variables, the global variables have
-j\_ or jlp\_ prefix. By changing the data structures,
-\textbf{J} also became significantly faster
-(main reason was that allocatable pointers were changed into allocatable arrays).
+\textbf{J} is utilizing linear programming subroutines of Roger Fletcher.
+Even Bergseng from NMBU helped in the first version of J. The role of Reetta Lempinen was essential
+when factories were included. She adviced how to use Github for the distribution. She has
+also helped to test the new version, and she participated in the writing of the manual before
+I developed new tools for the making of manuals. Victor Strimbu adviced how to change \textbf{J} into 64-bit and
+we are developing together solutions for using \textbf{J} with the new simulator of GAYA.
+Lauri Meht\"atalo helped to convince the leaders of Luke that Luke's interests do not require that
+they continue preventing the publication and development of J. With Lauri, we have developed a solution for using the optimizer of \textbf{J} from
+R. More advanced solutions will come later. I thank my grand daughter Ella
+for the permission to use the portrait she drawed for my 70 yr birthday.
 
+The web - launch of J3.0 was 22.4. 2022. The J-story was then part of the preface. Following the advice
+of Heikki Smolander, I separated this preface and the J-story at 25.5. 2022.
 
-In 2014 when we were looking at how \textbf{J} could be utilized in Mela software, I encountered
-old JLP concept ‘own function’, which was the method for allowing users of JLP to
-add own (arithmetic) functions if they had access to the source code. I thought that this
-idea would be useful also with respect to J. So, I organized \textbf{J} so that
-different users could add their own \textbf{J} functions,
-object types and options.
-
-I was then convinced that the best way to utilize these improvements would be to
-make the soft-ware open source. This would also allow me to continue my work freely
-with \textbf{J} after my retirement.
-
-
-The leaders of Luke agreed with me that the open-source \textbf{J} is a good idea.
-Unfortunately they
-also thought that open \textbf{J} is so important for Luke that the leaders could not
-allow me to take care of the publication and prepare and present
-the necessary decisions for their approval, or even participate as
-member in the group which
-started to hustle with the publication.
-The leaders wanted themselves take care of the publication. Unfortunately, none
-of the leaders involved
-considered that the publication of \textbf{J} would be even so
-important that he/she
-had taken care that \textbf{J} would be eventually published.
-They just wanted keep important
-in the process. This absurd deadlock lasted almost seven years.
-
-The previous version utilized some subroutines of IMSL package and from
-the ‘Numerical Recipes in Fortran’ book. I replaced these subroutines mainly by
-open access routines from Lapack and Ranlib packages from the Netlib library.
-Roger Fletcher allowed to distribute his linear programming sub-routines in
-the open \textbf{J} package. Fletcher gave a very liberal permission to use
-his subroutines in open source distribution (the
-price of his bqbd sofware was perhaps 100-200 Euros).
-But the lawyers of Luke studied his permission
-so long that he died before giving permission with better formulation.
-A permission with
-better formualations was obtained from his department in Dundee University.
-But the leading
-laywer of Luke, Emilia Katajajuuri was not satisfied, she wanted make
-sure that the
-legal position of the person
-who gave the new permission was such that he could give the permission.
-
-
-
-The following persons were involved in
-process: Päivi Eskelinen, Olli Salminen, Kari T. Korhonen, Kimmo Kukkavuori,
-Tuula Packalen, Sirpa Thessler, Sari Forsman-Hugg, Emilia Katajajuuri and Johanna
-Buchert. Iikka Sainio was an outside legal consult.
-
-The leading lawyer of Emilia Katajuuri made my position clear
-in a video meeting to which I also was accidentally invited to
-listen their new instructions.
-When I accidentally said 'could we decide that..', she interrupted me and said:
-'Listen Juha,
-you do not decide anything in this matter'. Their message was that
-I have done my part, and now
-I should keep out and not disturb their play with their new conquest.
-
-When it was evident that the leaders of Luke wanted to get rid of me,
-I threatened that I will not retire before the opening decision is done.
-Sari Forsman-Hugg told she will make the decision. But as my threat
-seemed to make no influence,
-I retried at the beginning of 2017. When I despite of all
-the humiliation and frustration still hoped that
-some kind a co-operation with Luke would be possible,
-I applied the position outside researcher,
-which had provided me access to Luke's e-mail and library services. Sari Forsman-Hugg was not
-able to make a decision also with recpect to my application.
-I did withdraw my application
-when my e-mail connections were interrupted two times.
-
-Later I heard from Reetta that Luke had made the opening decision but
-she did not know what kind decsion and
-I was not informed of the decision either, in disargeeent with the distribution list
-of the decision, as I noticed in when I finally could see the decision after
-three years.
-\subsection{Retired, frozen conflict}
-\label{preface5}
-After my retirement I was still hoping that some kind of co-operation
-without outside researcher status with Luke would be possible, and I
-participated in the application of factory optimization which was published in \ref{pekka}.
-Prof. Packalen told late 2017 that the publication of \textbf{J} is approaching.
-When I asked about the opening decision, she 'did not
-remember' what it contained but promised to check it out, which she
-did forget to do or atl least forget to tell me what the decision contained.
-Prof. Packalen was planning a very high level launch of
-\textbf{J} with prominent international guests. I wrote that such
-seminar would not probably be worth of
-for trans-Atlantic flights. I was so stupid that
-I believed her promise that the publication of \textbf{J} was approaching
-and I submitted a correction to a bug which produced some amount of negative timber
-quantities.
-
-During 2018-2021 I made some small parameter adjustments for Simosol and Norway and made some additions
-for my own research. Prof. Packalen had lost all interest in the publication,
-and she did not allow Reetta to
-develop the publication documents. When I heard 2020 that prof Packalen
-had left Luke and could
-not prevent publication any more, I asked Reetta to
-ask her superiors whether she could continue
-the preparation of manuals. She got the permission to use some time for that.
-This work with all style details was not very nice for her as she
-had already done big part of the work for the previous format of
-Lukes's report series.
-The report series had changed the formats, and Reetta had to do
-such tedious work she already had done once before.
-Reetta's superiors did never  discuss with me anything related to the
-manuals or to the code. This
-way they had been free to pretent that I have not contributed to
-the work if \textbf{J} had been some time published.
-
-
-In spring 2021 Hannu Salminen from Luke contacted me. He had memory
-problems with a very large data set. I made a rapid fix for his acute
-problem and did develop
-more permanent solutions for large data sets using direct access files.
-Actually that work was
-unncessary as Viktor Strimbu from  NMBU  adviced me later how to make
-\textbf{J} a 64-bit
-application using MSYS2 environment. The Gfortran environment I had
-used before did not
-support 64-bit applications. The 64-bit program allows to put the whole country
-into one run aslo in factory optimization. Hannu organized a video
-meeting where we discussed the
-development and utilization of the \textbf{J} software. He was the first person
-in Lukes six years history who
-was willing to discuss with me such things.
-
-I started to work with \textbf{J} again. Reetta had told that \textbf{J} had could
-collapse after some hours of computations in  large data sets in factory optimization.
-I asked Luke to get the problematic
-data sets so that I could try to fix the problem. I got the answer that Luke is not allowed to send the
-data sets, and the answer did  not indicate
-that Luke would do anything to get such permission.
-I was quite upset from such answer,
-and I started to think how to open the deadlock situation. Later I got the data,
-and I was able to fix the problem, which was not exactly
-a clear bug but rather a thin-ice place in the algorithm sot that \textbf{J} did drop
-throug the ice when going over the place repeatedly.
-\subsection{Operation Charles XII}
-\label{preface6}
-When I strarted to think how I could find a way out from the deadlock,
-I remembered Charles XII,
-the king of Sweden (wich included  also Finland). He was in war with Denmark
-and he decided to fight Denmark by attacking Norway, which belonged to Denmark.
-He failed as almost his solders died in snowstorms
-in Northern Norway and he was shot by his own soldier.
-I was in conflict with Luke, even if Luke did
-acknowledge that such confilict existed
-because Luke insisted that in a legal sense,
-I did not even exist in this \textbf{J} affair.
-I thought to conquer Norway with nice \textbf{J} codes.
-Renovation of my co-operation with GAYA group
-suited their plans as they were rebuilding their simulator.
-
-I wrote to Johanna Buchert, director general of Luke (who was already in the group of
-Luke leaders hustling in the publication of \textbf{J} when I was in Luke)
-Antti Asikainen, research director of Luke,  and Kari T. Korhonen, who has
-been involved in this \textbf{J} affair and was the superior of Reetta, and
-told that I will not send to Luke new \textbf{J} codes including working
-factory optimization codes without a written co-operation agreement.
-I wrote also to registry-office and asked for the opening decision, and
-to a lawyer of Luke and asked what kind of legal actions
-Luke will take agaisnt me if I started to publish factory optimization
-things with GAYA group using codes which I would not give to Luke.
-The leaders did not comment in any way my co-operation proposal. The research director
-just wrote that
-all codes done in METLA are property of Luke. Buchert did not respond, but
-the the Senior Vice President Ilkka P. Laurila answered that Luke regrets
-for the delays in the publication of \textbf{J} caused by personell changes
-(a funny expression for the fact that the publication process
-could just start in 2020
-when prof Packalen left Luke)
-and
-that Luke has started to prepare the publication and will publish the \textbf{J} on its
-web pages. Kari T Korhonen did not respond.
-
-Thus the leaders of Luke insisted that Luke will publish tens of thousands code
-and manual lines I had written, and insisted that it has no reason
-or obligation to discuss with
-me what and in what form it will these lines publish.
-It is evident that Luke had not been able to publish
-\textbf{J} in my life time (I'm over 70 yrs and I have a heart disease).
-But if I had been alive when Luke had
-published \textbf{J} under my name, I had made a lawsuit againt Luke
-for shaming my researcher honor
-by publishing something I had not accepted for publication. Or perhaps
-Luke had followed
-the previous  custom of  Romania where all chemistry
-research was published under the the name of Elena Ceaușescu,
-and had published the the software and
-manuals under the name of some equivalent to Elena.
-Also in that case I had made a lawsuit
-against Luke (if I had been alive). When the director general of Luke,
-the research director of Luke, the Senior Vice President of Luke
-and the lawyers of Luke
-decided that Luke has absolutely no interest in
-working factory optimization \textbf{J} codes or
-other up to date \textbf{J} codes, did they discuss with any researchers?
-
-After getting such a reponse to my co-opertation suggestion, it was evident that
-I would not give Luke any new codes, and would require Luke to remove all codes I had
-submitted after my retirement as Luke would not akckowledge that
-it had got any codes from me after my retirement, and it would publish my codes
-as if they were developed in Luke. So I would continue my Charles XII operation.
-Unfortunately NMBU did not have factory and transportation cost data ready.  In Norway
-the transportation costs can not be estimated as easily from coordinates as in Finland.
-
-Laurila did send the decision to publish \textbf{J} as a open source software
-after the lawyers of Luke
-had considered two weeks whether Luke should do that. The decision was
-signed by the research director Johanna Buchert 30.8. 2017.
-The process of trying to
-get permission to use Fletchers codes after his death was not described properly.
-It was written
-that after Fletchers death the university of Dundee did not
-respond to queries of Luke. As decribed above, the things did not go that way.
-When Luke was not satisfied with the corrected  permission sent
-by the university, the university had probably decided that
-it is vain to continue correspondece with Luke. However,
-the university wanted to communicate with me,
-when they asked my statement about the importance of Flethers
-code in planning of natural resources.
-The government wanted to figure out whether the
-university is doing something useful. I think that my statement
-was more valuable for
-the university than the euros the university would loose when
-not getting payments for the bqbd code.
-
-The decision told that \textbf{J} is published under licence AGPLv3.
-The licence is specially
-planned for programs which provide computing services through the net.
-Luke has not done anything to develop such net work services, as it has not
-developed \textbf{J} in any way after my retirement in 2017.
-The leaders of Luke did not discuss with
-me the license matters, of cource not.
-
-The decision nominated prof Packalen to take care of the launch of the software.
-Unfortunately she could not organize the lauch, as \textbf{J} was not ready to publication
-because prof Packalen did not allow Reetta to do the necessary
-preparations with respect to the code and manuals.
-
-The lawyers of Luke did not tell anything of the plans of Luke to make lawsuits
-against me if I would co-operate with Norway and would not send new codes to Luke.
-
-Lauri Mehtätalo became Professor in Mathematical Modeling for Forest Planning
-in Luke in Mai 2021.
-Coming from an university environment, he is interested
-in the development of science
-and research. He wanted to get \textbf{J} finally published after 6 year deadlock.
-Lauri did have anything againts that I would take care
-of the publication. Lauri even thought that it
-would be good for science and research that I would
-work without payment. It was a refreshing new attitude in Luke
-to put science into priority.
-Lauri told that he would try to convince the leaders of Luke
-that it would not harm Luke's interests that I would
-take care of the publication of
-the software I had made (for most part). Lauri told initially that
-he wants to persuade
-me to give all new codes to Luke. When I protested his choice of words,
-he apologized, and used thereafter the word 'negotiate'. When Lauri started to 'negotiate' with
-me, I consider that Luke first time in its history acknowledged that I do exist
-as an legal entity is this \textbf{J} affair.
-
-Lauri was able to rotate the head of the research director 180 degrees. The research director even told
-that he would be interested to become a coauthor in the publication dealing the factory
-optimization. It was, however, not mentally feasible for me, as
-he did not even
-answer my previous co-operation suggestion, but just told that Luke has everything
-it needs. Being a researcher, Lauri understood what
-were my aims and was able to get approval of the research director.
-So it seemed that
-the agreement was about ready. But then the agreement was
-stuck on the table of the research director.
-\subsection{Last battle, victory and peace in Olavinlinna}
-\label{preface7}
-I was invited to the 100 year anniversary celebration of the Finnish National Forest Inventory
-as I had worked also in the NFI group. I was interested to see my former colleagues,
-but it started to disturb me
-that I would not know whether I would be a guest of my enemy
-or my co-operations partner.
-I had a very exciting video meeting with the GAYA people. They promised me access
-to the Norwegian supercomputers needed in large factory optimizations, funding for traveling
-and for any consulting work. I started to think that have been stupid
-when I spent years of my short residual life waiting for such co-operation
-with Luke. As Lauri had tried
-to establish such co-operation between me and Luke,
-I decided to give Luke a last chance.
-I made an ultimatum that if we do not get a agreement with Luke within a week,
-I would break all negotiations with Luke and would continue only with Norwegian people,
-even if Luke might try to make a lawsuit against me.
-Twenty-four hours before the time
-limit Lauri called that Luke is willing to make treaty with me.
-The lawyers of Luke did finalize the treaty
-two hours before the NFI celebration.
-
-Antti Asikainen, the research director of Luke and I signed the co-opertation treaty in the king's hall in
-Olavinlinna (St. Olaf's Castle) in Savonlinna 7.10. 2021.
-In the treaty I got almost everything I had
-fighted for: The \textbf{J} software will be published, and I have
-full responsibility of the code and manuals.
-Luke will provide me data of factory locations, simulated treatment schedules for
-all inventory plots for the whole country, and the matrix of distances between the
-factories and inventory plots. Luke will also provide me access to CSC
-supercomputers which are necessary for the whole country optimizations. CSC does not allow
-independent retirees to use its computers. I'm allowed to make a methodological
-paper from developments, whereafter I will provide Luke all the
-new and improved \textbf{J} functions and the developed \textbf{J} scripts. I had hoped that
-Luke had promised me access to Mela so I could study how Mela is doing interest
-rate computations, as I have suspects that these computations are not in order.
-I had asked Olli Salminen some Mela results to study my suspects, but he told, after some
-day considerations, that Luke is not willing to make such computations.
-I suspect that the reason is
-Luke wants to keep all possible Mela problems secret. I did not insist to get
-such permissions as Lauri thought that this would delay and complicat
-the \textbf{J} process. In the treaty it
-is said that the code files state that Juha Lappi
-and Natural Resources Institute Finland have the copyright for the code.
-In the last minutes
-before the signatures
-the lawyers tried to reverse the order of copyright owners. I did not, of course,
-accept the reveresed order, bacause I have made the \textbf{J} really operable after my retirement,
-Now, the recent developments have made Lukes or Metlas contribution
-even smaller, and the overall influence of Luke has been negative.
-It must, however to be taken into account that Pekka M\"akinen has done valuable
-work in collecting data of factories and
-transportation costs, and this data greatly helps my work when I'm now allowed
-to start to develop factory optimization for the whole Finland.
-\subsection{Total balance with Luke}
-\label{preface8}
-At the signing of the peace treaty, Johanna Buchert told that there has not been any
-disagreement in this \textbf{J} busisness, and let bygones be bygones.
-From my point of view, I had six and half years fight to get permission to
-publish the results of my research.  For Luke, there was no
-disagreement because Luke did not acknowledge that I even existed as a
-legal entity. How could Luke
-have disagreement with something which does not even exist? For me,
-the behavior of the leaders of Luke was a 'me too' experience. In
-the heart of my researcher
-identity is the conviction that every researcher, at least in a government
-research institute, has the right and even the obligation to publish the
-results of his research let it be a stastistical method or computer code or
-ordinary research publication.
-The leaders of Luke denied
-me the right to publish the results of my statistical work
-in our biometry book and the results of my software development.  In this \textbf{J} case,
-the reason was that they
-wanted to publish my results themselves.  This has been a very traumatic
-harrasment experience. All the victims of sexual harassment are also
-told that 'let bygones be bygones'.
-As in the peace treaty I was given all responsibility of manuals, I'm
-now utilizing this responsibility in this preface hoping the leaders of
-Luke and perhaps also others
-would be more careful when making decisions which may not tolerate daylight,
-similarly
-as bosses are slowly learning to keep better control of
-their hands which would like
-to grope the bottoms of their subordinates.
-
-From the legal perspective, the leaders of Luke have insisted that
-Luke has full copyright to all work I've done in Mela or Luke. So they can freely
-follow their whims and waste hundreds of thousands of euros
-taxpayers money used in the \textbf{J} project.
-With Lukes overhead multipliers we may speak about millions.
-Perhaps they should also pay
-attention to the by-law telling what is the duty of Luke. How has
-Luke promoted forest research and its utilization by prevented
-the development and
-utilization of \textbf{J} software for over six years?
-Perhaps the ministry should  give
-the leaders of Luke training about the duties of Luke. The leaders
-of Luke never gave any rational justification why Luke should prevent me
-to take care of the publication.
-
-If I had been allowed to publish and develop \textbf{J} as I wanted,
-Luke and forest industry would have
-now available methods to analyze e.g. what can be done
-when timber import from Russia suddenly stops.
-Luke is also still doing static regional sustainability analyzes,
-which are not reasonable
-as they do not take factories into account. Mentally Luke
-is stuck to the German foresters from
-1800's who rotated a fixed cutting area for each year.
-If Luke had let me publish the open-source software in 2015
-Luke had been a forerunner in the open source publication, and I had praised it
-for its progressive attitude. Now Luke has
-has establised its status in the history of open-source as an institute which
-decided to open a software
-but keeps the decision and the code locked for several years because
-it did not allow the principal
-author to take care of or even participate in the publication.
-\subsection{Freedom}
-\label{preface9}
-After the Olavinlinna peace treaty, I thought initially that
-I would like to publish the software before Christmas 2021.
-But when the iron cage around me disappeared, the pressure which had increased
-in my mind for seven years did burst in intensive code development.
-This development had already started when negotiations with Lauri started to look promising,
-and I developed the program to make Latex files for manuals and script files
-for examples automatically from comments embedded within the code or from a
-separate text files.
-
-After the peace treaty I have rewritten all the central parts of the
-software using simpler and more easily maintained solutions,
-and added many new properties. The most important was the rewriting
-of the interpreter
-which interprets the \textbf{J} code generated using the input programming capabilities.
-I had been shamed if the previous interpreter had be offered to the eyes of
-professional programmers. I did rewrite the precompiler so it takes only some
-seconds to do the precompilation, and if the precompiled file
-does not change the new precompiled file is deleted so that the compiler
-does not do any more unnecessary compilation. I did put the matrix computations
-into a new level implementing
-all properties I had found useful in Matlab when providing a method for a client
-using Matlab codes. I added new tools for debugging
-and code development. Now \textbf{J} can treat nicely submatrices and do
-all arithmetic operations and logical operations
-on matrices in addition to scalars. The previous version of  \textbf{J} could make rough
-figures using a separate program written in Intel
-fortran, which I do no more have available. Publication level
-figures could be done using R sripts generated by J.
-Now \textbf{J} is producing figures using Gnuplot which is automatically run from within J.
-Currently only basic 2D and 3D figures
-can be done, but this Gnuplot connection makes it possible to develop \textbf{J}
-into full scale interface to all Gnuplot properties. \textbf{J} can now generate random numbers from any
-continuous or discrete distibution providing new possiblities to study the
-effects of random errors in the simulation of treatment schedules or in
-optimization. It is now  possible to run R scripts from within J.
-Now \textbf{J} can be used easily also as a subroutine. Lauri has utilized this property
-by calling \textbf{J} from R. This offers many new possiblities,
-which we will utilize when
-continuing the co-operation with the GAYA-group.
-
-I made first cleaning of the important \textcolor{VioletRed}{jlp}() function in the spring of 2021
-when correcting
-the fragility which prevented the solution of large problems which take several hours in
-a ordinary PC. There are many things to be done in \textcolor{VioletRed}{jlp}() function, but I start
-to work with them when developing factory optimization in CSC supercomputers.
-I know already how parallel computations can be utilized in \textcolor{VioletRed}{jlp}()-function.
-Previous versions of \textbf{J} had special functions for developing forest simulators and
-computing the simulated schedules. Now all simulators can be developed and utilized
-using standard properties of \textbf{J} transformations either for using stand level
-or tree level variables
-I have not yet made good examples to demonstrate these properties. Because the new \textbf{J} provides
-a platform for making all kind of new devlopments, including
-integer optimization (i.e preventing treatment unit to be divided among several
-schedules), nonlinear objective function
-(which would utlize the capability of \textbf{J} to compute derivatives
-according to analytic derivation rules), it was difficult to breathe a little and make the
-new codes available for users. The codes now published contain many errors.
-I invite the users to help me to correct them. First users should have some
-patience with respect to errors. I claime that the bug percentage is smaller than
-estimated 23-27\% bug percentage in the first version
-of Windows 1, which accintally happened be the same as the bug percentage
-Soviet masons used in the mortar they used when masoning the US embassy in Moscow.
-Currently I can correct most bugs
-causing system crash in 5-10 minutes. It should be emphasized that
-Luke does not have any kind of responsibility of the errors.
-I take the full moral responsibilty of the errors. Similarly, it should
-be emphasized that Luke has no responsibility of the code which works correctly.
-I take the main responsibility of the correctly working code,
-giving Reetta her fair
-share. It is easier for me to correct the errors while alive.
-This fundamental fact of life
-was ignored by Luke when it prevented the publication for seven years.
-
-During the intensive work period after the Olavinlinna peace treaty, my deep
-'me too' traumas have started to heal slowly. Probably this healing process takes
-a long time, and I cannot very soon say let bygones be bygones.
-
-\textbf{J}uha Lappi, Suonenjoki 22.4.2022
-
-\subsection{Changes from previous versions}
-\label{changes}
-The software is almost  completely rewritten. There are many new
-functions and properties. All the previous users should  look at the
-new properties.  If an old user has difficulties to run their old scripts they should
-contact J.L. Note that graphics now assumes that Gnuplot is installed.
-
+\textbf{J}uha Lappi
 \section{Introduction}
 \label{intro}
 The \textbf{J} software can be used as is, i.e. using exe files. The User guide concentrates
-on using binary files, but some reference is aslo made to additional possiblities offered
-by the open \textbf{J} code which Luke finally after 7 years deadlock allowed to publish.
-\subsection{Using exe files}
+on using binary files, but some reference is also made to additional possibilities offered
+by the open \textbf{J} code.
+\subsection{Using \textbf{J} exe files}
 \label{intro1}
 \textbf{J} is a general program for many different tasks. In one end, \textbf{J} is a programming language which
-can be used to program several kind of applicatios and tasks, starting from computing 1+1, either
+can be used to program several kind of applications and tasks, starting from computing 1+1, either
 at \textcolor{Red}{sit>} promt or inside a trasformation object.
 In the other end, it contains many functions which
 can do several tasks in statistics, plotting figures,
 deterministic and stochastic simulation and linear optimization. Forest planning with factories
 using \textcolor{VioletRed}{jlp}() function can take several hours.
 The general \textbf{J} functions and \textbf{J} trasformations can be combined in many ways.
-!
-The development of new \textbf{J} applications is made easier with special input programming. Input
-programming can generate efficiently several \textbf{J} code lines with few lines so that any part of
-object names can be have indices. \textbf{J} scripts can be read from include files which can contain
-sections, so that all code of a project can be stored in one file. Different sections can
-be executed by just writing the name of the section at \textcolor{Red}{sit>} prompt.
-!
-The code development is easy using efficient debugging tools. The output of a \textbf{J} function is printed
-if the line ends with ';' or ';;'. After the code development, the printing can be put off without
-changing the code by telling with \textcolor{teal}{Printresult} variable whether ';' or ';;' or - results
-are printed. During \textcolor{VioletRed}{pause}() the user can do any computations and print objects and
-then either continue or interrupt the process. With \textcolor{teal}{Debugconsole} variable the user can
-tell whether \textcolor{VioletRed}{pause}() is generated after each command line read from an include file. With
-\textcolor{teal}{Debugcode} the user can tell wther \textcolor{VioletRed}{pause}() is generated after each line when \textbf{J} excecutes
-code made by the interpreter and which is packed into a transformation object.
 
-\textbf{J} is now efficient program to do many kind matrix computations. After retirement I sold a client
-an algorithm which I dad developed using J. I submitted the algorith using Matlab code,
-and thus learned Matlab. Then I implemented all Matlab properties I found useful.
-all arithemetical, trigonometric and logical funtions cand operate both on scalars and matrices.
-Some useful extensios to normal computation rules were addewd. Matrices can be made
-from submatrices, submatrices can be extracted from matrices and replaced by other
-matrices.
-!
-The list object is used to transimit and acces object lists. If the list elements are
-objects called REAL variables, the the list can be used in matrix computaions
-in the same way as column vectors.
-!
-The input programming  has the following functions and capabilities.
-\begin{itemize}
-\item \textcolor{Red}{;incl}(file,\textcolor{blue}{form->}) include code from file starting from a label, e.g. as ;ad1;
-\item \textcolor{Red}{;do}(i,ia1,ia2,step) generates input records in a loop
-\item ;if();then \\ \textcolor{green}{!includes\,conditionally\,code}
-\item objstart"i"end \,\textcolor{green}{!\,replaces\,i\,in\,the\,text\,with\,the\,integer\,value\,of\,i.\,Combined\,with\,\textcolor{Red}{;do}()}
-this provides possiblitesd to generate large numer of lines using only some linse
-\textcolor{Red}{;goto}() \,\textcolor{green}{!\,code\,is\,obtained\,from\,a\,different\,place\,of\,an\,include\,file.}
-;elseif();then \\
-;else \\
-;endif
-\end{itemize}
+There are several alternatives for doing general mathematical and statistical
+computations available in J, most prominent being R. For  users of R, the most interesting
+functions in \textbf{J} are evidently the linear programming functions which utilize the the structure
+of typical forest managment planning problems. The forest management planning can now
+combined with factories. R users can do general data management in R and use
+\textbf{J} only for linear programming. But after learning basics of J, it may be more
+straightforward to do also data management in J.
 
-\textbf{J} functions can have arguments and options. Options are used to trasnmit optional arguments
-to a function. Options are expressed as option->. If the option does not refer to a single object then
-the value of the option must be put into parentrhesi.In some cases the prence or absence of an argument passes an logical
-argument into a function. There tow groups of options, ordinaryy options and code options.
-Ordinalry options treansmit either object names or numeric values into a function.
-code options contain a short peice of code which is computed several times form within the function.
-E.g. \textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x) can tells the \textcolor{VioletRed}{draw}() function waht is the function to be drawn. If
-computation of the codeoption rquires several lines, then thes lines can be
-then the \textcolor{blue}{func->}tr(\textcolor{teal}{res}) is used to tell how the function value is computed.
-\subsection{Github}
+\textbf{J} can now be used for general matrix computations. I have included in \textbf{J} all matrix functions of
+Matlab which I found useful in a consulting project. \textbf{J} uses Gnuplot for making figures.
+It is straigtforward to extend these graphics functions. \textbf{J} can be used an
+interface to Gnuplot graphics.  \textbf{J} contains many tools to deal with classified data.
+\subsection{Developing own \textbf{J} functions in Fortran}
+\label{intro2}
+The user's of \textbf{J} can utilize the open source of \textbf{J} in principally two different ways.
+Either the user can develop new versions of existing \textbf{J} functions or the user can can make new functions.
+It both cases the user should make new developments using so called own functions, which can
+be independently of the main \textbf{J} functions. When modifying an existing \textbf{J} function, the user should make a copy of the
+function under a different name. Then the old and new versions
+can exist simultaneously in the function
+space of J. It is very easy to add new functions in \textbf{J} and even more easy to add new options.
+
+When deloping a new methods in J, it is possible to first use the \textbf{J}
+script language to make developments.
+Then the user can make an own function where the method is written in Fortran to make the method faster.
+When writing new methods in Fortran, the user can concentrate on essential parts of the method, and utilize
+the standard data management services provided by J.
+\section{Installing \textbf{J} from Github}
 \label{git}
-The package at github.com/juhalappi/j contains the following components
+The Github ditribution was made under the guidance of Reetta Lempinen. This section decribes the
+folders of the Github distribution and also how to
+install \textbf{J} and Gnuplot.
+\subsection{Git package}
+\label{gitpack}
+The \textbf{J}  package can be loaded by pressing load zip button under the green
+code button in the right side of the page github.com/juhalappi/j.  The package
+contains the following components
+
 \begin{itemize}
 \item[\textbf{J}] Data: \hspace{1cm} folder for data files
 \begin{itemize}
@@ -747,13 +104,13 @@ The package at github.com/juhalappi/j contains the following components
 
 \end{itemize}
 \item[\textbf{J}] J\_R: \hspace{1cm} using \textbf{J} from R, courtesy of Lauri Meht\"atalo.
-!
+
 \begin{itemize}
 \item[\textbf{J}] j.par \hspace{1cm}decaul include file for starting \textbf{J}
-\item[\textbf{J}] JR\_0.0.tar.gz \hspace{1cm} File neede to us fortran subroutines in R
+\item[\textbf{J}] JR\_0.0.tar.gz \hspace{1cm} File needed to use Fortran subroutines in R
 \item[\textbf{J}] testr.cda
 \item[\textbf{J}] test.xda
-\item[\textbf{J}] testr.inc \hspace{1cm} include file an jlp-example
+\item[\textbf{J}] testr.inc \hspace{1cm} include file for an jlp-example
 
 \item[\textbf{J}] testr.inc
 
@@ -772,16 +129,16 @@ for accessing variables in module
 libwinpthread-1.dll which must be available in the path. e.g., in the same folder as the exe
 
 \end{itemize}
-\item[\textbf{J}] Jdoc\_demo \hspace{1cm}documents and include file for running examples fro User's guide
+\item[\textbf{J}] Jdoc\_demo \hspace{1cm}documents and include file for running examples from User's guide
 \begin{itemize}
-\item[\textbf{J}] hyvonenetal2019.pdf \hspace{1cm}facotory optimiazation paper
+\item[\textbf{J}] hyvonenetal2019.pdf \hspace{1cm} A paper utilizing the factory optimization.
 \item[\textbf{J}] J3.0\_userguide\_2021.pdf \hspace{1cm} old version of the manual, explains better some functions thant j3.pdf
 \item[\textbf{J}]	J3.pdf \hspace{1cm} Users guide made with Latex
 \item[\textbf{J}]	 J3\_setup\_development.docx \hspace{1cm} not up-to-date manual for developers
 \item[\textbf{J}] jexamples.inc \hspace{1cm}include file which can be used to run all examples in the manual
 and which is generated with jmanual.exe
 \item[\textbf{J}] jlp92.pdf \hspace{1cm}Manual of old JLP which explains the theory behind the jlp algorithm
-\item[\textbf{J}] lappilempinen.pdf \hspace{1cm}
+\item[\textbf{J}] lappilempinen.pdf \hspace{1cm} Paper explaining the theory behing factory optimization.
 \end{itemize}
 \item[\textbf{J}] Jmanual: \hspace{1cm} Source files for making Latex code for
 the manual and the include file for running examples
@@ -791,10 +148,10 @@ the manual and the include file for running examples
 \item[\textbf{J}] jsections.txt \hspace{1cm}describes such manual sections not in source files
 \item[\textbf{J}] jsections2.txt \hspace{1cm}tells in what order sections foun in jsections.txt
 and source files are put into the manual and what is the level of the sections
-\item[\textbf{J}] main.tex main tex \hspace{1cm}code containd Latex definitions
+\item[\textbf{J}] main.tex  \hspace{1cm}Preample code containing Latex definitions
 \item[\textbf{J}] Makefile\_debug \hspace{1cm}Makefile for making jmanual.exe
 \end{itemize}
-!
+
 \item[\textbf{J}] Source :\hspace{1cm} source code before precompilation
 \begin{itemize}
 \item[\textbf{J}] fletcherd.for \hspace{1cm}Fletchers subroutines turned into double precision
@@ -813,15 +170,168 @@ a subroutine then this must be made a subroutine
 in addition to files in Source (such files which are not precompiled are put in both folders)
 \begin{itemize}
 \item[\textbf{J}] makefile\_debug \hspace{1cm}makefile for making debug- version
-\textcolor{green}{!\,\item[\textbf{J}]\,makefile\_release\hspace{1cm}\,makefile\,for\,making\,release-\,version}
+\item[\textbf{J}] makefile\_release\hspace{1cm} makefile for making release- version
 \end{itemize}
 \item[\textbf{J}] LICENSE:the license file
 \item[\textbf{J}] README.m :readme file
 
 \end{itemize}
-!
+
+\subsection{Loading the package}
+\label{gitload}
+
+The installation is here described from the viewpoint of an user
+who just want to use J, not develop (yet).
+
+The load zip button loads file J-master.zip. Copy this file into a proper folder.
+Let it be Jgit. Clicking the J-master.zip icon shows folder J-master in
+7Zip (if this is installed). Clicking unpack 7zip unpacks it to the folder Jgit.
+Too many folder levels are avoided, if everyhing in folder J-master is copied directly in
+folder Jgit.
+
+The j3d.exe is the debug version of J3. The debug version should be
+used as long as the most memory acces probems are solved.
+Let us assume that the working folder is jtest.
+\section{Starting to us \textbf{J} and Gnuplot}
+\label{start}
+This section tells how to install \textbf{J} so that the user can start running the example
+\subsection{Istalling Gnuplot and \textbf{J}}
+\label{install}
+Let us then install Gnuplot. Go to page gnuplot.info, and select there download,
+and in the download page select green 'download latest version', which loads
+'gp543-min64-mingw.exe' (or similar), and if you let it install with usual yes-next procedures
+gnuplot is installed  in folder c:\program files\gnuplot. Open then command prompt.
+Give command gnuplot. If the compuler says that it is not operable command,
+this means that gnuplot is not properly on the PATH of the system. I had some problems to get the PATH to work
+properly. When I edited the Environmental variable for system and added new item by adding C:\program files\gnuplot\bin having
+space between 'program' and 'files', I did get gnuplot to the PATH, and PATH command showed that it was
+actually two times, but anyhow it worked.
+
+Also folder Jgit/Jbin  should be put on the PATH. This happens by adding item C:\jgit\Jbin to the
+environmental system variable PATH.
+Restart then the computer.
+
+If you have problems  with the environmental variable PATH \textbf{J} and Gnuplot can be put
+into path by defining file jpath.bat  in the working directory containing the lines:\\
+PATH =\%PATH\%;C:\program files\gnuplot\bin\gnuplot\\
+PATH =\%PATH\%;C:\Jgit\Jbin\\
+When starting to work in the working directory, launch Command prompt, got ot the
+working directory using cd commands, and when in the working directory
+write jpath which the puts both j3d and Gnuplot temporalrily into the path.
+
+\subsection{Running examples}
+\label{runex}
+
+Copy then jexamples.inc and j3.pdf  from jdoc\_demo folder into the Jtest folder.
+It is not wise to start
+working in the Jdoc\_demo folder, because if you load a new version of \textbf{J} in a similar way into Jgit folder
+and allow the computer replace existing folders with the same name,
+you would loose the work done in Jgit folder.
+
+Open the command prompt and move to the directory 'jtest' by 'cd' commands.
+It is possible to use \textbf{J} also directly, but its necessary to use \textbf{J} through the command prompt
+at this testing phase, bacause then, if \textbf{J} crashes, the error messages do not disappear.
+In first time, you may want to change
+the colors etc of the commant prompt (color may take effect only after
+closing command prompt and reopening it). It may be reasonable to tick all editing
+properties under the properties button of the command prompt.
+
+If you would like that when starting j3d in this folder, \textbf{J} immediately starts with examples,
+make file j.par to folder jtest and write
+to it
+
+\textcolor{Red}{;incl}(jexamples.inc)
+
+It is possible to write to the fisrts line of j.par
+
+*3000
+
+which would mean that \textbf{J} would generate intially 3000 named objects.
+
+
+Then start j by giving command j3d at the command prompt.
+If you have not done j:par file, write at the \textcolor{Red}{sit>} prompt:  \textcolor{Red}{;incl}(jexamples.inc).
+Alternatively you can diretly start in the jexamples.inc by launching \textbf{J} by\\
+\textbf{J}3d jexamples.inc
+
+\textbf{J} will then print all shortcuts available. You can run examples one by one by giving example shortcuts
+individually, or you can run all examples by shortcut ALL. If you give shortcut ALL, \textbf{J} asks whether
+a \textcolor{Red}{;pause} is generated after each example ('pause after each example(1/0)>').
+Even if \textcolor{VioletRed}{pause}() is not generated after each example, it is generated after each plot.
+This can be prevented by giving at \textcolor{Red}{sit>} promt 'fcont=1' before giving ALL. Examples in the ALL section can anyhow be started
+at any point by putting label ';current:' to any point after label ;ALL: and giving shortcut
+'current'. This is also handy when examples have errors which break the execution. If the errors are made
+intentionally to demonstrate error situations, the interruption of excution after these intentional errors are
+prevented so that the jexamples.inc have command Continue=1 before the intentional error. Theafter the normal
+error handling is put on by command Continue=0.
+
+It is useful to keep the manual open and follow simultaneously the manual and the execution of examples.
+
+
+
 \subsection{\textbf{J} functions}
 \label{jfuncs0}
+The structure of \textbf{J} functions is easiest to explain using examples.
+For instance a data object can be created with \\
+data1=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(x1...x3),\textcolor{blue}{maketrans->}mt,\textcolor{blue}{in->}) \\
+Here \textcolor{teal}{data1} is the output. \textcolor{blue}{read->} is an option which tells what are the variable names in the data.
+Options can transmit object names or numeric values, here \textcolor{blue}{read->} transmits object names.
+maketras->mt tells that for each observation the trasformations defined in the trasformation
+object mt are first computed and the output variables are included in the data object. Option
+\textcolor{blue}{in->} tells that the data are read from the following input paragraph.
+
+Let us then look at a function with arguments and codeoptions. Fuction \\
+\textcolor{VioletRed}{stat}(x1,x3,\textcolor{blue}{min->},\textcolor{blue}{max->},\textcolor{blue}{filter->}(x2.gt.3)) \\
+Now the arguments x1 and x2 tell that stasistics are computed for variables  x1 and x2.
+The options \textcolor{blue}{min->} and \textcolor{blue}{max->} tell that the minimum of \textcolor{teal}{x1} is stored in variable \textcolor{teal}{x1}\%min and maximum in
+variable \textcolor{teal}{x1}\%max.
+
+ Option \textcolor{blue}{filter->} is a code option is trasmits a piece of code. \textcolor{blue}{filter->}(x2.gt.3) tells that
+only such observations are accepted for which \textcolor{teal}{x} is greater than 3. All operations
+which look like logical operations are actually numeric operations which produce
+value 1 for TRUE and value 0 for FALSE. Other options are
+interpreted only once when entering the function, but the code within a code option is here
+computed repeatedly for all observations. If the code needed in a code option is long or must
+be computed using several lines, the code can be put into a transformation object, and e.g.
+\textcolor{blue}{filter->}(tr(a).gt.3) is done so that transformation \textcolor{teal}{tr} is first
+computed and \textcolor{teal}{tr}(\textcolor{teal}{a}) trasmits the value of variable
+\textcolor{teal}{a} after the transforamation is computed.
+
+\textcolor{VioletRed}{stat}() function does not produce an output object.
+For such function which produce output but the name of the output is not given, the name of the output
+is Result. Try e.g. '1+1;' If an output is produced, the it is printed if the code line
+ends with ';' or ';;' . See section \ref{joperation} how the printing is controlled with the
+variable \textcolor{teal}{Printoutput}.
+
+For an option which basically transmits on/off information, it may be necesssary to
+control wheter the option is on by a control variable. For instance, in plotting figures
+option \textcolor{blue}{continue->} indicates that the execution continues without \textcolor{VioletRed}{pause}()
+when the figure is plotted. The option \textcolor{blue}{continue->}fcont that the option is on when variable
+fcont has non-zero value.
+
+The value of an option needs to be put into parenthesis when it is not a single
+constant, object name or simple function call as in\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x),\textcolor{blue}{x->}x,\textcolor{blue}{xrange->}(0,10)).
+Here there arguments can be computed using computations. For istansce \\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x),\textcolor{blue}{x->}x,\textcolor{blue}{xrange->}(0,\textcolor{VioletRed}{max}(10*ran(),3)))\\
+would compute a random upper range for the x-axes. Note here \textcolor{blue}{x->}x means that the name
+of the x-axes variable is x, which used as the argument in \textcolor{VioletRed}{sin}([x[)
+
+\textbf{In a function all the arguments must be before all options.}
+
+The computations are done going through the parse tree form right to left.
+This should be taken into account when getting the values of option arguments
+using transformations, for instance if a and b are computed in transformation tr
+then \textcolor{blue}{filter->}(tr(a).gt.b) does not work in the intended way but \textcolor{blue}{filter->}(a.gt.tr(b)) does.
+The reason for this nonstandard direction for going through
+the parse tree is that the options mus be computed before entering the function, and it had
+made the processing of the parse tree more complicated.
+
+Some of the errors made by the user are noted at the time the function is interpreted, some
+errors are noted after entering the function. Some errors are not recognized and
+unintended results are obtained. In some cases the system will crash.
+
+
 The general (non arithmetic) \textbf{J} functions are used either in statements
 
 func(arg1,…,argn,opt1->value1,….,optm->valuem)
@@ -998,70 +508,8 @@ https://sourceforge.net/projects/gnuplot/files/gnuplot/5.4.2/
 
 Download  download gp542-win64-mingw.exe. This will install gnuplot on your windows
 system under C:\Program Files\gnuplot\. \textbf{J} will strat Gnuplot automatically when
-plotting figures.
+plotting figures if Gnuplot is on the PATH (see section Installing Gnuplot and J).
 
-\subsection{Set-up of \textbf{J}}
-\label{setup}
-The maximum number of available objects cannot be changed during a \textbf{J} session. It is determined during
-the initialization. When \textbf{J} is started it tries to read first file j.par from the default directory
-(see 'During the first use' chapter): The first line must look like
-*2000
-where the number gives the maximum number of named objects.  If j.par is not available, the default
-number of objects is 5000.
-Thereafter there can be in j.par file any number of \textbf{J} commands executed directly (e.g.
-you can give shortcuts for
-commands which are handy e.g. when including repeatedly certain sections from include files). If you
-want to go directly into a specific J-application, you can put into j.par the corresponding include
-command.
-If \textbf{J} is started from command prompt, there can be an include file name in the command line. This
-include file is run after commands read from j.par if it is available.  ?TESTAA
-\subsection{During the first use}
-\label{firstuse}
-It is reasonable to have the exe versions and dll's found in
-\textbf{J}bin folder in one folder, and to make shortcuts for exe-files
-into all working folders. Edit the properties of the shortcut (right click the
-shortcut icon) so that the starting directory is the working directory. Or
-alternatively you can set the path to the folder containing \textbf{J} executable and
-run \textbf{J} in your working directory. Copy also the file j.par into each working
-directory.
-It is recommended that \textbf{J} is run in the Command Prompt window even if it can be
-run also directly from the program shortcut.
-Edit first the properties of the I/O window if you are using \textbf{J} directly or from
-the Command Prompt window. The properties of the I/O window can be changed by
-right-clicking the-icon at the upper left corner. It is reasonable to make the
-screen buffer rather large (large height) so that the whole history of the \textbf{J}
-session can be seen (this is done in the layout sheet of the shortcut
-properties). The default height of the I/O window is also probably too small.
-The width should be at least 81. If you would like to use mouse in copy and
-paste, put quick edit option on. Also the colours of the text and background of
-the \textbf{J} window should be made healthier for eyes (dark text, bright background).
-To see that \textbf{J} is running properly, give your first commands at \textcolor{Red}{sit>} prompt:
-\textcolor{Red}{sit>}a=7.7;
-!
-The result should look
-a=7.700000
-\textcolor{Red}{sit>}
-It is possible to use arrow keys to gwt previous command lines.
-!
-All input lines entered or generated by input programming at \textcolor{Red}{sit>} prompt are
-called commands. Commands are either input programming commands (input
-commands) or commands that define operations in the \textbf{J} working environment
-(operation commands). Input commands and operation commands may read and
-interpret more input lines before returning control to the command level.
-It is most convenient to develop \textbf{J} applications using include files. There is
-available in the jdoc-demo folder an include file jexamples.txt
-which can be used to run all examples in this manual. If the include file
-is in the working directory you can run any example by wrting the name of the example
-in the J-window if you have given '\textcolor{Red}{;incl}(jexamples.txt)' at the \textcolor{Red}{sit>} pronpt.
-The working environment of \textbf{J} consists of named objects, temporary objects,
-constants, functions, arithmetic operations and text paragraphs. Operation
-commands define simple arithmetic operations or more complicated operations on
-the data structures. Operation commands are defined using a transformation
-language. In addition to operation commands, the same transformation language
-is used to define transformation objects which are computed as a group, usually severl times,
-and which
-can be linked in different ways to data structures or other
-transformation objects.
 \subsection{Exiting \textbf{J}}
 \label{exit}
 To exit \textbf{J} program and close console window, just give end command:
@@ -1166,8 +614,8 @@ give new values for \textcolor{teal}{Debugtrans} and \textcolor{teal}{Debugconso
 What happens when an error is encountered is dependent on the value of variable \textcolor{teal}{Continue}. If \textcolor{teal}{Continue} has
 value 0 8teh default case), the control comes into \textcolor{Red}{sit>} prompt when an real error occurs or if an atrficial
 error condition is generated with \textcolor{VioletRed}{errexit}(). If \textcolor{teal}{Continue} has value 1 then the computation continues in
-the same script file where the error occured. This property is used in file jexaples.inc to demosntrate
-possible error conditions so that the computation continues as fi no error had occured.
+the same script file where the error occured. This property is used in file jexaples.inc to demonstrate
+possible error conditions so that the computation continues as if no error had occured.
 
 \begin{example}[operexr]Exapmple of operation of J.\\
 \label{operexr}
@@ -2155,7 +1603,7 @@ objects will be printed with semicolns.
 \hline
 \vspace{0.2cm}
 \begin{note}
-Options \textcolor{blue}{input->}, \textcolor{blue}{local->}, \textcolor{blue}{matrix->}, \textcolor{blue}{arg->}, \textcolor{blue}{result->}, \textcolor{blue}{source->} of previous
+Options input->, \textcolor{blue}{local->}, \textcolor{blue}{matrix->}, \textcolor{blue}{arg->}, result->, \textcolor{blue}{source->} of previous
 versions are obsolte.
 \end{note}
 \begin{note}
@@ -2354,7 +1802,7 @@ write.table(mydat,file=paste(wd,"/mydat.txt",sep=""))\\
 \label{Rcalls}
 File JR\_0.0.tar.gz in the folder J\_R contains R tarball for taking \textbf{J}  subroutines into R.
 With R command JR(”testr.inc”) the example jp problem can be solved from R.
-Later lauri Mehtat\"alo will develop this cooention further so tha R can directly access also
+Later lauri Mehtat\"alo will develop this co-operation further so that R can directly access also
 matrices in the \textbf{J} memory.
 For further information contakt lauri.mehtatalo@luke.fi
 \section{Loops and control strucures}
@@ -2874,7 +2322,10 @@ N(mean,1) variables and \textcolor{VioletRed}{rann}(mean,sd) procuses N(mean,sd)
 rx=\textcolor{VioletRed}{rann}() \,\textcolor{green}{!Output\,is\,REAL}\\
 rm=\textcolor{VioletRed}{matrix}(100)\\
 \textcolor{VioletRed}{print}(\textcolor{VioletRed}{mean}(rm),\textcolor{VioletRed}{sd}(rm),\textcolor{VioletRed}{min}(rm),\textcolor{VioletRed}{max}(rm))\\
+Continue=1 \textcolor{green}{!an\,error}\\
 large=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.2),any)\\
+Continue=0\\
+large=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.2),\textcolor{blue}{any->})\\
 \textcolor{VioletRed}{print}(100*nrows(large)/\textcolor{VioletRed}{nrows}(rm))\\
 cpu0=cpu()\\
 rm2=\textcolor{VioletRed}{matrix}(1000000)\\
@@ -5344,10 +4795,10 @@ both.
 min Vector containing coefficients of z-variables for the objective row of a
 minimization problem. Either \textcolor{blue}{max->} or \textcolor{blue}{min->} option has to be defined but not
 both.
-rhs Vector containing lower bound for each constraint row. Value 1.7e37 is used to
+rhs Vector containing lower bound for each constraint row. Value j\_inf is used to
 indicate the absence of the lower bound in a row. Either or both of the bound
 options (\textcolor{blue}{rhs->}, \textcolor{blue}{rhs2->}) has to be defined.
-rhs2 Vector containing upper bound for each constraint row. Value 1.7e37 is used to
+rhs2 Vector containing upper bound for each constraint row. Value j\_inf is used to
 indicate the absence of the upper bound in a row. Either or both of the bound
 options (\textcolor{blue}{rhs->}, \textcolor{blue}{rhs2->}) has to be defined.
 Other options described above in chapter Solving a problem: \textcolor{VioletRed}{jlp}( ).
@@ -5682,8 +5133,8 @@ mark types of Gnuplot. The mark can be given also as CHAR varible or constant.
 \vspace{0.2cm}
 \begin{example}[drawex]Example of \textcolor{VioletRed}{draw}()\\
 \label{drawex}
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x),\textcolor{blue}{xrange->}(0,2*Pi),\textcolor{blue}{color->}Blue,\textcolor{blue}{continue->}fcont)\\
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{cos}(x),\textcolor{blue}{xrange->}(0,2*Pi),\textcolor{blue}{color->}Red,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(x),\textcolor{blue}{x->}x,\textcolor{blue}{xrange->}(0,2*Pi),\textcolor{blue}{color->}Blue,\textcolor{blue}{continue->}fcont)\\
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{cos}(x),\textcolor{blue}{x->}x,\textcolor{blue}{xrange->}(0,2*Pi),\textcolor{blue}{color->}Red,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\
 \textcolor{VioletRed}{if}(\textcolor{VioletRed}{type}(figyx).ne.FIGURE)plotyxex\\
 \textcolor{VioletRed}{show}(figyx,cont->fcont)\\
 reg0=\textcolor{VioletRed}{regr}(y,x)\\
@@ -6580,7 +6031,7 @@ objects will be printed with semicolns.
 \hline
 \vspace{0.2cm}
 \begin{note}
-Options \textcolor{blue}{input->}, \textcolor{blue}{local->}, \textcolor{blue}{matrix->}, \textcolor{blue}{arg->}, \textcolor{blue}{result->}, \textcolor{blue}{source->} of previous
+Options input->, \textcolor{blue}{local->}, \textcolor{blue}{matrix->}, \textcolor{blue}{arg->}, result->, \textcolor{blue}{source->} of previous
 versions are obsolte.
 \end{note}
 \begin{note}
@@ -6975,6 +6426,675 @@ possibilities to stdy the effects of random errors in the optimization.
 \item[\textbf{J}] The new tools for analyzing grouped data are usefulf when studying the grouped data. it would
 be straightforward to implement mixed model methods based on expected means squares.
 \end{itemize}
+\section{\textbf{J} story}
+\label{preface1}
+!
+she drawed for my 70 yr birthday. \\
+\textbf{J} software version 3.0 is now publisched as a open source software. The preparation of the new version was
+very complicated and frustrating process. The whole story of \textbf{J} is
+presented in section \ref{jstory} where I make also some critical comments on how Luke did
+treat this process. I got 7.10.2021 in a co-operation agreement with Luke
+
+I will here describe the history of \textbf{J} in this preface in unusual
+length and detail. Readers interested ony in the use of the current
+software can perhasp look briefly the subsection Freedom. The reason
+why I'm going through in detail
+the difficulties with Luke is that I think that the policy insisted by the leaders of Luke
+that the researchers of Luke do not have any moral or legal right to publish the results of their
+research should be discussed. I think also that the leaders of Luke
+were willing to waste large amount of taxpayers' money when the prevented the
+development and timely publication of \textbf{J} software. I hope that this part of the
+preface gets some attention also outside the potential users of the software e.g.
+in the ministry. As an amateur actor, I also hope that some play writer would
+notice this and would make tragicomedy on the stage.
+\subsection{JLP and first version of \textbf{J}}
+\label{preface2}
+
+I started to develop \textbf{J} software as a successor of the linear programming software
+\textbf{J}LP \cite{JLP} around
+2004. I had also done several programs for statistical computing (AKTA and Jakta)
+since late seventies
+when there was not
+easy to use software even for ordinary linear regression.
+Later I had to write own software
+for mixed linear models. AKTA, Jakta, and JLP contained  means to use script files and
+make new variables described in arithmetic expressions. The starting idea in \textbf{J} was to put all my
+previous software developments into one program.
+Version 0.9.3 of \textbf{J} was published in August 2004.
+
+In JLP the crucial property was the utilization of the generalized upper bound (GUB) technique which
+I invented and, which I could later find also in the literature (\cite{dant}), as I expected. GUB is
+just the right technique which is
+needed in foreast management planning. JLP made it possible to solve
+significantly larger LP problems significantly faster
+than using standard commercial LP software. In JLP I programmed all the necessary matrix
+operations needed to change columns of the basis matrix in the revised simplex method.
+I updated the inverse of the basis matrix explicitly,
+instead of using factorization procedures as is the standard way in LP.
+I treated nonbinding constraints in a nonstandard way
+by reducing the dimension of the basis matrix instead of using residual
+basic variables, as is normally done.
+
+When I started to develop J, I thought that it might be good idea to use matrix routines
+based on factorizations and developed by a professional in this field.
+I found the LP software bqbd by Fletcher
+based on \cite{flet}. The bqbd software was meant to use 'as is' software for linear and quadratic programming.
+When I told Fletcher that I plan to separate the matrix routines needed in the GUB algorithm,
+he told he is certain that I will not succeed, as his Fortran code did not have any comments.
+He wrote that he will not have any time to help me.
+However, it was not that difficult becasue his code was divided
+to proper subroutines. His code did computations in
+single precision, and it was necessary to change computations
+into double precision. Because I do not have
+a proper training in the rounding error business,
+I had hoped his advice in changing the several tolerance
+parameters to correspont double precision computations. In the development of the original JLP algorith,
+I spent two-three times more time to fight rounding errors than to
+get the code mathematically correct. Now I understood the rounding errors better, but
+anyhow they are the permanent nuisance. The fundamental question
+with respect to rounding errors is: is a small-looking number zero or non-zero.
+
+When I later told him how large problems and how fast my algorithm could solve,
+his attitude towards
+my efforts clearly changed.
+
+Even Bergseng from NMBU started to use \textbf{J} in forest management problems
+in a quite premature
+stage, and we had quite tough time to keep his project in time.
+It took some time to clear a bug in Fletcher
+code which every now and then took the optimization into a wrong path.
+I had a quite slow computer, and the
+data transwer between Norway and Finland was slow. The bug was such that
+it had never caused problems in
+standard applications of bqbd software. In forest planning problems
+it can happen that after many
+pivot operations only residual variables corresponding nonbinding
+constrains are in the basis.
+And when \textbf{J} refactorized of the basis after fixed number of pivot operations,
+as is the common procedure, the basis became slightly corrupted.
+In such a case, the refactorization is not needed. NMBU started to use \textbf{J}
+together with their GAYA simulator, and called the whole system GAYA-J,
+as the previous system was called GAYA-JLP.
+I appreciate that they have acknowledged our co-operation this way.
+\textbf{J} version 0.9.3 was published in
+August 2004.
+
+\textbf{J} contained also a simulator language by which one describe a simulator
+which can be used to geneate
+treatment schedules which are later optimized with the
+LP funtions of J. When Simosol started
+to develop sofware which would compete with the Mela, which had had a
+monopoly status in planning software
+in Finland, and had all the problems which are inevitable in all monopoly projects.
+Simosol made first simulator developments using J, but moved to other solutions before first
+published version of Simo software. Simosol however used the
+linear programming routines
+of J.  They are still using \textbf{J} when being part of Afry.
+\subsection{\textbf{J} with factories: J2.0}
+\label{preface3}
+For me the most disturbing feature of \textbf{J} and JLP was that they were not able to treat factories.
+I thought that the clever heuristic DTRAN algorithm of Howard Hoganson
+(\cite{dtran} and \cite{howard} showed
+that it should be possible to extend basic ideas of the
+\textbf{J}LP algorithm to treat with factory
+problems. I was able to derive the needed equations (see \cite{lappilem}).
+Reetta Lempinen started to work with me to implement the formulas. Reetta has professional
+training in programming, while I'm a self-learning amateur. The necessary
+data structures were quite complicated.
+I had made some wrong decisions which made the data structes even
+more complicated than was necessary.
+Reetta had a clear head to keep data structures in order.
+It was a nice new experience to
+work together through video connection on the code which both could
+see simultaneously.
+I just gave commands, but it was not necessary to give detailed
+instructions because Reetta
+understood from a half word what to do. An important
+contribution of her was that when there were several dead ends,
+and I started to doubt whether we can really
+do what we were aiming at, she told, 'listen Juuso, we can solve this problem as we have
+solved all previous problems'. Interestingly, the problems were usually not in any programming errors,
+but the path could be found by raising to a little upper level and going to the main ideas.
+Reetta's role was essential in the factory optimization. Also later she has been helpful in
+minor technical matters, in writing the manual, testing the new developments etc. Recently she
+adviced me how to use Git and Github. Reetta has also been
+solidary during the painful Luke years, when she was not
+allowed to work with \textbf{J} as she had liked
+to do. I appreciate her contibution very much. She is the second author of this
+manual and the paper \cite{lappilem} for good reasons. However, I use word 'I'
+for such situtions where Reetta has not been involved in the decisions how to proceed. The factory optimization was implemeted in
+\textbf{J} version 2.0. published in 2013.
+\subsection{Battle over open-source J3.0  starts in Luke}
+\label{preface4}
+
+Initially I made the software so that only I could understand the structure and the code.
+When Reetta started to work with me in factory problems,
+I learned what are the weakest points in the software if it should be maintained
+by a group of people. But as I was always able to tell Reetta how the software worked,
+only very slight improvements in the documentation and comments of the code etc. were made.
+When I realized that my retirement age is approaching,
+I started to worry how the software could be maintained and developed after my retirement.
+
+I had worked for Finnish Forest Research Institute (Metla) with small Academy
+and University of Joensuu brakes since 1978. In 2015 Metla and
+two other institutes were merged into Institute of Natural Resources Finland (Luke).
+Based on my long service in a government organization, I expected that
+the new organization would mean
+new leaders, new lawyers, new bureaucrats, and  much more bureaucracy,
+and less time
+for researchers to do research, as always happens when
+government organizations simplify
+their administration and make it more efficient.
+My expectations were in the right direction, but even in my worst
+nightmares I could not have imagined
+what Luke would mean to me personally.
+
+Lauri Meht\"atalo and I had agreed with an international publisher to
+make a book about forest biometry. In Metla this kind of agreement had been
+considered as a merit to Metla. But Luke forbad me to put any working time
+to this book project. After retirement I was free to prepare this book with Lauri.
+On the back-cover of the book I presented myself as a researcher of Metla
+in order to give the affilation credit to Metla.
+The co-operation
+among statisticians of Luke, led by Juha Heikkinen, the continued co-operation
+with Jaana Luoranen, and the support of the whole personell
+of the Research Station of Suonenjoki when the leaders of Luke
+started to humillate me
+were my only positive experiences at Luke.
+
+I started to clean and reorganize the \textbf{J} code so that it would be easier to maintain it.
+My superior Olli Salminen forbad me to continue that effort because
+he was certain that I would
+never get that work ready. I didn't obey, of course not. The eternity of
+this first cleaning round lasted two and
+half weeks. Reorganization of files took 2-3 days, but programming
+of a precompiler took
+two weeks. In JLP I already had learned that a precompiler could help to manage
+data areas of JLP. In J, the precompiler has greatly helped to manage
+global variables.
+The precompiler allows the users access global module variables
+without knowing where they are. To separate the global variables
+from local variables, the global variables have
+j\_ or jlp\_ prefix. By changing the data structures,
+\textbf{J} also became significantly faster
+(main reason was that allocatable pointers were changed into allocatable arrays).
+
+
+In 2014 when we were looking at how \textbf{J} could be utilized in Mela software, I encountered
+old JLP concept ‘own function’, which was the method for allowing users of JLP to
+add own (arithmetic) functions if they had access to the source code. I thought that this
+idea would be useful also with respect to J. So, I organized \textbf{J} so that
+different users could add their own \textbf{J} functions,
+object types and options.
+
+I was then convinced that the best way to utilize these improvements would be to
+make the soft-ware open source. This would also allow me to continue my work freely
+with \textbf{J} after my retirement.
+
+
+The leaders of Luke agreed with me that the open-source \textbf{J} is a good idea.
+Unfortunately they
+also thought that open \textbf{J} is so important for Luke that the leaders could not
+allow me to take care of the publication and prepare and present
+the necessary decisions for their approval, or even participate as
+member in the group which
+started to hustle with the publication.
+The leaders wanted themselves take care of the publication. Unfortunately, none
+of the leaders involved
+considered that the publication of \textbf{J} would be even so
+important that he/she
+had taken care that \textbf{J} would be eventually published.
+They just wanted keep important
+in the process. This absurd deadlock lasted almost seven years.
+
+The previous version utilized some subroutines of IMSL package and from
+the ‘Numerical Recipes in Fortran’ book. I replaced these subroutines mainly by
+open access routines from Lapack and Ranlib packages from the Netlib library.
+Roger Fletcher allowed to distribute his linear programming sub-routines in
+the open \textbf{J} package. Fletcher gave a very liberal permission to use
+his subroutines in open source distribution (the
+price of his bqbd sofware was perhaps 100-200 Euros).
+But the lawyers of Luke studied his permission
+so long that he died before giving permission with better formulation.
+A permission with
+better formualations was obtained from his department in Dundee University.
+But the leading
+laywer of Luke, Emilia Katajajuuri was not satisfied, she wanted make
+sure that the
+legal position of the person
+who gave the new permission was such that he could give the permission.
+
+
+
+The following persons were involved in
+process: P/"aivi Eskelinen, Olli Salminen, Kari T. Korhonen, Kimmo Kukkavuori,
+Tuula Packalen, Sirpa Thessler, Sari Forsman-Hugg, Emilia Katajajuuri and Johanna
+Buchert. Iikka Sainio was an outside legal consult.
+
+The leading lawyer of Emilia Katajuuri made my position clear
+in a video meeting to which I also was accidentally invited to
+listen their new instructions.
+When I accidentally said 'could we decide that..', she interrupted me and said:
+'Listen Juha,
+you do not decide anything in this matter'. Their message was that
+I have done my part, and now
+I should keep out and not disturb their play with their new conquest.
+
+When it was evident that the leaders of Luke wanted to get rid of me,
+I threatened that I will not retire before the opening decision is done.
+Sari Forsman-Hugg told she will make the decision. But as my threat
+seemed to make no influence,
+I retried at the beginning of 2017. When I despite of all
+the humiliation and frustration still hoped that
+some kind a co-operation with Luke would be possible,
+I applied the position outside researcher,
+which had provided me access to Luke's e-mail and library services. Sari Forsman-Hugg was not
+able to make a decision also with recpect to my application.
+I did withdraw my application
+when my e-mail connections were interrupted two times.
+
+Later I heard from Reetta that Luke had made the opening decision but
+she did not know what kind decsion and
+I was not informed of the decision either, in disargeeent with the distribution list
+of the decision, as I noticed in when I finally could see the decision after
+three years.
+\subsection{Retired, frozen conflict}
+\label{preface5}
+After my retirement I was still hoping that some kind of co-operation
+without outside researcher status with Luke would be possible, and I
+participated in the application of factory optimization which was published in \ref{pekka}.
+Prof. Packalen told late 2017 that the publication of \textbf{J} is approaching.
+When I asked about the opening decision, she 'did not
+remember' what it contained but promised to check it out, which she
+did forget to do or atl least forget to tell me what the decision contained.
+Prof. Packalen was planning a very high level launch of
+\textbf{J} with prominent international guests. I wrote that such
+seminar would not probably be worth of
+for trans-Atlantic flights. I was so stupid that
+I believed her promise that the publication of \textbf{J} was approaching
+and I submitted a correction to a bug which produced some amount of negative timber
+quantities.
+
+During 2018-2021 I made some small parameter adjustments for Simosol and Norway and made some additions
+for my own research. Prof. Packalen had lost all interest in the publication,
+and she did not allow Reetta to
+develop the publication documents. When I heard 2020 that prof Packalen
+had left Luke and could
+not prevent publication any more, I asked Reetta to
+ask her superiors whether she could continue
+the preparation of manuals. She got the permission to use some time for that.
+This work with all style details was not very nice for her as she
+had already done big part of the work for the previous format of
+Lukes's report series.
+The report series had changed the formats, and Reetta had to do
+such tedious work she already had done once before.
+Reetta's superiors did never  discuss with me anything related to the
+manuals or to the code. This
+way they had been free to pretent that I have not contributed to
+the work if \textbf{J} had been some time published.
+
+
+In spring 2021 Hannu Salminen from Luke contacted me. He had memory
+problems with a very large data set. I made a rapid fix for his acute
+problem and did develop
+more permanent solutions for large data sets using direct access files.
+Actually that work was
+unncessary as Viktor Strimbu from  NMBU  adviced me later how to make
+\textbf{J} a 64-bit
+application using MSYS2 environment. The Gfortran environment I had
+used before did not
+support 64-bit applications. The 64-bit program allows to put the whole country
+into one run also in factory optimization. Hannu organized a video
+meeting where we discussed the
+development and utilization of the \textbf{J} software. He was the first person
+in Lukes six years history who
+was willing to discuss with me such things.
+
+I started to work with \textbf{J} again. Reetta had told that \textbf{J} had could
+collapse after some hours of computations in  large data sets in factory optimization.
+I asked Luke to get the problematic
+data sets so that I could try to fix the problem. I got the answer that Luke is not allowed to send the
+data sets, and the answer did  not indicate
+that Luke would do anything to get such permission.
+I was quite upset from such answer,
+and I started to think how to open the deadlock situation. Later I got the data,
+and I was able to fix the problem, which was not exactly
+a clear bug but rather a thin-ice place in the algorithm sot that \textbf{J} did drop
+throug the ice when going over the place repeatedly.
+\subsection{Operation Charles XII}
+\label{preface6}
+When I strarted to think how I could find a way out from the deadlock,
+I remembered Charles XII,
+the king of Sweden (wich included  also Finland). He was in war with Denmark
+and he decided to fight Denmark by attacking Norway, which belonged to Denmark.
+He failed as almost his solders died in snowstorms
+in Northern Norway and he was shot by his own soldier.
+I was in conflict with Luke, even if Luke did
+acknowledge that such confilict existed
+because Luke insisted that in a legal sense,
+I did not even exist in this \textbf{J} affair.
+I thought to conquer Norway with nice \textbf{J} codes.
+Renovation of my co-operation with GAYA group
+suited their plans as they were rebuilding their simulator.
+
+I wrote to Johanna Buchert, director general of Luke (who was already in the group of
+Luke leaders hustling in the publication of \textbf{J} when I was in Luke)
+Antti Asikainen, research director of Luke,  and Kari T. Korhonen, who has
+been involved in this \textbf{J} affair and was the superior of Reetta, and
+told that I will not send to Luke new \textbf{J} codes including working
+factory optimization codes without a written co-operation agreement.
+I wrote also to registry-office and asked for the opening decision, and
+to a lawyer of Luke and asked what kind of legal actions
+Luke will take agaisnt me if I started to publish factory optimization
+things with GAYA group using codes which I would not give to Luke.
+The leaders did not comment in any way my co-operation proposal. The research director
+just wrote that
+all codes done in METLA are property of Luke. Buchert did not respond, but
+the the Senior Vice President Ilkka P. Laurila answered that Luke regrets
+for the delays in the publication of \textbf{J} caused by personell changes
+(a funny expression for the fact that the publication process
+could just start in 2020
+when prof Packalen left Luke)
+and
+that Luke has started to prepare the publication and will publish the \textbf{J} on its
+web pages. Kari T Korhonen did not respond.
+
+Thus the leaders of Luke insisted that Luke will publish tens of thousands code
+and manual lines I had written, and insisted that it has no reason
+or obligation to discuss with
+me what and in what form it will these lines publish.
+It is evident that Luke had not been able to publish
+\textbf{J} in my life time (I'm over 70 yrs and I have a heart disease).
+But if I had been alive when Luke had
+published \textbf{J} under my name, I had made a lawsuit againt Luke
+for shaming my researcher honor
+by publishing something I had not accepted for publication. Or perhaps
+Luke had followed
+the previous  custom of  Romania where all chemistry
+research was published under the the name of Elena Ceaușescu,
+and had published the the software and
+manuals under the name of some equivalent to Elena.
+Also in that case I had made a lawsuit
+against Luke (if I had been alive). When the director general of Luke,
+the research director of Luke, the Senior Vice President of Luke
+and the lawyers of Luke
+decided that Luke has absolutely no interest in
+working factory optimization \textbf{J} codes or
+other up to date \textbf{J} codes, did they discuss with any researchers?
+
+After getting such a reponse to my co-opertation suggestion, it was evident that
+I would not give Luke any new codes, and would require Luke to remove all codes I had
+submitted after my retirement as Luke would not akckowledge that
+it had got any codes from me after my retirement, and it would publish my codes
+as if they were developed in Luke. So I would continue my Charles XII operation.
+Unfortunately NMBU did not have factory and transportation cost data ready.  In Norway
+the transportation costs can not be estimated as easily from coordinates as in Finland.
+
+Laurila did send the decision to publish \textbf{J} as a open source software
+after the lawyers of Luke
+had considered two weeks whether Luke should do that. The decision was
+signed by the research director Johanna Buchert 30.8. 2017.
+The process of trying to
+get permission to use Fletchers codes after his death was not described properly.
+It was written
+that after Fletchers death the university of Dundee did not
+respond to queries of Luke. As decribed above, the things did not go that way.
+When Luke was not satisfied with the corrected  permission sent
+by the university, the university had probably decided that
+it is vain to continue correspondece with Luke. However,
+the university wanted to communicate with me,
+when they asked my statement about the importance of Flethers
+code in planning of natural resources.
+The government wanted to figure out whether the
+university is doing something useful. I think that my statement
+was more valuable for
+the university than the euros the university would loose when
+not getting payments for the bqbd code.
+
+The decision told that \textbf{J} is published under licence AGPLv3.
+The licence is specially
+planned for programs which provide computing services through the net.
+Luke has not done anything to develop such net work services, as it has not
+developed \textbf{J} in any way after my retirement in 2017.
+The leaders of Luke did not discuss with
+me the license matters, of cource not.
+
+The decision nominated prof Packalen to take care of the launch of the software.
+Unfortunately she could not organize the lauch, as \textbf{J} was not ready to publication
+because prof Packalen did not allow Reetta to do the necessary
+preparations with respect to the code and manuals.
+
+The lawyers of Luke did not tell anything of the plans of Luke to make lawsuits
+against me if I would co-operate with Norway and would not send new codes to Luke.
+
+Lauri Meht\"atalo became Professor in Mathematical Modeling for Forest Planning
+in Luke in Mai 2021.
+Coming from an university environment, he is interested
+in the development of science
+and research. He wanted to get \textbf{J} finally published after 6 year deadlock.
+Lauri did have anything againts that I would take care
+of the publication. Lauri even thought that it
+would be good for science and research that I would
+work without payment. It was a refreshing new attitude in Luke
+to put science into priority.
+Lauri told that he would try to convince the leaders of Luke
+that it would not harm Luke's interests that I would
+take care of the publication of
+the software I had made (for most part). Lauri told initially that
+he wants to persuade
+me to give all new codes to Luke. When I protested his choice of words,
+he apologized, and used thereafter the word 'negotiate'. When Lauri started to 'negotiate' with
+me, I consider that Luke first time in its history acknowledged that I do exist
+as an legal entity is this \textbf{J} affair.
+
+Lauri was able to rotate the head of the research director 180 degrees. The research director even told
+that he would be interested to become a coauthor in the publication dealing the factory
+optimization. It was, however, not mentally feasible for me, as
+he did not even
+answer my previous co-operation suggestion, but just told that Luke has everything
+it needs. Being a researcher, Lauri understood what
+were my aims and was able to get approval of the research director.
+So it seemed that
+the agreement was about ready. But then the agreement was
+stuck on the table of the research director.
+\subsection{Last battle, victory and peace in Olavinlinna}
+\label{preface7}
+I was invited to the 100 year anniversary celebration of the Finnish National Forest Inventory
+as I had worked also in the NFI group. I was interested to see my former colleagues,
+but it started to disturb me
+that I would not know whether I would be a guest of my enemy
+or my co-operations partner.
+I had a very exciting video meeting with the GAYA people. They promised me access
+to the Norwegian supercomputers needed in large factory optimizations, funding for traveling
+and for any consulting work. I started to think that have been stupid
+when I spent years of my short residual life waiting for such co-operation
+with Luke. As Lauri had tried
+to establish such co-operation between me and Luke,
+I decided to give Luke a last chance.
+I made an ultimatum that if we do not get a agreement with Luke within a week,
+I would break all negotiations with Luke and would continue only with Norwegian people,
+even if Luke might try to make a lawsuit against me.
+Twenty-four hours before the time
+limit Lauri called that Luke is willing to make treaty with me.
+The lawyers of Luke did finalize the treaty
+two hours before the NFI celebration.
+
+Antti Asikainen, the research director of Luke and I signed the co-opertation treaty in the king's hall in
+Olavinlinna (St. Olaf's Castle) in Savonlinna 7.10. 2021.
+In the treaty I got almost everything I had
+fighted for: The \textbf{J} software will be published, and I have
+full responsibility of the code and manuals.
+Luke will provide me data of factory locations, simulated treatment schedules for
+all inventory plots for the whole country, and the matrix of distances between the
+factories and inventory plots. Luke will also provide me access to CSC
+supercomputers which are necessary for the whole country optimizations. CSC does not allow
+independent retirees to use its computers. I'm allowed to make a methodological
+paper from developments, whereafter I will provide Luke all the
+new and improved \textbf{J} functions and the developed \textbf{J} scripts. I had hoped that
+Luke had promised me access to Mela so I could study how Mela is doing interest
+rate computations, as I have suspects that these computations are not in order.
+I had asked Olli Salminen some Mela results to study my suspects, but he told, after some
+day considerations, that Luke is not willing to make such computations.
+I suspect that the reason is
+Luke wants to keep all possible Mela problems secret. I did not insist to get
+such permissions as Lauri thought that this would delay and complicat
+the \textbf{J} process. In the treaty it
+is said that the code files state that Juha Lappi
+and Natural Resources Institute Finland have the copyright for the code.
+In the last minutes
+before the signatures
+the lawyers tried to reverse the order of copyright owners. I did not, of course,
+accept the reveresed order, bacause I have made the \textbf{J} really operable after my retirement,
+Now, the recent developments have made Lukes or Metlas contribution
+even smaller, and the overall influence of Luke has been negative.
+It must, however to be taken into account that Pekka M\"akinen has done valuable
+work in collecting data of factories and
+transportation costs, and this data greatly helps my work when I'm now allowed
+to start to develop factory optimization for the whole Finland.
+\subsection{Total balance with Luke}
+\label{preface8}
+At the signing of the peace treaty, Johanna Buchert told that there has not been any
+disagreement in this \textbf{J} busisness, and let bygones be bygones.
+From my point of view, I had six and half years fight to get permission to
+publish the results of my research.  For Luke, there was no
+disagreement because Luke did not acknowledge that I even existed as a
+legal entity. How could Luke
+have disagreement with something which does not even exist? For me,
+the behavior of the leaders of Luke was a 'me too' experience. In
+the heart of my researcher
+identity is the conviction that every researcher, at least in a government
+research institute, has the right and even the obligation to publish the
+results of his research let it be a stastistical method or computer code or
+ordinary research publication.
+The leaders of Luke denied
+me the right to publish the results of my statistical work
+in our biometry book and the results of my software development.  In this \textbf{J} case,
+the reason was that they
+wanted to publish my results themselves.  This has been a very traumatic
+harrasment experience. All the victims of sexual harassment are also
+told that 'let bygones be bygones'.
+As in the peace treaty I was given all responsibility of manuals, I'm
+now utilizing this responsibility in this preface hoping the leaders of
+Luke and perhaps also others
+would be more careful when making decisions which may not tolerate daylight,
+similarly
+as bosses are slowly learning to keep better control of
+their hands which would like
+to grope the bottoms of their subordinates.
+
+From the legal perspective, the leaders of Luke have insisted that
+Luke has full copyright to all work I've done in Mela or Luke. So they can freely
+follow their whims and waste hundreds of thousands of euros
+taxpayers money used in the \textbf{J} project.
+With Lukes overhead multipliers we may speak about millions.
+Perhaps they should also pay
+attention to the by-law telling what is the duty of Luke. How has
+Luke promoted forest research and its utilization by prevented
+the development and
+utilization of \textbf{J} software for over six years?
+Perhaps the ministry should  give
+the leaders of Luke training about the duties of Luke. The leaders
+of Luke never gave any rational justification why Luke should prevent me
+to take care of the publication.
+
+If I had been allowed to publish and develop \textbf{J} as I wanted,
+Luke and forest industry would have
+now available methods to analyze e.g. what can be done
+when timber import from Russia suddenly stops.
+Luke is also still doing static regional sustainability analyzes,
+which are not reasonable
+as they do not take factories into account. Mentally Luke
+is stuck to the German foresters from
+1800's who rotated a fixed cutting area for each year.
+If Luke had let me publish the open-source software in 2015
+Luke had been a forerunner in the open source publication, and I had praised it
+for its progressive attitude. Now Luke has
+has establised its status in the history of open-source as an institute which
+decided to open a software
+but keeps the decision and the code locked for several years because
+it did not allow the principal
+author to take care of or even participate in the publication.
+\subsection{Freedom}
+\label{preface9}
+After the Olavinlinna peace treaty, I thought initially that
+I would like to publish the software before Christmas 2021.
+But when the iron cage around me disappeared, the pressure which had increased
+in my mind for seven years did burst in intensive code development.
+This development had already started when negotiations with Lauri started to look promising,
+and I developed the program to make Latex files for manuals and script files
+for examples automatically from comments embedded within the code or from a
+separate text files.
+
+After the peace treaty I have rewritten all the central parts of the
+software using simpler and more easily maintained solutions,
+and added many new properties. The most important was the rewriting
+of the interpreter
+which interprets the \textbf{J} code generated using the input programming capabilities.
+I had been shamed if the previous interpreter had be offered to the eyes of
+professional programmers. I did rewrite the precompiler so it takes only some
+seconds to do the precompilation, and if the precompiled file
+does not change the new precompiled file is deleted so that the compiler
+does not do any more unnecessary compilation. I did put the matrix computations
+into a new level implementing
+all properties I had found useful in Matlab when providing a method for a client
+using Matlab codes. I added new tools for debugging
+and code development. Now \textbf{J} can treat nicely submatrices and do
+all arithmetic operations and logical operations
+on matrices in addition to scalars. The previous version of  \textbf{J} could make rough
+figures using a separate program written in Intel
+fortran, which I do no more have available. Publication level
+figures could be done using R sripts generated by J.
+Now \textbf{J} is producing figures using Gnuplot which is automatically run from within J.
+Currently only basic 2D and 3D figures
+can be done, but this Gnuplot connection makes it possible to develop \textbf{J}
+into full scale interface to all Gnuplot properties. \textbf{J} can now generate random numbers from any
+continuous or discrete distibution providing new possiblities to study the
+effects of random errors in the simulation of treatment schedules or in
+optimization. It is now  possible to run R scripts from within J.
+Now \textbf{J} can be used easily also as a subroutine. Lauri has utilized this property
+by calling \textbf{J} from R. This offers many new possiblities,
+which we will utilize when
+continuing the co-operation with the GAYA-group.
+
+I made first cleaning of the important \textcolor{VioletRed}{jlp}() function in the spring of 2021
+when correcting
+the fragility which prevented the solution of large problems which take several hours in
+a ordinary PC. There are many things to be done in \textcolor{VioletRed}{jlp}() function, but I start
+to work with them when developing factory optimization in CSC supercomputers.
+I know already how parallel computations can be utilized in \textcolor{VioletRed}{jlp}()-function.
+Previous versions of \textbf{J} had special functions for developing forest simulators and
+computing the simulated schedules. Now all simulators can be developed and utilized
+using standard properties of \textbf{J} transformations either for using stand level
+or tree level variables
+I have not yet made good examples to demonstrate these properties. Because the new \textbf{J} provides
+a platform for making all kind of new devlopments, including
+integer optimization (i.e preventing treatment unit to be divided among several
+schedules), nonlinear objective function
+(which would utlize the capability of \textbf{J} to compute derivatives
+according to analytic derivation rules), it was difficult to breathe a little and make the
+new codes available for users. The codes now published contain many errors.
+I invite the users to help me to correct them. First users should have some
+patience with respect to errors. I claime that the bug percentage is smaller than
+estimated 23-27\% bug percentage in the first version
+of Windows 1, which accintally happened be the same as the bug percentage
+Soviet masons used in the mortar they used when masoning the US embassy in Moscow.
+Currently I can correct most bugs
+causing system crash in 5-10 minutes. It should be emphasized that
+Luke does not have any kind of responsibility of the errors.
+I take the full moral responsibilty of the errors. Similarly, it should
+be emphasized that Luke has no responsibility of the code which works correctly.
+I take the main responsibility of the correctly working code,
+giving Reetta her fair
+share. It is easier for me to correct the errors while alive.
+This fundamental fact of life
+was ignored by Luke when it prevented the publication for seven years.
+
+During the intensive work period after the Olavinlinna peace treaty, my deep
+'me too' traumas have started to heal slowly. Probably this healing process takes
+a long time, and I cannot very soon say let bygones be bygones.
+
+\textbf{J}uha Lappi, Suonenjoki 22.4.2022
+
 \begin{thebibliography}{9}
 
 \bibitem{dan}

@@ -112,6 +112,107 @@
 ! endnote
 !endmacro
 
+!Section preface0 Preface
+
+! The J software is the succsssor of the JLP software which has been used as the optimizer in the Mela software 
+! and in the Norwegian GAYA planning software which was then called GAYA-JLP.
+!  JLP was published 1992 and Finnish Forest Research Institute (Metla) started to distribute it
+(most part of it was written while I was payed by the Academy of Finland). First version of J ,
+!  version 0.9.3 was published in August 2004. The GAYA group was involved in the development and
+! started to use J immediatemently in the planning system called thereafter GAYA-J. Mela has not
+! included J as
+! as the optimizer, but it is possible to pull out simulated schedules from Mela and then
+! define and solve linear programming problems using J. Simosol started to use J as an 
+!optimizer from the beginning.
+! J version 2.0. published in 2013 made it possible optimize simultatenously forestry and transportations to factories
+! and factory production. 
+
+! In 2015 Metla and 
+! two other institutes were merged into Institute of Natural Resources Finland (Luke). 
+! When my retirement was approaching, I suggested Luke that J would be published as
+! an open source software. The leaders of Luke told that this a good idea, and this is so important that
+!  Luke cannot let me take care of the publication but the leaders wanted to publish J
+! themselves. This started a frustrating and humillating process which lasted until 1.10. 2021 when
+! I got the permission to publish the software and manuals as I like. The development of JLP and J is 
+! decribed in some detail in section 'J story'.
+
+!When Luke did not prevent the development of J any more, I have rewritten all central parts
+! of J. J is now a 64-bit application. And J is now finally published as an open source software
+! at github.com/juhalappi/J. New versions are published there all the time (J contains still many bugs).
+
+! J is utilizing linear programming subroutines of Roger Fletcher.
+!Even Bergseng from NMBU helped in the first version of J. The role of Reetta Lempinen was essential
+! when factories were included. She adviced how to use Github for the distribution. She has
+! also helped to test the new version, and she participated in the writing of the manual before 
+! I developed new tools for the making of manuals. Victor Strimbu adviced how to change J into 64-bit and
+! we are developing together solutions for using J with the new simulator of GAYA.
+! Lauri Meht\"atalo helped to convince the leaders of Luke that Luke's interests do not require that 
+!  they continue preventing the publication and development of J. With Lauri, we have developed a solution for using the optimizer of J from
+! R. More advanced solutions will come later. I thank my grand daughter Ella 
+! for the permission to use the portrait she drawed for my 70 yr birthday.
+
+! The web - launch of J3.0 was 22.4. 2022. The J-story was then part of the preface. Following the advice
+!of Heikki Smolander, I separated this preface and the J-story at 25.5. 2022.
+
+!  Juha Lappi
+!endsection
+
+
+!Initially I made the software so that only I could understand
+! the structure and the code. When Reetta Lempinen started to work with me 
+! in version 2.0 incorporating factory problems, I learned what are the
+! weakest points in the software if it should be maintained by a group of 
+! people. But as I was always able to tell Reetta how the software worked,
+! only very slight improvements in the documentation etc. were made.
+! When I realized that my retirement age is approaching, I started to worry
+! how the software could be maintained after my retirement. In 2014 
+! when we were looking at how J could be utilized in Me-la software, 
+! I encountered old JLP concept ‘own function’, which was the method 
+! for allowing users of JLP to add own (arithmetic) functions if they
+! had access to the source code. Adding these two things together
+! I realized how J should be restructured so that it could be better 
+! maintained and how different users could add their own J functions, 
+! object types and options. 
+! I was then convinced that the best way to utilize these improvements
+! would be to make the soft-ware open source. This would also allow me 
+! to continue my work with J after my retirement. So I started to make
+! necessary changes that different users could start to maintain and
+! develop J source code. This meant changes in the file structure and 
+! data structures and additional documentation. By changing the data 
+! structures, J also became significantly faster (main reason was that 
+! I made allocatable pointers were changed into allocatable arrays). 
+! I made also a precompiler which allows the users access global module 
+! global variables without knowing where they are. To separate the
+! global variables from user’s own variables, they are separated 
+! by j_ -prefix. 
+! At least in this initial phase of the open J project, we did not 
+! try to comment all existing J functions. The purpose is to give the
+! user enough information that she/he can make own functions, object
+! types and options and access old object types and options.  Old J
+! functions do not show good examples how to make J functions, as I 
+! made just for this open J project general purpose utility functions
+! for starting a function and accessing options, and these are not 
+! utilized in the old code. Old J functions utilize directly the 
+! information of how the interpreted J code is organized. ‘User’s 
+! guide to own J3.0 packages’ describes how the user can develop 
+! and maintain J code. 
+! The previous version utilized some subroutines of IMSL package and
+! from the ‘Numerical Recipes in Fortran’ book.  These are now replaced 
+! mainly by open access routines from Lapack and Ranlib packages from 
+! the Netlib library. Roger Fletcher allowed to distribute his linear
+! programming sub-routines in the open J package (see the Conditions
+! of the use for the conditions).??
+! The users are invited to develop the new open J software. This first
+! version could be better documented, but I think that it is according 
+! to the open source ideas that software can be opened even if it is 
+! not so completely clean. I try to bear the shame for the poor 
+! documentation.
+! Suonenjoki. dd mm 2021
+! Juha Lappi
+
+
+
+
 !Section preface Preface
 ! The most important change in the new J3.0 is that the software is made 
 ! open source. Initially I made the software so that only I could understand
@@ -180,21 +281,57 @@
 
 !Section intro Introduction
 !The J software can be used as is, i.e. using exe files. The User guide concentrates 
-!on using binary files, but some reference is aslo made to additional possiblities offered
-! by the open J code which Luke finally after 7 years deadlock allowed to publish.
+!on using binary files, but some reference is also made to additional possibilities offered
+! by the open J code.
 !endsection
 
-!Section intro1 Using exe files
+!Section intro1 Using J exe files
 !J is a general program for many different tasks. In one end, J is a programming language which
-! can be used to program several kind of applicatios and tasks, starting from computing 1+1, either
+! can be used to program several kind of applications and tasks, starting from computing 1+1, either
 !at sit> promt or inside a trasformation object. 
 !In the other end, it contains many functions which
 ! can do several tasks in statistics, plotting figures, 
 ! deterministic and stochastic simulation and linear optimization. Forest planning with factories
- !using jlp() function can take several hours. 
+!using jlp() function can take several hours. 
 ! The general J functions and J trasformations can be combined in many ways.
-!
-!The development of new J applications is made easier with special input programming. Input 
+
+! There are several alternatives for doing general mathematical and statistical 
+! computations available in J, most prominent being R. For  users of R, the most interesting
+! functions in J are evidently the linear programming functions which utilize the the structure
+! of typical forest managment planning problems. The forest management planning can now 
+! combined with factories. R users can do general data management in R and use 
+! J only for linear programming. But after learning basics of J, it may be more 
+! straightforward to do also data management in J. 
+
+! J can now be used for general matrix computations. I have included in J all matrix functions of 
+! Matlab which I found useful in a consulting project. J uses Gnuplot for making figures. 
+! It is straigtforward to extend these graphics functions. J can be used an
+! interface to Gnuplot graphics.  J contains many tools to deal with classified data. 
+!endsection
+ 
+ !Section intro2 Developing own J functions in Fortran
+ ! The user's of J can utilize the open source of J in principally two different ways. 
+ ! Either the user can develop new versions of existing J functions or the user can can make new functions.
+ ! It both cases the user should make new developments using so called own functions, which can 
+ ! be independently of the main J functions. When modifying an existing J function, the user should make a copy of the
+ ! function under a different name. Then the old and new versions
+! can exist simultaneously in the function
+ ! space of J. It is very easy to add new functions in J and even more easy to add new options.
+ 
+ !When deloping a new methods in J, it is possible to first use the J 
+ !script language to make developments.
+ !Then the user can make an own function where the method is written in Fortran to make the method faster.
+ ! When writing new methods in Fortran, the user can concentrate on essential parts of the method, and utilize 
+ ! the standard data management services provided by J.
+ !endsection
+ 
+ 
+ 
+ 
+ 
+
+
+! The development of new J applications is made easier with special input programming. Input 
 ! programming can generate efficiently several J code lines with few lines so that any part of
 ! object names can be have indices. J scripts can be read from include files which can contain
 ! sections, so that all code of a project can be stored in one file. Different sections can
@@ -244,7 +381,7 @@
 ! computation of the codeoption rquires several lines, then thes lines can be 
 packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ REAL object, 
 ! then the func->tr(]res[) is used to tell how the function value is computed.
-!endsection
+
 
 !Section jfuncs J functions: an overview
 !J functions are organized into 21 groups. Some of of the functions are such that the
@@ -696,7 +833,7 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 !Section git  Installing J from Github 
 ! The Github ditribution was made under the guidance of Reetta Lempinen. This section decribes the 
 ! folders of the Github distribution and also how to 
-! isntall J and Gnuplot. 
+! install J and Gnuplot. 
 !endsection
 
 !Section gitpack Git package
@@ -713,13 +850,13 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 
 !\end{itemize}
 !\item[\textbf{J}] J_R: \hspace{1cm} using J from R, courtesy of Lauri Meht\"atalo.
-!
+
 !\begin{itemize}
 !\item[\textbf{J}] j.par \hspace{1cm}decaul include file for starting J
-!\item[\textbf{J}] JR_0.0.tar.gz \hspace{1cm} File neede to us fortran subroutines in R
+!\item[\textbf{J}] JR_0.0.tar.gz \hspace{1cm} File needed to use Fortran subroutines in R
 !\item[\textbf{J}] testr.cda
 !\item[\textbf{J}] test.xda
-!\item[\textbf{J}] testr.inc \hspace{1cm} include file an jlp-example
+!\item[\textbf{J}] testr.inc \hspace{1cm} include file for an jlp-example
 
 !\item[\textbf{J}] testr.inc
 
@@ -738,16 +875,16 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 !  libwinpthread-1.dll which must be available in the path. e.g., in the same folder as the exe
 
 !\end{itemize}
-!\item[\textbf{J}] Jdoc_demo \hspace{1cm}documents and include file for running examples fro User's guide
+!\item[\textbf{J}] Jdoc_demo \hspace{1cm}documents and include file for running examples from User's guide
 !\begin{itemize}
-! \item[\textbf{J}] hyvonenetal2019.pdf \hspace{1cm}facotory optimiazation paper
+! \item[\textbf{J}] hyvonenetal2019.pdf \hspace{1cm} A paper utilizing the factory optimization.
 ! \item[\textbf{J}] J3.0_userguide_2021.pdf \hspace{1cm} old version of the manual, explains better some functions thant j3.pdf
 ! \item[\textbf{J}]	J3.pdf \hspace{1cm} Users guide made with Latex
 ! \item[\textbf{J}]	 J3_setup_development.docx \hspace{1cm} not up-to-date manual for developers
 ! \item[\textbf{J}] jexamples.inc \hspace{1cm}include file which can be used to run all examples in the manual
 ! and which is generated with jmanual.exe
 ! \item[\textbf{J}] jlp92.pdf \hspace{1cm}Manual of old JLP which explains the theory behind the jlp algorithm
-! \item[\textbf{J}] lappilempinen.pdf \hspace{1cm}
+! \item[\textbf{J}] lappilempinen.pdf \hspace{1cm} Paper explaining the theory behing factory optimization.
 !\end{itemize}
 !\item[\textbf{J}] Jmanual: \hspace{1cm} Source files for making Latex code for 
 !the manual and the include file for running examples
@@ -757,10 +894,10 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 ! \item[\textbf{J}] jsections.txt \hspace{1cm}describes such manual sections not in source files
 ! \item[\textbf{J}] jsections2.txt \hspace{1cm}tells in what order sections foun in jsections.txt 
 !and source files are put into the manual and what is the level of the sections
-! \item[\textbf{J}] main.tex main tex \hspace{1cm}code containd Latex definitions
+! \item[\textbf{J}] main.tex  \hspace{1cm}Preample code containing Latex definitions
 ! \item[\textbf{J}] Makefile_debug \hspace{1cm}Makefile for making jmanual.exe
 !\end{itemize}
-! 
+
 !\item[\textbf{J}] Source :\hspace{1cm} source code before precompilation
 !\begin{itemize}
 !\item[\textbf{J}] fletcherd.for \hspace{1cm}Fletchers subroutines turned into double precision
@@ -779,13 +916,13 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 ! in addition to files in Source (such files which are not precompiled are put in both folders)
 !\begin{itemize}
 ! \item[\textbf{J}] makefile_debug \hspace{1cm}makefile for making debug- version
-!! \item[\textbf{J}] makefile_release\hspace{1cm} makefile for making release- version
+! \item[\textbf{J}] makefile_release\hspace{1cm} makefile for making release- version
 !\end{itemize}
 !\item[\textbf{J}] LICENSE:the license file
 !\item[\textbf{J}] README.m :readme file
 
 !\end{itemize}
-! 
+ 
 !endsection
 
 !Section gitload Loading the package
@@ -809,19 +946,26 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
  !endsection
 	!Section install Istalling Gnuplot and J
 	! Let us then install Gnuplot. Go to page gnuplot.info, and select there download,
-	! and in the download page select green 'download latest vestion', which loads 
+	! and in the download page select green 'download latest version', which loads 
 	! 'gp543-min64-mingw.exe' (or similar), and if you let it install with usual yes-next procedures
 	! gnuplot is installed  in folder c:\program files\gnuplot. Open then command prompt.
 	! Give command gnuplot. If the compuler says that it is not operable command, 
-	! this means that gnuplot is not properly on the PATH of the system. I had some problems to get the PAT to work
+	! this means that gnuplot is not properly on the PATH of the system. I had some problems to get the PATH to work
 	! properly. When I edited the Environmental variable for system and added new item by adding C:\program files\gnuplot\bin having 
-	! space between program and files, I did get gnuplot to the path, and path command showed that it was
+	! space between 'program' and 'files', I did get gnuplot to the PATH, and PATH command showed that it was
 	! actually two times, but anyhow it worked.
 	
 	! Also folder Jgit/Jbin  should be put on the PATH. This happens by adding item C:\jgit\Jbin to the 
-	! environmental system variable path.
+	! environmental system variable PATH.
 	! Restart then the computer.
 	
+	!If you have problems  with the environmental variable PATH J and Gnuplot can be put
+	! into path by defining file jpath.bat  in the working directory containing the lines:\\
+	! PATH =%PATH%;C:\program files\gnuplot\bin\gnuplot\\
+  ! PATH =%PATH%;C:\Jgit\Jbin\\
+	!When starting to work in the working directory, launch Command prompt, got ot the
+	! working directory using cd commands, and when in the working directory
+	!write jpath which the puts both j3d and Gnuplot temporalrily into the path.
 	
 	! endsection
 	
@@ -838,7 +982,8 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 	! at this testing phase, bacause then, if J crashes, the error messages do not disappear.
 	! In first time, you may want to change 
 	! the colors etc of the commant prompt (color may take effect only after
-	! closing command prompt and reopening it). 
+	! closing command prompt and reopening it). It may be reasonable to tick all editing
+	! properties under the properties button of the command prompt.
  
  ! If you would like that when starting j3d in this folder, J immediately starts with examples,
  ! make file j.par to folder jtest and write
@@ -865,7 +1010,7 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 ! This can be prevented by giving at sit> promt 'fcont=1' before giving ALL. Examples in the ALL section can anyhow be started
 ! at any point by putting label ';current:' to any point after label ;ALL: and giving shortcut
 ! 'current'. This is also handy when examples have errors which break the execution. If the errors are made 
-! intentionally to demosntrate error situations, the interruption of excution after these intentional errors are
+! intentionally to demonstrate error situations, the interruption of excution after these intentional errors are
 ! prevented so that the jexamples.inc have command Continue=1 before the intentional error. Theafter the normal
 ! error handling is put on by command Continue=0.
 
@@ -914,7 +1059,7 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
  
  ! Download  download gp542-win64-mingw.exe. This will install gnuplot on your windows
 ! system under C:\Program Files\gnuplot\. J will strat Gnuplot automatically when
-! plotting figures.
+! plotting figures if Gnuplot is on the PATH (see section Installing Gnuplot and J).
 
 !endsection
 
@@ -1498,8 +1643,8 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 ! Here ]data1[ is the output. read-> is an option which tells what are the variable names in the data.
 ! Options can transmit object names or numeric values, here read-> transmits object names. 
 !maketras->mt tells that for each observation the trasformations defined in the trasformation
-! object mt are first computed and the output variables are included in the data object.
-! Option in-> tells that the data are read from the following input paragraph.
+! object mt are first computed and the output variables are included in the data object. Option
+!  in-> tells that the data are read from the following input paragraph.
 
 !Let us then look at a function with arguments and codeoptions. Fuction \\
 ! stat(x1,x3,min->,max->,filter->(x2.gt.3)) \\
@@ -1507,7 +1652,7 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 ! The options min-> and max-> tell that the minimum of ]x1[ is stored in variable ]x1[%min and maximum in 
 ! variable ]x1[%max. 
 
-! Option filter-> is a code option is trasmits a piece of code. filter->(x2.gt.3) tells that 
+! +Option filter-> is a code option is trasmits a piece of code. filter->(x2.gt.3) tells that 
 ! only such observations are accepted for which ]x[ is greater than 3. All operations
 ! which look like logical operations are actually numeric operations which produce
 ! value 1 for TRUE and value 0 for FALSE. Other options are 
@@ -2304,8 +2449,8 @@ a call to function assone()
  ! What happens when an error is encountered is dependent on the value of variable ]Continue[. If ]Continue[ has
  ! value 0 8teh default case), the control comes into sit> prompt when an real error occurs or if an atrficial 
  ! error condition is generated with errexit(). If ]Continue[ has value 1 then the computation continues in
- ! the same script file where the error occured. This property is used in file jexaples.inc to demosntrate 
- ! possible error conditions so that the computation continues as fi no error had occured.
+ ! the same script file where the error occured. This property is used in file jexaples.inc to demonstrate 
+ ! possible error conditions so that the computation continues as if no error had occured.
  
  ! endheader
  ! Ex operexr Exapmple of operation of J.
@@ -2332,8 +2477,8 @@ a call to function assone()
 !The file jexamples.inc which comes with the manual and which is generated
 ! with the jmanual program shows an examle.
 
-!Section preface1 Preface
-! First I thank my grand daughter for the permission to use the portrait
+!Section preface1 J story
+! 
 ! she drawed for my 70 yr birthday. \\
 ! J software version 3.0 is now publisched as a open source software. The preparation of the new version was
 !very complicated and frustrating process. The whole story of J is 
@@ -2497,7 +2642,7 @@ a call to function assone()
  ! nightmares I could not have imagined
 ! what Luke would mean to me personally.
 
-! Lauri Mehtätalo and I had agreed with an international publisher to 
+! Lauri Meht\"atalo and I had agreed with an international publisher to 
 ! make a book about forest biometry. In Metla this kind of agreement had been 
 ! considered as a merit to Metla. But Luke forbad me to put any working time 
 ! to this book project. After retirement I was free to prepare this book with Lauri.
@@ -2575,7 +2720,7 @@ a call to function assone()
 
  
 ! The following persons were involved in
-! process: Päivi Eskelinen, Olli Salminen, Kari T. Korhonen, Kimmo Kukkavuori,
+! process: P/"aivi Eskelinen, Olli Salminen, Kari T. Korhonen, Kimmo Kukkavuori,
 ! Tuula Packalen, Sirpa Thessler, Sari Forsman-Hugg, Emilia Katajajuuri and Johanna
 ! Buchert. Iikka Sainio was an outside legal consult.
 
@@ -2653,7 +2798,7 @@ a call to function assone()
  ! application using MSYS2 environment. The Gfortran environment I had 
  ! used before did not
 ! support 64-bit applications. The 64-bit program allows to put the whole country 
- ! into one run aslo in factory optimization. Hannu organized a video
+ ! into one run also in factory optimization. Hannu organized a video
  ! meeting where we discussed the
  ! development and utilization of the J software. He was the first person 
  ! in Lukes six years history who 
@@ -2777,7 +2922,7 @@ a call to function assone()
  ! The lawyers of Luke did not tell anything of the plans of Luke to make lawsuits 
  ! against me if I would co-operate with Norway and would not send new codes to Luke.
  
- ! Lauri Mehtätalo became Professor in Mathematical Modeling for Forest Planning
+ ! Lauri Meht\"atalo became Professor in Mathematical Modeling for Forest Planning
  ! in Luke in Mai 2021.
  ! Coming from an university environment, he is interested 
  ! in the development of science
@@ -3081,7 +3226,7 @@ a call to function assone()
 !Section  Rcalls Calling J-scripts from R
 ! File JR_0.0.tar.gz in the folder J_R contains R tarball for taking J  subroutines into R.
 ! With R command JR(”testr.inc”) the example jp problem can be solved from R.
-! Later lauri Mehtat\"alo will develop this cooention further so tha R can directly access also 
+! Later lauri Mehtat\"alo will develop this co-operation further so that R can directly access also 
 ! matrices in the J memory.
 !For further information contakt lauri.mehtatalo@luke.fi
 !endsection

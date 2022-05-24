@@ -8754,7 +8754,8 @@ subroutine j_getinput(prompt,inprint,nul0t)  ! gets next input line
 
 678 if(j_inp(1:1).eq.';')then  !input programming
 	!	write(6,*)'<88888 ',j_inp(1:6)
-		write(6,*)'<'//j_inp(1:j_linp)
+	
+		if(printline())write(6,*)'<'//j_inp(1:j_linp)
 	!	if(j_inp(1:j_linp).eq.';enddo')write(6,*)'j_niifs ',j_niifs,' j_ndo ',j_ndo, 'j_niifsindo ',&
 	!	j_niifsindo(j_ndo),' dostart ',j_dostart(j_ndo),'j_niifs,',j_niifs,' j_bypa(j_niifs) ', &
 	!	j_bypa(j_niifs)
