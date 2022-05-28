@@ -162,7 +162,7 @@ subroutine j_jinit0(jparf)
 	!write(6,*)'>44',lencmd,istcmd,cmd
 	if(.not.j_inited)then
 !the following is updated with the J-precompiler,DO NOT CHANGE ANYTHING
-		j_title='j: j3.0 24.  5. 2022 (c) Juha Lappi and Natural Resources Institute Finland'
+		j_title='j: j3.0 28.  5. 2022 (c) Juha Lappi and Natural Resources Institute Finland'
 		write(6,*)j_title
 		write(6,1357)'j',j_nfunctions_,j_noptions_,j_nobjecttypes_
 		write(6,1357)o1_title,o1_nfunctions,o1_noptions,o1_nobjecttypes
@@ -9448,8 +9448,8 @@ endif
 	! Returns the value of the logistic function 1/(1+exp(-x)). This can in principle computed by the
 ! transformation, but the transformation will produce an error condition when the argument -x
 ! of the exp-function is large. Because the logistic function is symmetric, these cases are
-! computed as 1-1/(1+exp(x)). Because the logistic function can be needed in the nonlinear
-! regression, also the derivatives are implemented.  Note, to utilse derivatives
+! computed as exp(x)/(1+exp(x)). Because the logistic function can be needed in the nonlinear
+! regression, also the derivatives are implemented.  Note, to utilize derivatives
 ! the function needs to be in a TRANS object.
 ! Eg when f=logistic(a*(x-x0)), then
 ! the derivatives can be obtained with respect to the parameters a and x0 by
@@ -9495,8 +9495,9 @@ endif
 	! then there should be first
  
 	!	call j_checkoutput(iob,io)
-		ivout=j_o(iob)%i(io+2)
-		arg=j_v( j_o(iob)%i(io+1))
+		narg=j_o(iob)%i(io+1)
+		ivout=j_o(iob)%i(io+narg+2)
+		arg=j_v( j_o(iob)%i(io+2))
 		j_v(ivout)=j_1/(j_1+exp(-arg))
 !	io=io+3    ! this is not a regular function, it does not have the number of arguments, becasue
 	! one can get derivatives, which are implemented wfor funtion which do dot have number of arguments explicitly
@@ -12322,12 +12323,13 @@ character*40 filename
 	use jmod, only: j_getdataobject
 	use jmod, only: j_err
 	use jmod, only: j_clearoption
+	use jmod, only: j_dnobs
 	use jmod, only: j_dfrom
 	use jmod, only: j_getobs
-	use jmod, only: j_dnobs
 	use jmod, only: j_rejected
 	use jmod, only: j_v
 	use jmod, only: j_duntil
+	use jmod, only: j_ivaccepted
 	use jmod, only: j_quick_sort
 	use jmod, only: j_defmatrix
 	use jmod, only: j_matreg
@@ -12357,12 +12359,13 @@ character*40 filename
 !	io=io_
 		narg=j_o(iob)%i(io+1)
 !	io_=io_+narg+3
+	
 		iv=j_o(iob)%i(io+2)
 		iout=j_o(iob)%i(io+2+narg)
 		call j_getdataobject(iob,io)
 		if(j_err)return
 		call j_clearoption(iob,io )
-		allocate(value9(1:jnobstot))
+		allocate(value9(1:j_dnobs))
 		missing=0
 !	do k=1,jndatasetss
 	!call j_getdataset(j_datasets(k),nobs)
@@ -12379,7 +12382,7 @@ character*40 filename
 			goto 100
 		endif !if(j_rejected)then
 		value9(1)=j_v(iv);nval=1;ial=ial+1
- 
+	nacc=1
 		do i=ial,j_duntil
 			call j_getobs(i)
 			if(j_err)return  !j_err
@@ -12389,18 +12392,21 @@ character*40 filename
 				missining=missing+1
 				cycle
 			endif !if(abs(j_v(iv)).ge.1.7d19)then
- 
+			nacc=nacc+1
 			if(.not.any(value9(1:nval).eq.j_v(iv)))then
 				nval=nval+1;value9(nval)=j_v(iv)
 			end if !if(.not.any(value9(1:nval).eq.j_v(iv)))then
 		end do !do i=ial,j_duntil
 !	end do !do k=1,jndatasetss
+		j_v(j_ivaccepted)=nacc
+	write(6,*)'Accepted ',nacc,'  from ',j_dnobs
 		allocate(iperm(1:nval))
 		call j_quick_sort(value9(1:nval),iperm)
 		call j_defmatrix(iout,' ',nval,1,j_matreg,ivout_)
 		j_o(iout)%d=value9(1:nval)
 		deallocate(value9)
 		deallocate(iperm)
+	
 		if(j_depilog.gt.0)call dotrans(j_depilog,1)
 		return
 	end subroutine values !subroutine values(iob,io)
@@ -12547,6 +12553,8 @@ character*40 filename
 	use jmod, only: j_linkoption
 	use jmod, only: j_mpar
 	use jmod, only: j_err
+	use jmod, only: j_codelink
+	use jmod, only: j_mvariance
 	use jmod, only: j_getoption_index
 	use jmod, only: j_mnoint
 	use jmod, only: j_optarg0
@@ -12565,6 +12573,8 @@ character*40 filename
 	use jmod, only: j_duntil
 	use jmod, only: j_getobs
 	use jmod, only: j_rejected
+	use jmod, only: j_codevalue
+	use jmod, only: j_0
 	use jmod, only: j_printname
 	use jmod, only: j_dnkeep
 	use jmod, only: j_o
@@ -12599,6 +12609,8 @@ character*40 filename
 	!corr&-1|0& & if vcorr-> is present regr() generated matrix ]output%corr[ for
 	!the correlation matrix of the coeffcient estimates. Standard deviations
 	!are put to the diagonal.
+	!variance&-1|1&CODE&The variance of the residual error is proportional to the function
+	!given in this codeoption.
 	!endoption
 	! Note If the DATA object contains variables Regr and Resid, then the values of
 	! the regression function and resduals are put into these columns. Space for these e
@@ -12642,15 +12654,21 @@ character*40 filename
 		double precision ,dimension(:,:), allocatable::mat
 		integer ,dimension(:), allocatable::ipiv
 		double precision ,dimension(:,:), allocatable::rhs_
-		double precision ::sst,sse,sumy,sum,resid
+		double precision ::sst,sse,sumy,sum,resid,weight
+		double precision sse0,sst0 ,r2,r20
 		double precision dfe,mse_,tmin,slow
-		logical var,corr,step,singucur,singutot,getpar
+		logical var,corr,step,singucur,singutot,getpar,isvariance
+	
 		call j_startfunction(iob,io,j_ipreal,.true.,narg,arg,iout)
 		singutot=.false. ! are there altogether droppings
 		getpar=j_linkoption(iob,io,j_mpar).ge.0
 		if(j_err)return
 		iy=arg(1) !   o(iob)%i(io+2)
 		intcep=1
+		linkvariance=j_codelink(iob,io,j_mvariance)
+		isvariance=linkvariance.gt.0
+	
+!		if(isvariance)write(6,*)'hep ',j_o(iob)%i(linkvariance:linkvariance+4)
 		call j_getoption_index(iob,io,j_mnoint,-1,0,0,&
 			.false.,.false.,nnoint,j_optarg0)
 		if(nnoint.ge.0)intcep=0
@@ -12733,46 +12751,103 @@ character*40 filename
  
 		!do k=1,jndatasetss
 			!call j_getdataset(j_datasets(k),nobs)
-			obloop1:do i=j_dfrom,j_duntil
-				!call j_nextobs()
-				call j_getobs(i)
-				if(j_err)return  !j_err
+			if(isvariance)then
+				obloopw:do i=j_dfrom,j_duntil
+					!call j_nextobs()
+					call j_getobs(i)
+					if(j_err)return  !j_err
  
-				if(j_rejected)cycle
-				if(abs(j_v(iy)).ge.1.7d19)then
-					missing=missing+1
-					cycle
-				endif !if(abs(j_v(iy)).ge.1.7d19)then
- 
-				do j=intcep2,ncoef
-					if(abs(j_v(regl(j))).ge.1.7d19)then
+					if(j_rejected)cycle
+					if(abs(j_v(iy)).ge.1.7d19)then
 						missing=missing+1
-						cycle obloop1
-					endif !if(abs(j_v(regl(j))).ge.1.7d19)then
-				enddo !do j=intcep2,ncoef
+						cycle
+					endif !if(abs(j_v(iy)).ge.1.7d19)then
+ 
+					do j=intcep2,ncoef
+						if(abs(j_v(regl(j))).ge.1.7d19)then
+							missing=missing+1
+							cycle obloopw
+						endif !if(abs(j_v(regl(j))).ge.1.7d19)then
+					enddo !do j=intcep2,ncoef
  
  
-				if(j_err)goto 900
-				ntot=ntot+1
-			! if(intcep.gt.0)then
-				! mat(1,1)=mat(1,1)+1.d0
-				! rhs_(1,ncoef1)=rhs_(1,ncoef1)+j_v(iy)
-				! do j=2,ncoef
-					! mat(1,j)=mat(1,j)+j_v(regl(j))
-				! enddo !do j=2,ncoef
-			! endif !if(intcep.gt.0)then
+					if(j_err)goto 900
+					ntot=ntot+1
+				! if(intcep.gt.0)then
+					! mat(1,1)=mat(1,1)+1.d0
+					! rhs_(1,ncoef1)=rhs_(1,ncoef1)+j_v(iy)
+					! do j=2,ncoef
+						! mat(1,j)=mat(1,j)+j_v(regl(j))
+					! enddo !do j=2,ncoef
+				! endif !if(intcep.gt.0)then
+	
+					weight=j_codevalue(iob,linkvariance)
+			!	if(i.le.3)write(6,*)'<66i',i,j_o(iob)%i(linkvariance:linkvariance+5),weight
+					if(weight.le.j_0)then
+						write(6,*)'for observation ',i,' variance was not positive'
+						j_err=.true. ;return
+					endif
+					do j=1,ncoef
+						rhs_(j,ncoef1)=rhs_(j,ncoef1)+j_v(regl(j))*j_v(iy)/weight
  
-				do j=1,ncoef
-					rhs_(j,ncoef1)=rhs_(j,ncoef1)+j_v(regl(j))*j_v(iy)
+						do j2=j,ncoef
  
-					do j2=j,ncoef
+							mat(j,j2)=mat(j,j2)+j_v(regl(j))*j_v(regl(j2))/weight
+						enddo !do j2=j,ncoef
+					enddo !do j=1,ncoef
  
-						mat(j,j2)=mat(j,j2)+j_v(regl(j))*j_v(regl(j2))
-					enddo !do j2=j,ncoef
-				enddo !do j=1,ncoef
+					sumy=sumy+j_v(iy)
+				enddo obloopw !obloop1:do i=j_dfrom,j_duntil
+	
+	
+			else
+				obloop1:do i=j_dfrom,j_duntil
+					!call j_nextobs()
+					call j_getobs(i)
+					if(j_err)return  !j_err
  
-				sumy=sumy+j_v(iy)
-			enddo obloop1 !obloop1:do i=j_dfrom,j_duntil
+					if(j_rejected)cycle
+					if(abs(j_v(iy)).ge.1.7d19)then
+						missing=missing+1
+						cycle
+					endif !if(abs(j_v(iy)).ge.1.7d19)then
+ 
+					do j=intcep2,ncoef
+						if(abs(j_v(regl(j))).ge.1.7d19)then
+							missing=missing+1
+							cycle obloop1
+						endif !if(abs(j_v(regl(j))).ge.1.7d19)then
+					enddo !do j=intcep2,ncoef
+ 
+ 
+					if(j_err)goto 900
+					ntot=ntot+1
+				! if(intcep.gt.0)then
+					! mat(1,1)=mat(1,1)+1.d0
+					! rhs_(1,ncoef1)=rhs_(1,ncoef1)+j_v(iy)
+					! do j=2,ncoef
+						! mat(1,j)=mat(1,j)+j_v(regl(j))
+					! enddo !do j=2,ncoef
+				! endif !if(intcep.gt.0)then
+ 
+					do j=1,ncoef
+						rhs_(j,ncoef1)=rhs_(j,ncoef1)+j_v(regl(j))*j_v(iy)
+ 
+						do j2=j,ncoef
+ 
+							mat(j,j2)=mat(j,j2)+j_v(regl(j))*j_v(regl(j2))
+						enddo !do j2=j,ncoef
+					enddo !do j=1,ncoef
+ 
+					sumy=sumy+j_v(iy)
+				enddo obloop1 !obloop1:do i=j_dfrom,j_duntil
+			endif
+			if(ntot.lt.ncoef)then
+				write(6,*)'*only ',ntot,' observations accepted, estimation not possible'
+				j_err=.true.
+				return
+			endif
+	
 	!	end do !do k=1,jndatasetss
 			singucur=.false.
 			do j=1,ncoef
@@ -12800,8 +12875,10 @@ character*40 filename
 				enddo !do j2=1,j-1
 			enddo !do j=1,ncoef
 			call dgesv(ncoef,ncoef1,mat,ncoef0,ipiv,rhs_,ncoef0,info_)
-			sse=0.d0
-			sst=0.d0
+			sse=j_0
+			sst=j_0
+			sse0=j_0
+			sst0=j_0
 			sumy=sumy/ntot
 			ntot=0
 	!	do k=1,jndatasetss
@@ -12832,10 +12909,21 @@ character*40 filename
 					sum=sum+rhs_(j,ncoef1)*j_v(regl(j))
 				enddo !do j=1,ncoef
 				resid=j_v(iy)-sum
-				sse=sse+resid*resid
+				if(isvariance)then
+					weight=j_codevalue(iob,linkvariance)
+					sse=sse+resid*resid/weight
+					sse0=sse0+resid*resid
+				else
+					sse=sse+resid*resid
+				endif
 				if(iregf.gt.0)j_o(j_dimat)%d(ibas+iregf)=sum
 				if(iresid.gt.0)j_o(j_dimat)%d(ibas+iresid)=resid
-				sst=sst+(j_v(iy)-sumy)**2
+				if(isvariance)then
+					sst=sst+(j_v(iy)-sumy)**2/weight
+					sst0=sst0+(j_v(iy)-sumy)**2
+				else
+					sst=sst+(j_v(iy)-sumy)**2
+				endif
  
 			enddo obloop2 !obloop2:		do i=j_dfrom,j_duntil
 !		end do !do k=1,jndatasetss
@@ -12889,7 +12977,12 @@ character*40 filename
 			r2=1.d0-mse_*(ntot-1.)/sst
 			write(6,*)' '
 			write(6,'(a,g13.5,a,f6.3,a,i7)')'RMSE= ',rmse,' R2=',r2, ' df ',idfe
-			if(intcep.gt.0)then
+			if(isvariance)then
+			write(6,*)'*Note the se of the residual error is RMSE*sqrt(variance), where variance is defined in variance->'
+			r20=1.d0-sse0*(ntot-1.)/(sst0*dfe)
+			write(6,*)'sd of residuals=',sse0/dfe,' R2 in the original scale =',r20
+		 endif
+		if(intcep.gt.0)then
 				write(6,*)'F reg (',ncoef-1,idfe,')=',(sst-sse)/(mse_*(ncoef-1.))
 			end if !if(intcep.gt.0)then
 445	if(step.and.tmin0.lt.tmin.or.singucur)then
@@ -13104,6 +13197,8 @@ character*40 filename
 	use jmod, only: j_ivregf
 	use jmod, only: j_divkeep
 	use jmod, only: j_ivresid
+	use jmod, only: j_codelink
+	use jmod, only: j_mvariance
 	use jmod, only: j_getoption
 	use jmod, only: j_mpar
 	use jmod, only: j_ipreal
@@ -13129,6 +13224,8 @@ character*40 filename
 	use jmod, only: j_duntil
 	use jmod, only: j_getobs
 	use jmod, only: j_rejected
+	use jmod, only: j_codevalue
+	use jmod, only: j_1
 	use jmod, only: j_o
 	use jmod, only: j_dimat
 	use jmod, only: j_object_name
@@ -13157,12 +13254,13 @@ character*40 filename
 		integer ,dimension(:), allocatable::ipiv
 		double precision ,dimension(:), allocatable::current
 		double precision ,dimension(:,:), allocatable::rhs_
-		double precision ::sst,sse,sumy,sse0,sumy2
+		double precision ::sst,sse,sumy,sse0,sumy2,sse0nw,ssenw
 		double precision dfe,mse_,resid
-		double precision scale,scalemin1,scalemin2,step
+		double precision scale,scalemin1,scalemin2,step,variance,sumynw,sumy2nw,weight
+		double precision sumf,sumnf
 		logical eka
 		logical var,corr
-		logical isparmin,isparmax,isdpar,ismissing
+		logical isparmin,isparmax,isdpar,ismissing,isvariance
 		integer iprint
 		corr=.false.
 		eka=.true.
@@ -13177,6 +13275,9 @@ character*40 filename
 		endif !if(.not.j_distrans)then
 		iregf=j_inlistobject(j_ivregf,j_divkeep)
 		iresid=j_inlistobject(j_ivresid,j_divkeep)
+	
+		linkvariance=j_codelink(iob,io,j_mvariance)
+		isvariance=linkvariance.gt.0
  
 		iy=arg(1) !   o(iob)%i(io+2)
 		if=arg(2)
@@ -13222,6 +13323,8 @@ character*40 filename
 		enddo !do ii=1,ncoef1
 		if(nnz.eq.0)then
 			write(6,*)'some initial values should be nonzero'
+			j_err=.true.
+			return
 		endif !if(nnz.eq.0)then
  
  
@@ -13293,23 +13396,27 @@ character*40 filename
  
 		allocate(mat(1:ncoef,1:ncoef),rhs_(1:ncoef,ncoef1),ipiv(1:ncoef),current(1:ncoef))
 		loop=0
-		sumy=0.d0
-		sumy2=0.d0
+		sumy=j_0
+		sumy2=j_0
+		sumynw=j_0
+		sumy2nw=j_0
 		iter=0
+		sumf=j_0
 	100 continue
 		if(iter.ge.maxiter)then
 			if(j_dprint.gt.1)write(6,*)'maximum number of iterations ',iter
 			goto 200
 		endif !if(iter.ge.maxiter)then
 		loop=loop+1
-		mat=0.d0
-		rhs_=0.d0
+		mat=j_0
+		rhs_=j_0
 		do k=1,ncoef
 			rhs_(k,k)=1.d0
 		enddo !do k=1,ncoef
  
 		ntot=0
-		sse0=0.d0
+		sse0=j_0
+		sse0nw=j_0
 		missing=0
 !	do k=1,jndatasetss
 		!call j_getdataset(j_datasets(k),nobs)
@@ -13326,39 +13433,82 @@ character*40 filename
 				cycle
 			endif !if(abs(j_v(iy)).ge.1.7d19)then
 			ntot=ntot+1
-			if(eka)then
-				sumy=sumy+j_v(iy)
-				sumy2=sumy2+j_v(iy)*j_v(iy)
-			endif !if(eka)then
-			do j=1,ncoef
-				rhs_(j,ncoef1)=rhs_(j,ncoef1)+j_v(der(j))*(j_v(iy)-j_v(if))
+	
+				resid=j_v(iy)-j_v(if)
+	
+			if(isvariance)then
+				variance=j_codevalue(iob,linkvariance)
+	
+			!	if(i.le.5)write(6,*)'<77',i,variance,j_v(if),j_v(iy),j_v(der(1:ncoef))
+					if(variance.le.j_0)then
+						write(6,*)'for observation ',i,' variance was not positive'
+						j_err=.true. ;return
+					endif
+						weight=j_1/sqrt(variance)
+						sumy=sumy+weight*j_v(iy)
+						sumf=sumf+weight*j_v(if)
+						sumfnw=sumfnw+j_v(if)
+						sumy2=sumy2+j_v(iy)*j_v(iy)/variance
+	
+					if(eka)then
+						sumynw=sumynw+j_v(iy)
+						sumy2nw=sumy2nw+j_v(iy)*j_v(iy)
+					endif !if(eka)then
+					do j=1,ncoef
+					rhs_(j,ncoef1)=rhs_(j,ncoef1)+j_v(der(j))*resid/variance
  
-				do j2=j,ncoef
+					do j2=j,ncoef
  
-					mat(j,j2)=mat(j,j2)+j_v(der(j))*j_v(der(j2))
-				enddo !do j2=j,ncoef
-			enddo !do j=1,ncoef
-			resid=j_v(iy)-j_v(if)
+						mat(j,j2)=mat(j,j2)+j_v(der(j))*j_v(der(j2))/variance
+					enddo !do j2=j,ncoef
+				enddo !do j=1,ncoef
+				sse0nw=sse0+resid*resid
+				sse0=sse0+resid*resid/variance
+			else
+				if(eka)then
+					sumy=sumy+j_v(iy)
+					sumy2=sumy2+j_v(iy)*j_v(iy)
+				endif !if(eka)then
+				do j=1,ncoef
+					rhs_(j,ncoef1)=rhs_(j,ncoef1)+j_v(der(j))*resid !(j_v(iy)-j_v(if))
+ 
+					do j2=j,ncoef
+ 
+						mat(j,j2)=mat(j,j2)+j_v(der(j))*j_v(der(j2))
+					enddo !do j2=j,ncoef
+				enddo !do j=1,ncoef
 			sse0=sse0+resid*resid
- 
-			if(iregf.gt.0)j_o(j_dimat)%d(ibas+iregf)=j_v(if)
-			if(iresid.gt.0)j_o(j_dimat)%d(ibas+iresid)=resid
-		end do !do i=j_dfrom,j_duntil
+			sumf=sumf+j_v(if)
 !	end do !do k=1,jndatasetss
+		endif
+				!	resid=j_v(iy)-j_v(if)
+			!	sse0nw=sse0+resid*resid
  
+				if(iregf.gt.0)j_o(j_dimat)%d(ibas+iregf)=j_v(if)
+				if(iresid.gt.0)j_o(j_dimat)%d(ibas+iresid)=resid
+		end do !do i=j_dfrom,j_duntil
 		do j=1,ncoef
 			do j2=1,j-1
 				mat(j,j2)=mat(j2,j)
 			enddo !do j2=1,j-1
 		enddo !do j=1,ncoef
+!		write(6,*)'mat',mat
+	!	write(6,*)'rhs_',rhs_
 		call dgesv(ncoef,ncoef1,mat,ncoef,ipiv,rhs_,ncoef,info_)
+	!	write(6,*)'add',rhs_(1:ncoef,ncoef1)
 		current=j_v(par(1:ncoef))
 		rmse0=sqrt(sse0/(ntot-ncoef))
 		if(eka)then
 			if(j_dprint.gt.1)then
-				write(6,*)' '
-				write(6,*)'par0 ', j_v(par(1:ncoef))
-				write(6,*)'rmse0',rmse0
+	!			write(6,*)' '
+		!		write(6,*)'par0 ', j_v(par(1:ncoef))
+		if(isvariance)then
+			write(6,*)'Unweighted: rmse',sqrt(sse0nw/(ntot-ncoef)),' mean of y  ',sumynw/ntot,' mean of func ',sumfnw/ntot
+	
+			write(6,*)'  Weighted: rmse ',rmse0,' mean of w-y ',sumy/ntot,' mean of func ',sumf/ntot
+		else
+				write(6,*)'rmse',rmse0,' mean of y ',sumy/ntot,' mean of func ',sumf/ntot
+		endif
 			endif !if(j_dprint.gt.1)then
 			eka=.false.
 		endif !if(eka)then
@@ -13427,10 +13577,15 @@ character*40 filename
  
  
 		j_v(par(1:ncoef))=current+scale*rhs_(1:ncoef,ncoef1)
-		sse=0.d0
+		sse=j_0
 		ntot=0
+		ssenw=j_0
+		sumf=j_0
+		if(isvariance)sumy=j_0
+		sumfnw=j_0
 !	do k=1,jndatasetss
 		!call j_getdataset(j_datasets(k),nobs)
+	
 		do i=j_dfrom,j_duntil
  
 			call j_getobs(i)
@@ -13439,8 +13594,24 @@ character*40 filename
 			if(j_rejected)cycle
 			if(abs(j_v(iy)).ge.1.7d19)cycle
 			ntot=ntot+1
- 
-			sse=sse+(j_v(iy)-j_v(if))**2
+			resid=j_v(iy)-j_v(if)
+	if(isvariance)then
+	!if(i.le.15)write(6,*)'<88',i,variance,j_v(if),j_v(iy)
+		variance=j_codevalue(iob,linkvariance)
+		weight=j_1/sqrt(variance)
+		! if(variance.le.0.d0)then
+			! write(6,*)'VARIA',i,variance
+			! j_err=.true.
+			! return
+		! endif
+			sse=sse+resid*resid/variance  !(j_v(iy)-j_v(if))**2/variance
+			ssenw=ssenw+resid*resid !(j_v(iy)-j_v(if))**2
+			sumf=sumf+weight*j_v(if)
+			sumfnw=sumfnw+j_v(if)
+	else
+			sse=sse+resid*resid ! (j_v(iy)-j_v(if))**2
+			sumf=sumf+j_v(if)
+		endif
 		end do !do i=j_dfrom,j_duntil
 !	end do !do k=1,jndatasetss
 		if(sse.gt.sse0)goto 10   ! no improvement, decrease step
@@ -13449,7 +13620,21 @@ character*40 filename
 		if(j_dprint.gt.1)then
 			write(6,*)' '
 			write(6,*)'par ',j_v(par(1:ncoef))
-			write(6,*)'rmse ',rmse,' step ',scale
+		if(isvariance)then
+			write(6,*)'Unweighted: rmse',sqrt(sse0nw/(ntot-ncoef)),' mean of y  ',sumynw/ntot,' mean of func ',sumfnw/ntot
+	
+			write(6,*)'  Weighted: rmse ',rmse0,' mean of w-y ',sumy/ntot,' mean of func ',sumf/ntot
+		else
+				write(6,*)'rmse',rmse,' mean of y ',sumy/ntot,' mean of func ',sumf/ntot
+		endif
+		! if(isvariance)then
+			! write(6,*)'unweighted: rmse',sqrt(sse0nw/dfe),' mean of y ',sumynw/ntot, 'mean of func ',sumfnw/ntot, &
+			! ' Weighted: rmse0 ',rmse,' mean of w-y ',sumy/ntot,' mean of func ',sumf/ntot
+		! else
+				! write(6,*)'rmse',rmse,' mean of y ',sumy/ntot,' mean of func ',sumf/ntot
+		! endif
+			write(6,*)' step ',scale
+			if(isvariance)write(6,*)' unweighted rmse ',	sqrt(ssenw/(ntot-ncoef))
 		endif !if(j_dprint.gt.1)then
 		if(slow.lt.0.)then
 			perc=100.*(sse0-sse)/sse0
@@ -13463,6 +13648,7 @@ character*40 filename
 	200 dfe=ntot-ncoef
 		idfe=dfe
 		mse_=sse/dfe
+!		write(6,*)'ssehere ',sse,ssew
 		rmse=sqrt(mse_)
 		if(j_dprint.gt.0)then
 			write(6,*)' '
@@ -13480,8 +13666,11 @@ character*40 filename
 		endif !if(j_dprint.gt.0)then
 		r2=1.-mse_*(ntot-1.)/((sumy2-ntot*(sumy/ntot)**2))
 		if(j_dprint.gt.0)then
+	!	mse_=sse/dfe
 			write(6,*)' '
 			write(6,'(a,g13.5,a,f6.3,a,i7)')'RMSE= ',rmse,' R2=',r2, ' df ',idfe
+			if(isvariance)write(6,*)'unweighted RMSE ',sqrt(ssenw/(ntot-ncoef)),&
+			' unweighted R2 ',j_1-ssenw*(ntot-j_1)/(dfe*(sumy2nw-ntot*(sumynw/ntot)**2))
 		endif !if(j_dprint.gt.0)then
 		if(iout.ne.j_ivresult)then
 			if(j_otype(iout).ne.j_ipreal)call j_del(iout)
@@ -15421,7 +15610,7 @@ character*40 filename
  
 		call j_clearoption(iob,io)
 		if(j_gpix.eq.0)then
-			write(6,*)'**x missing'
+			write(6,*)'**x-> missing'
 			j_err=.true.
 			return
 		endif
@@ -20157,6 +20346,19 @@ iobs(1)=iobs(1)-nrejected(1)
 			rfheadlink(id)=j_linkoption(iob,io,lrfhead(id),clear=.true.,link=.true.)
 	
 			rfcodelink(id)=j_linkoption(iob,io,lrfcode(id),clear=.true.,link=.true.)
+			if(rfcodelink(id).gt.0)then
+			if(j_o(iob)%i(rfcodelink(id)).gt.0)then
+				write(6,*)'rfcode-> cannot have arguments'
+				j_err=.true.;return
+			endif
+			endif
+			if(rfheadlink(id).gt.0)then
+			if(j_o(iob)%i(rfheadlink(id)).gt.0)then
+				write(6,*)'rfcode-> cannot have arguments'
+				j_err=.true.;return
+			endif
+			endif
+	
 		!	call j_getoption_index(iob,io,lrfcode(id),-1,0,j_ipreal,.true.,.false.,noptarg,j_optarg0)
 	
  
@@ -24713,7 +24915,7 @@ iobs(1)=iobs(1)-nrejected(1)
 		ioutfin=j_o(iob)%i(iexitloc)  !output of the function the output is put to temporal outputs initially
  
 	!	write(6,*)'ioutpos',ioutpos,'iexitloc',iexitloc,'ioutfin',ioutfin
-		arg=>j_o(iob)%i(io+2:io+1+nd)
+		arg=>j_o(iob)%i(io+2:io+1+nd)  !number of var
 		deriv=>j_o(iob)%i(ioutpos+2:ioutpos+1+nd)
 !		write(6,*)'arg',arg
 !		write(6,*)'deriv',deriv
@@ -24754,7 +24956,7 @@ iobs(1)=iobs(1)-nrejected(1)
 			isvar=irg.le.j_mxnamedv.or.irg.gt.j_nv
 			isilo=.false.
 			if(isvar)then
-				do il=1,narg
+				do il=1,nd
 				if(irg.eq.arg(il))goto 135
 				enddo
 				il=0
@@ -24768,19 +24970,19 @@ iobs(1)=iobs(1)-nrejected(1)
 				v=j_v(irg2)
 				isvar2=irg2.le.j_mxnamedv.or.irg2.gt.j_nv
 				if(isvar2)then
-					do il2=1,narg
-					if(irg.eq.arg(il2))goto 136
+					do il2=1,nd
+					if(irg2.eq.arg(il2))goto 136
 					enddo
 					il2=0
 		!			il=findloc(arg,irg,dim=1)
 			! il=ilo(1)
-136					isilo=il2.gt.0
+136					isilo2=il2.gt.0
 	
 	
 	
 				endif !if(isvar2)then
 			endif !if(isarg2)then
-		!	write(6,*)'iloc,io,nd',iloc,io,nd
+		!	write(6,*)'isvar,isvar2,il,il2,isilo,isilo2,iout',isvar,isvar2,il,il2,isilo,isilo2,iout
  
 	!		write(6,*)'ifunc,j_fplus,j_fmult,iout,io2',ifunc,j_fplus,j_fmult,iout,io2
 		! d f(u) =f'(u) du
@@ -24798,7 +25000,7 @@ iobs(1)=iobs(1)-nrejected(1)
 					do id=1,nd
 						j_o(iout)%d(id)=j_o(irg)%d(id)
 					enddo !do id=1,nd
-				elseif(isilo)then !if(.not.isvar)then
+				elseif(isilo)then !if(.not.isvar)then first argument il'th der var
 	!		write(6,*)'<56554 ',iout,il
 					j_o(iout)%d(il)=j_1
  
@@ -24809,11 +25011,11 @@ iobs(1)=iobs(1)-nrejected(1)
 						j_o(iout)%d(id)=j_o(iout)%d(id)+j_o(irg2)%d(id)
 					enddo !do id=1,nd
 				elseif(isilo2)then !if(.not.isvar2)then
-					j_o(iout)%d(il2)=j_o(iout)%d(il2)+j_1
+					j_o(iout)%d(il2)=j_o(iout)%d(id)+j_1
 				endif !if(.not.isvar2)then
 	
 			case (j_fminus) !select case (ifunc)
-		!d(u+v)=du+dv  ;
+		!d(u-v)=du-dv  ;
 				j_v(iout)=u-v
 				if(.not.isvar)then  !first argument intermediate result
 					do id=1,nd
@@ -24830,14 +25032,14 @@ iobs(1)=iobs(1)-nrejected(1)
 						j_o(iout)%d(id)=j_o(iout)%d(id)-j_o(irg2)%d(id)
 					enddo !do id=1,nd
 				elseif(isilo2)then !if(.not.isvar2)then
-					j_o(iout)%d(il2)=j_o(iout)%d(il2)-j_1
+					j_o(iout)%d(il2)=j_o(iout)%d(id)-j_1
 				endif !if(.not.isvar2)then
 	
 	
  
 			case (j_fmult) !select case (ifunc)
 	!	d(uv)=v*du  +u*dv
-!	write(6,*)'put ',iout,'u*v',u,v,u*v
+	!write(6,*)'put ',iout,'u*v',u,v,u*v,isvar,isvar2,isilo,isilo2
 				j_v(iout)=u*v
 				if(.not.isvar)then
 					do id=1,nd
@@ -24944,7 +25146,9 @@ iobs(1)=iobs(1)-nrejected(1)
 				endif !if(u.gt.j_0)then
  
 				if(.not.isvar)then
+		!		write(6,*)'ilo',isilo
 					do id=1,nd
+		!			write(6,*)'<44',j_o(irg)%d(id)
 						j_o(iout)%d(id)=j_v(iout)*(j_1-j_v(iout))*j_o(irg)%d(id)
 					enddo !do id=1,nd
 				elseif(isilo)then !if(.not.isvar)then
@@ -25023,6 +25227,7 @@ iobs(1)=iobs(1)-nrejected(1)
  
 			case default !select case (ifunc)
 				write(6,*)'derivative for function ',j_functions(ifunc),' not yet implemented, ask J. Lappi'
+				write(6,*)j_flogistic,ifunc
 				j_err=.true.
 				return
 			end select !select case (ifunc)

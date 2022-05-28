@@ -6140,7 +6140,9 @@ subroutine j_getdataobject(iob,io)  ! initilization for data-> option  %%data
 
 	j_dimat=j_o(j_divdata)%i(1)
 	j_divkeep=j_o(j_divdata)%i(2)
-	j_dnkeep=j_o(j_divkeep)%i(3)
+	call j_getname(j_dimat,j_divkeep)
+!	write(6,*)'<87',j_oname(1:j_loname),j_oname2(1:j_loname2)
+	j_dnkeep=j_o(j_divkeep)%i(3)    
 	j_dnobs=j_o(j_dimat )%i(1)
 	j_divobs=j_o(j_divdata )%i(6)
 	!	write(6,*)'<1po32',j_dnobs
@@ -6319,7 +6321,9 @@ subroutine j_getdots(i1,i2,n) ! get varaible list from ... , if(new) can generat
 
 		if(name1(ial:ial).eq.name2(ial:ial).and.(name1(ial:ial).lt.'0'.or. &
 			name1(ial:ial).gt.'9'))cycle !bypass initial letters
-		
+			if(name1(ial:ial).ne.name2(ial:ial).and.(name1(ial:ial).lt.'0'.or.name1(ial:ial).gt.'9'.or.&
+				name2(ial:ial).lt.'0'.or.name2(ial:ial).gt.'9'))goto 99
+				
 		exit
 	enddo !do ial=1,le1
 
@@ -12600,7 +12604,8 @@ recursive subroutine j_interpret(input,ivteku)
 					call teku(nteku+3,nout)
 					nteku=nteku+3
 					call teku(nteku+nin,inlist(nin))
-					if(nin.gt.1)j_o(ivteku)%i(nteku+1:nteku+nin-1)=outlist(1:nin-1)
+					if(nin.gt.1)j_o(ivteku)%i(nteku+1:nteku+nin-1)=inlist(1:nin-1)
+					
 					!call teku(nteku+1:nteku+nin,inlist(1:nin))
 					nteku=nteku+nin
 					call teku(nteku+nout,outlist(nout))
@@ -13841,7 +13846,7 @@ recursive subroutine j_interpret(input,ivteku)
 !write(6,*)'code,indoe,nodetoteku,',inode,icode, teku(icode+4)			!io of the function
 				if(nteku.eq.icode+4)then   !single argument without computing anything
 					call teku(icode+2,0) !just continue without computing
-
+					call teku(icode+3,-node(sister(ic)))
 				else !if(nteku.eq.icode+4)then
 				!put return to the end
 					!ntek=ntekuf(2)
@@ -14367,7 +14372,8 @@ double precision function j_codevalue(iob,link)
 !  write(6,*)'setcodeopt,option',j_o(iob)%i(io+1),' jumpto ' ,j_o(iob)%i(io+2),'output ',j_o(iob)%i(io+3)
 !io=j_o(iob)%i(io+2)
 !write(6,*)'jumpnow ',io
-	if(j_o(iob)%i(link-2).ne.0)call dotrans(iob,link)
+!write(6,*)'<777',link,j_o(iob)%i(link-2),j_o(iob)%i(link-2)
+	if(j_o(iob)%i(link-3).ne.0)call dotrans(iob,link)
 	j_codevalue=j_v(j_o(iob)%i(link-2))
 	!	write(6,*)'iisjump,link,iv',j_o(iob)%i(link-2),link,j_o(iob)%i(link-1)
 	!	call j_printname('  ',j_o(iob)%i(link-1),' hellirei')

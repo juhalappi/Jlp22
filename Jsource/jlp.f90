@@ -606,7 +606,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 					endif !if(j_otype(ivcoe_).eq.j_ipreal)then
 
 				else !if(ivcoe_.gt.0)then
-					write(6,*)'<444>',j_inp(ial1:ine-1)
+			!		write(6,*)'<444>',j_inp(ial1:ine-1)
 					coe=j_val(j_inp(ial1:ine-1))
 					if(j_err)then
 						write(6,*)'*problem, error in interpreting coefficient: ',j_inp(ial1:ine-1)
@@ -5092,7 +5092,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		jlp_xsmin=jlp_zero     !minimum for the sum
 		jlp_xsmax=jlp_zero     !maximum for the sum
 		rejectnow_=.false.
-		write(n16,*)'<44starti',jlp_nunits
+	!	write(n16,*)'<44starti',jlp_nunits
 		do i=1,jlp_nunits  !***********************
 		write(n16,*)'<44starti',i
 			nrej=0
@@ -5809,7 +5809,7 @@ if(i.le.2)write(16,*)'ibxdatkey i',ibxdatkey,i
 	allocate( jlp_x(1:mxnm) ,jlp_b(1:mxn) ) ! x:n dimensio +
 	jlp_x=j_0
 	jlp_b=j_0
-	write(6,*)'<44 alloc jlp_x'
+	!write(6,*)'<44 alloc jlp_x'
 ! Fletcher routines solve a system  B.x=b
 	if(p)write(n16,*)'X:n dimensio,b:n dimensio ',mxnm,mxn
 

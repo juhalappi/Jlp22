@@ -160,8 +160,8 @@ logical ::j_inited=.false.
 	! ! Special arithemetic functions
 	!'der','gamma','loggamma','logistic','npv',
 	integer,parameter::j_fgamma=j_fbarit2+2
-	integer,parameter::j_floggamma=j_fbarit+3
-	integer,parameter::j_flogistic=j_fbarit+3
+	integer,parameter::j_floggamma=j_fbarit2+3
+	integer,parameter::j_flogistic=j_fbarit2+4
 	integer,parameter::j_fassign=j_fbloop+3
 	integer,parameter::j_fgoto=j_fbloop+7
 	integer,parameter ::j_fgoto2=j_fbloop+17
@@ -390,7 +390,7 @@ logical ::j_inited=.false.
 'style','color','func','title','z','out', 'zrange','reject', 'subfilter','subreject',& ! 71-80
 'se','matrix','treevars','plotvars','buffersize','maxtrees','report','modeldf', 'classes','degree',& !81-90
 'minvariance','dummy','sym','minobs','wish','origo','r','colmin','integer','y',&  !91-100
-'points','dx','dy','dz','arg','Free4','corr','corrb','until','angle', &  !101-110
+'points','dx','dy','dz','arg','free6','corr','corrb','until','angle', &  !101-110
 'model','selector','area','notareavars','subtrans','repeatdomains','options','normal','err','stemcurves',& !111-120
 'relheight','weight','position','exit','iterations','histogram','freq','sort','label','continue','axes','index', & !121-130
 'column','source','diag','width','level','errexit','xlegend','ylegend', & !131-140
@@ -448,11 +448,11 @@ logical ::j_inited=.false.
 		/
 
 
-	integer,parameter :: j_nnewvar=38
+	integer,parameter :: j_nnewvar=37
 	character*(j_lenoption), dimension(j_nnewvar)::j_newvar
 	data j_newvar / &  !can %%option arguments be generated if they do not exist
 		'read','mean','min','max','sd','var','obs','subobs','subdata', &
-		'nobsw','subread','sum','input','x','obsw','nobswcum','oldsubobs','periods', &
+		'nobsw','subread','sum','x','obsw','nobswcum','oldsubobs','periods', &
 		'period','unitdata','unitdataobs','oldobsw','func','out','matrix','treevars','plotvars','report', &
 		'dummy','r','y','arg','normal','iterations','local','eof','keep','list'&
 		/

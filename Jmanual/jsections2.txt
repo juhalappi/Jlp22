@@ -26,7 +26,7 @@ subsection runex
 !!!;return
 !!!ubsection compo
 subsection jfuncs0
-subsection jfunc
+!!subsection jfunc
 
 subsection objintro
 subsection system
