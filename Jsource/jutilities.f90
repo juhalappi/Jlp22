@@ -1103,7 +1103,7 @@ recursive subroutine j_command(commandline,passoptions) !execute single %%functi
 	endif !if(j_err)then
 	! if(.not.present(passoptions))then
 		! if(j_nopt.gt.0)then
-			! write(6,*)'*j* j_command started without clearing options first with clearopt or clearopt, command:'
+			! write(6,*)'*j* ?? j_command started without clearing options first with clearopt or clearopt, command:'
 		! !	write(6,*)commandline
 			! j_err=.true.
 			! return
@@ -13385,6 +13385,18 @@ recursive subroutine j_interpret(input,ivteku)
 		!	if(win(ial:ir-1).eq.'sin')write(6,*)'22 ',jnfunctions,jfunctions(30:40)
 				mother(nn)=mothers(level)
 				
+				if(iv.eq.1)then !setoption
+					if(node(mother(nn)).eq.4)then  
+					
+						ipil=index(win(ir1+2:ir1+2+j_lenoption),',')
+				!		write(6,*)'<55 ',ipil,win(ir1:ir1+10)
+						read(win(ir1+2:ir1+ipil),'(i8)')iopt
+						write(6,*)'**illegal location for option ',j_options(iopt)
+						
+						j_err=.true.
+						return
+					endif
+				endif
 		!		if(nn.eq.10)write(6,*)'tasmutsiee*********%%%%%%%%%%%%',mothers(level+1),&
 		!		'level ',level,levels(nn)
 				
@@ -14317,8 +14329,13 @@ integer function j_codelink(iob,io,jmcode)
 	integer::loc
 	integer :: optiontot
 	equivalence(optiontot,optionmoptio)
+	write(6,*)'<777 nopt2,in j_nopt2,jmcode,iob,io',j_nopt2,jmcode,iob,io
+	! do kii=1,j_nopt2
+	
+	! write(6,*)j_optionmoptio2(1:2,kii)
+	! enddo
 	if(jmcode.le.0.or.jmcode.gt.j_noptions)then
-		write(6,*)'*j* illegal argumen in j_codelink'
+		write(6,*)'*j* illegal argument in j_codelink'
 		j_err=.true.;return
 	endif !if(jmcode.le.0.or.jmcode.gt.j_noptions)then
 	!	write(6,*)'j_nopt2',j_nopt2,jmcode,io,j_optioniob2(1),j_optionmoptio2(1:2,1),j_optionlink2(1)
@@ -14355,6 +14372,7 @@ integer function j_codelink(iob,io,jmcode)
 		j_codelink=0
 
 	endif !if(loc.gt.0)then
+	write(6,*)'<88 nopt2,out',j_nopt2
 !		write(6,*)'codelink',j_codelink
 end function !integer function j_codelink(iob,io,jmcode)
 
@@ -14692,7 +14710,10 @@ subroutine j_parent(inp,le)
 		case(')') !select case(inp(i:i))
 			if(.not.(haka.or.hipsu))nright=nright+1
 			if(nright.gt.nleft)then
-				write(6,*)'at character ',i ,' more ) than ( ,nleft=',nleft,' nright=',nright
+				write(6,*)nleft,' ( ',nright,' ) at:'! more ) than ( ,nleft=',nleft,' nright=',nright
+				write(6,*)inp(1:i)
+				write(6,*)' '
+				!write(6,*)'at character ',i ,' more ) than ( ,nleft=',nleft,' nright=',nright
 				j_err=.true.;return
 			endif !if(nright.gt.nleft)then
 		case('=') !select case(inp(i:i))
@@ -14704,7 +14725,10 @@ subroutine j_parent(inp,le)
 
 				endif !if(neq.gt.1)then
 				if(nleft.ne.nright)then
-					write(6,*)'at  = more ( than ), nleft=',nleft,' nright=',nright
+					write(6,*)nleft,' ( ',nright,' ) nonbalanced parenthesis at:'
+					write(6,*)inp(1:i)
+					write(6,*)' '
+				!	write(6,*)'at  = more ( than ), nleft=',nleft,' nright=',nright
 					j_err=.true. ;return
 				endif !if(nleft.ne.nright)then
 			endif !if(.not.(haka.or.hipsu))then
@@ -14733,7 +14757,9 @@ subroutine j_parent(inp,le)
 		 case('}')
 			 nright2=nright2+1
 			 if(nright2.gt.nleft2)then
-					write(6,*)nleft2,' { ',nright2, ' }, not balanced'
+					write(6,*)nleft2,' { ',nright2, ' }, not balanced at'
+					write(6,*)inp(1:i)
+					write(6,*)' '
 					j_err=.true. 
 			endif
 			 lis=i-iv
@@ -14746,12 +14772,16 @@ subroutine j_parent(inp,le)
 		end select !select case(inp(i:i))
 	enddo !do i=1,le
 	if(nleft.ne.nright)then
-		write(6,*)'more ( than ), nleft=',nleft,' nright=',nright
+		write(6,*)nleft,' ( ',nright, ' )  at: '
+		write(6,*)inp(1:i)
+		write(6,*)' '
 		j_err=.true. ;return
 	endif !if(nleft.ne.nright)then
 	if(nleft2.ne.0)then
 		if(nleft2.ne.nright2)then
 			write(6,*)nleft2,' { ',nright2, ' }, not balanced'
+				write(6,*)inp(1:i)
+		write(6,*)' '
 			j_err=.true. 
 		else
 			if(iv.lt.le)then
