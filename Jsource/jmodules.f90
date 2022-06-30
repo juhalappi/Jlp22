@@ -377,13 +377,13 @@ logical ::j_inited=.false.
 
 
 !free options free$
-	parameter (j_noptions_=193) !!!option number of j_ options
+	parameter (j_noptions_=196) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 	'extra','subextra','mean', 'min','max',& ! 1-10
 'sd','var','warm','volsd','rhs','rhs2','w','obs', 'subobs','problem',& !11-20 MIXED UP
-'from','subdata','nobsw','subread','keep','subkeep','submaketrans','free','rows','subin', & !21-30
-'subform','filter','print','sum','duplicate','$FREE','mask','maxiter','test','debug', & !31-40
+'from','subdata','nobsw','subread','keep','subkeep','submaketrans','rmse','rows','subin', & !21-30
+'subform','filter','print','sum','duplicate','loglike','mask','maxiter','test','debug', & !31-40
 'default','classlink','x','maxlines','q','obsw','nobswcum','xrange','yrange','mark',& !41-50
 'keepperiod','nobs','append','variance','oldsubobs','noint','periods','period','unitdata','unitdataobs', & !51-60
 'any','oldobsw','refac','tole','factories','class','key','sparse','row','show',& ! 61-70
@@ -398,7 +398,8 @@ logical ::j_inited=.false.
 'expand','exist','slow','initial','eof','object','fastrounds','fastpercent','finterval','cov', & !151-160
 'sdmean','parmin','parmax','step','dpar','rfhead','rfcode','subrfhead','subrfcode','subnobs',& !161-
 'stop','rfvars','first','last','echo','list','delete','ext','got','do','set','xlabel', & !171-179
-'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170,j_mrfsubcode=171)
+'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
+'tailtofirst','tailtolast','cumulative'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170,j_mrfsubcode=171)
 
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -407,8 +408,8 @@ logical ::j_inited=.false.
 	parameter (j_mvolsd=16,j_mrhs=17,j_mrhs2=18,j_mw=19,j_mobs=20,j_msubobs=21)   !mobs was mxdata
 	parameter (j_mproblem=22,j_mfrom=23)
 	parameter (j_msubdata=24,j_mnobsw=25,j_msubread=26,j_mkeep=27,j_msubkeep=28,j_msubmaketrans=29)
-	parameter (j_mgaya=30,j_mrows=31,j_msubin=32,j_msubform=33,j_mfilter=34,j_mprint=35)
-	parameter (j_msum=36,j_mduplicate=37,j_minput=38,j_mmask=39,j_mmaxiter=40)
+	parameter (j_mrmse=30,j_mrows=31,j_msubin=32,j_msubform=33,j_mfilter=34,j_mprint=35)
+	parameter (j_msum=36,j_mduplicate=37,j_mloglike=38,j_mmask=39,j_mmaxiter=40)
 	parameter (j_mtest=41,j_mdebug=42,j_mdefault=43)
 	parameter (j_mclasslink=44,j_mx=45,j_mmaxlines=46,j_mq=47,j_mobsw=48,j_mnobswcum=49)
 	parameter (j_mxrange=50,j_myrange=51,j_mmark=52,j_mkeepperiod=53,j_mnobs=54,j_mappend=55)
@@ -432,7 +433,7 @@ logical ::j_inited=.false.
 	parameter (j_msubnobs=172,j_mstop=173,j_mrfvars=174,j_mfirst=175,j_mlast=176,j_mecho=177,j_mlist=178,j_mdelete=179,j_mext=180)
 	parameter (j_mgot=181,j_mdo=182,j_mset=183,j_mxlabel=184,j_mylabel=185,j_mt=186,&
 	j_mcoef=187,j_msorted=188,j_msub=189,j_mdiscrete=190,j_mprolog=191,j_mepilog=192,j_munit=193)
-
+	parameter (j_mtailtofirst=194,j_mtailtolast=195,j_mcumulative=196)
 	integer,parameter :: j_nnamedoptarg=59
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
 	data j_namedoptarg / & !%%options which should have named objects as arguments
@@ -468,13 +469,13 @@ logical ::j_inited=.false.
 
 
 
-	parameter (j_ncodeoptions_=8) ! code!!options
+	parameter (j_ncodeoptions_=9) ! code!!options
 !	character*(j_lenoption), j_codeoptions(j_ncodeoptions_)  ! code!!options
 !	data j_codeoptions/'filter','reject','subfilter','subreject','variance','weight','func',&
 !	'stop'/
-	integer,dimension(8)::j_codeoptions
+	integer,dimension(j_ncodeoptions_)::j_codeoptions
 	data j_codeoptions/j_mfilter,j_mreject,j_msubfilter,j_msubreject,j_mvariance,j_mweight,j_mfunc,&
-	j_mstop/
+	j_mstop,j_mloglike/
 
 !end motule !!module j_mod
 
@@ -648,7 +649,7 @@ logical ::j_inited=.false.
 ! integer ivbuffer     ! ivnames=object_iv('Names')
 
 
-! integer ivselected  !tarkista
+! integer ivselected  !tarkista 
 ! integer ivprintinput !Printinput controls printing in ;incl default (given in j_init for v(ivprintinput)=2
 ! integer ivprintoutput  !Printoutput controls printing in ;incl -files, default Printoutput=2
 	integer ::j_ivdeffig=0  !tarkista
@@ -672,6 +673,8 @@ logical ::j_inited=.false.
 	integer j_mxtemporalv  ! maximum number of intermediate results
 	parameter (j_mxtemporalv=200)
 	parameter (j_mxtemporalv0=100)  !oridinry temporals rsst are for dervative
+	double precision,dimension(j_mxtemporalv)::j_temporals
+!	integer ::j_temporalbas
 	integer j_mxv 	!total maximum number of values
 	integer,parameter ::j_mxrecursion=100
 	integer,dimension(j_mxrecursion)::j_curline
@@ -854,6 +857,7 @@ logical ::j_inited=.false.
 
 	logical j_remain
 	logical j_stop
+	logical :: j_inpara=.false.
 !	logical j_initialized:: .false.
 
 !!end motule
@@ -2565,8 +2569,9 @@ logical ::j_inited=.false.
 		subroutine j_fromutf8(line)
 			character*(*),intent(inout)::line
 		end subroutine
-		subroutine j_toutf8(line)
+		subroutine j_toutf8(line,le)
 			character*(*),intent(inout)::line
+			integer,intent(inout)::le
 		end subroutine
 		
 		logical function j_exist(ivfile,ext)
@@ -2754,6 +2759,7 @@ logical ::j_inited=.false.
 		logical function j_isnumber(ch) ! is letter ?
 			character*3, intent(in):: ch
 		end function j_isnumber !logical function j_isletter(ch)
+		
 
 		logical function j_isletter(ch)
 			character*1, intent(in):: ch
