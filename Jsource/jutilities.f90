@@ -13482,6 +13482,7 @@ recursive subroutine j_interpret(input,ivteku)
 					if(node(mother(nn)).eq.4)then  
 					
 						ipil=index(win(ir1+2:ir1+2+j_lenoption),',')
+<<<<<<< HEAD
 							if(ipil.lt.2)then
 						write(6,*)'illegal location of ,'
 						j_err=.true.
@@ -13495,6 +13496,14 @@ recursive subroutine j_interpret(input,ivteku)
 						j_err=.true.
 						return
 		719 	continue
+=======
+				!		write(6,*)'<55 ',ipil,win(ir1:ir1+10)
+						read(win(ir1+2:ir1+ipil),'(i8)')iopt
+						write(6,*)'**illegal location for option ',j_options(iopt)
+						
+						j_err=.true.
+						return
+>>>>>>> f4393ad550e48e2e12290b68e9013cb13ca02fda
 					endif
 				endif
 		!		if(nn.eq.10)write(6,*)'tasmutsiee*********%%%%%%%%%%%%',mothers(level+1),&
@@ -14434,7 +14443,11 @@ integer function j_codelink(iob,io,jmcode)
 	integer::loc
 	integer :: optiontot
 	equivalence(optiontot,optionmoptio)
+<<<<<<< HEAD
 !	write(6,*)'<777 nopt2,in j_nopt2,jmcode,iob,io',j_nopt2,jmcode,iob,io
+=======
+	write(6,*)'<777 nopt2,in j_nopt2,jmcode,iob,io',j_nopt2,jmcode,iob,io
+>>>>>>> f4393ad550e48e2e12290b68e9013cb13ca02fda
 	! do kii=1,j_nopt2
 	
 	! write(6,*)j_optionmoptio2(1:2,kii)
@@ -14477,7 +14490,11 @@ integer function j_codelink(iob,io,jmcode)
 		j_codelink=0
 
 	endif !if(loc.gt.0)then
+<<<<<<< HEAD
 !	write(6,*)'<88 nopt2,out',j_nopt2
+=======
+	write(6,*)'<88 nopt2,out',j_nopt2
+>>>>>>> f4393ad550e48e2e12290b68e9013cb13ca02fda
 !		write(6,*)'codelink',j_codelink
 end function !integer function j_codelink(iob,io,jmcode)
 
