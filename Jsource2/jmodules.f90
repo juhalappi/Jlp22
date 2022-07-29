@@ -372,6 +372,7 @@ module jmod
 	! integer,parameter ::  j_nunknownfuncarg=2 !!%%function functions which can have
 	! ! ! !                              unknown objects as arguments
  
+<<<<<<< HEAD
 	! integer, dimension(j_nunknownfuncarg)::j_unknownfuncarg
 	! data j_unknownfuncarg/124,181/      !put here function index which can have unknown (but named) objects as arguments
  
@@ -401,6 +402,37 @@ module jmod
 		'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
 		'tailtofirst','tailtolast','cumulative','time','missing','clean'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170,j_mrfsubcode=171)
  
+=======
+	 ! integer, dimension(j_nunknownfuncarg)::j_unknownfuncarg
+	  ! data j_unknownfuncarg/124,181/      !put here function index which can have unknown (but named) objects as arguments
+
+
+!free options free$
+	parameter (j_noptions_=196) !!!option number of j_ options
+	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
+	data j_options/'read','in','form','values','data','maketrans','trans', &
+	'extra','subextra','mean', 'min','max',& ! 1-10
+'sd','var','warm','volsd','rhs','rhs2','w','obs', 'subobs','problem',& !11-20 MIXED UP
+'from','subdata','nobsw','subread','keep','subkeep','submaketrans','rmse','rows','subin', & !21-30
+'subform','filter','print','sum','duplicate','loglike','mask','maxiter','test','debug', & !31-40
+'default','classlink','x','maxlines','q','obsw','nobswcum','xrange','yrange','mark',& !41-50
+'keepperiod','nobs','append','variance','oldsubobs','noint','periods','period','unitdata','unitdataobs', & !51-60
+'any','oldobsw','refac','tole','factories','class','key','sparse','row','show',& ! 61-70
+'style','color','func','title','z','out', 'zrange','reject', 'subfilter','subreject',& ! 71-80
+'se','matrix','treevars','plotvars','buffersize','maxtrees','report','modeldf', 'classes','degree',& !81-90
+'minvariance','dummy','sym','minobs','wish','origo','r','colmin','integer','y',&  !91-100
+'points','dx','dy','dz','arg','free6','corr','corrb','until','angle', &  !101-110
+'model','selector','area','notareavars','subtrans','repeatdomains','options','normal','err','stemcurves',& !111-120
+'relheight','weight','position','exit','iterations','histogram','freq','sort','label','continue','axes','index', & !121-130
+'column','source','diag','width','level','errexit','xlegend','ylegend', & !131-140
+'local','tab','par','wait','file','memory','zmatrix','break', 'content','chi2',&         !141-150
+'expand','exist','slow','initial','eof','object','fastrounds','fastpercent','finterval','cov', & !151-160
+'sdmean','parmin','parmax','step','dpar','rfhead','rfcode','subrfhead','subrfcode','subnobs',& !161-
+'stop','rfvars','first','last','echo','list','delete','ext','got','do','set','xlabel', & !171-179
+'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
+'tailtofirst','tailtolast','cumulative'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170,j_mrfsubcode=171)
+
+>>>>>>> 5c528c1506341fdd439e0e7bac9d180974c4b715
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
 	parameter (j_mextra=8,j_msubextra=9)
@@ -432,9 +464,14 @@ module jmod
 	parameter (j_mparmin=164,j_mparmax=165,j_mstep=166,j_mdpar=167,j_mrfhead=168,j_mrfcode=169,j_msubrfhead=170,j_msubrfcode=171)
 	parameter (j_msubnobs=172,j_mstop=173,j_mrfvars=174,j_mfirst=175,j_mlast=176,j_mecho=177,j_mlist=178,j_mdelete=179,j_mext=180)
 	parameter (j_mgot=181,j_mdo=182,j_mset=183,j_mxlabel=184,j_mylabel=185,j_mt=186,&
+<<<<<<< HEAD
 		j_mcoef=187,j_msorted=188,j_msub=189,j_mdiscrete=190,j_mprolog=191,j_mepilog=192,j_munit=193)
 	parameter (j_mtailtofirst=194,j_mtailtolast=195,j_mcumulative=196,j_mtime=197,j_mmissing=198)
 	parameter (j_mclean=199)
+=======
+	j_mcoef=187,j_msorted=188,j_msub=189,j_mdiscrete=190,j_mprolog=191,j_mepilog=192,j_munit=193)
+	parameter (j_mtailtofirst=194,j_mtailtolast=195,j_mcumulative=196)
+>>>>>>> 5c528c1506341fdd439e0e7bac9d180974c4b715
 	integer,parameter :: j_nnamedoptarg=59
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
 	data j_namedoptarg / & !%%options which should have named objects as arguments
@@ -467,6 +504,7 @@ module jmod
 		'REAL','CHAR','free','LIST','MATRIX','free','TRANS','STORE','LISTI','TXT', & !1-10
 		'STEMSPLINE','TEXT','DATA','PROBLEM','FIGURE','SMOOTH','free','REGR','BITMATRIX','free',& !11-20
 		'free','free','TRACESET','LAASPOLY','TAUTSPLINE'/
+<<<<<<< HEAD
  
  
  
@@ -481,6 +519,22 @@ module jmod
 	!end motule !!module j_mod
  
 	!module errmod   ! includes only j_err
+=======
+
+
+
+	parameter (j_ncodeoptions_=9) ! code!!options
+!	character*(j_lenoption), j_codeoptions(j_ncodeoptions_)  ! code!!options
+!	data j_codeoptions/'filter','reject','subfilter','subreject','variance','weight','func',&
+!	'stop'/
+	integer,dimension(j_ncodeoptions_)::j_codeoptions
+	data j_codeoptions/j_mfilter,j_mreject,j_msubfilter,j_msubreject,j_mvariance,j_mweight,j_mfunc,&
+	j_mstop,j_mloglike/
+
+!end motule !!module j_mod
+
+!module errmod   ! includes only j_err
+>>>>>>> 5c528c1506341fdd439e0e7bac9d180974c4b715
 	logical :: j_err=.false.
 	!end motule !!module errmod
  
@@ -618,6 +672,7 @@ module jmod
 	double precision,dimension(:),allocatable ::j_dvector
 	integer :: j_n_vector=0
 	integer :: j_n_dvector=0
+<<<<<<< HEAD
 	!ten used in jfig, and 16 in jlpdebug
 	! 17 and 18 used for fig and flag files
 	! 16 used in jlp(
@@ -653,6 +708,43 @@ module jmod
 	! integer ivselected  !tarkista
 	! integer ivprintinput !Printinput controls printing in ;incl default (given in j_init for v(ivprintinput)=2
 	! integer ivprintoutput  !Printoutput controls printing in ;incl -files, default Printoutput=2
+=======
+!ten used in jfig, and 16 in jlpdebug
+! 17 and 18 used for fig and flag files
+! 16 used in jlp(
+!!end motule
+
+
+! !module parmod: object indexes for useful global objects, can be obtained also using iv_object('name_of_object')
+! some objects are intial at program start, some later when they are needed
+!objects initilized in
+! integer ivnames  ! ivnames=iv_object('Names')  text objct containing names of all named objects,
+! integer ivpi    ! Pi=v(ivpi)=3.141592653
+! integer ivresult !  output object when no explicit output is given, if output is real variable then
+! !                v(ivresult) gets the value of output, otherwise o(ivresult) is the output object
+! integer ivarg ! Arg  ?miten käytetään
+! integer ivobsdef    ! ivnames=iv_object('Obs') default variable getting observation number in data, note that the nonstandard
+! !  connection between iv... and the variable name
+! integer ivrecord    ! v(ivrecord)  gets the record number when reading data, if records are rejected then
+! !  v(ivrecord) and v(ivobs) are not equal
+! integer ivsubrecord     ! v(ivsubrecord) get the record number of sub-level when reading hierarchical data
+
+! integer ivcursor ! ivnames=iv_object('$Cursor$')  transformation used to drive sit>- prompt, '$Cursor$' appears in error messages
+! !                    otherwise user should not use it
+! integer ivcursor2    ! ivnames=iv_object('Cursor2$') subtransformatio
+! integer ivval       ! ivval=iv_object('$Val$') the transformation used to compute the value of " "-expression
+! integer ivtempdata ! = list containg data-objects  ??
+! integer ivlastdata     ! LastData =list containg last data  (used or defined ?)
+! integer ivcurrentdata      ! ??
+! integer ivdollar       ! $ = indicating default channel (screen) and '*' -format in write
+! integer ivxstar ! x#  used in figure plotting
+! integer ivbuffer     ! ivnames=object_iv('Names')
+
+
+! integer ivselected  !tarkista 
+! integer ivprintinput !Printinput controls printing in ;incl default (given in j_init for v(ivprintinput)=2
+! integer ivprintoutput  !Printoutput controls printing in ;incl -files, default Printoutput=2
+>>>>>>> 5c528c1506341fdd439e0e7bac9d180974c4b715
 	integer ::j_ivdeffig=0  !tarkista
  
 	integer j_ivstartedjlp  !??
@@ -675,7 +767,11 @@ module jmod
 	parameter (j_mxtemporalv=200)
 	parameter (j_mxtemporalv0=100)  !oridinry temporals rsst are for dervative
 	double precision,dimension(j_mxtemporalv)::j_temporals
+<<<<<<< HEAD
 	!	integer ::j_temporalbas
+=======
+!	integer ::j_temporalbas
+>>>>>>> 5c528c1506341fdd439e0e7bac9d180974c4b715
 	integer j_mxv 	!total maximum number of values
 	integer,parameter ::j_mxrecursion=100
 	integer,dimension(j_mxrecursion)::j_curline
@@ -859,11 +955,19 @@ module jmod
 	logical j_remain
 	logical j_stop
 	logical :: j_inpara=.false.
+<<<<<<< HEAD
 	!	logical j_initialized:: .false.
  
 	!!end motule
 	!datafmod : dataf-funktion käyttöön
 	!!module datafmod
+=======
+!	logical j_initialized:: .false.
+
+!!end motule
+!datafmod : dataf-funktion käyttöön
+!!module datafmod
+>>>>>>> 5c528c1506341fdd439e0e7bac9d180974c4b715
 	! lre = linkopt(mread), nrvar = o(iob)%i(lre), iobdataf = iob
 	integer j_lre, j_nrvar
 	integer j_lre2, j_nrvar2
@@ -2782,8 +2886,13 @@ module jmod
 		logical function j_isnumber(ch) ! is letter ?
 			character*3, intent(in):: ch
 		end function j_isnumber !logical function j_isletter(ch)
+<<<<<<< HEAD
  
  
+=======
+		
+
+>>>>>>> 5c528c1506341fdd439e0e7bac9d180974c4b715
 		logical function j_isletter(ch)
 			character*1, intent(in):: ch
 		end function !logical function j_isletter(ch)
