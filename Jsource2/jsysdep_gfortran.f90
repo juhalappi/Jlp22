@@ -14,7 +14,7 @@ subroutine showdir(iob,io)
 
 	integer istat
 
-	narg=j_o(iob)%i(io+1)
+	
 
 !gfortran
 
@@ -32,7 +32,7 @@ subroutine showdir(iob,io)
 !if not intel or gfortran
 ! write(6,*)'** dir not available in current version'
 ! j_err=.true.
-	io=io+narg+3
+!	io=io+narg+3
 	return
 end !subroutine showdir(iob,io)
 

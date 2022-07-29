@@ -10,7 +10,7 @@ utility models for products. Thus J can be used to optimize simultaneosly forest
 management and forest industry. The transformation language of J is well fitted 
 for defining forest simulators which can simualate treatment schedules both using
 stand level and tree level data. The scripting language is quite fast. There are over 
-2220 build in functions in J, which can be interpreted into integer vectors
+220 build in functions in J, which can be interpreted into integer vectors
 which are faste to compute. The user can
  add her own Fortran functions, own object types ans own options, which can be used in simiular way as J functions,
  objects and options. A speciality is the input programming, i.e. there is an
@@ -19,7 +19,7 @@ which are faste to compute. The user can
  contains aprecompiler makes the management of global variables located in modules very
  handy. A separe program can do indentations. There is a separate program which can generate the Users guide
  from comments within the source code and from an extra file. The same program also generates a script file which
- can be used to run all examples in the manual. J can run R scripts, and Lauri Metätalo has made a R package which 
+ can be used to run all examples in the manual. J can run R scripts, and Lauri Mehtätalo has made a R package which 
  can run J srripts.
  
  There are following folders in Github:
@@ -38,10 +38,13 @@ Jmanual Files for making Users guide and scripts for exmples.
 
 Jpre  Source code for the precompiler
 
-Jsource Source code before precompilatipn
+Jsource Source code before precompilation
 
 Source2 Sorce code after precompilatiom
 
+Further information can be obtained from juha.lappi.sjk@gmail.com
+
+If anyone wants to be informed of new versions, send reports of bugs,
+send suggestions for improvements, or wants to start developing the code, please send email.
 
 
-Kääntämiset

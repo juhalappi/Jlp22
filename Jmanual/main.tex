@@ -9,50 +9,48 @@
 %\documentclass{refrep}
 %\documentclass[krantz1]{krantz} %See documentation for other class options 
 % Packages used in this example
-\usepackage{graphicx}  % for including images
-\usepackage{microtype} % for typographical enhancements
-%\usepackage{minted}    % for code listings
-\usepackage{listings}
-\usepackage[dvipsnames]{xcolor}
-%\usepackage{longtable}
-%\usepackage{amsthm} aiheuttaa ongelmia
-\usepackage{array}
-\usepackage{multicol}
-\usepackage{ntheorem}
-\usepackage{varioref}
-
-
-% \newtheorem{example}{Example}[section]
-\usepackage{here}
-\usepackage{amsmath}   % for equations and mathematics
-%\setminted{style=friendly,fontsize=\small}
-%\renewcommand{\listoflistingscaption}{List of Code Listings}
-\usepackage{hyperref}  % for hyperlinks
-\usepackage[a4paper,top=3.2cm,bottom=3.2cm,left=1.5cm,right=1.5cm]{geometry} % for setting page size and margins
-\usepackage{changepage}
-%fobt
-\usepackage{amsthm}
-\usepackage{thmtools}
-
-\declaretheoremstyle[headfont=\normalfont]{normalhead}
-\declaretheorem[style=normalhead]{example}
-
-\newtheorem{note}{Note}[subsection]
-\theoremstyle{break}
-
-\usepackage{datetime}
-\usepackage{tgbonum}  %fonts
-\usepackage[bitstream-charter]{mathdesign}
-\usepackage[T1]{fontenc}
-\usepackage{xcolor}
-\usepackage{array}  % juuso
-%\usepackage{tabularx}
+\usepackage[yyyymmdd]{datetime}
+%\usepackage{datetime}
+\newdate{date}{06}{09}{2012}
+\date{\displaydate{date}}
+\usepackage{graphicx}
+\usepackage{biblatex} %Imports biblatex package
+\addbibresource{j.bib}
+\usepackage{tabularx}
 \newcolumntype{b}{X}
 \newcolumntype{s}{>{\hsize=.5\hsize}X}
+\usepackage[dvipsnames]{xcolor}
+\makeatletter
+\renewcommand*{\@seccntformat}[1]{\csname the#1\endcsname\hspace{1.5cm}}
+\makeatother
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+\setlength{\topsep}{0pt}%
+\setlength{\leftmargin}{#1}%
+\setlength{\rightmargin}{#2}%
+\setlength{\listparindent}{\parindent}%
+\setlength{\itemindent}{\parindent}%
+\setlength{\parsep}{\parskip}%
+}%
+\item[]}{\end{list}}
 
 % Custom macros used in this example document
 \newcommand{\doclink}[2]{\href{#1}{#2}\footnote{\url{#1}}}
 \newcommand{\cs}[1]{\texttt{\textbackslash #1}}
+
+%\usepackage{titlesec}% Http://ctan.org/pkg/titlesec
+%\titleformat{\section}{\bfseries\sffamily\large}{\thesection.}{\hspace{1cm}}{}%
+%\titleformat{\section}{\thesection.}{\hspace{2.5cm}}{}
+\usepackage[titletoc,toc,page]{appendix}
+\usepackage{tocloft} % customize TOC font/spacing
+%\renewcommand\cftchappresnum{Section } % prefix "Chapter " to chapter number in ToC
+%\renewcommand{\cftchapaftersnum}{.}    % add period after chapter number
+
+\cftsetindents{section}{1em}{2em} 
+\cftsetindents{subsection}{1em}{2em} 
+\cftsetindents{subsubsection}{1em}{2em} 
+
+
 
 % Frontmatter data; appears on title page
 %\title{J User's Guide}
@@ -60,10 +58,10 @@
 %\author{Juha Lappi and Reetta Lempinen}
 % \includegraphics[width=8cm]{juhalappi.jpg}
 %\softwarelogo{\includegraphics[width=8cm]{juhalappi.jpg}}
-\usepackage{array,tabularx,calc}
-
+\usepackage{array,calc}
+\makeindex
 \usepackage{tabto}
-
+\usepackage{pifont}
 \newlength{\conditionwd}
 \newenvironment{conditions}[1][]
   {%
@@ -77,43 +75,53 @@
 
 \begin{titlepage}
    \begin{center}
-       \vspace*{1cm}
+  %     \vspace*{0.1cm}
 \Huge
 \textbf{J}\\
        \textbf{Users' Guide}
 
        \vspace{0.5cm}
        \Large
-        Version 3.0
+        Version 3.0 \hspace{0.5cm} \today
             
-       \vspace{1.5cm}
+       \vspace{1cm}
 \huge
-       \textbf{Juha Lappi }\\
+       \textbf{Juha Lappi }
+        \vspace{0.3cm}
+       
+  \normalsize
+    juha.lappi.sjk@gmail.com
+    
+    \vspace{0.1cm}
+ 
+ \huge   
+    
        \textbf{ Reetta Lempinen}\\
 \vspace{1cm}
  %\vfill
   %   \Huge \huge \LARGE \Large \large \normalsize (default)
 %\small \footnotesize \scriptsize \tiny       
       \normalsize
-      @date
+      %@date
  %     \Date{\today}\\
  %\today
      \vspace{1cm}
-       \includegraphics[width=0.4\textwidth,angle=180]{juhalappi.jpg}
+       \includegraphics[width=0.6\textwidth,angle=180]{juhalappi.jpg}
     
             
    \end{center}
 \end{titlepage}
 
 %\maketitle
-
+\addtolength{\cftsecnumwidth}{5pt}
+\addtolength{\cftsubsecnumwidth}{10pt}
+\addtolength{\cftsubsubsecnumwidth}{15pt}
 \tableofcontents
 %\listoflistings
 \newpage
 
 
 \input{jmanual}
-
+\printbibliography
+\printindex
 \end{document}
-
-%jmanual.tex

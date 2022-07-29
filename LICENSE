@@ -20,6 +20,9 @@ the subroutines made by late Prof Fletcher and located in file fletcherd.for in 
 Jsource and Jsource2. His contribution
 should be acknowledged by making a reference  to:
 
+Fletcher,R. 1996. Dense factors of Sparse matrices. Dundee Numerical
+Analysis Report NA/170
+
 
 Subroutines in file matsub.f found in the folders Jsource and Jsource2 have
 been obtained from other sources and have the following license conditions:

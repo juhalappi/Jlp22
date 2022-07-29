@@ -113,7 +113,7 @@
 !endmacro
 
 !Section preface0 Preface
-
+! \addcontentsline{toc}{section}{Preface}
 ! The J software is the succsssor of the JLP software which has been used as the optimizer in the Mela software 
 ! and in the Norwegian GAYA planning software which was then called GAYA-JLP.
 !  JLP was published 1992 and Finnish Forest Research Institute (Metla) started to distribute it
@@ -867,7 +867,6 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 !\begin{itemize}
 ! \item[\textbf{J}] j3d.exe \hspace{1cm} Debug version of J, release version is 
 ! provided after some testing period
-! \item[\textbf{J}] jindent.exe \hspace{1cm} indentation
 ! \item[\textbf{J}] jmanual.exe \hspace{1cm} makes the latex code file jmanual.tex
 ! \item[\textbf{J}] jpre.exe \hspace{1cm} the precompiler which generates the code 
 ! for accessing variables in module
@@ -880,7 +879,6 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 ! \item[\textbf{J}] hyvonenetal2019.pdf \hspace{1cm} A paper utilizing the factory optimization.
 ! \item[\textbf{J}] J3.0_userguide_2021.pdf \hspace{1cm} old version of the manual, explains better some functions thant j3.pdf
 ! \item[\textbf{J}]	J3.pdf \hspace{1cm} Users guide made with Latex
-! \item[\textbf{J}]	 J3_setup_development.docx \hspace{1cm} not up-to-date manual for developers
 ! \item[\textbf{J}] jexamples.inc \hspace{1cm}include file which can be used to run all examples in the manual
 ! and which is generated with jmanual.exe
 ! \item[\textbf{J}] jlp92.pdf \hspace{1cm}Manual of old JLP which explains the theory behind the jlp algorithm
@@ -1047,9 +1045,11 @@ packed into a transforamtion object. E.g. if ]tr] computes the value of ]res[ RE
 ! See J3.0 Development Guide to start develop the software or to add
 ! own functions. The development package contains, in addition to source code for
 ! the standard J software, program Jmanual
-! which can be used to generate Latex code for the manual, program Jindent to make indentations for 
-! Fortran source files and
-! a precompiler Jpre which writes necessary Fortran statements to access all globa J data structures.
+! which can be used to generate Latex code for the manual and 
+! a precompiler Jpre which writes necessary Fortran statements to access all global
+! J data structures and it makes indentations, writes comments to endif and enddo
+! telling how the ifthen or do was started. The procompiler also gives better
+! description what is wrong if ifthens and do's are mixed up.
 
 ! Figures are made with Gnoplot.
 !Gnuplot is freely available at
@@ -2479,24 +2479,21 @@ a call to function assone()
 
 !Section preface1 J story
 ! 
-! she drawed for my 70 yr birthday. \\
 ! J software version 3.0 is now publisched as a open source software. The preparation of the new version was
-!very complicated and frustrating process. The whole story of J is 
-!presented in section \ref{jstory} where I make also some critical comments on how Luke did
-!treat this process. I got 7.10.2021 in a co-operation agreement with Luke
-
-! I will here describe the history of J in this preface in unusual
+!very complicated and frustrating process. I got 7.10.2021 in a co-operation 
+!agreement with Luke
+! I will here describe the history of J here in unusual
 ! length and detail. Readers interested ony in the use of the current 
 ! software can perhasp look briefly the subsection Freedom. The reason
 !  why I'm going through in detail
 ! the difficulties with Luke is that I think that the policy insisted by the leaders of Luke
-! that the researchers of Luke do not have any moral or legal right to publish the results of their 
+! that the researchers of Luke do not have any moral or legal
+! right to publish the results of their 
 !research should be discussed. I think also that the leaders of Luke 
 ! were willing to waste large amount of taxpayers' money when the prevented the
 ! development and timely publication of J software. I hope that this part of the
 !preface gets some attention also outside the potential users of the software e.g. 
-! in the ministry. As an amateur actor, I also hope that some play writer would 
-! notice this and would make tragicomedy on the stage.
+! in the ministry. 
 !endsection
 
 !Section preface2 JLP and first version of J
@@ -2508,7 +2505,8 @@ a call to function assone()
  ! when there was not
 ! easy to use software even for ordinary linear regression.
  ! Later I had to write own software 
- ! for mixed linear models. AKTA, Jakta, and JLP contained  means to use script files and 
+ ! for mixed linear models when doing my doctoral thesis. AKTA, Jakta, and JLP 
+ ! contained  means to use script files and 
 ! make new variables described in arithmetic expressions. The starting idea in J was to put all my 
 ! previous software developments into one program.
  ! Version 0.9.3 of J was published in August 2004.
@@ -2516,7 +2514,7 @@ a call to function assone()
 ! In JLP the crucial property was the utilization of the generalized upper bound (GUB) technique which
  ! I invented and, which I could later find also in the literature (\cite{dant}), as I expected. GUB is
  ! just the right technique which is
-! needed in foreast management planning. JLP made it possible to solve 
+! needed in forest management planning. JLP made it possible to solve 
 ! significantly larger LP problems significantly faster
 ! than using standard commercial LP software. In JLP I programmed all the necessary matrix 
 ! operations needed to change columns of the basis matrix in the revised simplex method.
@@ -2533,7 +2531,7 @@ a call to function assone()
 ! When I told Fletcher that I plan to separate the matrix routines needed in the GUB algorithm,
 ! he told he is certain that I will not succeed, as his Fortran code did not have any comments.
 ! He wrote that he will not have any time to help me.
-! However, it was not that difficult becasue his code was divided 
+! However, it was not that difficult because his code was divided 
 ! to proper subroutines. His code did computations in
 ! single precision, and it was necessary to change computations
 ! into double precision. Because I do not have 
@@ -2545,7 +2543,7 @@ a call to function assone()
  ! anyhow they are the permanent nuisance. The fundamental question 
  ! with respect to rounding errors is: is a small-looking number zero or non-zero.
 
- ! When I later told him how large problems and how fast my algorithm could solve, 
+ ! When I later told Fletcher how large problems and how fast my algorithm could solve, 
  ! his attitude towards
 ! my efforts clearly changed. 
 
@@ -2571,7 +2569,7 @@ a call to function assone()
 ! August 2004.
 
 ! J contained also a simulator language by which one describe a simulator 
-! which can be used to geneate
+! which can be used to generate
 ! treatment schedules which are later optimized with the 
 ! LP funtions of J. When Simosol started 
 ! to develop sofware which would compete with the Mela, which had had a 
@@ -2593,7 +2591,7 @@ a call to function assone()
  ! Reetta Lempinen started to work with me to implement the formulas. Reetta has professional
  ! training in programming, while I'm a self-learning amateur. The necessary
  ! data structures were quite complicated.
- ! I had made some wrong decisions which made the data structes even
+ ! I had made some wrong initial decisions which made the data structes even
  ! more complicated than was necessary. 
  ! Reetta had a clear head to keep data structures in order. 
  ! It was a nice new experience to
@@ -2638,22 +2636,15 @@ a call to function assone()
 ! for researchers to do research, as always happens when 
 ! government organizations simplify
 !their administration and make it more efficient.
-! My expectations were in the right direction, but even in my worst
- ! nightmares I could not have imagined
-! what Luke would mean to me personally.
+! My expectations were in the right direction,
+ ! the reality was worse than I had expected.
+
 
 ! Lauri Meht\"atalo and I had agreed with an international publisher to 
 ! make a book about forest biometry. In Metla this kind of agreement had been 
 ! considered as a merit to Metla. But Luke forbad me to put any working time 
 ! to this book project. After retirement I was free to prepare this book with Lauri.
-! On the back-cover of the book I presented myself as a researcher of Metla
-! in order to give the affilation credit to Metla. 
-! The co-operation
- ! among statisticians of Luke, led by Juha Heikkinen, the continued co-operation
- ! with Jaana Luoranen, and the support of the whole personell
- ! of the Research Station of Suonenjoki when the leaders of Luke
- ! started to humillate me
- ! were my only positive experiences at Luke.
+!
 
 ! I started to clean and reorganize the J code so that it would be easier to maintain it.
 ! My superior Olli Salminen forbad me to continue that effort because
@@ -2697,8 +2688,7 @@ a call to function assone()
  ! considered that the publication of J would be even so 
  ! important that he/she 
  ! had taken care that J would be eventually published.
- ! They just wanted keep important 
- ! in the process. This absurd deadlock lasted almost seven years. 
+ ! This absurd deadlock lasted almost seven years. 
  
  ! The previous version utilized some subroutines of IMSL package and from 
 ! the ‘Numerical Recipes in Fortran’ book. I replaced these subroutines mainly by
@@ -2708,9 +2698,10 @@ a call to function assone()
  ! his subroutines in open source distribution (the 
  ! price of his bqbd sofware was perhaps 100-200 Euros).
  ! But the lawyers of Luke studied his permission
- ! so long that he died before giving permission with better formulation. 
+ ! so long before they realized that it did not have correct words that 
+ ! Fletcher died before giving permission with better formulation. 
  ! A permission with
-! better formualations was obtained from his department in Dundee University. 
+! better formulations was obtained from his department in Dundee University. 
  ! But the leading
 ! laywer of Luke, Emilia Katajajuuri was not satisfied, she wanted make 
 ! sure that the
@@ -2730,15 +2721,14 @@ a call to function assone()
 ! When I accidentally said 'could we decide that..', she interrupted me and said: 
 ! 'Listen Juha,
 ! you do not decide anything in this matter'. Their message was that
- ! I have done my part, and now 
-! I should keep out and not disturb their play with their new conquest.
+ ! I have done my part.
 
 ! When it was evident that the leaders of Luke wanted to get rid of me,
  ! I threatened that I will not retire before the opening decision is done. 
 ! Sari Forsman-Hugg told she will make the decision. But as my threat 
 ! seemed to make no influence, 
 ! I retried at the beginning of 2017. When I despite of all
-! the humiliation and frustration still hoped that
+! the humiliation still hoped that
 ! some kind a co-operation with Luke would be possible, 
 ! I applied the position outside researcher,
 ! which had provided me access to Luke's e-mail and library services. Sari Forsman-Hugg was not 
@@ -2760,7 +2750,7 @@ a call to function assone()
  ! Prof. Packalen told late 2017 that the publication of J is approaching. 
  ! When I asked about the opening decision, she 'did not
  ! remember' what it contained but promised to check it out, which she 
-  ! did forget to do or atl least forget to tell me what the decision contained. 
+  ! did forget to do or at least forget to tell me what the decision contained. 
  ! Prof. Packalen was planning a very high level launch of 
  ! J with prominent international guests. I wrote that such 
  ! seminar would not probably be worth of
@@ -2869,8 +2859,7 @@ a call to function assone()
 	! research was published under the the name of Elena Ceaușescu,
 	! and had published the the software and
 	! manuals under the name of some equivalent to Elena. 
-	! Also in that case I had made a lawsuit
-	! against Luke (if I had been alive). When the director general of Luke,
+	! When the director general of Luke,
 	! the research director of Luke, the Senior Vice President of Luke 
 	! and the lawyers of Luke
 	! decided that Luke has absolutely no interest in 
@@ -2879,7 +2868,7 @@ a call to function assone()
 	
 	! After getting such a reponse to my co-opertation suggestion, it was evident that 
 	! I would not give Luke any new codes, and would require Luke to remove all codes I had
-	! submitted after my retirement as Luke would not akckowledge that
+	! submitted after my retirement as Luke would not acknowledge that
 	! it had got any codes from me after my retirement, and it would publish my codes
 	! as if they were developed in Luke. So I would continue my Charles XII operation. 
 	! Unfortunately NMBU did not have factory and transportation cost data ready.  In Norway
@@ -2919,8 +2908,6 @@ a call to function assone()
   ! because prof Packalen did not allow Reetta to do the necessary
  ! preparations with respect to the code and manuals.
  
- ! The lawyers of Luke did not tell anything of the plans of Luke to make lawsuits 
- ! against me if I would co-operate with Norway and would not send new codes to Luke.
  
  ! Lauri Meht\"atalo became Professor in Mathematical Modeling for Forest Planning
  ! in Luke in Mai 2021.
@@ -2993,7 +2980,7 @@ a call to function assone()
 ! day considerations, that Luke is not willing to make such computations. 
 ! I suspect that the reason is
 ! Luke wants to keep all possible Mela problems secret. I did not insist to get
-! such permissions as Lauri thought that this would delay and complicat 
+! such permissions as Lauri thought that this would delay and complicate 
 ! the J process. In the treaty it 
 ! is said that the code files state that Juha Lappi
  ! and Natural Resources Institute Finland have the copyright for the code.
@@ -3031,13 +3018,10 @@ a call to function assone()
 ! harrasment experience. All the victims of sexual harassment are also
  ! told that 'let bygones be bygones'.
 ! As in the peace treaty I was given all responsibility of manuals, I'm 
-! now utilizing this responsibility in this preface hoping the leaders of 
+! now utilizing this responsibility in this story hoping that the leaders of 
 ! Luke and perhaps also others
 ! would be more careful when making decisions which may not tolerate daylight,
- ! similarly
-! as bosses are slowly learning to keep better control of
- ! their hands which would like
-! to grope the bottoms of their subordinates.
+ 
 
 ! From the legal perspective, the leaders of Luke have insisted that 
 ! Luke has full copyright to all work I've done in Mela or Luke. So they can freely
@@ -3049,8 +3033,7 @@ a call to function assone()
  ! Luke promoted forest research and its utilization by prevented 
  ! the development and 
  ! utilization of J software for over six years? 
- ! Perhaps the ministry should  give
- ! the leaders of Luke training about the duties of Luke. The leaders
+ ! The leaders
  ! of Luke never gave any rational justification why Luke should prevent me
  ! to take care of the publication. 
  
@@ -3090,9 +3073,9 @@ a call to function assone()
  ! which interprets the J code generated using the input programming capabilities.
  ! I had been shamed if the previous interpreter had be offered to the eyes of 
  ! professional programmers. I did rewrite the precompiler so it takes only some 
- ! seconds to do the precompilation, and if the precompiled file 
- ! does not change the new precompiled file is deleted so that the compiler
- ! does not do any more unnecessary compilation. I did put the matrix computations 
+ ! seconds to do the precompilation, and the precompiler makes indentations and gives
+ ! better error messages than Gfortran for mixed up itfthen or do-
+ !structures. I did put the matrix computations 
  ! into a new level implementing
  ! all properties I had found useful in Matlab when providing a method for a client
  ! using Matlab codes. I added new tools for debugging 
@@ -3125,17 +3108,16 @@ a call to function assone()
  ! using standard properties of J transformations either for using stand level
   ! or tree level variables
   ! I have not yet made good examples to demonstrate these properties. Because the new J provides
-	! a platform for making all kind of new devlopments, including 
+	! a platform for making all kind of new developments, including 
 	! integer optimization (i.e preventing treatment unit to be divided among several 
 	! schedules), nonlinear objective function  
 	! (which would utlize the capability of J to compute derivatives
 	! according to analytic derivation rules), it was difficult to breathe a little and make the
 	! new codes available for users. The codes now published contain many errors.
 	! I invite the users to help me to correct them. First users should have some 
-	! patience with respect to errors. I claime that the bug percentage is smaller than
+	! patience with respect to errors. I claim that the bug percentage is smaller than
 ! estimated 23-27% bug percentage in the first version
-! of Windows 1, which accintally happened be the same as the bug percentage 
-! Soviet masons used in the mortar they used when masoning the US embassy in Moscow.
+! of Windows 1.
 !	Currently I can correct most bugs
 	! causing system crash in 5-10 minutes. It should be emphasized that 
 	! Luke does not have any kind of responsibility of the errors.

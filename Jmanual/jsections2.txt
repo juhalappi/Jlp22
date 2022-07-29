@@ -268,6 +268,7 @@ subsection corrmatrix corramtrix() correlation matrix from variance matrix
 section datahead
 subsection data data() creating a DATA object or two hierarchical data objects
 subsection newdata newdata(): making a new DATA from matrices posssibly with transformations
+subsection datawcase datawcase(): makes a data object wehre observations have names.
 subsection exceldata exeldata(): making DATA from excel file 
 subsection linkdata linkdata(): linking two DATA objects
 subsection getobs getobs(): getting an observation from DATA

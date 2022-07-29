@@ -30,28 +30,28 @@ module o1_mod
 	character(len=j_lenfunction), dimension(o1_nnamedfuncarg) :: o1_namedfuncarg
 	data o1_namedfuncarg /'koe1'/
 	! logical, dimension(o1_nfunctions) :: o1_namedfuncarg = (/ &
-		! .false.,.false., &
-		! .false.,.false.,.false.,.false.,.false.,.false.,.false.,.false., &
-		! .true. &
+	! .false.,.false., &
+	! .false.,.false.,.false.,.false.,.false.,.false.,.false.,.false., &
+	! .true. &
 	! /)
  
 	integer, parameter :: o1_noptions = 2
 	character(len=j_lenoption):: o1_options(o1_noptions)
 	data	o1_options /'melaoptio11', 'melaoptio12'/
-	
-!options whose argumenst must be named objects:
+ 
+	!options whose argumenst must be named objects:
 	integer,parameter :: o1_nnamedoptarg=1
 	character(len=j_lenoption), dimension(o1_nnamedoptarg):: o1_namedoptarg
 	data o1_namedoptarg/'melaoptio11'/
  
-! options whose named arguments can be objects which are not known beforehand:
+	! options whose named arguments can be objects which are not known beforehand:
 	integer,parameter :: o1_nnewvar=1
 	character(len=j_lenoption), dimension(o1_nnewvar):: o1_newvar
 	data o1_newvar/'melaoptio11'/
 	! logical o1_namedoptarg(o1_noptions)
 	! data o1_namedoptarg/.true., .false./
 	! logical :: o1_newvar(o1_noptions) =(/.true., .false./)
-	
+ 
 	integer,parameter :: o1_ncodeoptions=0
 	character(len=j_lenoption) o1_codeoptions(1)  !otherwise compiler complains
 	! data statement for code option names
@@ -64,21 +64,21 @@ module o1_mod
 		/
  
 	! integer, parameter :: o1_nsubobjecttypes = 0
-! !20141219 oli: character*16, dimension (0:j_nobjecttypes)::j_objecttypes=(/'REAL','??',&
- ! character(len=lensubobject), dimension (1:max(o1_nsubobjecttypes,1))::o1_subobjecttypes  !=(/ &
- ! data o1_subobjecttypes/ &
- ! 'TEXT2%WAD'/
+	! !20141219 oli: character*16, dimension (0:j_nobjecttypes)::j_objecttypes=(/'REAL','??',&
+	! character(len=lensubobject), dimension (1:max(o1_nsubobjecttypes,1))::o1_subobjecttypes  !=(/ &
+	! data o1_subobjecttypes/ &
+	! 'TEXT2%WAD'/
  
  
-		! integer, parameter ::o1_ncompoundobjects=0
-	 ! !20141219 oli: character*16, dimension (0:j_nobjecttypes)::j_objecttypes=(/'REAL','??',&
-		! character*(lenobject), dimension (1:max(o1_ncompoundobjects,1))::o1_compoundobjects  !=(/ &
+	! integer, parameter ::o1_ncompoundobjects=0
+	! !20141219 oli: character*16, dimension (0:j_nobjecttypes)::j_objecttypes=(/'REAL','??',&
+	! character*(lenobject), dimension (1:max(o1_ncompoundobjects,1))::o1_compoundobjects  !=(/ &
 	interface
-	
-	recursive subroutine o1_del(iv,iotype) !deletes subobjects of compound own-object
-		integer,intent(in) :: iv  !object to be deleted
-		integer,intent(in) :: iotype ! object type according to the objectype numbering of own objects
-   end subroutine !recursive subroutine o1_del(iv,iotype)
+ 
+		recursive subroutine o1_del(iv,iotype) !deletes subobjects of compound own-object
+			integer,intent(in) :: iv  !object to be deleted
+			integer,intent(in) :: iotype ! object type according to the objectype numbering of own objects
+		end subroutine !recursive subroutine o1_del(iv,iotype)
  
 		subroutine o1_open()  !see own2 package
 		end subroutine !subroutine o1_open()
@@ -93,13 +93,13 @@ module o1_mod
 		subroutine o1_getsubobs()
 		end subroutine !subroutine o1_getsubobs()
 		subroutine o1_init()
-	
+ 
 		end subroutine !subroutine o1_init()
 		subroutine o1_funcs(iob,io)
 			integer,intent(in)::iob
 			integer ::io
 		end subroutine
-	
+ 
 	end interface
  
  

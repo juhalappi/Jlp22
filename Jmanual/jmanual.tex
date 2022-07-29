@@ -1,6 +1,6 @@
 \section*{Preface}
 \label{preface0}
-
+\addcontentsline{toc}{section}{Preface}
 The \textbf{J} software is the succsssor of the JLP software which has been used as the optimizer in the Mela software
 and in the Norwegian GAYA planning software which was then called GAYA-JLP.
 \textbf{J}LP was published 1992 and Finnish Forest Research Institute (Metla) started to distribute it
@@ -121,7 +121,6 @@ contains the following components
 \begin{itemize}
 \item[\textbf{J}] j3d.exe \hspace{1cm} Debug version of J, release version is
 provided after some testing period
-\item[\textbf{J}] jindent.exe \hspace{1cm} indentation
 \item[\textbf{J}] jmanual.exe \hspace{1cm} makes the latex code file jmanual.tex
 \item[\textbf{J}] jpre.exe \hspace{1cm} the precompiler which generates the code
 for accessing variables in module
@@ -134,7 +133,6 @@ libwinpthread-1.dll which must be available in the path. e.g., in the same folde
 \item[\textbf{J}] hyvonenetal2019.pdf \hspace{1cm} A paper utilizing the factory optimization.
 \item[\textbf{J}] J3.0\_userguide\_2021.pdf \hspace{1cm} old version of the manual, explains better some functions thant j3.pdf
 \item[\textbf{J}]	J3.pdf \hspace{1cm} Users guide made with Latex
-\item[\textbf{J}]	 J3\_setup\_development.docx \hspace{1cm} not up-to-date manual for developers
 \item[\textbf{J}] jexamples.inc \hspace{1cm}include file which can be used to run all examples in the manual
 and which is generated with jmanual.exe
 \item[\textbf{J}] jlp92.pdf \hspace{1cm}Manual of old JLP which explains the theory behind the jlp algorithm
@@ -416,62 +414,6 @@ accepted which pass the filter
 \\
 transmits the function to be drawn not a single value.
 \\
-\subsection{Structure of general \textbf{J} functions}
-\label{jfunc}
-The general (non arithmetic) \textbf{J} functions are used either in statements
-
-func(arg1,â€¦,argn,opt1->value1,â€¦.,optm->valuem)
-
-or
-
-output=func(arg1,â€¦,argn,opt1->value1,â€¦.,optm->valuem)
-
-If there is no output for a function in a statement, then there can be three different cases:
-\begin{itemize}
-\item[\textbf{J}] The function does not produce any output (if an output would be given, then \textbf{J} would just
-ignore it
-
-\item[\textbf{J}] The function is producing output, and the default name {Result} is used for the output
-for arithmetic and matrix operations.
-\item[\textbf{J}] The function is a sub expression within a transformation consisting of several parts including
-other function or arithmetic operations. Then the output is put into a temporary unnamed
-object which is used by upper level functions as an argument (e.g. a=\textcolor{VioletRed}{inverse}(b)*t(c))
-\end{itemize}
-If the value of an option is not a single object or numeric constant, then it must be enclosed in
-parenthesis.
-
-\begin{note}
-It is useful to think that options define additional argument sets for a function. Actually
-an alternative for options would be to have long argument lists where the position of an
-argument determines its interpretation. Hereafter generic term 'argument' may refer also to
-the arguments of an option.
-\end{note}
-\begin{note}
-When \textbf{J} is interpreting a function, it is checking that the option names and the syntax
-are valid, but it is not checking if an option is used by the function. Also when executing the
-function, the function is reacting to all options it recognizes but it does not notice if there are
-extra options, and these are thus just ignored.
-An argument for a \textbf{J} function can be either functional statements producing a \textbf{J} object as its
-value, or a name of \textbf{J} object. Some options can be without any argument (indicating that the
-option is on).
-\end{note}
-\begin{example}[jfuncex]Examples of J-functions\\
-\label{jfuncex}
-a = \textcolor{VioletRed}{sin}(\textcolor{VioletRed}{cos}(c)+b) \textcolor{green}{!\,Usual\,arithmetic\,functions\,have\,numeric\,values\,as\,arguments}\\
-\textcolor{green}{!\,here\,the\,value\,of\,the\,argument\,of\,cos\,is\,obtained\,by\,'computing'\,the\,value\,of\,real\,variable\,c.}\\
-Dm=\textcolor{VioletRed}{matrix}(\textcolor{blue}{do->}(0.1,40))\\
-nob=\textcolor{VioletRed}{nrows}(Dm)\\
-e=\textcolor{VioletRed}{matrix}(nob)\\
-e=\textcolor{VioletRed}{rann}()\\
-Hm=0.5+Dm**0.7+e\\
-dat=\textcolor{VioletRed}{newdata}(Dm,Hm,\textcolor{blue}{read->}(D,H))\\
-\textcolor{VioletRed}{stat}(D,H,\textcolor{blue}{min->},\textcolor{blue}{max->}) \textcolor{green}{!\,Here\,arguments\,must\,be\,variable\,names}\\
-\textcolor{VioletRed}{plotyx}(H,D) \textcolor{green}{!arguments\,of\,the\,function\,are\,variables}\\
-h=\textcolor{VioletRed}{matrix}(5,5);\\
-h=\textcolor{VioletRed}{rann}();\\
-g=\textcolor{VioletRed}{matrix}(5,\textcolor{blue}{do->}5);\\
-c = \textcolor{VioletRed}{inverse}(h+\textcolor{VioletRed}{t}(g)); \textcolor{green}{!\,The\,argument\,can\,be\,intermediate\,result\,from\,matrix\,computations.}
-\end{example}
 \subsection{\textbf{J} objects}
 \label{objintro}
 \textbf{J} objects have a simple yet efficient structure. Each object is associate with a double precision
@@ -496,9 +438,11 @@ See chapter ? for more information of error handling.
 See J3.0 Development Guide to start develop the software or to add
 own functions. The development package contains, in addition to source code for
 the standard \textbf{J} software, program Jmanual
-which can be used to generate Latex code for the manual, program Jindent to make indentations for
-Fortran source files and
-a precompiler Jpre which writes necessary Fortran statements to access all globa \textbf{J} data structures.
+which can be used to generate Latex code for the manual and
+a precompiler Jpre which writes necessary Fortran statements to access all global
+\textbf{J} data structures and it makes indentations, writes comments to endif and enddo
+telling how the ifthen or do was started. The procompiler also gives better
+description what is wrong if ifthens and do's are mixed up.
 
 Figures are made with Gnoplot.
 Gnuplot is freely available at
@@ -1578,14 +1522,14 @@ object, and associated tr\%input and tr\%output lists are created for input and 
 variables. Objects can be in both lists. Objects having names starting
 with '\$' are not put into the input or output lists. The source code is saved in a text object
 tr\%source. List tr\%arg contains all arguments.
-!
+	!
 If a semicolon ';'  is at the end of an input line, then
 the output is printed if REAL variable Prindebug has value 1 or value>2 at
 the execution time. If the double semicolon ';;' is at the end then the output is
 printed if Printresult>1. If there is no output, but just list of objects, then these
 objects will be printed with semicolns.
 
-!
+	!
 \vspace{0.3cm}
 \hline
 \vspace{0.3cm}
@@ -2084,8 +2028,8 @@ library dcdflib in Netlib.
 Returns the value of the logistic function 1/(1+\textcolor{VioletRed}{exp}(-x)). This can in principle computed by the
 transformation, but the transformation will produce an error condition when the argument -x
 of the exp-function is large. Because the logistic function is symmetric, these cases are
-computed as 1-1/(1+\textcolor{VioletRed}{exp}(x)). Because the logistic function can be needed in the nonlinear
-regression, also the derivatives are implemented.  Note, to utilse derivatives
+computed as \textcolor{VioletRed}{exp}(x)/(1+\textcolor{VioletRed}{exp}(x)). Because the logistic function can be needed in the nonlinear
+regression, also the derivatives are implemented.  Note, to utilize derivatives
 the function needs to be in a TRANS object.
 Eg when f=\textcolor{VioletRed}{logistic}(a*(x-x0)), then
 the derivatives can be obtained with respect to the parameters a and x0 by
@@ -2334,7 +2278,7 @@ cpu()-cpu0;\\
 \textcolor{VioletRed}{mean}(rm2),\textcolor{VioletRed}{sd}(rm2),\textcolor{VioletRed}{min}(rm2),\textcolor{VioletRed}{max}(rm2);\\
 large=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.14),\textcolor{blue}{any->})\\
 \textcolor{VioletRed}{print}(100*nrows(large)/\textcolor{VioletRed}{nrows}(rm))\\
-!
+	!
 \end{example}
 \begin{note}
 When generating a matrix with random numbers, there cannot be
@@ -2369,7 +2313,7 @@ number of successes. (J does not have explicit integer type object).
 \begin{changemargin}{3cm}{0cm}
 \noindent  \textcolor{teal}{Arg1} is the number of trials (n) and \textcolor{teal}{Arg2} is the probability
 of succes in one trial.
-!
+	!
 \end {changemargin}
 \hline
 \vspace{0.2cm}
@@ -2378,7 +2322,7 @@ of succes in one trial.
 \textcolor{VioletRed}{ranbin}(10,0.1);
 \\
 \textcolor{VioletRed}{ranbin}(10,0.1);\\
-!\\
+	!\\
 A=\textcolor{VioletRed}{matrix}(1000,2)\\
 A(All,1)=\textcolor{VioletRed}{ranbin}(20,0.2)\\
 A(All,2)=\textcolor{VioletRed}{ranbin}(20,0.2)\\
@@ -2900,10 +2844,13 @@ writ-ten text can be easily converted to Ms Word tables.
 Print values of variables or information about objects.//
 Arguments:
 arg1,â€¦,argn
-arguments can be any \textbf{J} objects or values of arithmetic or logical expressions
+arguments can be any \textbf{J} objects or values of arithmetic or logical expressions or
+the only argument can be name of a text file.
 Options:
-maxlines the maximum number of lines printed for matrices, default 100.
-data data sets. If \textcolor{blue}{data->} option is given then arguments must be ordinary real
+maxlines&-1|1&REAL& the maximum number of lines printed for matrices, default 100.
+any& -1|0 && if the argument is the name of a text file, then \textcolor{blue}{any->} indicates that
+the file is read to the end and the number  of lines is put into variable Accepted.
+data&-1|1 &DATA & data sets. If \textcolor{blue}{data->} option is given then arguments must be ordinary real
 variables obtained from data.
 row if a text object is printed, then the first value given in the \textcolor{blue}{row->} option gives the
 first line to be printed. If a range of lines is printed, then the second argument
@@ -3469,7 +3416,7 @@ create data object.
 Data object to be created. If there is no output then the default is \$Data\$.
 It is recommended that this default is used only when only one data object
 is used in the analysis.
-!
+	!
 \end{changemargin}
 \vspace{0.3cm}
 \hline
@@ -3704,6 +3651,14 @@ rfsubcode works for subdata similarly as \textcolor{blue}{rfcode->} for data
 If there are both \textcolor{blue}{rfhead->} and \textcolor{blue}{rfcode->} then \textcolor{blue}{rfhead->} is excuted first.
 \textcolor{blue}{rfhead->} and \textcolor{blue}{rfcode->} replace readfirst-> option  of previous versions which was too
 complicated.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent time \tabto{3cm} -1|0 \tabto{5cm}   \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  If time-> is present, the cpu-time and total time in function are printed
+
 \end {changemargin}
 \hline
 \vspace{0.2cm}
@@ -3791,6 +3746,13 @@ matrices.
 \noindent \textcolor{blue}{maketrans} \tabto{3cm} N|1 \tabto{5cm}   TRANS  \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
 \noindent  A predefined ransformation object computed for each observation.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent time \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  If time-> is present, the cpu-time and total time in function are printed
 \end {changemargin}
 \hline
 \vspace{0.2cm}
@@ -3830,6 +3792,10 @@ x"i"\#z"j"=x"i"*z"j"\\
 new=\textcolor{VioletRed}{newdata}(data1,matrix1,\textcolor{blue}{read->}(z1,z2),\textcolor{blue}{maketrans->}newtr)\\
 \textcolor{VioletRed}{print}(new)
 \end{example}
+\subsection{datawcase(): Creates a data object where eac observation has name}
+\label{datawcase}
+This function will replace or be alternative for properties function.
+This function, to be reported later, will be used in factory optimization.
 \subsection{\textcolor{VioletRed}{exceldata}()}\index{exceldata()}
 \label{exceldata}
 Generates data object from csv data generated with excel. It is assumed that ';' is used as column separator,
@@ -4228,7 +4194,7 @@ Computes and prints basic statistics from data objects.
 \noindent Args  \tabto{3cm}  0-99 \tabto{5cm}  REAL \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
 \noindent variables for which the statistics are computed,
-the default is all variables in the data (all variables in the data matrix plus the output variables of the associated transformation object) and all output variables of the tran
+the default is all variables in the data (all variables in the data matrix plus the output variables of the associated transformation object) and all output
 
 @@data
 \end{changemargin}
@@ -4237,7 +4203,7 @@ the default is all variables in the data (all variables in the data matrix plus 
 \vspace{0.3cm}
 \noindent \textcolor{blue}{data}  \tabto{3cm}  -1,99  \tabto{5cm}   Data  \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
-\noindent 	data objects , see section Common options for default\textcolor{green}{!\,weight\,	gives\,the\,weight\,of\,each\,observations\,if\,weighted\,means\,and\,variances\,are\,computed.\,The\,weigh}
+\noindent 	data objects , see section Common options for default\textcolor{green}{!\,weight\,	gives\,the\,weight\,of\,each\,observations\,if\,weighted\,means\,and\,variances\,ar}
 transformation or it can be a variable in the data object
 @@seecom
 \end{changemargin}
@@ -4294,21 +4260,21 @@ then the minima are stored into these variables.
 \vspace{0.3cm}
 \noindent \textcolor{blue}{nobs}  \tabto{3cm} -1 | 1 \tabto{5cm}  REAL \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
-\noindent 	gives variable which will get the number of accepted observations, default is variable 'Nnobs'. If all observations are rejected due to \textcolor{blue}{filter->} or \textcolor{blue}{reject->} opt
+\noindent 	gives variable which will get the number of accepted observations, default is variable 'Nnobs'. If all observations are rejected due to fi
 \end{changemargin}
 \vspace{0.3cm}
 \hline
 \vspace{0.3cm}
 \noindent \textcolor{blue}{trans}  \tabto{3cm} -1 | 1 \tabto{5cm}  TRANS \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
-\noindent 	transformation object which is executed for each observation. If there is a transformation object associated with the data object, those transformations are
+\noindent 	transformation object which is executed for each observation. If there is a transformation object associated with the data object, those
 \end{changemargin}
 \vspace{0.3cm}
 \hline
 \vspace{0.3cm}
 \noindent \textcolor{blue}{filter}  \tabto{3cm} -1 | 1 \tabto{5cm}  Code \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
-\noindent  logical or arithmetic statement (nonzero value indicating True) describing which observations will be accepted. \textcolor{blue}{trans->} transformations are computed before u
+\noindent  logical or arithmetic statement (nonzero value indicating True) describing which observations will be accepted. \textcolor{blue}{trans->} transformations
 \end{changemargin}
 \vspace{0.3cm}
 \hline
@@ -4322,7 +4288,7 @@ then the minima are stored into these variables.
 \vspace{0.3cm}
 \noindent transafter  \tabto{3cm} -1 | 1 \tabto{5cm}   TRANS \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
-\noindent  transformation object which is executed for each observation which has passed the filter and is not rejected by the \textcolor{blue}{reject->}-option.
+\noindent  transformation object which is executed for each observation which has passed the filter and is not rejected by the \textcolor{blue}{reject->}-optio
 \end {changemargin}
 \hline
 \vspace{0.2cm}
@@ -4450,6 +4416,14 @@ the variance-covariance matrix of the coeffcient estimates.
 \noindent  if vcorr-> is present \textcolor{VioletRed}{regr}() generated matrix ]output\%corr[ for
 the correlation matrix of the coeffcient estimates. Standard deviations
 are put to the diagonal.
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{variance} \tabto{3cm} -1|1 \tabto{5cm}  CODE \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent The variance of the residual error is proportional to the function
+given in this codeoption.
 \end {changemargin}
 \hline
 \vspace{0.2cm}
@@ -4515,7 +4489,13 @@ Variables for which class means are computed.
 \noindent \textcolor{blue}{x}  \tabto{3cm} 1 \tabto{5cm}  REAL \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
 \noindent The first variable defining classes.
-minobs minimum number of observation in a class, obtained by merging classes. Does
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent \textcolor{blue}{minobs} \tabto{3cm} -1|1 \tabto{5cm}  REAL \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  minimum number of observation in a class, obtained by merging classes. Does
 not work if \textcolor{blue}{z->} is given
 
 \end{changemargin}
@@ -4540,13 +4520,27 @@ either \textcolor{blue}{xrange->} or nay-> must be present.
 \vspace{0.3cm}
 \hline
 \vspace{0.3cm}
+\noindent tailtofirst \tabto{3cm} -1|0 \tabto{5cm}   \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  If the x-variable is less than the lower xrange, the observation is put to the first class
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent tailtolast \tabto{3cm} -1|0 \tabto{5cm}   \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  If the x-variable is greater than the upper xrange, the observation is put to the first class
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
 \noindent \textcolor{blue}{classes} \tabto{3cm} -1|1 \tabto{5cm}  Real \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
 \noindent  Number of classes, If \textcolor{blue}{dx->} is not given, the default is that range is
 divided into 7 classes.
 \textcolor{blue}{minobs->} minimum number of observations in one class. Classes are merged so that this can
 be obtained. Does not work if \textcolor{blue}{z->} is present.
-!
+	!
 \end{changemargin}
 \vspace{0.3cm}
 \hline
@@ -4708,7 +4702,7 @@ income.2-income.1>0
 In the above example domain7 is a data variable. Unit belongs to domain if the value of the
 variable domain7 is anything else than zero.
 The objective row must be the first row. The objective must always be present. If the purpose
-is to just get a feasible solution without objective, this can be obtained by minimizing a zvariable which does not otherwise appear in the problem (remember z-> option in the jlp()
+is to just get a feasible solution without objective, this can be obtained by minimizing a zvariable which does not otherwise appear in the problem (remember
 function.
 In problems having large number of variables in a row it is possible to give the coefficients as
 a vector and variables as a list e.g.
@@ -4736,18 +4730,18 @@ NNote that ‘<’ means less or equal, and ‘>’ means greater or equal. The equality
 part of linear programming constraints.
 The logic of jlp() function is the same as in the old JLP software. There is one difference
 which makes the life a little easier with J. In J the problem definition can use c-variables which
-are defined in the stand data. These are used similarly as if they would become from the xdata. It does not make any sense to have on a problem row only c-variables, but there can be
+are defined in the stand data. These are used similarly as if they would become from the xdata. It does not make any sense to have on a problem row only c-va
 constraints like
 vol#1-vol#0>0
 where vol#0 is the initial volume, i.e. a c-variable, and vol#1 is the volume during first period.
 In old JLP these initial values had to be put into the x-data.
 NNote also that problem definition rows are not in one-to-one relation to the constraint rows in
-the final lp problem. A problem definition row may belong to several domains, thus several lpconstraint rows may be generated from one problem definition row. The problem obtained by
+the final lp problem. A problem definition row may belong to several domains, thus several lpconstraint rows may be generated from one problem definition row
 taking multiple domains in domain definition rows into account is called ‘expanded problem’.
 Domain definitions describe logical or arithmetic statements indicating for what management
 units the following rows apply. Problem will generate problem definition object, which is
 described below.
-Starting from J3.0 it is also possible to specify the period of the row for each row containing xvariables. The period is given between two ‘#’ signs at the beginning of the row, e.g.
+Starting from J3.0 it is also possible to specify the period of the row for each row containing xvariables. The period is given between two ‘#’ signs at the
 #2# income.2-income.1 >0
 If the row contains x variables from several periods, the period of the row is the last period of
 the x variables. If the period is given for some rows containing x variables, it must be given for
@@ -4766,7 +4760,7 @@ including factories), there have to be variables in the objective function or at
 constraint row. Example of problem definition including factories can be found in chapter 11.12
 JLP Examples.
 NNote 3: An ordinary linear programming problem contains only z-variables.
-NNote 4: It is not necessary to define problem() function if the problem includes only zvariables. In jlp() function you can use zmatrix-> option instead of problem-> option.
+NNote 4: It is not necessary to define problem() function if the problem includes only zvariables. In jlp() function you can use zmatrix-> option instead of
 For more information see chapter 11.8 Solving a large problem with z-variables: jlp( ).
 NNote 5: If the problem contains harvest/area constraints for several domains, it saves memory,
 if the constraints are written in form
@@ -5200,16 +5194,17 @@ of class means computed as \textcolor{VioletRed}{sqrt}(sample\_within-class\_var
 \vspace{0.3cm}
 \hline
 \vspace{0.3cm}
-\noindent histo  \tabto{3cm}   N | 0  \tabto{5cm}     \tabto{7cm}
+\noindent \textcolor{blue}{histogram}  \tabto{3cm}   N | 0  \tabto{5cm}     \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
-\noindent Within-class sample variances are drawn.abto{5cm}
+\noindent Within-class sample variances are drawn.
 \end{changemargin}
 \vspace{0.3cm}
 \hline
 \vspace{0.3cm}
 \noindent \textcolor{blue}{freq}  \tabto{3cm}  N | 0  \tabto{5cm}     \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
-\noindent Cumulative  frequences are drawn.
+\noindent  Absolute  frequences are drawn in histogram. Default
+percentage if \textcolor{blue}{area->} is not present
 \end{changemargin}
 \vspace{0.3cm}
 \hline
@@ -5217,6 +5212,15 @@ of class means computed as \textcolor{VioletRed}{sqrt}(sample\_within-class\_var
 \noindent \textcolor{blue}{area}  \tabto{3cm}  N |0  \tabto{5cm}    \tabto{7cm}
 \begin{changemargin}{3cm}{0cm}
 \noindent the histogram is scaled so that that it can be overlayed to density function
+\end{changemargin}
+\vspace{0.3cm}
+\hline
+\vspace{0.3cm}
+\noindent cumulative  \tabto{3cm} N|0  \tabto{5cm}    \tabto{7cm}
+\begin{changemargin}{3cm}{0cm}
+\noindent  cumulativer histogram is drawn. If \textcolor{blue}{freq->} is presented then absolute
+cumulative frequences are drawn, otherwise cumulative percentages are draw, except if also \textcolor{blue}{area->}
+is presenet then then cumulative realtive freaquences are drawn.
 \end {changemargin}
 \hline
 \vspace{0.2cm}
@@ -5788,7 +5792,6 @@ The following objects are generated during the initilaization.
 
 \noindent \$\textcolor{teal}{Input}\$ \tabto{25mm }   Text  \tabto{45mm }   Text object used for original input line.
 
-
 \noindent \textcolor{teal}{1}\$Input1\$  \tabto{25mm }  Text \tabto{45mm }   Text object for input line after removing blanks and comments.
 
 
@@ -6006,14 +6009,14 @@ object, and associated tr\%input and tr\%output lists are created for input and 
 variables. Objects can be in both lists. Objects having names starting
 with '\$' are not put into the input or output lists. The source code is saved in a text object
 tr\%source. List tr\%arg contains all arguments.
-!
+	!
 If a semicolon ';'  is at the end of an input line, then
 the output is printed if REAL variable Prindebug has value 1 or value>2 at
 the execution time. If the double semicolon ';;' is at the end then the output is
 printed if Printresult>1. If there is no output, but just list of objects, then these
 objects will be printed with semicolns.
 
-!
+	!
 \vspace{0.3cm}
 \hline
 \vspace{0.3cm}
@@ -6429,24 +6432,21 @@ be straightforward to implement mixed model methods based on expected means squa
 \section{\textbf{J} story}
 \label{preface1}
 !
-she drawed for my 70 yr birthday. \\
 \textbf{J} software version 3.0 is now publisched as a open source software. The preparation of the new version was
-very complicated and frustrating process. The whole story of \textbf{J} is
-presented in section \ref{jstory} where I make also some critical comments on how Luke did
-treat this process. I got 7.10.2021 in a co-operation agreement with Luke
-
-I will here describe the history of \textbf{J} in this preface in unusual
+very complicated and frustrating process. I got 7.10.2021 in a co-operation
+agreement with Luke
+I will here describe the history of \textbf{J} here in unusual
 length and detail. Readers interested ony in the use of the current
 software can perhasp look briefly the subsection Freedom. The reason
 why I'm going through in detail
 the difficulties with Luke is that I think that the policy insisted by the leaders of Luke
-that the researchers of Luke do not have any moral or legal right to publish the results of their
+that the researchers of Luke do not have any moral or legal
+right to publish the results of their
 research should be discussed. I think also that the leaders of Luke
 were willing to waste large amount of taxpayers' money when the prevented the
 development and timely publication of \textbf{J} software. I hope that this part of the
 preface gets some attention also outside the potential users of the software e.g.
-in the ministry. As an amateur actor, I also hope that some play writer would
-notice this and would make tragicomedy on the stage.
+in the ministry.
 \subsection{JLP and first version of \textbf{J}}
 \label{preface2}
 
@@ -6457,7 +6457,8 @@ since late seventies
 when there was not
 easy to use software even for ordinary linear regression.
 Later I had to write own software
-for mixed linear models. AKTA, Jakta, and JLP contained  means to use script files and
+for mixed linear models when doing my doctoral thesis. AKTA, Jakta, and JLP
+contained  means to use script files and
 make new variables described in arithmetic expressions. The starting idea in \textbf{J} was to put all my
 previous software developments into one program.
 Version 0.9.3 of \textbf{J} was published in August 2004.
@@ -6465,7 +6466,7 @@ Version 0.9.3 of \textbf{J} was published in August 2004.
 In JLP the crucial property was the utilization of the generalized upper bound (GUB) technique which
 I invented and, which I could later find also in the literature (\cite{dant}), as I expected. GUB is
 just the right technique which is
-needed in foreast management planning. JLP made it possible to solve
+needed in forest management planning. JLP made it possible to solve
 significantly larger LP problems significantly faster
 than using standard commercial LP software. In JLP I programmed all the necessary matrix
 operations needed to change columns of the basis matrix in the revised simplex method.
@@ -6482,7 +6483,7 @@ based on \cite{flet}. The bqbd software was meant to use 'as is' software for li
 When I told Fletcher that I plan to separate the matrix routines needed in the GUB algorithm,
 he told he is certain that I will not succeed, as his Fortran code did not have any comments.
 He wrote that he will not have any time to help me.
-However, it was not that difficult becasue his code was divided
+However, it was not that difficult because his code was divided
 to proper subroutines. His code did computations in
 single precision, and it was necessary to change computations
 into double precision. Because I do not have
@@ -6494,7 +6495,7 @@ get the code mathematically correct. Now I understood the rounding errors better
 anyhow they are the permanent nuisance. The fundamental question
 with respect to rounding errors is: is a small-looking number zero or non-zero.
 
-When I later told him how large problems and how fast my algorithm could solve,
+When I later told Fletcher how large problems and how fast my algorithm could solve,
 his attitude towards
 my efforts clearly changed.
 
@@ -6520,7 +6521,7 @@ I appreciate that they have acknowledged our co-operation this way.
 August 2004.
 
 \textbf{J} contained also a simulator language by which one describe a simulator
-which can be used to geneate
+which can be used to generate
 treatment schedules which are later optimized with the
 LP funtions of J. When Simosol started
 to develop sofware which would compete with the Mela, which had had a
@@ -6541,7 +6542,7 @@ problems. I was able to derive the needed equations (see \cite{lappilem}).
 Reetta Lempinen started to work with me to implement the formulas. Reetta has professional
 training in programming, while I'm a self-learning amateur. The necessary
 data structures were quite complicated.
-I had made some wrong decisions which made the data structes even
+I had made some wrong initial decisions which made the data structes even
 more complicated than was necessary.
 Reetta had a clear head to keep data structures in order.
 It was a nice new experience to
@@ -6585,22 +6586,15 @@ and less time
 for researchers to do research, as always happens when
 government organizations simplify
 their administration and make it more efficient.
-My expectations were in the right direction, but even in my worst
-nightmares I could not have imagined
-what Luke would mean to me personally.
+My expectations were in the right direction,
+the reality was worse than I had expected.
+
 
 Lauri Meht\"atalo and I had agreed with an international publisher to
 make a book about forest biometry. In Metla this kind of agreement had been
 considered as a merit to Metla. But Luke forbad me to put any working time
 to this book project. After retirement I was free to prepare this book with Lauri.
-On the back-cover of the book I presented myself as a researcher of Metla
-in order to give the affilation credit to Metla.
-The co-operation
-among statisticians of Luke, led by Juha Heikkinen, the continued co-operation
-with Jaana Luoranen, and the support of the whole personell
-of the Research Station of Suonenjoki when the leaders of Luke
-started to humillate me
-were my only positive experiences at Luke.
+!
 
 I started to clean and reorganize the \textbf{J} code so that it would be easier to maintain it.
 My superior Olli Salminen forbad me to continue that effort because
@@ -6644,8 +6638,7 @@ of the leaders involved
 considered that the publication of \textbf{J} would be even so
 important that he/she
 had taken care that \textbf{J} would be eventually published.
-They just wanted keep important
-in the process. This absurd deadlock lasted almost seven years.
+This absurd deadlock lasted almost seven years.
 
 The previous version utilized some subroutines of IMSL package and from
 the â€˜Numerical Recipes in Fortranâ€™ book. I replaced these subroutines mainly by
@@ -6655,9 +6648,10 @@ the open \textbf{J} package. Fletcher gave a very liberal permission to use
 his subroutines in open source distribution (the
 price of his bqbd sofware was perhaps 100-200 Euros).
 But the lawyers of Luke studied his permission
-so long that he died before giving permission with better formulation.
+so long before they realized that it did not have correct words that
+Fletcher died before giving permission with better formulation.
 A permission with
-better formualations was obtained from his department in Dundee University.
+better formulations was obtained from his department in Dundee University.
 But the leading
 laywer of Luke, Emilia Katajajuuri was not satisfied, she wanted make
 sure that the
@@ -6677,15 +6671,14 @@ listen their new instructions.
 When I accidentally said 'could we decide that..', she interrupted me and said:
 'Listen Juha,
 you do not decide anything in this matter'. Their message was that
-I have done my part, and now
-I should keep out and not disturb their play with their new conquest.
+I have done my part.
 
 When it was evident that the leaders of Luke wanted to get rid of me,
 I threatened that I will not retire before the opening decision is done.
 Sari Forsman-Hugg told she will make the decision. But as my threat
 seemed to make no influence,
 I retried at the beginning of 2017. When I despite of all
-the humiliation and frustration still hoped that
+the humiliation still hoped that
 some kind a co-operation with Luke would be possible,
 I applied the position outside researcher,
 which had provided me access to Luke's e-mail and library services. Sari Forsman-Hugg was not
@@ -6706,7 +6699,7 @@ participated in the application of factory optimization which was published in \
 Prof. Packalen told late 2017 that the publication of \textbf{J} is approaching.
 When I asked about the opening decision, she 'did not
 remember' what it contained but promised to check it out, which she
-did forget to do or atl least forget to tell me what the decision contained.
+did forget to do or at least forget to tell me what the decision contained.
 Prof. Packalen was planning a very high level launch of
 \textbf{J} with prominent international guests. I wrote that such
 seminar would not probably be worth of
@@ -6814,8 +6807,7 @@ the previous  custom of  Romania where all chemistry
 research was published under the the name of Elena CeauÈ™escu,
 and had published the the software and
 manuals under the name of some equivalent to Elena.
-Also in that case I had made a lawsuit
-against Luke (if I had been alive). When the director general of Luke,
+When the director general of Luke,
 the research director of Luke, the Senior Vice President of Luke
 and the lawyers of Luke
 decided that Luke has absolutely no interest in
@@ -6824,7 +6816,7 @@ other up to date \textbf{J} codes, did they discuss with any researchers?
 
 After getting such a reponse to my co-opertation suggestion, it was evident that
 I would not give Luke any new codes, and would require Luke to remove all codes I had
-submitted after my retirement as Luke would not akckowledge that
+submitted after my retirement as Luke would not acknowledge that
 it had got any codes from me after my retirement, and it would publish my codes
 as if they were developed in Luke. So I would continue my Charles XII operation.
 Unfortunately NMBU did not have factory and transportation cost data ready.  In Norway
@@ -6864,8 +6856,6 @@ Unfortunately she could not organize the lauch, as \textbf{J} was not ready to p
 because prof Packalen did not allow Reetta to do the necessary
 preparations with respect to the code and manuals.
 
-The lawyers of Luke did not tell anything of the plans of Luke to make lawsuits
-against me if I would co-operate with Norway and would not send new codes to Luke.
 
 Lauri Meht\"atalo became Professor in Mathematical Modeling for Forest Planning
 in Luke in Mai 2021.
@@ -6937,7 +6927,7 @@ I had asked Olli Salminen some Mela results to study my suspects, but he told, a
 day considerations, that Luke is not willing to make such computations.
 I suspect that the reason is
 Luke wants to keep all possible Mela problems secret. I did not insist to get
-such permissions as Lauri thought that this would delay and complicat
+such permissions as Lauri thought that this would delay and complicate
 the \textbf{J} process. In the treaty it
 is said that the code files state that Juha Lappi
 and Natural Resources Institute Finland have the copyright for the code.
@@ -6974,13 +6964,10 @@ wanted to publish my results themselves.  This has been a very traumatic
 harrasment experience. All the victims of sexual harassment are also
 told that 'let bygones be bygones'.
 As in the peace treaty I was given all responsibility of manuals, I'm
-now utilizing this responsibility in this preface hoping the leaders of
+now utilizing this responsibility in this story hoping that the leaders of
 Luke and perhaps also others
 would be more careful when making decisions which may not tolerate daylight,
-similarly
-as bosses are slowly learning to keep better control of
-their hands which would like
-to grope the bottoms of their subordinates.
+
 
 From the legal perspective, the leaders of Luke have insisted that
 Luke has full copyright to all work I've done in Mela or Luke. So they can freely
@@ -6992,8 +6979,7 @@ attention to the by-law telling what is the duty of Luke. How has
 Luke promoted forest research and its utilization by prevented
 the development and
 utilization of \textbf{J} software for over six years?
-Perhaps the ministry should  give
-the leaders of Luke training about the duties of Luke. The leaders
+The leaders
 of Luke never gave any rational justification why Luke should prevent me
 to take care of the publication.
 
@@ -7032,9 +7018,9 @@ of the interpreter
 which interprets the \textbf{J} code generated using the input programming capabilities.
 I had been shamed if the previous interpreter had be offered to the eyes of
 professional programmers. I did rewrite the precompiler so it takes only some
-seconds to do the precompilation, and if the precompiled file
-does not change the new precompiled file is deleted so that the compiler
-does not do any more unnecessary compilation. I did put the matrix computations
+seconds to do the precompilation, and the precompiler makes indentations and gives
+better error messages than Gfortran for mixed up itfthen or do-
+structures. I did put the matrix computations
 into a new level implementing
 all properties I had found useful in Matlab when providing a method for a client
 using Matlab codes. I added new tools for debugging
@@ -7067,17 +7053,16 @@ computing the simulated schedules. Now all simulators can be developed and utili
 using standard properties of \textbf{J} transformations either for using stand level
 or tree level variables
 I have not yet made good examples to demonstrate these properties. Because the new \textbf{J} provides
-a platform for making all kind of new devlopments, including
+a platform for making all kind of new developments, including
 integer optimization (i.e preventing treatment unit to be divided among several
 schedules), nonlinear objective function
 (which would utlize the capability of \textbf{J} to compute derivatives
 according to analytic derivation rules), it was difficult to breathe a little and make the
 new codes available for users. The codes now published contain many errors.
 I invite the users to help me to correct them. First users should have some
-patience with respect to errors. I claime that the bug percentage is smaller than
+patience with respect to errors. I claim that the bug percentage is smaller than
 estimated 23-27\% bug percentage in the first version
-of Windows 1, which accintally happened be the same as the bug percentage
-Soviet masons used in the mortar they used when masoning the US embassy in Moscow.
+of Windows 1.
 Currently I can correct most bugs
 causing system crash in 5-10 minutes. It should be emphasized that
 Luke does not have any kind of responsibility of the errors.
