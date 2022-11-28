@@ -1,12 +1,13 @@
-# Gfortran makefile for release version of j3, result j3.exe
+# Gfortran makefile for release version of jlp22r, result jlp22r.exe
 # use this file: make -f Makefile_release
 # The compiler
 FC = gfortran
 # flags for debugging or for maximum performance, comment as necessary
 # FCFLAGS = -ggdb -O0 -pg -fcheck=all -g -fbacktrace      -pg produces gmon.out
 # FCFLAGS = -ggdb -O0 -fcheck=all -g -fbacktrace         debug version
-
-FCFLAGS = -ggdb -O0 -g -fmax-errors=6 
+#FCFLAGS = -ggdb -O0 -g -fmax-errors=6 
+#FCFLAGS = -ggdb -O3 -g -fmax-errors=6 
+FCFLAGS =  -O3  -fmax-errors=6 
 
 # release version
 #FCFLAGS = -ggdb -O0 -fbounds-check  -pg -fcheck=all -g -fbacktrace 
@@ -16,12 +17,12 @@ FCFLAGS = -ggdb -O0 -g -fmax-errors=6
 # FCFLAGS += -I/usr/include
 
 # List of executables to be built within the package
-PROGRAMS = j3.exe
+PROGRAMS = jlp22r.exe
 
 # "make" builds all
 all: $(PROGRAMS)
 
-j3.exe : jmodules.o\
+jlp22r.exe : jmodules.o\
 		 	 own1mod_2.o\
 		 own2mod_2.o\
 		 own3mod_2.o\
@@ -34,11 +35,12 @@ j3.exe : jmodules.o\
 		 jlp_2.o\
 		 matsub.o\
 		 jsysdep_gfortran_2.o\
-		 j_2.o 
+		 j_2.o\
+	jmain.o		 		 
 
 
 
-	$(FC) $(FCFLAGS) -o j3.exe \
+	$(FC) $(FCFLAGS) -o jlp22r.exe \
 			jmodules.o\
 		 own1mod_2.o\
 		 own2mod_2.o\
@@ -52,7 +54,9 @@ j3.exe : jmodules.o\
 		 jlp_2.o\
 		 matsub.o\
 		 jsysdep_gfortran_2.o\
-		 j_2.o 
+		 j_2.o\
+		 	jmain.o		 		 
+
 
 
 j_ownmod_2.o : jmodules.o own1mod_2.o own2mod_2.o own3mod_2.o

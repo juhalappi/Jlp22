@@ -1,0 +1,21 @@
+*5000
+
+** this has not been tested
+** jlp() solves linear programming problem (line   4085 file c:/jlp22/jlp.f90)
+cdata=data(in->'cdat.txt',read->(ns,site))
+stat()
+xdata=data(in->'xdat.txt',read->(npv#0,npv#5,income1...income5))
+stat()
+linkdata(data->cdata,subdata->xdata,nobsw->ns)
+proba=problem();
+** In this problem the 4% net present value at the beginning is maximixe
+** subject to the constraints telling that net incomes are nondecreasing
+npv#0==max
+;do(i,2,5)
+income"i"-income"i-1"=0
+;enddo
+npv#5-npv#0>0
+/
+plist=;list(proba%?);
+@plist;
+jlpa=jlp(problem->proba,data->cdata)

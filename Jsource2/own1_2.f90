@@ -8,7 +8,7 @@ end subroutine !subroutine o1_init()
 subroutine o1_funcs(iob,io)
 	use jmod, only: j_o
 	use jomod, only: j_o1funcdelta
-	
+ 
 	goto(10,20,30,40,50,60,70,80,90,100,110)j_o(iob)%i(io)-j_o1funcdelta
  
 		10  continue
@@ -38,15 +38,15 @@ recursive subroutine o1_del(iv,iotype) !deletes subobjects of compound own-objec
 	integer,intent(in) :: iv  !object to be deleted
 	integer,intent(in) :: iotype ! object type according to the objectype numbering of own objects
  
-!note only subobjects need to be deleted, the calling subroutine deletes integer,real
-! double precision and character forks of the object iv
-! select case(iotype)
-! case (2)  !if objecttype 2 contains subobjects
- ! call del(o(iv)%i(2))  !if o(iv)%i(2) refers to subobject the subobject can be a J-type object or
-                         ! !own-object
- ! case (4)
- ! !!!
- ! end select
+	!note only subobjects need to be deleted, the calling subroutine deletes integer,real
+	! double precision and character forks of the object iv
+	! select case(iotype)
+	! case (2)  !if objecttype 2 contains subobjects
+	! call del(o(iv)%i(2))  !if o(iv)%i(2) refers to subobject the subobject can be a J-type object or
+	! !own-object
+	! case (4)
+	! !!!
+	! end select
  
 	return
  

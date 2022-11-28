@@ -1,4 +1,4 @@
-#Gfortran Makefile for debug version of J3.0, result j3d.exe
+#Gfortran Makefile for debug version of Jlp22, result jlp22.exe
 # use this file: make -f Makefile_debug
 # The compiler
 FC = gfortran
@@ -14,12 +14,12 @@ FCFLAGS = -ggdb -O0 -fcheck=all -g -fbacktrace -fmax-errors=6
 # FCFLAGS += -I/usr/include
 
 # List of executables to be built within the package
-PROGRAMS = j3d.exe
+PROGRAMS = jlp22.exe
 
 # "make" builds all
 all: $(PROGRAMS)
 
-j3d.exe : jmodules.o\
+jlp22.exe : jmodules.o\
 		 own1mod_2.o\
 		 own2mod_2.o\
 		 own3mod_2.o\
@@ -37,7 +37,7 @@ j3d.exe : jmodules.o\
 
 
 
-	$(FC) $(FCFLAGS) -o j3d.exe \
+	$(FC) $(FCFLAGS) -o jlp22.exe \
 		jmodules.o\
 		 own1mod_2.o\
 		 own2mod_2.o\

@@ -13,7 +13,7 @@
 program j_manual
 	!use koemod,only: koe2
  
-	use jmod, only: j_nfunctions_,j_noptions_,j_functions,j_options
+	use jmod, only: j_nfunctions_,j_noptions_,j_functions,j_options,j_maxarg_,j_minarg_
 	integer,parameter ::maxsections=1000
 	integer,parameter :: maxmacros=200  !common options
 	integer,parameter :: maxfuncs0=100 !per section
@@ -45,7 +45,7 @@ program j_manual
 	integer,dimension(maxsections)::fnote,lnote=0
 	integer,dimension(maxnote)::fnotel,lnotel=0
 	character*40,dimension(maxex)::exfile
-	character*80,dimension(maxsections)::section
+	character*300,dimension(maxsections)::section
 	character*20,dimension(maxsections)::sectionlabel
 	character*20,dimension(maxmacros)::macrolabel
 	character*5,dimension(7)::tabto
@@ -112,11 +112,30 @@ program j_manual
 	integer ::nlblock
  
 	logical::firsto=.false. ! is firsrt word in colors object name
+integer:: niter
+	
+	! logical, dimension(10)::logi
+	! integer,dimension(10)::inte
+	niter=0
+	!nitemize=0
+	! inte=0
+	! logi=.true.
+	! logi(5)=.false.
+	! inte=logi
+	
+	
+	! write(6,*)'logi',logi
+	! write(6,*)'inte',inte
+
+	! stop
+	
 	!	logical ::frommacro
 	write(6,*)j_nfunctions_,' functions available'
 	ninpufv=0
 	exline=' '
-	!write(6,*)j_functions
+	do j=1,j_nfunctions_
+	write(6,*)j,j_functions(j),j_minarg_(j),j_maxarg_(j)
+	enddo
 	! character*(len=*),parameter :: fucol='\textcolor{VioletRed}{'
 	! lfucolp=len(fucol)+1
 	! character*(len=*),parameter :: inpucol='\textcolor{Red}{'
@@ -186,7 +205,7 @@ program j_manual
 	nsection0=0
 	inlisting=.false.
 	write(6,*)'opening jsections2.txt'
-	open(10,file='jsections2.txt',action='READ')
+	open(10,file='jsections2.txt',action='READ',NOSHARED)
 100 read(10,'(a)',end=234)line
 	write(6,*)'sections2: ',line(1:j_lentrim(line))
 	if(line(1:1).eq.'!')goto 100
@@ -257,19 +276,23 @@ program j_manual
 		goto 100
  
 	elseif(index(line(1:le),'outfile').gt.0)then
-		write(6,*)'deleting ',line(ifirst(2):le)
+		!write(6,*)'deleting ',line(ifirst(2):le)
 		! read(5,*)ii
-		if(open20)close(20)
-		open(20,file=line(ifirst(2):le),status='REPLACE',action='WRITE')
-		open20=.true.
+	!	if(open20)close(20)
+		
+	!	open20=.true.
 		if(line(le-3:le).eq.'.inc')then
+			open(19,file=line(ifirst(2):le),status='REPLACE',action='WRITE')
 			call writeincl()
+			close(19)
 			goto 100
-		endif !if(line(le-3:le).eq.'.inc')    265
+		else
+		open(20,file=line(ifirst(2):le),status='REPLACE',action='WRITE')
 		call writeoutput()
- 
-		stop 'tas#################'
-		write(6,*)'goto100'
+		stop 'here' 
+		endif !if(line(le-3:le).eq.'.inc')    265
+		
+	!	write(6,*)'goto100'
 		!	goto 100
 		! else
 		! write(6,*)'<337writeoutput ',line(1:le)
@@ -309,51 +332,51 @@ program j_manual
 	contains
 	subroutine writeincl()
 		write(6,*)'writing ',nexample, ' examples as include file'
-		write(20,'(a)')'exfile=thisfile()'
+		write(19,'(a)')'exfile=thisfile()'
  
  
-		write(20,'(a)')"current=';incl(exfile,from->current)'"
+		write(19,'(a)')"current=';incl(exfile,from->current)'"
 		do ine=1,nexample
 			lef=len_trim(exfile(ine))
  
 			write(6,*)ine, exlabel(ine)(1:lexlabel(ine)),' from ',exfile(ine),' line ',exline(ine)
-			write(20,'(a)')exlabel(ine)(1:lexlabel(ine))//"=';incl(exfile,from->"// &
+			write(19,'(a)')exlabel(ine)(1:lexlabel(ine))//"=';incl(exfile,from->"// &
 				exlabel(ine)(1:lexlabel(ine))//")'"
 		enddo !ine=1,nexample    316
-		write(20,'(a)')"AGAIN=';incl(exfile)'"
-		write(20,'(a)')"ALL=';incl(exfile,from->ALL)'"
-		!		write(20,'(a)')"ask(fcont,q->'continue after each figure(1/0)>')"
-		!		write(20,'(a)')';if(wait);pause'
-		write(20,'(a)')'wait=0'
-		write(20,'(a)')'continue=1'
-		write(20,'(a)')';return'
-		write(20,'(a)')' '
+		write(19,'(a)')"AGAIN=';incl(exfile)'"
+		write(19,'(a)')"ALL=';incl(exfile,from->ALL)'"
+		!		write(19,'(a)')"ask(fcont,q->'continue after each figure(1/0)>')"
+		!		write(19,'(a)')';if(wait);pause'
+		write(19,'(a)')"ask(wait,q->'pause after each example(1/0)>')"
+		write(19,'(a)')"ask(fpause,q->'pause after each figure(1/0)>')"
+		write(19,'(a)')"fcont=.not.fpause"
+		write(19,'(a)')';return'
+		write(19,'(a)')' '
 		do ine=1,nexample
 			lef=len_trim(exfile(ine))
-			write(20,'(a)')' '
-			write(20,'(a)')';'//exlabel(ine)(1:lexlabel(ine))//':  '
-			write(20,'(a)')'!'//exlabel(ine)(lexlabel(ine)+1:j_lentrim(exlabel(ine)))//' (line '//&
+			write(19,'(a)')' '
+			write(19,'(a)')';'//exlabel(ine)(1:lexlabel(ine))//':  '
+			write(19,'(a)')'**'//exlabel(ine)(lexlabel(ine)+1:j_lentrim(exlabel(ine)))//' (line '//&
 				exline(ine)//' file '//exfile(ine)(1:lef)//')'
 			do ine2=1,ninexample(ine)
-				write(20,'(a)')ex(ine2,ine)(1:leex(ine2,ine))
+				write(19,'(a)')ex(ine2,ine)(1:leex(ine2,ine))
 			enddo !ine2=1,ninexample(ine)    337
-			write(20,'(a)')';if(wait);pause'
-			write(20,'(a)')';return'
-			write(20,'(a)')' '
+			write(19,'(a)')';if(wait);pause'
+			write(19,'(a)')';return'
+			write(19,'(a)')' '
  
 		enddo !ine=1,nexample    331
  
-		write(20,*)' '
-		write(20,'(a)')';ALL:'
-		write(20,'(a)')"ask(wait,q->'pause after each example(1/0)>')"
-		!	write(20,'(a)')"ask(fcont,q->'continue after each figure(1/0)>')"
+		write(19,*)' '
+		write(19,'(a)')';ALL:'
+		!	write(19,'(a)')"ask(fcont,q->'continue after each figure(1/0)>')"
 		do ine=1,nexample
-			!	write(20,'(a)')' '
-			!	write(20,'(a)')';'//exlabel(ine)(1:lexlabel(ine))//':'
-			write(20,'(a)')exlabel(ine)(1:lexlabel(ine))
+			!	write(19,'(a)')' '
+			!	write(19,'(a)')';'//exlabel(ine)(1:lexlabel(ine))//':'
+			write(19,'(a)')exlabel(ine)(1:lexlabel(ine))
  
 		enddo !ine=1,nexample    350
-		write(20,'(a)')';return'
+		write(19,'(a)')';return'
  
  
  
@@ -365,8 +388,9 @@ program j_manual
 		isend=.true.
 700	 read(10,'(a)',end=999)line;nl=nl+1;le=j_lentrim(line) !read(2,'(a)',end=40)line;nl=nl+1;le=j_lentrim(line)
 		if(line(1:1).eq.'!')goto 700
-		write(6,*)line(1:le)
+	
 		if(le.le.0)goto 700
+			write(6,*)line(1:le)
 		if(index(line(1:le),';return').gt.0)then
 			goto 999
 			isend=.false.
@@ -388,23 +412,58 @@ program j_manual
 					!if(isec.eq.54) stop 'kdkkd'
 					if(line(le:le).eq.'*')then
 						if(leni.gt.0)then
- 
-							write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'*{'//&
+						line='\'//line(ifirst(1):ilast(1))//'*{'//&
 								section(isec)(1:lesec)//'} \index{'// &
 								sectionindex(isec)(1:leni)//'}  % '//line(ifirst(2):ilast(2))
+						lei=len_trim(line)
+						call final(line,lei,line2,le2)
+						
+						write(20,'(a)')line2(1:le2)
+ 
+							! write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'*{'//&
+								! section(isec)(1:lesec)//'} \index{'// &
+								! sectionindex(isec)(1:leni)//'}  % '//line(ifirst(2):ilast(2))
 						else
 							!if(leni.gt.0)then
-							write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'*{'//section(isec)(1:lesec)//'} ' // &
+							line='\'//line(ifirst(1):ilast(1))//'*{'//section(isec)(1:lesec)//'} ' // &
 								' % '//line(ifirst(2):ilast(2))
+							lei=len_trim(line)
+							call final(line,lei,line2,le2)
+							write(20,'(a)')line2(1:le2)
+							! write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'*{'//section(isec)(1:lesec)//'} ' // &
+								! ' % '//line(ifirst(2):ilast(2))
  
 						endif !if(leni.gt.0)    390
-						write(20,'(a)')'	\addcontentsline{toc}{section}{'//section(isec)(1:lesec)//'}'
+						line='\addcontentsline{toc}{section}{'//section(isec)(1:lesec)//'}'
+					
+							lei=len_trim(line)
+							call final(line,lei,line2,le2)
+							write(20,'(a)')line2(1:le2)
+					!	write(20,'(a)')'	\addcontentsline{toc}{section}{'//section(isec)(1:lesec)//'}'
 					else
 						if(leni.gt.0)then
-							write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}'//&
-								'\index{'//sectionindex(isec)(1:leni)//'}'
+						line='\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}'//&
+									'\index{'//sectionindex(isec)(1:leni)//'}'
+									lei=len_trim(line)
+								call final(line,lei,line2,le2)
+							write(20,'(a)')line2(1:le2)	
+								! write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}'//&
+									! '\index{'//sectionindex(isec)(1:leni)//'}'
+									! ! if(sectionlabel(isec)(1:lelabel).eq.'ROB')then
+									! write(20,*)'lesec,leni ',lesec,leni
+									! write(20,'(a)')line(ifirst(1):ilast(1))
+									! write(20,'(a)')section(isec)(1:lesec)
+									! write(20,'(a)')sectionindex(isec)(1:leni)
+									! stop
+									! endif
+	
+						
 						else
-							write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}'
+						lei=ilast(1)-ifirst(1)+lesec+4
+						call final('\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}',lei,&
+						line2,le2)
+							write(20,'(a)')line2(1:le2)	
+				!			write(20,'(a)')'\'//line(ifirst(1):ilast(1))//'{'//section(isec)(1:lesec)//'}'
 						endif !if(leni.gt.0)    403
 					endif !if(line(le:le).eq.'*')    389
  
@@ -415,7 +474,17 @@ program j_manual
 				write(6,*)'     writing section ',isec, ' ',sectionlabel(isec)(1:lelabel),'  ',lsection(isec)+2,' lines'
 				do j=1,lsection(isec)
 					lei=j_lentrim(sheaders(j,isec))
-					write(20,'(a)')sheaders(j,isec)(1:lei)
+					
+					call final(sheaders(j,isec),lei,line2,le2)
+					if(line2(1:le2).ne.'\\')write(20,'(a)')line2(1:le2)
+			
+					! if(nsi.gt.0)then
+						! write(20,'(a)')line2(1:ialout)//sheaders(j,isec)(ialin:lei)
+						! write(17,'(a)')'#',line2(1:ialout)//sheaders(j,isec)(ialin:lei)
+					! else
+						! if(sheaders(j,isec)(1:lei).ne.'\\')write(17,'(a)')sheaders(j,isec)(1:lei)
+						! if(sheaders(j,isec)(1:lei).ne.'\\')write(20,'(a)')sheaders(j,isec)(1:lei)
+					! endif
 				enddo !j=1,lsection(isec)    416
 				written(isec)=.true.
 				nl2=nl2+lsection(isec)
@@ -449,11 +518,11 @@ program j_manual
 				nonw=nonw+1
 				do j=1,lsection(isec)
 					lei=j_lentrim(sheaders(j,isec))
-					write(20,'(a)')sheaders(j,isec)(1:lei)
+					if(sheaders(j,isec)(1:lei).ne.'\\')write(20,'(a)')sheaders(j,isec)(1:lei)
 				enddo !j=1,lsection(isec)    450
 			endif !if(.not.written(isec))    435
 		enddo !isec=1,nsection    433
-		if(nonw.gt.0)write(6,*)nonw,' sections written which were not written earlier'
+		if(nonw.gt.0.and.(yesno.eq.'y'.or.yesno.eq.'Y'))write(6,*)nonw,' sections written which were not written earlier'
  
  
  
@@ -540,6 +609,8 @@ program j_manual
 				goto 17
 			endif !if(le.eq.0.and.insection)    538
 			if(line(nb:nb).ne.'!')goto 17
+			nb2=nonblank(line,nb+1,le)
+			if(line(nb2:nb2).eq.'!')goto 17
 			iter=index(line(1:le),'itemize')
 			if(iter.gt.0)then
 				ie=index(line(1:iter),'end')
@@ -563,6 +634,7 @@ program j_manual
 					stop 'itemize'
 				endif !if(ie.eq.0.and.ib.eq.0)    547
 			endif !if(iter.gt.0)    544
+		!	if(iter.gt.0)write(6,*)'ITEMIZE ',niter,line(1:le),niter
 			if(nb.lt.le)then
 				nb2=nonblank(line,nb+1,le)
 				line=line(nb2:le)
@@ -645,12 +717,28 @@ program j_manual
 			inpuf(ninpuf)=line(ifirst(2):ilast(2))
 			!		write(6,*)'line ',nl, ' in ',infile(1:linfile), ' Inpuf ',line(ifirst(2):ilast(2))
 		endif !if(line(ifirst(1):ilast(1)).eq.'Inpuf')    633
+		! if(index(line(1:le),'itemize').gt.0)then
+			! if(index(line(1:le),'begin').gt.0)then
+				! nitemize=nitemize+1
+			! elseif(index(line(1:le),'end').gt.0)then
+				! nitemize=nitemize-1
+			! else
+				! write(6,*)line(1:le)
+				! write(6,*)'line ',nl, ' in ',infile(1:linfile),' itemize without end or begin, do we continue 1/0?'
+				! read(5,*)icon
+				! if(icon.eq.0)stop
+			! endif
+		! endif
  
 756	if(line(ifirst(1):ilast(1)).eq.'Section')then
 			if(nwords.lt.3)then
 				write(6,*)'line ',nl,' in ',infile(1:linfile), ' section does not have title '
 				stop 'no title'
 			endif !if(nwords.lt.3)    650
+			if(insection)then
+			write(6,*)'line ',nl, ' in ',infile(1:linfile),' we are already in a section starting ',&
+			sectionstart(nsection)
+			endif
 			call testblock()
 			nlsection=nl
 			!		if(nlsection.gt.nlblock)then
@@ -659,7 +747,7 @@ program j_manual
 			!		endif
 			nsection=nsection+1
 			sectionstart(nsection)=nl
-			sectionlabel(nsection)=line(ifirst(2):ilast(2))
+			sectionlabel(nsection)=line(ifirst(2):ilast(2))  !can start with limiter
  
 			!		write(6,*)'line ',nl,' in ',infile(1:linfile), ' Section ',line(ifirst(2):ilast(2))
 			do isec=1,nsection-1
@@ -693,7 +781,8 @@ program j_manual
 			!	if(nl.eq.1234)stop 'pi'
 			call colors(firsto,inpuf,ninpuf,line,le,line2,&
 				nwords,ifirst,ilast,.false.,.false.,le2)
-			section(nsection)=line2(ifirst(3):le2)
+		!	section(nsection)=line2(ifirst(3):le2)
+		section(nsection)=line2(ilast(2)+2:le2)
 			!		section(nsection)=line(ifirst(3):le)
 			! section cominout Command input and output
 			!	character*40,dimension(maxsections)::section
@@ -814,7 +903,7 @@ program j_manual
 			! if(.not.inlatex)then
 			if(inoption0)call putsec('\end{changemargin}')
 			call putsec('\vspace{0.3cm}')
-			call putsec('\hline')
+			call putsec('\hrule')
 			call putsec('\vspace{0.3cm}')
 			!		call words(line,1,le,nwords,ifirst,ilast,iss)
 			!	call colors(firsto,inpuf,ninpuf,line,line2,nwords,ifirst,ilast,.false.,isoption,le2)
@@ -879,17 +968,18 @@ program j_manual
 			! le2=le2+lis
 			! !	line=line2
 			! !	le=len_trim(line)
+		!	p=index(line(1:le),' matrix to be generated ').gt.0
 			lee=le-iliv
 			jatko(1:lee)=line(iliv+1:le)
 			! if(nl.eq.2997)then
-			! write(6,*)'ine:',iliv,le,lee,le2,line(1:le)
+			if(p)write(6,*)'ine:',iliv,le,lee,le2,line(1:le)
  
 			! endif
 			line(1:le2-1)=line2(1:le2)
 			le=le2-1
-			if(p)write(6,*)'hui',line(1:le)
+		!	if(p)write(6,*)'hui',line(1:le)
 			call words(line,1,le,nwords,ifirst,ilast,iss)
-			!		write(6,*)nwords,ifirst(1:nwords),ilast(1:nwords),line(1:le)
+			!if(p)		write(6,*)nwords,ifirst(1:nwords),ilast(1:nwords),line(1:le)
 			!		stop 'djdj'
 			call colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,.false.,isoption,le2)
 			call putsec(line2(1:le2))
@@ -901,17 +991,27 @@ program j_manual
 			! stop
 			! endif
 			call words(line,1,le,nwords,ifirst,ilast,iss)
-			if(nl.eq.2997)then
-				write(6,*)'ineT:',nwords,ifirst(1:nwords),ilast(1:nwords)
-				!	stop
-			endif !if(nl.eq.2997)    904
+			! if(p)then
+				! write(6,*)'ineT:',nwords,ifirst(1:nwords),ilast(1:nwords)
+				! !	stop
+			! endif !if(nl.eq.2997)    904
+		! if(p)	write(6,*)'inebef:',firsto,inpuf,ninpuf
+		! if(p)write(6,*)'line ',line(1:le)
+		! if(p)write(6,*)'line2',line2(1:le2)
+		! if(p)then
+			! do iw=1,nwords
+			! write(6,*)iw,' ',line(ifirst(iw):ilast(iw))
+			
+			! enddo
+	! !	line(1:1)='?'
+		! endif
 			call colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,.false.,.false.,le2)
-			if(nl.eq.2997)then
-				write(6,*)'ineTw:',line2(1:le2)
-				!	stop
-			endif !if(nl.eq.2997)    909
+			! if(p)then
+				! write(6,*)'ineTw:',line2(1:le2)
+				! !	stop
+			! endif !if(nl.eq.2997)    909
 			call putsec('\noindent '//line2(1:le2))
- 
+			if(p)stop
 			! if(ikatk.gt.0)then
 			! line=jatko
 			! le=lek
@@ -1055,11 +1155,17 @@ program j_manual
 	7899	write(6,*)'premature end of file'
 				stop
 177			read(2,'(a)',end=7899)line;nl=nl+1;le=j_lentrim(line)
+
 				nb=nonblank(line,1,le)  !if le=0 nb=1
 				!		if(iper.eq.100)write(6,*)'jdjdj',line(1:le+1)
 				if(line(nb:nb).ne.'!')goto 177
+				
 				if(nb.lt.le)then
 					nb2=nonblank(line,nb+1,le)
+					! if(nl.eq.479)write(6,*)'nb,nb2,line(1:le),line(nb2:nb2).eq.!',&
+					! nb,nb2,line(1:le),line(nb2:nb2).eq.'!'
+					if(line(nb2:nb2).eq.'!')goto 177
+					
 					line=line(nb2:le)
 					le=le-nb2+1
 				endif !if(nb.lt.le)   1061
@@ -1068,10 +1174,12 @@ program j_manual
 				if(line2(le2:le2).eq.'>')goto 175
  
 				call putsec('\tabto{'//tabto(nmerk)//'} '//line2(1:le2))
+				
 				call putsec(' ')
  
 			else
 				call putsec('\noindent '//line2(1:le2))
+				!	if(index(line2(1:le2),' generated ').gt.0)write(6,*)'here&',le2 ,line(1:le2)
 				!	write(6,*)'putsec ',le2,line2(1:le2)
 				!	iperk=100
 				call putsec(' ')
@@ -1084,7 +1192,20 @@ program j_manual
  
  
 		if(p)write(6,*)'<587nwords',nwords
-		isnote=line(ifirst(1):ilast(1)).eq.'Note'
+		isnote=.false.
+		if(line(ifirst(1):ilast(1)).eq.'Note')then
+		write(6,*)ifirst(1),ilast(1),line(ifirst(1):ilast(1))
+			if(line(ilast(1)+1:ilast(1)+1).eq.'#')then
+				write(6,*)'hellurei ',line(ifirst(1):ilast(1)+1)
+				line(ilast(1)+1:ilast(1)+1)=' '
+			else
+			isnote=.true.
+			endif
+		endif
+		! isnote=line(ifirst(1):ilast(1)).eq.'Note'
+		! if(line(ifirst(1):ifirst(1)+3).eq.'Note')write(6,*)'isnote ,line(ifirst(1):ilast(1)).eq.Note#',isnote,&
+		! line(ifirst(1):ilast(1)).eq.'Note#'
+		! if(line(ifirst(1):ilast(1)).eq.'Note#')line(ilast(1):ilast(1))=' '
 		!	if(nl.eq.1406)write(6,*)'insection,innote,inexample,inex2,inoption,inlatex,isnote',&
 		!		insection,innote,inexample,inex2,inoption,inlatex,isnote
 		if(isnote)then
@@ -1167,7 +1288,7 @@ program j_manual
  
 			write(exline(nexample),'(i6)')nl
 			lexlabel(nexample)=lelabe
-			write(6,*)'<777',nexample,exlabel(nexample),exfile(nexample),nl
+			!write(6,*)'<777',nexample,exlabel(nexample),exfile(nexample),nl
 			ifue=j_isin(line(ifirst(2):ilast(2)),j_functions,j_nfunctions_)
  
 			if(ifue.gt.0)then
@@ -1286,6 +1407,7 @@ program j_manual
 			call colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,.false.,.false.,le2)
 			call putsec(line2(1:le2))
 			if(inex2)call putsec('\\')
+		!	write(17,*)'here le2 ',le2 ,line2(1:le2)
 			goto 1
 		endif !if(inheader.or.inoption.or.inex2.or.innote)   1285
  
@@ -1405,7 +1527,7 @@ program j_manual
 		!	write(6,*)'<5444 ',line(1:le)
 		inoption=.false.
 		if(inoption0)call putsec('\end {changemargin}')
-		call putsec('\hline')
+		call putsec('\hrule')
 		call putsec('\vspace{0.2cm}')
 		wasoption=.false.
 		inoption0=.false.
@@ -1494,6 +1616,8 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 	integer,parameter:: lboxvolp=len(boxcol)+1
 	character(len=*),parameter :: optcol='\textcolor{blue}{'
 	integer,parameter:: loptcolp=len(optcol)+1
+	character(len=*),parameter :: jlpcol='\textbf{Jlp22}'
+	integer,parameter:: ljlpcol=len(jlpcol)
 	character(len=*),parameter :: jcol='\textbf{J}'
 	integer,parameter:: ljcol=len(jcol)
 	character(len=*),parameter :: comcol='\textcolor{green}{'
@@ -1516,10 +1640,11 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 	!	lfu=len('\textcolor{VioletRed}{')+1
 	!	lbox=len('\colorbox{GreenYellow}{')+1
 	!	lvar=len('\textcolor{
-	!p=index(line,'(this)').gt.0
+	!p=index(line,'a###').gt.0
 	!	stop
 	!	le=j_lentrim(line)
 	! perk=index(line(1:le),'func->').gt.0
+	!p=line(1:1).eq.'?'
 	if(p)then
 		write(6,*)line(1:le)
 		do iw=1,nwords
@@ -1550,7 +1675,7 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 	got=.false.
  
 	nw=1
-	icom=index(line(1:le),'!')
+	icom=index(line(1:le),'!!')
 	icom1=max(icom-1,1)
 	if(line(icom1:icom1).eq."'")icom=0  !ignore '!
 	icom0=icom
@@ -1606,6 +1731,7 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 			le2=le2+1
 			line2(le2:le2)='}'
 		endif !if(icom.lt.le)   1605
+		if(p)stop
 		return
  
 	endif !if(j.gt.le)   1604
@@ -1622,61 +1748,76 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 	! ! j=j+1
 	! goto 100
 	! endif
-	if(line(j:j).eq.'J'.and.(j.eq.1.or. line(max(j-1,1):max(j-1,1)).eq.' ' &
-			.and.line(j+1:j+1).eq.' '))then
+	if(line(j:j+4).eq.'Jlp22')then
+		line2(le2+1:le2+ljlpcol)=jlpcol
+		!	 write(6,*)'<23>J',j
+		le2=le2+ljlpcol
+		nw=nw+1
+	 j=j+4
+		goto 100
+	endif !if(line(j:j).eq.'J'.and.(j.eq.1.or. line(max(j-1,1):max(j-   1625
+	
+	if(line(j:j+1).eq.'J '.or.line(j:j+1).eq.'J,'.or.(line(j:j+1).eq.'J.'.and.index(line(j+2:le),'Lappi').le.0))then
 		line2(le2+1:le2+ljcol)=jcol
 		!	 write(6,*)'<23>J',j
 		le2=le2+ljcol
 		nw=nw+1
-		! j=j+1
+	! j=j+4
 		goto 100
 	endif !if(line(j:j).eq.'J'.and.(j.eq.1.or. line(max(j-1,1):max(j-   1625
-	if(line(j:j).eq.'%')then
+	
+	! if(line(j:j).eq.'%')then
  
-		line2(le2+1:le2+2)='\%'
-		le2=le2+2
-		goto 100
-	endif !if(line(j:j).eq.'%')   1634
-	if(line(j:j).eq.'_')then
+		! line2(le2+1:le2+2)='\%'
+		! le2=le2+2
+		! goto 100
+	! endif !if(line(j:j).eq.'%')   1634
+	
+	 ! if(line(j:j).eq.'\')then
+	 ! line(le2+1:le2+14)= '\textbackslash'
  
-		line2(le2+1:le2+2)='\_'
-		le2=le2+2
-		goto 100
-	endif !if(line(j:j).eq.'_')   1640
-	! if(line(j:j).eq.'\')then
-	! line(le2+1:le2+14)= '\textbackslash'
- 
-	! le2=le2+14
+	 ! le2=le2+14
 	! goto 100
 	! endif
-	if(line(j:j).eq.'$')then
+	! if(line(j:j).eq.'$')then
  
-		line2(le2+1:le2+2)='\$'
-		le2=le2+2
-		goto 100
-	endif !if(line(j:j).eq.'$')   1652
-	if(line(j:j).eq.'~')then
-		!%le2=le2+1
-		ischar=.not.ischar
-		line2(le2+1:le2+6)='$\sim$'
-		le2=le2+6
-		goto 100
-	endif !if(line(j:j).eq.'~')   1658
-	if(line(j:j).eq.'/'.and.line(j+1:j+1).eq.'\')then
-		!%le2=le2+1
+		! line2(le2+1:le2+2)='\$'
+		! le2=le2+2
+		! goto 100
+	! endif !if(line(j:j).eq.'$')   1652
+	 ! if(line(j:j).eq.'~')then
+		! ! !%le2=le2+1
+		 ! ischar=.not.ischar
+		 ! line2(le2+1:le2+6)='$\sim$'
+		 ! le2=le2+6
+		 ! goto 100
+	! endif !if(line(j:j).eq.'~')   1658
+	 if(line(j:j).eq.'/'.and.line(j+1:j+1).eq.'\')then
+		 le2=le2+1
  
-		line2(le2+1:le2+12)='$\backslash$'
-		le2=le2+12
+		line2(le2+1:le2+15)='\textbackslash '   !'$\backslash$'
+		le2=le2+15  !12
 		j=j+1
 		goto 100
 	endif !if(line(j:j).eq.'/'.and.line(j+1:j+1).eq.'\')   1665
-	if(line(j:j).eq.'#')then
-		!%le2=le2+1
-		!	write(6,*)'<44#in color>',nl,line(1:le)
-		line2(le2+1:le2+2)='\#'
-		le2=le2+2
-		goto 100
-	endif !if(line(j:j).eq.'#')   1673
+	! if(line(j:j).eq.'#')then
+		! !%le2=le2+1
+		! !	write(6,*)'<44#in color>',nl,line(1:le)
+		! line2(le2+1:le2+2)='\#'
+		! le2=le2+2
+		! goto 100
+	! endif !if(line(j:j).eq.'#')   1673
+	
+		! if(line(j:j).eq.'_')then
+		! ji1=max(j-1,1)
+		! if(line(ji1:ji1).ne.'\'.or.j.eq.1)then
+		! !%le2=le2+1
+		! !	write(6,*)'<44#in color>',nl,line(1:le)
+		! line2(le2+1:le2+2)='\#'
+		! le2=le2+2
+		! goto 100
+		! endif
+	! endif !if(line(j:j).eq.'#')   1673
 	! if(line(j:j).eq.'_')then
 	! ! !%le2=le2+1
 	! ! !	write(6,*)'<44#in color>',nl,line(1:le)
@@ -1709,19 +1850,47 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 		goto 100
 	endif !if(icom.lt.le.and.(j.ge.icom0.and.j.lt.icom.or.j.gt.icom.a   1706
 	if(j.eq.icom0)then
-		line2(le2+1:le2+lcomcol+1)=comcol//'!'
-		le2=le2+lcomcol+1
-		goto 100
+		if(j.gt.1)then
+			if(line(j-1:j-1).eq.'\')then
+				line2(le2:le2)='!'  !replace 
+				icom=le+1
+				icom0=le+1
+				goto 100
+			
+			endif
+		
+		endif
+!		line2(le2+1:le2+lcomcol+1)=comcol//'!'
+!		le2=le2+lcomcol+1
+		
+		line2(le2+1:le2+18)=' ! {\color{green} '
+		le2=le2+18
+		
+		le=le+1
+		line(le:le)='}'
+		icom=le+1
+		icom0=le+1
+		 goto 100
+
 	endif !if(j.eq.icom0)   1711
 	if(line(j:j).eq.' '.and.(ischar.or.j.gt.icom))then
 		line2(le2+1:le2+2)='\,'
 		le2=le2+2
 		goto 100
 	endif !if(line(j:j).eq.' '.and.(ischar.or.j.gt.icom))   1716
+	! if(line(j:j).eq.'_')then
+ 
+		! line2(le2+1:le2+2)='\_'
+		! le2=le2+2
+		! goto 100
+	! endif !if(line(j:j).eq.'_')   1640
 	if(p)write(6,*)'<j,nw,ifirst(nw)',j,nw,ifirst(nw)
 	if(j.eq.ifirst(nw))then
 		lenw=ilast(nw)-ifirst(nw)+1
 		ifu=j_isin(line(ifirst(nw):ilast(nw)),j_functions,j_nfunctions_)
+		! ifu2=0
+		! if(ifu.le.0)ifu2=j_isin(line(ifirst(nw):ilast(nw)+2),j_functions,j_nfunctions_)
+	
 		iopt=j_isin(line(ifirst(nw):ilast(nw)),j_options,j_noptions_)
 		inpufu=j_isin(line(ifirst(nw):ilast(nw)),inpuf,ninpuf)
 		! if(index(line(1:le),';sum').gt.0)then
@@ -1752,19 +1921,47 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 			j=j+lenw-1
 		elseif(ifu.gt.0.and.line(ilast(nw)+1:ilast(nw)+1).eq.'(')then
 			! if(j_functions(ifu)(1:1).eq.';')then
-			lis=17+lenw
+		!	lis=17+lenw
 			! lis=linpucolp+lenw
-			line2(le2+1:le2+lis)='\textcolor{red}{'//line(ifirst(nw):ilast(nw))//'}'
+		!	line2(le2+1:le2+lis)='\textcolor{red}{'//line(ifirst(nw):ilast(nw))//'}'
 			! line2(le2+1:le2+lis)=inpucol//line(ifirst(nw):ilast(nw))//'}'
  
 			! else
+		!	idone=0
+			!if(ilast(nw).gt.2)then
+			! iala=index(line(ifirst(nw):ilast(nw)),'_')
+			! if(iala.gt.0)then
+			! line2(le2+1:le2+lis)=fucol//line(ifirst(nw):ifirst(nw)+iala-2)//'\'// &
+			! line(ifirst(nw)+iala-1:ilast(nw))//'}'
+			! lis=lfucolp+lenw+1
+			! idone=1
+			! endif
+			! endif
+		!	if(idone.eq.0)then
 			lis=lfucolp+lenw
 			!	line2(le2+1:le2+lis)='\textcolor{VioletRed}{'//line(ifirst(nw):ilast(nw))//'}'
 			line2(le2+1:le2+lis)=fucol//line(ifirst(nw):ilast(nw))//'}'
+		!	endif
  
 			!			endif
 			le2=le2+lis
 			j=j+lenw-1
+		! elseif(ifu2.gt.0.and.line(ilast(nw)+3:ilast(nw)+3).eq.'(')then
+		! !		lis=17+lenw+2
+			! ! lis=linpucolp+lenw
+		! !	line2(le2+1:le2+lis)='\textcolor{red}{'//line(ifirst(nw):ilast(nw)+2)//'}'
+			! ! line2(le2+1:le2+lis)=inpucol//line(ifirst(nw):ilast(nw))//'}'
+ 
+			! ! else
+			! lis=lfucolp+lenw+2
+			! !	line2(le2+1:le2+lis)='\textcolor{VioletRed}{'//line(ifirst(nw):ilast(nw))//'}'
+			! line2(le2+1:le2+lis)=fucol//line(ifirst(nw):ilast(nw))//'\_'//line(ilast(nw)+2:ilast(nw)+2)//'}'
+ 
+			! !			endif
+			! le2=le2+lis
+			! j=j+lenw-1+2
+			! nw=nw+1
+			
 		elseif(inpufu.gt.0)then
 			!	lis=17+lenw
 			lis=linpucolp+lenw
@@ -1823,6 +2020,12 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 			!endif
 		endif !if(nw.eq.1.and.firsto)   1742
 		nw=nw+1
+		if(nw.gt.nwords)then
+		line2(le2+1:le2+le-j+1)=line(j+1:le)
+		le2=le2+le-j
+		if(p)write(6,*)'hanta/',line2(le2+1:le2+le-j+1),'/',line(j+1:le),'/'
+		return
+		endif
 		!		if(j.ge.ifirst(nw))nw=nw+1
 		!		 if(perk)write(6,*)'<39>',nw,j,ifirst(nw)
  
@@ -1951,7 +2154,7 @@ subroutine words(inp,ial0,le,nwords,ifirst,ilast,iss)
 	logical iss
 	integer ::ifirst(1:*),ilast(1:*)
 	!write(6,*)'<1>',ial0,le,inp(ial0:le)
-	limit(1:22)=' ,():!&-+/#@"._<>=~\%$'
+	limit(1:22)=' ,():!&-+/#@".<>=~\%$'
 	limit(23:23)="'"
 	nwords=0
 	islimit=.false.
@@ -1972,6 +2175,7 @@ subroutine words(inp,ial0,le,nwords,ifirst,ilast,iss)
  
 100 continue
 main: do j=ial,le
+if(inp(j:j).eq.'_')cycle main
 sub: do k=1,nl
 			if(inp(j:j).eq.limit(k:k).or.ichar(inp(j:j)).eq.9)then
  
@@ -2038,4 +2242,100 @@ integer function j_lentrim(inp)   !like len-trim but returns zero aslo when line
 	j_lentrim=0
 	return
 end function j_lentrim !integer function j_lentrim_(inp)
+
+function nextlim(inp,ial,lop,limit)
+	! Finds the next limiter.
+	!*
+	! inp   = string to be searched
+	! ial   = first character of inp looked at
+	! lop   = last character to consider
+	! limit = string containing limiters
+	! If no limiter character is found function returns lop+1
+	! sections between [ and ] are ignored
  
+	character*(*), intent(in):: inp, limit
+	integer, intent(in):: ial,lop
+ 
+	
+	le=len(limit)
+	linp=len(inp)
+	
+	do  i=ial,lop
+		
+		do  j=1,le
+			if(inp(i:i).eq.limit(j:j))then
+				nextlim=i
+				return
+			endif
+		enddo ! j=1,le   4410
+	enddo ! i=ial,lop   4396
+	!1 continue !do 1 i=ial,lop
+	nextlim=lop+1
+
+	
+	return
+end function nextlim !function j_nextlim(inp,ial,lop,limit)
+subroutine final(line,lei,line2,le2)
+	character*(*)line,line2
+
+	
+			
+			isi=nextlim(line(1:lei),1,lei,'%_#$~')
+	!		write(17,*)line(1:lei)
+			nsi=0
+			ialin=1
+			ialout=0  !so far
+			do while(isi.le.lei)
+				isi1=max(isi-1,1)
+		!		write(17,*)'isi',isi, ' merkki ',line(isi:isi)
+					nle1=isi-ialin
+					nle=nle1+1
+				!	write(17,*)'nle ',nle
+				
+				
+					
+				if(line(isi:isi).eq.'~')then
+						line2(ialout+1:ialout+nle1+6)=line(ialin:isi1)//'$\sim$'
+						
+						ialout=ialout+nle1+6
+				!		write(17,*) 'afttilde ',line2(1:ialout)
+						nsi=nsi+1
+				
+				elseif(line(isi1:isi1).ne.'\')then
+					nsi=nsi+1
+					
+			!		write(17,*)'nsi,nle1,nle, ',nsi,nle1,nle,' ialout',ialout,' ialin ',ialin
+					if(isi.eq.1)then
+						line2(1:1)='\'
+					else
+						line2(ialout+1:ialout+nle)=line(ialin:isi1)//'\'
+				!		write(17,*)'here ',line2(1:ialout+nle)
+					endif
+					line2(ialout+nle+1:ialout+nle+1)=line(isi:isi)
+					ialout=ialout+nle+1
+
+				else
+				line2(ialout+1:ialout+nle+1)=line(ialin:isi)
+				ialout=ialout+nle
+				endif
+				ialin=isi+1
+			
+	!		write(17,*)'outp ',line2(1:ialout)
+	!		write(17,*)'inp ',line(1:isi)
+				isi=nextlim(line(1:lei),ialin,lei,'%_#$~')
+	!		write(17,*)'isi ',isi, 'ialin ',ialin,' lei ',lei
+			enddo
+			if(ialout.gt.0)then
+			line2=line2(1:ialout)//line(ialin:lei)
+			le2=ialout+lei-ialin+1
+			else
+			line2=line(1:lei)
+			le2=lei
+			endif
+	!			write(20,'(a)')line2(1:ialout)//sheaders(j,isec)(ialin:lei)
+	 iet=index(line2(1:lei),'&')
+	 if(iet.gt.0)line(iet:iet)='!'
+	 
+	 
+	 
+ end subroutine

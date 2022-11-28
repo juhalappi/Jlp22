@@ -1,7 +1,7 @@
 infile jsections.txt
-infile c:/j3/jutilities.f90
-infile c:/j3/j.f90
-infile c:/j3/jlp.f90
+infile c:/jlp22/jutilities.f90
+infile c:/jlp22/j.f90
+infile c:/jlp22/jlp.f90
 outfile jexamples.inc
 
 !!;return
@@ -11,6 +11,7 @@ outfile jmanual.tex
 !!;return
 section* preface0
 
+section changes
 
 section intro
 subsection intro1
@@ -19,70 +20,138 @@ subsection intro2
 section git
 subsection gitpack
 subsection gitload
-
+section typo
+section license
 section start
 subsection install
 subsection runex
 !!!;return
 !!!ubsection compo
-subsection jfuncs0
-!!subsection jfunc
-
-subsection objintro
-subsection system
-!subsection setup
-!subsection firstuse
-subsection exit
-subsection typo
-subsectione license
-
-subsection joperation
-
 section cominout
 subsection inpuline
 subsection inpupara
 subsection short
 subsection inpuprog
-subsubsection inpuad
-subsubsection inpureplace
-subsubsection incl
-subsubsection inpugoto
-subsubsection inpureturn
-subsubsection inpudo
-subsubsection inpusum
-subsubsection inpudif
-subsubsection inpupause
-subsubsection inpureturn 
+subsection inpuad
+subsection inpureplace
+subsection incl
+subsection inpugoto
+subsection inpudo
+subsection inpusum
+subsection inpudif
+subsection inpupause
+subsection inpureturn 
+subsection inpuwhere
+subsection inpusubobj
+subsection inpulistelem
+subsection expand
 subsection dots
 
-section jfuncs
+section objintro
+subsection onames
+subsection otypes
+subsubsection realo
+subsubsection charo
+subsubsection logical0
+subsection pref
+
+
+section jfuncs0
+subsection output
+subsection functionname
+subsubsection matrixfunc
+subsubsection realmatrix
+subsubsection datafunc
+!!subsubsection transfunc0
+subsubsection transfunc
+subsubsection regrfunc
+subsubsection isnotfunc
+
+subsection arguments
+subsection options
+subsubsection optionstructure
+subsubsection codeoption
+
+section arith
+subsection arfu1
+subsection conversion
+subsection minmax min() and max()
+subsection sign
+subsection numer
+subsection logic
+
+
+
+
+!!subsection codeopt
+
+
+section joperation
+subsection basicloop
+subsection printing
+subsubsection printinpu
+subsubsection printcommand
+subsubsection printoutput
+subsection interactive
+subsubsection inpupause
+subsubsection pause
+subsection batch
+subsection operation2
+subsection exit
+
+section objects  Functions for handling objects
+subsection copy
+subsection type 
+subsection delete_o delete_o()
+subsection existo  exist_o()
+subsection name name()
+
+!!subsection jfunc
+
+
+
+
+section system
+!subsection setup
+!subsection firstuse
+
+
+
+
+
+
+
+
+section jtrans
+subsection transo
+subsection trans
+subsection call
+subsection pause 
+
+!!section jfuncs
 section  special Special functions
 
 subsection setoption setoption()
+subsection getelem getelem()
 subsection getelem0
-subsubsection getelem getelem()
+
 subsection setelem setelem()
 subsection list20 list2()
 subsection setcode setcodeopt()
 subsection own
 
 
-section objects  Functions for handling objects
-subsection type 
-subsection delete_o delete_o()
-subsection exist_o  exist_o()
-subsection name name()
 
-section 	Transformations
 
-subsection trans trans()
-subsection call call()
-subsection pause pause()
-subsection noptions noptions()
 
-section JR
-subsection R R()
-subsection Rcalls
+section Transformations
+
+! subsection trans trans()
+!!!subsection call call()
+
+!subsection noptions noptions()
+
+
 
 
 section loops Loops and controls structures
@@ -90,6 +159,7 @@ section loops Loops and controls structures
 subsection do do()
 
 subsection if if()
+subsection ifthen
 subsection ASSIGN ASSIGN()
 !!section sit
 subsection which 
@@ -99,8 +169,8 @@ subsection goto goto()
 
 
 
-!!subsection goto2 goto2() 
-!!subsection goto3	goto2()
+subsection goto1 goto(label) 
+subsection goto2	goto(index,lable1...labeln)
 
 
 
@@ -177,7 +247,7 @@ section  Special arithemetic functions
 !	
 subsection der der()
 subsection gamma gamma()
-!!subsection loggamma loggamma()
+ubsection loggamma loggamma()
 subsection logistic logistic()
 subsection npv npv()
 !
@@ -199,7 +269,7 @@ subsection ranbin ranbin()
 subsection rannegbin rannegbin()
 subsection select select()
 subsection random random()
-!
+!  
 section inter Interpolation
 !	
 subsection interpolate interpolate()
@@ -213,10 +283,11 @@ subsection  list
 subsection merge
 subsection difference
 subsection index
-subsection index_v
+!!subsection index_v
 subsection len
 subsection ilist
 subsection putlist
+subsection table
 !
 section texts 
 subsection text text()
@@ -224,7 +295,7 @@ subsection txt txt()
 !
 section file File handling
 
-subsection exist_f
+subsection existf
 subsection delete_f
 subsection close
 subsection showdir
@@ -268,7 +339,7 @@ subsection corrmatrix corramtrix() correlation matrix from variance matrix
 section datahead
 subsection data data() creating a DATA object or two hierarchical data objects
 subsection newdata newdata(): making a new DATA from matrices posssibly with transformations
-subsection datawcase datawcase(): makes a data object wehre observations have names.
+subsection datawcase datawcase(): making a new DATA having names for cases
 subsection exceldata exeldata(): making DATA from excel file 
 subsection linkdata linkdata(): linking two DATA objects
 subsection getobs getobs(): getting an observation from DATA
@@ -293,11 +364,14 @@ subsection varcomp varcomp(): variance or covariance components
 subsection classify classify(): group means, group standard devitions and standard errors of group meean
 subsection class class(): class of a given observation
 !
-	
+section LP
 section jlpintro Linear programming
 subsection problemo PROBLEM object
 subsection problem problem(): defining a a PROBLEM object
-subsection jlp jlp(): solving a PROBLEB in DATA
+!subsection problem2 problem(): defining a a PROBLEM object
+subsection jlp jlp(): solving a PROBLEM with schedules data,
+subsection jlpz jlpz(): solving an ordinary Lp-problem
+subsection jlpcoef 
 subsection weights weights() weights of schedules
 subsection partweights
 !subsection unit unit() unit of a schedule
@@ -320,7 +394,7 @@ subsection partweights
 	
 section Plotting figures
 subsection figu
-subsubsection figureo
+!!subsubsection figureo
 subsection plotyx plotyx(): scatterplot
 subsection draw draw() drawing a function
 subsection drawclass drawclass() drawing classmeans and possibly se's of class means
@@ -343,7 +417,7 @@ subsection bitmatrixo
 subsection setbits setbits(): setting bits
 subsection clearbits clearbits(): clearing bits
 subsection getbit getbit(): getting a bit value
-subsection getbitch getbitch() get a bit value from a CHAR
+!!subsection getbitch getbitch() get a bit value from a CHAR
 subsection bitmatrix bitmatrix(): matrix of bits
 subsection setvalue setvalue(): set a bit value
 subsection closures clusures(): convex closures
@@ -354,79 +428,15 @@ section  misc Misc. utility functions
 !subsection value value()
 subsection properties properties()
 subsection cpu cpu()
-subsection seconds seconds()
+subsection secnds secnds()
 !
 !
-
-subsection onames
-subsection copy
-subsection delete
-subsection otypes
-subsubsection realo
-subsubsection charo
-subsubsection logical0
-
-!subsubsection logicalo
-
-
-
-subsection pref
-
-
-
-
-subsubsection transo
-
-
-subsection codeopt
-subsection comoptions
-subsection call
-subsection jtrans
-subsection trans
-subsection transfunc
-subsection transcont
-subsubsection if
-subsubsection ifthen
-subsection loops
-subsection return
-subsection errexit
-subsection goto
-
-subsection numer
-subsection logic
-subsection arfu
-
-
-!section matrixsection
-
-! subsection matrixf
-
-
-
-
-subsubsection textob
-subsection compo
+section JR
+subsection R R()
+subsection Rcalls
 
 
 section future
-
-
-section preface1 
-subsection preface2 
-subsection preface3 
-subsection preface4 
-subsection preface5 
-subsection preface6 
-subsection preface7
-subsection preface8
-subsection preface9
-
-
-
-
-
-
-
 
 section jbib
 

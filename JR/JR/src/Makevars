@@ -1,0 +1,26 @@
+ all : jmodules.o\
+		 own1mod_2.o\
+		 own2mod_2.o\
+		 own3mod_2.o\
+		 jownmod_2.o\
+		 own1_2.o\
+		 own2_2.o\
+		 own3_2.o\
+		 jutilities_2.o\
+		 fletcherd.o\
+		 jlp_2.o\
+		 matsub.o\
+		 jsysdep_gfortran_2.o\
+		 j_2.o\
+		jmain.o		 
+
+
+jownmod_2.o : jmodules.o own1mod_2.o own2mod_2.o own3mod_2.o
+jutilities_2.o : jmodules.o jownmod_2.o
+own1mod_2.o : jmodules.o 
+own2mod_2.o : jmodules.o 
+own3mod_2.o : jmodules.o 
+own1_2.o : jmodules.o
+own2_2.o : jmodules.o
+own3_2.o : jmodules.o
+j_2.o : jmodules.o 

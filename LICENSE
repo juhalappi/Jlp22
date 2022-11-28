@@ -1,4 +1,6 @@
-J
+Jlp22 
+Jlp22 was earlier called J but as there is a J programming language, the name is changed 281.11.2022 into Jlp22
+
 Copyright (C) 2022 Juha Lappi and Natural Resources Institute Finland
 
 The following license conditions apply to folders Jsource and Jsource2. Folder
@@ -15,7 +17,7 @@ This program is free software: you can redistribute it and/or modify
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-The linear programming algorithm used via funtion jlp() is utilizing
+The linear programming algorithm used via funtions jlp() and jlpz() are utilizing
 the subroutines made by late Prof Fletcher and located in file fletcherd.for in folders
 Jsource and Jsource2. His contribution
 should be acknowledged by making a reference  to:
@@ -48,7 +50,7 @@ Distribution : www.netlib.org/lapack
 License : http://www.netlib.org/lapack/LICENSE.txt
 
 
-Juha Lappi has the copyright to precompiler and Latex generation 
+Juha Lappi has the copyright to the precompiler and Latex generation 
 codes found in folders Jpre and Jmanual.
  These codes are distributed under the license MIT.
  

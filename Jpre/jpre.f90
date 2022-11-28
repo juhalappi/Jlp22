@@ -6,7 +6,7 @@
  
 !The precompiler generates necessary 'use' statments for global variables or subroutines stored
 ! in modules, makes indentations, writes comments to endif and enddo lines,
-! and gives better error  messages than Gfortran if ifthens or dos
+! and gives better error  messages than Gfortran if ifthens or do's
 ! are mixed up.
 ! The prefixes and the files to be precompiled are in the command file whose default name is jpre.txt.
 ! the program generates the output files indicated in the command file
@@ -60,6 +60,7 @@ module jeqmod !case insensitive character comp
 	logical ::contcur=.false.
 	logical ::contif=.false.
 	logical ::contfirst=.false.
+	
 	!integer ::letot,le,ico
 	character*(20):: tabs=char(9)//char(9)//char(9)//char(9)//char(9)//char(9)//&
 		char(9)//char(9)//char(9)//char(9)// &
@@ -138,7 +139,7 @@ end module
  
 module writeout
 	logical::write4
- 
+	logical::write3
 end module
  
 module sub
@@ -262,18 +263,29 @@ program jpre
 	!use koemod,only: koe2
 	!	use jeqmod
 	use pref
-	use writeout
+	use writeout !write2 and write4
 	use main
  
 	integer::time,time2
 	integer(4), dimension(13)::buff
 	integer(4)::status
-	logical ::rw
+	logical ::rw,rwtot
 	logical ::exisf
+	logical ::perhaps  !it is not certain whether a new _2 file is needed. This happens when
+	! the .f90 file has not been changed but R file has been changed
+	logical ::exisf2
+!	character(len=300)inp,inp2
+	!logical :: write3  !is update of original file needed
  
 	! goto 175
  
 	nun=0
+!	must=.false.
+	rwtot=.false.
+	nfiles2=0
+	nfiles22=0
+	nfiles22f=0
+	nfiles3=0
 	! read(5,*)in
 	! moduleword(in)='9'
 	! write(6,*)'log written to file fort.4 (or similar name depending on compiler)'
@@ -291,12 +303,13 @@ program jpre
 	endif !if(le.le.0)    283
 	nfiles=0
 	read(10,'(a)')inp
-	le=len_trim(inp)
+	le=len_trim_(inp)
 	write(6,*)inp(1:le)
 	ib=index(inp(1:le),' ')
 	!	write(6,*)'ib ',ib
 	ial=1
 	nprefix=0
+!	nwritten=0
 	ib=nextlim(inp,ial,le,' ')
 	do while(ib.lt.le)
 		nprefix=nprefix+1
@@ -310,17 +323,26 @@ program jpre
 	lprefix(nprefix)=le-ial+1
 	write(6,*)'prefixes ',prefix(1:nprefix)
 	goto 2
-99 write(6,*)'all files precessed'
+		
+99 write(6,*)' '
+	write(6,*)'***all files processed, '
+	write(6,*)'indentations made for      ',nfiles3 ,' files '
+	write(6,*)'_2 files made directly for ',nfiles2 ,' files '
+	if(nfiles22f.gt.0)write(6,*)'_2 files made from _22 files due to changes of R files  ',nfiles22f ,' times '
 	stop
 2 read(10,'(a)',end=99)inpf
-	lef=len_trim(inpf)
+	lef=len_trim_(inpf)
 	if(lef.eq.0)goto 2
 	write(6,*)' '
-	rw=.false.
+
 	write4=.false.
-141		if(inpf(1:2).eq.'R:')then
+	write3=.false.
+!	perhaps=.false.
+141		nfiles=nfiles+1
+	if(inpf(1:2).eq.'R:')then
 		if1=3
 		rw=.true.
+
 		write(6,*)'processing ',nfiles,'  ',inpf(if1:lef),' ACTION=R'
 		!			elseif(inpf(1:3).eq.'RW:')then
 		!			if1=4
@@ -328,10 +350,9 @@ program jpre
 		!			write(6,*)'processing ',nfiles,'  ',inpf(if1:lef),' ACTION=RW'
 	else
 		if1=1
-		write4=.true.
 		write(6,*)'processing ',nfiles,'  ',inpf(if1:lef),' ACTION=W'
+		rw=.false.
 	endif !141		if(inpf(1:2).eq.'R:')    317
- 
  
  
  
@@ -351,47 +372,67 @@ program jpre
 	!		write(6,*)'time of ',inpf(if1:lef),time
 	CALL STAT(inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),BUFF,STATUS)
 	write(6,*)'STATUS '//inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),STATUS,' TIME ',BUFF(10)
-	if(STATUS.eq.0)then
-		time2=buff(10)
-		!		write(6,*)'time of ',inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),time2
-		if(time2.ge.time.and..not.rw)then
-			write(6,*)'_2 file NEWER, no action needed'
+	
+	time2=0
+	if(STATUS.eq.0)time2=buff(10)
+
+	!		write(6,*)'time of ',inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),time2
+	if(time2.ge.time.and..not.rwtot.and..not.rw)then
+	
+			write(6,*)'_2 file NEWER, no previous changed R file, no action needed'
+			
 			goto 2
-		endif !if(time2.ge.time.and..not.rw)    353
-		if(time2.ge.time.and.rw)then
-			write(6,*)'_2 file NEWER, reading only ',inpf(if1:lef)
-		else
-			write4=.true.
-		endif !if(time2.ge.time.and.rw)    357
- 
-	else
+	!	else
+	elseif(time2.ge.time.and.rwtot)then
 		write4=.true.
-	endif !if(STATUS.eq.0)    350
-	!	endif
+!		inquire(file=inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),exist=exisf2)
+	
+		write(6,*)'_2 file NEWER, reading only ',inpf(if1:lef)
+		write(6,*)' 	but writing _22 file because a previous R file changed'
+		
+		nfiles22=nfiles22+1
+			
+	write(6,*)'opening ',inpf(if1:ipi-1)//'_22'//inpf(ipi:lef),' ********for POTENTIAL REWRITING'
+			open(unit=2,  err=144,file=inpf(if1:ipi-1)//'_22'//inpf(ipi:lef),&
+			ACCESS='SEQUENTIAL',status='REPLACE',form='FORMATTED',action='WRITE', &
+			iostat=ier)
+	elseif(time2.lt.time)then
+			if(STATUS.eq.0)then
+				write(6,*)'_2 file OLDER, writing both _2 and _3 file'
+				
+			else
+				write(6,*)'_2 file does not exist, writing both _2 and _3 file'
+			
+			endif
+			nfiles2=nfiles2+1
+		!	write4=.true.
+			write3=.true.
+			write4=.true.
+			if(rw)rwtot=.true.
+			nfiles3=nfiles3+1
+
+		write(6,*)'opening ',inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),' ************for REWRITING'
+			open(unit=2,  err=244,file=inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),&
+			ACCESS='SEQUENTIAL',status='REPLACE',form='FORMATTED',action='WRITE', &
+			iostat=ier)
+
+			
+			write(6,*)'opening ',inpf(if1:ipi-1)//'_3'//inpf(ipi:lef)
+			open(unit=3,  err=110,file=inpf(if1:ipi-1)//'_3'//inpf(ipi:lef),&
+			ACCESS='SEQUENTIAL',status='REPLACE',form='FORMATTED',action='WRITE', &
+			iostat=ier)
+	else
+		write(6,*)'rw ',rw
+		write(6,*)'R file, reading only'
+	endif !if(time2.ge.time.and..not.rw)    353
+
 	write(6,*)'opening ',inpf(if1:lef)
 	open(1,file=inpf(if1:lef),err=110,status='old')
  
-	nfiles=nfiles+1
-	ipi=index(inpf(1:lef),'.')
-	if(write4)then
+!	nfiles=nfiles+1
+
  
-		write(6,*)'opening ',inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),' ************for REWRITING'
-		open(unit=2,  err=110,file=inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),&
-			ACCESS='SEQUENTIAL',status='REPLACE',form='FORMATTED',action='WRITE', &
-			iostat=ier)
- 
-		!	inquire(file=j_filename(1:lefi),exist=yes,opened=ope)
- 
- 
-		!file with indentations
-		write(6,*)'opening ',inpf(if1:ipi-1)//'_3'//inpf(ipi:lef)
-		open(unit=3,  err=110,file=inpf(if1:ipi-1)//'_3'//inpf(ipi:lef),&
-			ACCESS='SEQUENTIAL',status='REPLACE',form='FORMATTED',action='WRITE', &
-			iostat=ier)
- 
- 
- 
-	endif !if(write4)    372
+!write(6,*)'write4,write3',write4,write3
  
  
 	call readfile()
@@ -404,16 +445,14 @@ program jpre
 	! write(6,*)'rename ',inpf(1:ipi-1)//'_3'//inpf(ipi:lef),'  ',inpf(1:ipi-1)//'_2'//inpf(ipi:lef)
 	! call rename(inpf(1:ipi-1)//'_3'//inpf(ipi:lef),inpf(1:ipi-1)//'_2'//inpf(ipi:lef),istatus)
 	! write(6,*)'status ',istatus, ' 0 =success'
-	close(3)
-	close(1)
-	if(write4)then
+	close(2)
+	if(write3)close(3)
+	!close(1)
+	if(write3)then
 		inquire(file=inpf(if1:ipi-1)//'_old'//inpf(ipi:lef),exist=exisf)
 		if(exisf)then
- 
-			open(unit=1, file=inpf(if1:ipi-1)//'_old'//inpf(ipi:lef), status="old")
- 
- 
-			close (unit=1, status="delete")
+ 			open(unit=1, file=inpf(if1:ipi-1)//'_old'//inpf(ipi:lef), status="old")
+ 			close (unit=1, status="delete")
  
 		endif !if(exisf)    407
 		write(6,*)'rename ',inpf(if1:lef),'  ',inpf(if1:ipi-1)//'_old'//inpf(ipi:lef)
@@ -440,14 +479,78 @@ program jpre
 			stop 'rename error 2'
 		endif !if(istatus.ne.0)    428
 		!inpf(1:ipi-1)//'_3'//inpf(ipi:lef),inpf(if1:lef)
-		close(2)
+	elseif(write4)then
+		! buff(1)	Device ID
+	! buff(2)	Inode number
+	! buff(3)	File mode
+	! buff(4)	Number of links
+	! buff(5)	Owner's uid
+	! buff(6)	Owner's gid
+	! buff(7)	ID of device containing directory entry for file (0 if not available)
+	! buff(8)	File size (bytes)
+	! buff(9)	Last access time
+	! buff(10)	Last modification time
+	! buff(11)	Last file status change time
+	! buff(12)	Preferred I/O block size (-1 if not available)
+	!buff(13)	Number of blocks allocated (-1 if not availabl
+	
+	CALL STAT(inpf(if1:ipi-1)//'_22'//inpf(ipi:lef),BUFF,STATUS)
+	write(6,*)'initbuff ',BUFF,'status' ,status
+	write(6,*)'::',inpf(if1:ipi-1)//'_22'//inpf(ipi:lef)
+			open(unit=2,err=144,file=inpf(if1:ipi-1)//'_22'//inpf(ipi:lef),status='old',form='formatted')
+			CALL STAT(inpf(if1:ipi-1)//'_22'//inpf(ipi:lef),BUFF,STATUS)
+			write(6,*)'aftbuff ',BUFF,'status', status
+			write(6,*)'opening ',inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),' for comparing _2 and _22 files'
+			open(4,file=inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),err=244,status='old',form='formatted')
+		inp=' '
+		inp2=' '
+			do j=1,1000000
+				read(2,'(a)',end=179)inp
+			
+				read(4,'(a)',end=777)inp2
+				
+				let=len_trim_(inp)
+				let2=len_trim_(inp2)
+	!		write(6,*)inp(1:let),'*',inp2(1:let)
+				if(let.ne.let2)goto 777
+				if(inp(1:let).ne.inp2(1:let)) goto 777
+			enddo
+179  read(4,*,end=181 )inp2 !end =>files are identical, delete _22 file
+		
+		
+		
+777		close (unit=4, status="delete") !files are different delete _2 file
+		nfiles22f=nfiles22f+1
+			close(2)
+			write(6,*)'_2 and _22 files are different at line ',j,' replace _2 file with _22 file'
+			write(6,*)'rename ',inpf(if1:ipi-1)//'_22'//inpf(ipi:lef),' ',inpf(if1:ipi-1)//'_2'//inpf(ipi:lef)
+			call rename(inpf(if1:ipi-1)//'_22'//inpf(ipi:lef),inpf(if1:ipi-1)//'_22'//inpf(ipi:lef),istatus)
+			write(6,*)'status ',istatus, ' 0 =success'
+		!	nwritten=nwritten+1
+			goto 2
+			
+181 	close(2,status="delete")
+		write(6,*)'files are indentical, delete _22 file'
+		endif
+	!			nwritten=nwritten+1
+	
+		
+
+
  
-	endif !if(write4)    405
+
 	!		CALL STAT(inpf(if1:lef),BUFF,STATUS)
 	!		time=BUFF(10)
 	!		call stat(inpf(if1:ipi-1)//'_2'//inpf(ipi:lef),BUFF,STATUS)
 	!		write(6,*)'time,time_2',time,BUFF(10)
 	goto 2
+	144			write(6,*)'error opening ',inpf(if1:ipi-1)//'_22'//inpf(ipi:lef)
+		stop '_22'
+							
+344			write(6,*)'error opening ',inpf(if1:ipi-1)//'_3'//inpf(ipi:lef)
+		stop '_3'
+244			write(6,*)'error opening ',inpf(if1:ipi-1)//'_2'//inpf(ipi:lef)
+		stop '_2'
  
  
 end program jpre!program jprenew
@@ -531,7 +634,7 @@ subroutine readfile()
 	! endif
 	!call wr(inp,outfileunit,indent,isad)
 	! if(linein.eq.1808)write(3,*)'<678 le,letot bef wr',letot,le,' linein ',linein
-	call wr(inp,3)
+	if(write3)call wr(inp,3)
 	!if(linein.eq.6572.or.linein.eq.6573)write(6,*)'<afw>',linein,cont,indent,istep,contcur,contfirst,contif
 	if(contfirst)then
 		indent=indent+1
@@ -746,8 +849,8 @@ subroutine readfile()
 					!	call jindent(inp,linein,indent,istep,isad,outfileunit,canbeleft,ininterface)
 					call jindent(inp,linein,3,canbeleft,ininterface)
  
-				call wr(inp,3)
-				write(2,'(a)')inp(1:len_trim(inp))
+			if(write3)call wr(inp,3)
+				write(2,'(a)')inp(1:len_trim_(inp))
  
 			endif !if(write4.and.inp(le:le).eq.'&')    734
 			!if(p)write(6,*)'<29> insub',insub
@@ -775,7 +878,7 @@ subroutine readfile()
 			write(6,*)'line ',linein,' *not in subroutine/function even if:',  inp(1:letot)
 			write(6,*)' last subroutine started in ',linesub, 'lastcontsub in ', linecontsub
 			write(6,*)' last contains started in ',incontline,' ended  in ',linecontend
-			call pstop('illgal')
+			call pstop('illegal')
 		endif !if(incontsub)    764
  
 		if(p)write(6,*)'nused ',nused,' nsubline ',nsubline
@@ -1164,6 +1267,8 @@ ploop:		do ip=1,nprefix
 			write(6,*)'prefix word ',inp(ipf:k-1),' not in modules????????????',nused,' nused'
 			write(6,*)'line ',linein,k-ipf.ne.lenmoduleword(j),k-ipf,lenmoduleword(j)
 			write(6,*)inp(1:le)
+			
+			! write(6,*)'modulewords ',modulewords
 			! do j=1,modulewords
 			! write(6,*)j,moduleword(j)(1:lenmoduleword(j))
 			! ! if(j.eq.952)write(6,'(a)')'/'//inp(ipf:k-1)//'/'//moduleword(j)(1:lenmoduleword(j))//'/'
@@ -1375,7 +1480,7 @@ subroutine jindent(inp,ilinn,outfileunit,canbeleft,ininterface)
 		isad=.true.
 		!	write(3,*)'isad'
 		do idi=1,ndo
-			lee1=len_trim(dolabel2(idi))
+			lee1=len_trim_(dolabel2(idi))
 			!	write(3,*)lee1,dolabel2(idi)(1:lee1),'*',inp(istart:ib-1)
 			if(dolabel2(idi)(1:lee1).eq.inp(istart:ib-1))then
 				if(p)write(6,*)'here ndo',ndo
@@ -1556,7 +1661,7 @@ subroutine jindent(inp,ilinn,outfileunit,canbeleft,ininterface)
 			!write(6,*)'<4664 nif,ifline(nif) ',nif,ifline(nif)
 			!	if(ilinn.gt.10)stop 'perk'
 			istep=1
-			!write(3,*)'istep after then'
+	!	if(ilinn.gt.5640.and.ilinn.le.5650)write(6,*)'<4995 tas ,nif ilinn',nif,ilinn,ilinn
 			!	if(ilinn.eq.741)write(6,*)'heres'
 			return
 		elseif(contfirst)then
@@ -1571,10 +1676,11 @@ subroutine jindent(inp,ilinn,outfileunit,canbeleft,ininterface)
 	!if(index(inp(1:letot),'else').gt.0)write(outfileunit,*)'***el4se*',inp(istart:istart+3),contif
 	!if(ilinn.eq.6573)write(6,*)'<465,tas',contif,le,inp(max(le-3,1):le)
 	if(contif.and.(inp(max(le-3,1):le).jeq.'then'))then
-		if(ilinn.eq.6573)write(6,*)'<455','tas'
+	
 		nif=nif+1
 		iflabel(nif)=label0(1:jlentrim(label0))
 		ifline(nif)=ifline0
+	!		if(ilinn.gt.5640.and.ilinn.le.5650)write(6,*)'<455 tas ,nif ilinn,ifline0',nif,ilinn,ifline0
 		!	istep=-1
 		indent=indent+1
 		contif=.false.
@@ -1770,5 +1876,7 @@ subroutine pstop(message)
 	character*(*) message
 	!write(6,*)'**stop with message ',message
 	close (unit=2, status="delete")
+	write(6,*)' '
+	write(6,*)'**ERROR***'
 	stop message
 end subroutine

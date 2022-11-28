@@ -55,15 +55,15 @@ recursive subroutine o3_del(iv,iotype) !deletes subobjects of compound o-object
 	integer,intent(in) :: iv  !object to be deleted
 	integer,intent(in) :: iotype ! object type according to the objectype numbering of o objects
  
-!note only subobjects need to be deleted, the calling subroutine deletes integer,real
-! double precision and character forks of the object iv
-! select case(iotype)
-! case (2)  !if objecttype 2 contains subobjects
- ! call del(o(iv)%i(2))  !if o(iv)%i(2) refers to subobject the subobject can be a J-type object or
-                         ! !o-object
- ! case (4)
- ! !!!
- ! end select
+	!note only subobjects need to be deleted, the calling subroutine deletes integer,real
+	! double precision and character forks of the object iv
+	! select case(iotype)
+	! case (2)  !if objecttype 2 contains subobjects
+	! call del(o(iv)%i(2))  !if o(iv)%i(2) refers to subobject the subobject can be a J-type object or
+	! !o-object
+	! case (4)
+	! !!!
+	! end select
  
 	return
 end !recursive subroutine o3_del(iv,iotype)

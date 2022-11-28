@@ -1,0 +1,13 @@
+Package: JR
+Type: Package
+Title: R interface to J
+Version: 0.0
+Date: 2022-04-21
+Author: Lauri Mehtatalo and Juha Lappi
+Maintainer: Lauri Mehtatalo <lauri.mehtatalo@luke.fi>
+Depends:
+Suggests:
+Description: An R-package for the use of J-software through R. 
+License: GPL-2
+NeedsCompilation: yes
+Packaged: 2022-04-21 09:21:17 UTC; 03191657

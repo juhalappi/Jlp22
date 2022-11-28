@@ -2302,6 +2302,7 @@ c     call checkout(n,a,la,aa,ll,ll(lc1),ll(li1))
       common/refactorc/nup,nfreq
       common/epsc/eps,tol,emin
 c     write(nout,*)'pivot: p,q =',p,q
+c      write(17,*)'pivot,p,q,n,nm,size aa',p,q,n,nm
       if(p.ne.mp)then       
         call eptsol(n,a,la,p,a,aa,aa(ns1),aa(nt1),ll,ll(lc1),ll(li1))
         e(p)=sqrt(scpr(0.D0,aa(ns1),aa(ns1),m1+1))
@@ -2313,7 +2314,7 @@ c     write(nout,*)'pivot: p,q =',p,q
       if(q.ne.mq)then
        
         call aqsol(n,a,la,q,a,aa(nt1),aa(mx1),aa,ll,ll(lc1),ll(li1))
-        mq=q
+*        mq=q   this is removed for security reasons by JL because the contents of columns chabnge
 *      else
 *        if(nout.ne.0)write(nout,*)'pivot using mq',mq
       
@@ -2346,6 +2347,7 @@ c     write(nout,*)'u =',(aa(nu+ij),ij=1,n)
           ei=e(i)
 c         ti=aa(nt+j)*eq/ei
 c         e(i)=max(emin,ei*sqrt(max(1.E0-ti*(2.E0*aa(nu+j)/ei-ti),0.E0)))
+c       write(17,*)'nt,j',nt,j
           ti=aa(nt+j)/ei
           e(i)=max(emin,
      *      ei*sqrt(max(tpsq-ti*(2.D0*tp*aa(nu+j)/ei-ti),0.D0))*eq)
@@ -2509,7 +2511,7 @@ c     write(nout,*)'fbsub  q =',q
       if(save)then
         if(q.ne.mq)then
           call aqsol(n,a,la,q,b,aa(nt1),aa(mx1),aa,ll,ll(lc1),ll(li1))
-          mq=q
+          mq=q  commented by jL to prevent 
 !         else
 !          if(nout.ne.0)write(16,*)'**fbsub using old mq',mq
         endif
@@ -2573,8 +2575,9 @@ c     write(nout,*)'tfbsub  p =',p
         call eptsol(n,a,la,p,b,aa,aa(nu1),aa(nt1),ll,ll(lc1),ll(li1))
 *        if(nout.ne.0)write(nout,*)'nu aft',nu,nu1
         do i=1,n
-*         if(nout.ne.0)write(nout,*)'i,ll(i),a(nu+i)',i,ll(i),aa(nu+i)
-          x(ll(i))=aa(nu+i)
+*				if(nout.ne.0)write(nout,*)'i,ll(i),a(nu+i)',i,ll(i),aa(nu+i)
+	
+         x(ll(i))=aa(nu+i)					
         enddo
       endif
 c     write(nout,*)'x =',(x(i),i=1,n)
@@ -2772,7 +2775,7 @@ c           ij=ij+m0+ii
 c         enddo
 c         write(nout,*)'m0,mm0,m1,mm',m0,mm0,m1,mm
 c         write(nout,*)'row perm',(lr(ij),ij=1,n)
-c         write(nout,*)'column perm',(lc(ij),ij=1,m1)
+c         write(nout,*)'column permu',(lc(ij),ij=1,m1)
 c         write(nout,*)'inverse perm',(li(ij),ij=1,p)
 c         call checkout(n,a,la,T,lr,lc,li)
         endif
