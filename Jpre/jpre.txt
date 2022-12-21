@@ -1,10 +1,14 @@
-PREFIX
-m_
-o2_
-o3_
-j_ 
-jlp_
-ENDPREFIX
+j_ p_ o1_ o2_ o3_
 R:jmodules.f90
+R:own1mod.f90
+R:own2mod.f90
+R:own3mod.f90
+R:jownmod.f90
 jutilities.f90
+jsysdep_gfortran.f90
 j.f90
+jlp.f90
+own1.f90
+own2.f90
+own3.f90
+

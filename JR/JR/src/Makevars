@@ -12,7 +12,7 @@
 		 matsub.o\
 		 jsysdep_gfortran_2.o\
 		 j_2.o\
-		jmain.o		 
+		Jlp22.o		 
 
 
 jownmod_2.o : jmodules.o own1mod_2.o own2mod_2.o own3mod_2.o

@@ -103,13 +103,7 @@
 ! the same code can produce different showing combinations.
 ! endmacro
 
-!Macro terminal
-! Note it is possible to change the window size of Gnuplot by 
-! using the predefined CHAR variable Window.
-! The default is \newline
-! Window='700,700'
-! endnote
-!endmacro
+
 
 !Section changes Recent changes
 
@@ -123,6 +117,21 @@
 ! This situation will not happen in ordinary linear programming problems. When hunting the bug, I developed new 
 ! debugging tools, so I hope that all users would now send problematic
 !runs to me.
+
+!Version Dec 20 2022 provides simple data formats for stroring schedules so that in the simulation tree only thos
+! nodes after branchinh are stored. See keepopen-> and continue-> options in data(). Function joindata() is
+! used to build the schedules from their components. Function splitdata() can be used to split data caontaining whole
+! schedules into thesae new compponent datas. splitdata() can be used to convert data generated with previous simulators
+! into this new format. It is recommeneded that a simulator generating data for Jlp22 startys to write directly into this new format.
+
+! Now the variable telling the number of observations in DATA datab is always datab%obs. Similarly the variable
+! telling how many children that observation has in the lower level is now always datab%nobsw and it must be the 
+! telling how many children that observation has in the lower level is now always datab%nobsw and it must be the 
+! first varaible in the list of variables. This new legisaltion was necessary to keep the new multilevel 
+!datas in order.
+
+!Version Dec 20 2022 gives possibility to chnage fonts in figures.
+
 !endsection
 
 !Section preface0 Preface
@@ -137,39 +146,27 @@
 ! data management and numeric computations,	that also vegetarians can use it.
 ! Perhaps these tools will be first used for preprocessing  data and postprocessing
 !the results in conjuction of linear programming. The random number generators
-! provide possiblities to do risk computations related to linear programming within Jlp22.
+! provide possibilities to do risk computations related to linear programming within Jlp22.
  
 ! \subsection*{History of J before Luke}
 !\addcontentsline{toc}{subsection}{History of J before Luke}
  
  ! JLP is the linear programming (LP) software I made for the forest planning system Mela
- ! which was created by Markku Siitonen in Finnish Forest Researc Institute (Metla). In Mela, a simulator generates a large number of treatment schedules
- ! for each stand in a group of stands. In an optimization problem a linear combination of sums of
-  ! variables (e.g. amount of harvested sawlogs dutring a period) produced in treatments is maximized or minimized subject to constraints which are also
-	! linear combinations of variables. JLP was published 1992 and 
+ ! which was created by Markku Siitonen in Finnish Forest Researc Institute  
+ !(Metla). Section 'JLP linear programming algorithm' describes the development and key points in the algorithm. 
+ !Here only the development is described from the organizational point of view.
+ ! JLP was published 1992 (see \href{run:./jlp92.pdf}{jlp92.pdf}) and 
 	! Finnish Forest Research Institute (Metla) started to distribute it.
-! I wrote most part of it when payed by Academy of Finland. I reinvented  the generalized
-! upper bound technique of Dantzik and Van Slyke. The key idea is to remove with algebraic tricks 
-! the area constraints which
-! tell that areas of different schedules add to the total area of the stand. In a typical problem the data can consist of 10000 stands, and and 
-! optimization problem can consist of 10 contraints for the sums ofe variables. Using an ordinary LP software 
-! in one iterative optimization step, a matrix consisting of 100200100 elements is updated. 
-!In JLP the equivalent 
-! step is computed by updating a matrix consisting 100 elements.
+! I wrote most part of it when payed by Academy of Finland.  
  ! NMBU started to use JLP from the beginning in its GAYA software which was then called GAYA-JLP.
- ! JLP allowed to compute new variables from the simulated variables. It allowed also to add 
-! nicely constraints for domains, i.e. subsets of stands. JLP was programmed
- ! in Fortran77, which did not have
-! dynamic allocation, pointers or own data types.
+ 
+
 
 ! I wrote J as a successor for JLP. First version of J,
-  ! version 0.9.3 was published in August 2004. The beef in J was the same linear programming 
-	! algorithm as in JLP. J was written in Fortran90 and now 
-	! it probably contains properties 
-	! of newer Fortrans. J uses in linear programming matrix 
-	! suboutines of Roger Fletcher which I changed to double precision. J provided many new possibilities
+  ! version 0.9.3 was published in 2004. The beef in J was the same linear programming 
+	! algorithm as in JLP. J provided many new possibilities
 	! for preprocessing of data and postprocessing of results, and these computations
-! can be uased  also without LP problems.
+! can be used  also without LP problems.
 	! Even Bergseng from NMBU 
 	! started to use J in a premature face and thus he had to tolerate quite much mix-up. The GAYA 
  ! started to use J in the planning system called thereafter GAYA-J. Mela has not
@@ -178,8 +175,8 @@
  ! define and solve linear programming problems using J. 
 
 ! Simosol started to use J as an 
-! optimizer from the beginning. Simosol has privately admitted, 
- ! that they using much J.
+! optimizer from the beginning. Simosol has privately admitted 
+ ! that they are using much J.
 !  For some reason Simosol
  ! wants to keep this hidden from the users of their sofware and from the public. 
  ! It would be important for an open source software that 
@@ -187,23 +184,20 @@
  ! This would give feedback to the developers 
  ! and would allow communication between users. 
  
- ! J version 2.0. published in 2013 made it possible optimize simultatenously
+ ! J version 2.0 published in 2013 made it possible optimize simultatenously
  ! forestry and transportations to factories
- ! and factory production. I extended the generalized upper bound tehcnique
- ! for constraints which tell that
- ! all harvested timber volume in a stand is transported somewhere. 
+ ! and factory production. 
  ! Reetta Lempinen started to work with me in the factory optimization. 
  ! Reetta has professional
  ! training in programming, while I'm a self-learning amateur.
 ! Reetta had a clear head to keep complicated data structures I had created in order. 
-	! She also maintained the spirit during the black moments. 
-	 
+	! She also maintained the spirit during the black moments. The theory for J with factories was published 
+!\href{run:./lappilempinen.pdf}{Lappi and Lempinen 2014}.
 
 	
 	! \subsection*{J in Luke}
 !\addcontentsline{toc}{subsection}{J in Luke}
-	
-	! When working with Reetta, I noticed how terribly dirty the code was. I started to clean the 
+		! When working with Reetta, I noticed how terribly dirty the code was. I started to clean the 
 	! code.
  ! In 2015 Metla and 
  ! two other institutes were merged into Institute of Natural Resources Finland (Luke). 
@@ -211,95 +205,30 @@
  ! an open source software so that I could continue its development after my retirement. 
 ! The leaders of Luke told that it is a good idea to open the software, and this is so important that
   ! Luke cannot let me take care of the publication but the leaders wanted to publish J
- ! themselves. This started a frustrating and humillating process which lasted until 7.10. 2021. None
- ! of the involved eleven leaders thought that the software had been even so 
- ! important that he/she had taken care that it had been eventually published. 
+ ! themselves. This started a frustrating and humillating process which lasted until 7.10. 2021. 
  
- ! The following leading persons were involved in
- ! process before my retirement in 2017: P\"aivi Eskelinen, Olli Salminen, Kari T. Korhonen,
- ! Kimmo Kukkavuori,
- ! Tuula Packalen, Sirpa Thessler, Sari Forsman-Hugg, Emilia Katajajuuri and Johanna
- ! Buchert. Iikka Sainio was an outside legal consult.
- ! After my retirement prof. Packalen and after she left Luke in 2020
- ! research director Antti Asikainen, head of adiministration Ilkka P. Laurila,
- ! and  the director general Johanna Buchert  
- ! took the control of the publication.
-
-! In the previous version of this manual I wrote a detailed description of the process, e.g.
- ! of the farce related 
-! to the subroutines of Roger Fletcher. Now I present only some key points.
- ! The process can be described as a hostile take over.
-! The leading lawyer Emilia Katajajuuri stated it 
- ! explicitly: 'Listen Juha, you do not decide anything in this matter'. 
- !P\"aivi Eskelinen told that I should wait 
- ! patiently because the leaders want to prepare 
- !the publication carefully. 
+ ! It has been difficult for me to recover from the time when I waited so many years
+ !  for the possibility to complete my life's work and saw that the days of my life were just running out without  
+ ! giving me that possibility, just because the leaders of Luke had so decided. This process has been
+! a me-too experience for me, or perhaps a similar experience what
+! a mother undergoes when social workers take her child and put him into a orphanage where the child is
+!  given only water and bread but no education or care. In the previous versions of the preface, I decribed the process with details which 
+ ! kept my bitterness alive. From this version I have dropped the names of the involved eleven leaders and all details of their doings
+ ! and wrong doings. But I anyhow want to tell what was the essence of the process from my point of view.
  
+ ! The process can be described as a hostile take over. I waited that the leaders would make the opening decision
+ !so that I could start develop J after my retirement. But finally I retired in February 2017 without getting that decision.
+! Research director Johanna Buchert signed the opening decision 30. 8. 2017.
+ ! I was not informed of the decision. I heard later that such decision has been made but 
+ !I was not told what the decision contained even if I asked. 
+ ! After my retirement I had make several improvements and bug corrections. 
+ ! Luke rejected my co operation offer to include these codes in the publication it was preparing. Luke pretended
+ ! that it did not need anything from me. This put Reetta into a difficult position because
+ !of course she would need my support for preparing publication of tens of thousands 
+ ! code and manual lines I had written. 
  
-
-! At the time when I retired in March 2017 I was told that the decision was 
-! ready to be signed by Sari Forsman-Hugg.
- ! She was not able to decide, similarly as as she was not able to 
- ! decide whether Luke could take me as an outside researcher.
- 
- 
- ! Research director Johanna Buchert signed the opening decision 30. 8. 2017.
-! Buchert nominated prof Packalen to take care of the launch.
- ! I was not informed of the decision. When I heard that such decision has been made, 
- ! I asked prof. Packalen what it contained.
- ! She did not remember. The software was used in a tiny research project utilizing factory optimization.
- ! I had sent to Luke a bug correction beleaving  that the 
- ! publication was approaching as prof Packalen had promised. She suggested a
- ! high-level launch with oversees attendees. I did not like such 
- ! launch because
- ! the software was not yet ripe
- ! for that. I would be ashamed if the prominent guests would look at the code.
- !Prof Packalen then prevented without any notice the publication altogether by not allowing
- ! Reetta Lempinen to do necessary preparations.
- ! Research director Buchert did not follow how prof Packalen was doing 
- ! the launch.
- 
- ! Prof Packalen left Luke in June 2020 and could thus no
- ! more prevent the publication. 
- ! In February 2021 Hannu Salminen started to discuss 
- !with me of the development and utilization of J. 
- ! He was the first person in Luke's
- ! history wanting to discuss such things with me.
- ! A cooperation plan was made.
- ! I had made significant improvements and corrected a bug in the factory 
- ! optimization. I had difficulties to obey the six year's old request of P\"aivi Eskelinen to
- ! wait patiently, so I tried 
- ! to get J published during my life time. 
- ! I told the leaders of Luke in March 2021 that I will not send improved codes
- ! to Luke without an explicit co-operation agreement. 
- ! The research director Antti Asikainen answered 
- ! 'According to my understanding the IPR rights of J software belong to Luke'. 
- !The head of admininistration,
- ! Ilkka P Laurila wrote: 'Luke has started preparations for the publication'. 
- ! Laurila was not on my e-mail list,
- ! so evidently he answered on behalf of director general Johanna Buchert, who was. 
- ! After getting such a rejection to my co-operation offer, it was clear that
- ! I would not send any codes to Luke. The highest leaders of Luke 
- ! did evidently not care of research needs of Hannu Salminen and others 
- ! included in the planned project. 
- 
- ! I decided to continue my co-operation only with the GAYA group.
- !  It had new interest 
- ! in co-operation as they were making a new simulator.
-	
- 
- 
- ! The situation changed when Lauri Meht\"atalo was invited to become a professor of Luke. 
- ! He started to mediate 
- ! negotiations between me and Luke. Earlier Luke did not acknowledge that I 
- ! did exist in legal sense in this matter. Lauri was able to persuade the 
- ! research director Asikainen to make an U-turn.
- ! As some months earlier he did not see any co-operation with me possible,
- ! he was now interested to become
- ! a co-author in a forthcoming publication.  
- ! The negotiations started well, but finally I had to make an ultimatum to
- ! brake conclusively all conncetions to Luke before 
- ! the co-operation agreement was signed 7.10. 2021 in the 100 years celebration of NFI in  Kings Hall
+!When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke.
+ ! The co-operation agreement was signed 7.10. 2021, after some dramatic episoded, in the 100 years celebration of NFI in  Kings Hall
  ! in the medieval Olavinlinna castle in Savonlinna.
  
  ! I got a
@@ -309,10 +238,29 @@
  ! Luke should provide me access to CSC supercomputers.  Luke should distribute Jlp22 via Github.  This point
  ! was not necessary as Reetta adviced me how to use Github.
  
+ !Being an old-time researcher, in the heart of my researcher indentity 
+ !is the conviction that a researcher of a government research organization
+ ! has the right  to publish the results of his research himself. 
+ !The leaders of Luke expressed explicitly, and I have
+ ! enenough e-mails to prove this, that 
+ !they do not agree. They made it clear already when when I was employed by Luke, so my retirement
+!   is no explanation.
+!   Are the leaders brave enough to state their view now publicly?
+ ! Does the the board of Luke and the Ministry of Agriculture and Forestry
+ !agree with me or the leaders of Luke? A task of the Board of Directors is promote cooperation with stakeholders. 
+!  I am now a stakeholder in this matter, and other stakeholders are also linked to this project through their 
+!  cooperation with me. Can the board of Directors help to solve this dispute. 
+!  Or are the leaders even so brave that they could admit that they did not recognize during 
+!  the process that a researcher has the right to publish 
+!  his results but they have changed their opinion? I got finally the permission to publish my results, 
+!  but if the leaders of Luke do not accept this as right of a researcher, 
+!  other reseachers will be in trouble in the future.
  
- !During the hostile take over, the leaders knew nothing of the code
- ! and the optimization algoritm,  and were not willing to learn these things. Packalen
- ! Salminen and Korhonen had some idea what the software can do.
+ 
+ !Putting the ethical and legal aspects aside, the behaviour of the leaders of 
+ ! Luke was not rational with respect to the interests of Luke. 
+! During the hostile take over, the leaders knew nothing of the code, and were not willing to
+ ! learn to know.
 ! Thus the leaders did not know that
  !the code contained so much dirty code
  ! that it could not be maintained and developed without my assistance.
@@ -329,29 +277,44 @@
  ! start from clean table.
  ! The code without my support
  ! provided only slightly better perspectives than a one-time exe- file.
- !Anyhow, it would be interesting to know how the leaders planned to publish
- !tens of thousand code and manual lines I had written indicating that they
- !had produced these lines.
  
- ! Markku Siitonen, the developer of the Mela software, used to say 
- ! 'You shall not steal more that you can carry'. The leaders were 
- ! stealing (legally as all big robberies are done) more than they could carry
- ! as they did not understand that their capture contained a large amount of dirty,
-! heavy-to-carry code. 
+ !Could the leaders of Luke be even so brave that they could admit that during their efforts to advance 
+ ! the interests of Luke they were actually making harm to these because they 
+ ! were not willing to listen the person who knew everyhing in this matter
+ ! from the guiding ideas to dirty goto statements? 
  
+	
   
  ! \subsection*{Rewriting the software}
 !\addcontentsline{toc}{subsection}{Rewriting the software}
  
  ! Open Jlp22 was published 22.4.2022 in a web-seminar, and it has been distributed in Github since then.
- ! It contained many errors, but I wanted to get it out of the control of Luke as soon as possible.
+ ! It contained many errors, but I wanted to get the open J started.
  ! After my retirement I have rewritten completely the software, 
  ! the most part after the agreement in 7.10.2021. 
  ! Only the sceleton and innermost loops in the optimization come from the time I worked 
  ! for Metla and Luke. The following manual tells what Jlp22 can do now.
- ! The factory optmization is under development, and I will be published it later. 
+ ! The factory optimization is under development, and I will be published it later. 
  ! Reetta has participated
  ! in testing, in addition to teaching the use of Github.
+ 
+ 
+ !\subsection*{Book: Linear and nonlinear programming methods}
+ !\addcontentsline{toc}{subsection}{Book: Linear and nonlinear programming methods}
+ !I signed in Dec 15 2022 with Chapman \& Hall the author agreement that I will write 
+ !a book with title: 'Linear and nonlinear programmng methods for joint analysis of forestry 
+ ! and factories: Jlp22 approach'.
+ 
+ !The book will be published with Open Access if I pay 16500 Euro when the book is ready.
+!  I want it be OA as it is utilizing a software which I was allowed to publish as Open Source after a long 
+! and painful fight. Alongside with the book, there will be a script file so that the readers
+! can repeat computations just writing the name of the example, similarly as the users
+ ! of Jlp22 can compute the examples in this manual. So I need data which I can utilize for such OA
+ ! computations. My current agreement with Luke does not allow such utilizitation of Luke's data. 
+ ! Such cooperation with Luke 
+ ! would allow a peaceful phase to our problematic 9 year relationship.
+ 
+ 
  
  ! \subsection*{Acknowledgements}
 !\addcontentsline{toc}{subsection}{Acknowledgements}
@@ -366,21 +329,18 @@
  !Ron Shepard adviced in Fortran Discourse to make expansion of allocated
  !vectors faster, in addition to advicing to chance the name of J software.
  !I thank Reetta Lempinen from Luke for being a loyal colleague for a long time. 
- ! I also ackowledge that Antti Asikainen was willing to listen to Lauri Meht\"atalo
- ! and that he finally changed the six and half year's consistent policy of Luke 
- ! to prevent me to take
-! care of or even participate in the publication of the software I had created. 
+ 
 
  !I thank my grand daughter Ella
 !for the permission to use the portrait she drawed for my 70 yr birthday in 2021.
 
 !\vspace{0.5cm}
-!Suonenjoki 8.11.2022
+!Suonenjoki 3.12.2022
 !\vspace{0.5cm}
 !  Juha Lappi
 
-
 !endsection
+
 
 ! \subsection*{About the writing style}
 !\addcontentsline{toc}{subsection}{About the writing style}
@@ -394,7 +354,7 @@
 
 
 !Section intro Introduction
-!Jlp22 can be used as is, i.e. using exe files. The User guide concentrates 
+!Jlp22 can be used as is, i.e. using exe files. The User's guide concentrates 
 !on using binary files, but some reference is also made to additional possibilities offered
 ! by the open Jlp22 code.
 !endsection
@@ -416,12 +376,22 @@
 !in principle be combined with factories. Just now a completely new version of factory optimization
 ! is under development, and thus it is not usable. R users can do general data management in R and use 
 ! Jlp22 only for linear programming. But after learning basics of Jlp22, it may be more 
-! straightforward to do also data management in Jjlp22. 
+! straightforward to do also data management in Jlp22. 
 
 ! Jlp22 can now be used for general matrix computations. I have included in Jlp22 all matrix functions of 
 ! Matlab which I found useful in a consulting project. Jlp22 uses Gnuplot for making figures. 
 ! It is straigtforward to extend these graphics functions. Jlp22 can be used an
 ! interface to Gnuplot graphics.  Jlp22 contains many tools to deal with classified data. 
+
+! The current binary versions of Jlp22 are developed using Gfortran Fortran 90 compiler in MSYS2 MINGW 64-bit environment
+! under Windows 10. 
+! Binary versions are ordinary console applications. It is recommended that Jlp22 is used in command
+! prompt window, so that 
+! if execution of Jlp22 terminates unexpectedly, the error debugging information remains visible.
+! With the debug version the problematic line is indicated.
+! See chapter \ref{error} for more information of error handling.
+
+
 !endsection
  
  !Section intro2 Developing own Jlp22 functions in Fortran
@@ -431,13 +401,23 @@
  ! be independently of the main Jlp22 functions. When modifying an existing Jlp22 function, the user should make a copy of the
  ! function under a different name. Then the old and new versions
 ! can exist simultaneously in the function
- ! space of J. It is very easy to add new functions in Jlp22 and even more easy to add new options.
+ ! space of Jlp22. It is very easy to add new functions in Jlp22 and even more easy to add new options.
  
  !When deloping a new methods in Jlp22, it is possible to first use the Jlp22 
  !script language to make developments.
  !Then the user can make an own function where the method is written in Fortran to make the method faster.
  ! When writing new methods in Fortran, the user can concentrate on essential parts of the method, and utilize 
  ! the standard data management services provided by Jlp22.
+ 
+ 
+! See Jlp22Development.docx to start develop the software or to add
+! own functions. This guide is not up to data, so all who are willing to start development shoud 
+!caotact first juha.lappi.sjk@gmail.com. The development package contains, in addition to source code for
+! the standard Jlp22 software, program Jmanual
+! which can be used to generate Latex code for the manual and the include file for
+!examples.   The precompiler Jpre  writes necessary Fortran statements to access all global
+! Jlp22 data structures, makes indentations and checks if-then and do strutures and gives
+! better error messages for them than Gfortran.
  !endsection
  
  
@@ -470,7 +450,7 @@
 ! matrices. 
 !
 !The list object is used to transimit and acces object lists. If the list elements are 
-! objects called REAL variables, the the list can be used in matrix computaions 
+! objects called REAL variables, the list can be used in matrix computaions 
 ! in the same way as column vectors.
 !
 ! The input programming  has the following functions and capabilities.
@@ -479,7 +459,7 @@
 !\item ;do(i,ia1,ia2,step) generates input records in a loop
 !\item ;if();then \\ !includes conditionally code
 !\item objstart"i"end  ! replaces i in the text with the integer value of i. Combined with ;do()
-! this provides possiblitesd to generate large numer of lines using only some linse
+! this provides possibilites to generate large numer of lines using only some linse
 ! ;goto()  ! code is obtained from a different place of an include file.
 ! ;elseif();then \\
 ! ;else \\
@@ -522,7 +502,7 @@
 !then the result of  ]tr[(]a[) is object ]a[ after calling ]tr[.
 !endheader
 !Note If someone starts to use the own function property of the open source J, she/he
-! probably would like to get the possiblity to extract information from her/his object types
+! probably would like to get the possibility to extract information from her/his object types
 ! also. To implement this property requires some co-operation from my side.
 !endnote
 !endsection
@@ -534,7 +514,7 @@
 ! output side (e.g. a(1,-3,All)=..). 
 !endheader
 !Note If someone starts to use the own function property of the open source J, she/he
-! probably would like to get the possiblity to put information into from her/his object types
+! probably would like to get the possibility to put information into from her/his object types
 ! also. To implement this property requires some co-operation from my side.
 !endnote
 !Note In effect the getelem() and setelem() functions are excuted in the same
@@ -630,7 +610,7 @@
 ! \item parser which generates from text lines integer vectors containing function indices,
 ! option indices and object indices (subroutine j\_interpret). 
 !\item Function driver which executes the code in the interpreted integer vector
-! (subroutine dotrans). The the function driver is using:
+! (subroutine dotrans). The function driver is using:
 !\begin{itemize}
 ! \item Jlp22 functions which operate on arguments which are determined either as formal arguments or
 ! via options.
@@ -646,15 +626,14 @@
  ! the other properties may help to understand waht is going on in a Jlp22 session.
 !endsection
 
-!Section git  Installing Jlp22 from Github 
+!Section git  Loading Jlp22 from Github 
 ! The Github ditribution was made under the guidance of Reetta Lempinen. This section describes the 
-! folders of the Github distribution and also how to 
-! install Jlp22 and Gnuplot. 
+! folders of the Github distribution.
 !endsection
 
 !Section gitpack Git package
 !The Jlp22  package can be loaded by pressing load zip button under the green
-! code button in the right side of the page github.com/juhalappi/jlp22.  The package
+! code button in the right side of the page github.com/juhalappi/Jlp22.  The package
 !contains the following files.
 
 !\begin{itemize}
@@ -667,81 +646,76 @@
 !\begin{itemize}
 
 
-!\item \textbf{J\_R}  \hspace{1cm} using Jlp22 from R, courtesy of Lauri Meht\"atalo.
+!\item \textbf{JR}  \hspace{0.2cm} using Jlp22 from R, courtesy of Lauri Meht\"atalo.
 
 !\begin{itemize}
-!\item j.par \hspace{1cm}default include file for starting Jlp22
-!\item JR\_0.0.tar.gz \hspace{1cm} File needed to use Fortran subroutines in R
-!\item testr.cda
-!\item test.xda
-!\item testr.inc \hspace{1cm} include file for an jlp-example
-
-!\item testr.inc
-
+!\item j.par \hspace{0.2cm}default include file for starting Jlp22. It contains also a LP
+! problem and its solution. 
+!\item JR\_0.0.tar.gz \hspace{0.2cm} File needed to use Fortran subroutines in R
+!\item cdat.txt
+!\item xdat.txt
 !\end{itemize}
 
-
-
-!\item \textbf{Jbin}\hspace{1cm} binary .exe files and dll files
+!\item \textbf{Jbin}\hspace{0.2cm} binary .exe files and dll files
 !\begin{itemize}
-! \item jlp22.exe \hspace{1cm} Debug version of Jlp22.
-!\item jlp22r.exe \hspace{1cm} Release version of Jlp22. If the release version crashes
-!use the debug version to get more information of the cause.
-
-
-! \item jmanual.exe \hspace{1cm} makes the latex code file jmanual.tex and
-! the example file jexamples.inc.
-! \item jpre.exe \hspace{1cm} the precompiler which generates the code 
-! for accessing variables in module, makes indentations and gives better error messages
-! for mixed do-loops and if-then structures than Gfortran.
-! \item dll:\hspace{1cm} libgcc\_s\_seh-1.dll, libgfortran-5.dll, libquadmath-0.dll and
+! \item jlp22.exe \hspace{0.2cm} Debug version of Jlp22.
+!\item jlp22r.exe \hspace{0.2cm} Release version of Jlp22. If the release version crashes,
+!    use the debug version to get more information of the cause.
+! \item jmanual.exe \hspace{0.2cm} makes the latex code file  \href{run:./jmanual.tex}{jmanual.tex} and
+!    the example file \href{run:./jexamples.inc}{jexamples.inc}.
+! \item jpre.exe \hspace{0.2cm} the precompiler which generates the code 
+!   for accessing variables in modules, makes indentations and gives better error messages
+!   for mixed do-loops and if-then structures than Gfortran.
+! \item dll:\hspace{0.2cm} libgcc\_s\_seh-1.dll, libgfortran-5.dll, libquadmath-0.dll and
 !  libwinpthread-1.dll which must be available in the path. e.g., in the same folder as the exe
-
-!\end{itemize}
-!\item \textbf{Jdoc\_demo} \hspace{1cm}documents and include file for running examples from User's guide
-!\begin{itemize}
-! \item hyvonenetal2019.pdf \hspace{1cm} A paper utilizing the factory optimization.
-! \item Jlp22.pdf \hspace{1cm} This users guide made with Latex. 
-! \item 	 Jlp22\_setup\_development.docx \hspace{1cm} not up-to-date manual for developers
-! \item jexamples.inc \hspace{1cm}include file which can be used to run all examples in the manual
-! and which is generated with jmanual.exe
-!\item cdat.txt \hspace{1cm}example unit data file for small jlp() example in jexample.inc. 
-!\item xdat.txt\hspace{1cm}example schedule file for small jlp() example
-! \item jlp92.pdf \hspace{1cm}Manual of old JLP which explains the theory behind the jlp algorithm
-! \item lappilempinen.pdf \hspace{1cm} Paper explaining the theory behing factory optimization.
-!\end{itemize}
-!\item \textbf{Jmanual} \hspace{1cm} Source files for making Latex code for 
-!the manual and the include file for running examples
-!\begin{itemize}
-! \item jmanual.f90 \hspace{1cm}source for making the Latex code and jexamples.inc
-! \item jmanual.tex \hspace{1cm}Latex code generated with jmanual.exe
-! \item jsections.txt \hspace{1cm}describes manual sections not in source files
-! \item jsections2.txt \hspace{1cm}tells in what order sections found in jsections.txt 
-!and source files are put into the manual and what is the level of the sections
-! \item main.tex  \hspace{1cm}Preample code containing Latex definitions
-! \item Makefile\_debug \hspace{1cm}Makefile for making jmanual.exe
-
 !\end{itemize}
 
-!\item \textbf{Source} \hspace{1cm} source code before precompilation
+!\item \textbf{Jdocdemo} \hspace{0.2cm}documents and include file for running examples from User's guide
 !\begin{itemize}
-!\item fletcherd.for \hspace{1cm}Fletchers subroutines turned into double precision
-! \item j.f90 \hspace{1cm}code for Jlp22 functions
-! \item jlp.f90 \hspace{1cm}code for linear programming
-! \item j.main \hspace{1cm}main prorgam for calling Jlp22 when used as is, if Jlp22 is used as 
+! \item Jlp22.pdf \hspace{0.2cm} This user's guide made with Latex using Overleaf \url{http://www.overleaf.com}. 
+
+! \item \href{run:./jexamples.inc }{jexamples.inc} \hspace{0.2cm}include file which can be used to run all examples in the manual
+!   and which is generated with jmanual.exe
+!\item \href{run:./cdat.txt}{cdat.txt} \hspace{0.2cm}example unit data file for small jlp() example in jexample.inc. 
+!\item xdat.txt\hspace{0.2cm}example schedule file for small jlp() example
+! \item \href{run:./jlp92.pdf}{jlp92.pdf} \hspace{0.2cm}Manual of old JLP which explains the theory behind the jlp algorithm
+! \item \href{run:./lappilempinen.pdf}{lappilempinen.pdf} \hspace{0.2cm} Paper explaining the theory behing factory optimization.
+! \item \href{run:./hyvonenetal2019.pdf}{hyvonenetal2019.pdf} \hspace{0.2cm} A paper utilizing the factory optimization.
+! \item \href{run:./JLp22development.docx} {Jlp22development.docx} \hspace{0.2cm} not up-to-date manual for developers
+!\item \href{run:./fletcher.pdf}{fletcher.pdf} The theory behind the subroutines of Fletcher
+!\end{itemize}
+
+!\item \textbf{Jmanual} \hspace{0.2cm} Source files for making Latex code for 
+! the manual and the include file for running examples
+!\begin{itemize}
+! \item jmanual.f90 \hspace{0.2cm}source for making the Latex code and jexamples.inc
+! \item jmanual.tex \hspace{0.2cm}Latex code generated with jmanual.exe
+! \item jsections.txt \hspace{0.2cm}describes manual sections not in source files
+! \item jsections2.txt \hspace{0.2cm}tells in what order sections found in jsections.txt 
+!  and source files are put into the manual and what is the level of the sections
+! \item main.tex  \hspace{0.2cm}Preample code containing Latex definitions
+! \item Makefile\_debug \hspace{0.2cm}Makefile for making jmanual.exe
+!\end{itemize}
+
+!\item \textbf{Source} \hspace{0.2cm} source code before precompilation
+!\begin{itemize}
+!\item fletcherd.for \hspace{0.2cm}Fletchers subroutines turned into double precision
+! \item j.f90 \hspace{0.2cm}code for Jlp22 functions
+! \item jlp.f90 \hspace{0.2cm}code for linear programming
+! \item j.main \hspace{0.2cm}main prorgam for calling Jlp22 when used as is, if Jlp22 is used as 
 !a subroutine then this must be made a subroutine
-! \item jmodules.f90 \hspace{1cm}data structure definitions 
-! \item jutilities.f90 \hspace{1cm}subroutines for handling objects etc.
-! \item jsysdep\_gfortran.f90 \hspace{1cm}system dependent routines
-! \item matsub.f \hspace{1cm}subroutines obtained from other sources, e.g. from Netlib
+! \item jmodules.f90 \hspace{0.2cm}data structure definitions 
+! \item jutilities.f90 \hspace{0.2cm}subroutines for handling objects etc.
+! \item jsysdep\_gfortran.f90 \hspace{0.2cm}system dependent routines
+! \item matsub.f \hspace{0.2cm}subroutines obtained from other sources, e.g. from Netlib
 ! \item other subroutines for setting up users own  functions
-
 !\end{itemize}
-!\item\textbf{Source2} \hspace{1cm} source code files after precompilation
+
+!\item\textbf{Source2} \hspace{0.2cm} source code files after precompilation
 ! in addition to files in Source (such files which are not precompiled are put in both folders)
 !\begin{itemize}
-! \item makefile\_debug \hspace{1cm}makefile for making debug- version
-! \item makefile\_release\hspace{1cm} makefile for making release- version
+! \item makefile\_debug \hspace{0.2cm}makefile for making debug version Jlp22.exe
+! \item makefile\_release\hspace{0.2cm} makefile for making release version Jlp22r.exe
 !\end{itemize}
 
 
@@ -768,33 +742,43 @@
   ! Let us assume that the working folder is jtest.
 !endsection
  
- !Section start Using Jlp22, and Gnuplot and Rscript from Jlp22
+ !Section start Install
  !This section tells how to install Jlp22, Gnuplot and Rscript from Jlp22
 ! so that the user can start
 !  running the examples in file jexamples.inc.
  !endsection
- !Section install Installing Jlp22, Gnuplot and Rscript
- ! After loading Jlp22 from the Github, the folders of the exe files must be
-!  put into the environmental variable PATH. In my computer the PATH contains line C:\textbackslash jlp22
-! An ordinary user may use Jlp22 ans Jlp22r from the folder 
-! Jgit\textbackslash Jlp22bin.
+ 
+ !Section install Install
+!endsection
 
-	! Let us then install Gnuplot. Go to page gnuplot.info, and select there download,
+!Section installjlp22 Install Jlp22
+ ! After loading Jlp22 from the Github.com/juhalappi/Jlp22, the folders of the exe files must be
+!  put into the environmental variable PATH. In my computer the PATH contains line C:\textbackslash jlp22
+! An ordinary user may use Jlp22 and Jlp22r from the folder 
+! Jgit\textbackslash Jlp22bin.
+!endsection
+
+!Section installgnuplot Install Gnuplot
+	! Let us then install Gnuplot. Go to page \url{http://gnuplot.info}, and select there download,
 	! and in the download page select green 'download latest version', which loads 
 	! 'gp543-min64-mingw.exe' (or similar), and if you let it install with usual yes-next procedures
 	! gnuplot is installed  in folder c:\textbackslash program files\textbackslash gnuplot
 !which should be placed into the environmental variable Path. 
+!endsection
 
 !When adding new lines to the path, it is necessary to accept changes with two 'OK'.
 !After editing PATH have effect only after restarting the computer.
 
+!Section installrscript Install Rscript 
 
 	!If you plan to run R scripts from Jlp22, Rscript program mus be installed 
 	! and the folder must be put into the PATH. In my computer the folder is
 !	C:\textbackslash Program Files\textbackslash R\textbackslash R-4.1.2\textbackslash bin
-	
+! endsection
 
-	! endsection
+!Section afterinstall After install restart
+!After editing the environmental varaible Path, the computer mus be restarted.
+!endsection
 	
 	! Section runex Running examples
 	
@@ -881,21 +865,8 @@
 
 
 !Section system System requirement
-! The current binary versions of Jlp22 are developed using Gfortran Fortran 90 compiler in MSYS2 MINGW 64-bit environment
-! under Windows 10. 
-! Binary versions are ordinary console applications. It is recommended that Jlp22 is used in command
-! prompt window, so that 
-! if execution of Jlp22 terminates unexpectedly, the error debugging information, remains visible.
-! With the debug version the problematic line is indicated.
-! See chapter ? for more information of error handling.
+!
  
-! See Jlp22.0 Development Guide to start develop the software or to add
-! own functions. The development package contains, in addition to source code for
-! the standard Jlp22 software, program Jmanual
-! which can be used to generate Latex code for the manualand the the include file for
-!examples.   The precompiler Jpre  writes necessary Fortran statements to access all global
-! Jlp22 data structures, makes indentations and checks if-the and do strutures and gives
-! better error messages for them than Gfortran.
 
 ! Figures are made with Gnoplot.
 !Gnuplot is freely available at
@@ -961,7 +932,7 @@
 ! (operation commands). Input commands and operation commands may read and 
 ! interpret more input lines before returning control to the command level.
 ! It is most convenient to develop Jlp22 applications using include files. There is 
-! available in the jdoc-demo folder an include file jexamples.txt 
+! available in the jdocdemo folder an include file jexamples.txt 
 ! which can be used to run all examples in this manual. If the include file
 !is in the working directory you can run any example by wrting the name of the example
 ! in the Jlp22-window if you have given ';incl(jexamples.txt)' at the sit> pronpt. 
@@ -985,21 +956,21 @@
 !endsection
 
 !Section typo Typographical conventions
-!In this manual function names are written in red, option names in blue, object types in
-!capital letters, object names within the text are written in this color: ]Object[. Coloring of objects
-! is not ready. Objects of a certain type are written using just the type. Thus
-!  a DATA means a DATA object.
-! Names like ]ob1[ are used as generic names for object and names like  ]var1[
-! are generic names for REAL variables. An object with a special type is written 
-! using the first letter in upper case and others in the lower case. Thus Matrix is a
-! generic name for a MATRIX object.
-
-!For functions that return real values or matrices which can be
-! used directly in arithmetic or matrix operations, 
-!the existence of output is not indicated.
-
-!endheader
 !endsection
+!Section wrfunc sin() is a function
+!endsection
+!Section wropt xrange-> is an option
+!endsection
+!Section wrinpu ;incl is and input programming function
+!endsection
+!Section wrobj matrixa is an object
+! Names matrixa, matrixb, proba,probb, jlpa,jlpb etc
+! are common names used for matrices etc. Coloring of object names is not yet complete.
+!endsection
+!Section wrtype MATRIX is shorthand notaion for a matrix object
+!if(type(matrixa).eq.MATRIX)then ..
+!endsection
+
 
 !Section onames Object names
 !Object names start with letter or with {$#}. Object names can contain any of 
@@ -1022,7 +993,7 @@
 ! Some of these are locked so that the users cannot change them. In transformation objects
 ! there can be objects which are intended to be used only locally. These are protected
 ! by putting an unvisible prefix to the object names, but these can be anyhow accessed
-! by writing the the prefix.
+! by writing the prefix.
 ! Names of objects having a predefined interpretation start with capital letter. 
 ! The user can freely use lower or upper case letters. Jlp22 is case sensitive.
 ! All objects known at a given point of a Jlp22 session can be listed by command:
@@ -1252,7 +1223,7 @@
 ! in a compact and short form. This chapter describes input programming concepts and commands.
 !endsection
 !Section inpuline Input record and input line 
-!Jlp22 reads input records from the current input channel which may be terminal, file or a text object.
+!Jlp22 reads input records from the current input channel which may be the console, file or a text object.
 ! When Jlp22 interprets input lines, spaces between limiters and function or object names are not
 ! significant. In input programming, functions start with ';' which is part of the function name (and
 ! there can thus be no space immediately after ';'). If a line (record) ends with ',' ,'+', '*´, '-',
@@ -1283,11 +1254,12 @@
 ! Many Jlp22 functions parsed and executed (interpreted) at the command level need or can use a group of
 ! text lines as input. In these cases the additional input lines are immediately after the function.
 ! This group of lines is called input paragraph. The input paragraph ends with '/', except the
-! input paragraph of text function ends with '//' as a text object can contain ordinary input
+! input paragraph of text function text() and txt() end with '//' as a text object can contain ordinary input
 ! paragraphs. It may be default for the function that there is input paragraph following. When
 ! it is not a default, then the existence of the input paragraph is indicated with option in->
-! without any value. An input paragraph can contain input programming commands; the
-! resulting text lines are transmitted to the Jlp22 function which interprets the input paragraph
+! without any value. For many functions, the input paragraph can contain input programming commands.
+! The resulting text lines are transmitted to the function which interprets the input paragraph either using
+! the parser (e.g. trans() function) or by other means (e.g problem()).
 !endheader
 !Ex inpuparag Example of inputparagraph
 ! transa=trans()
@@ -1304,7 +1276,7 @@
 !Section short Shortcuts
 !Command shortcuts are defined by defining character variables. When entering the 
 ! name of a character variable at sit> prompt or from an include file, Jlp22 excutes the command.
-!The command can be either input programming command or ??? command. The file jexamples.inc
+!The command can be either input programming command or one-line command. The file jexamples.inc
 !shows an useful way to organize shortcuts and include files.
 !endheader
 !Ex shortex Example of using shortcuts and include files
@@ -1339,8 +1311,8 @@
 ! needed by Jlp22 functions. The names of input programming commands start with semicolon ';'.
 ! There can be no space between ';' and the following input programming function. The syntax
 ! of input programming commands is the same as in Jlp22 functions, but the input programming
-! functions cannot have an output. There are also controls structures in the input programming.
-! An input paragraph can contain input programming structures.
+! functions cannot have an output. There are also control structures in the input programming.
+! An input paragraph can also contain input programming structures.
 !endsection
 
 !Section inpuad  Labels in input programming
@@ -1359,7 +1331,7 @@
 
 !Note The definition of a transformations object can also contain labels. These labels start
 ! with a letter and end also with colon (:). When defining a transformation object with trans() function,
-! the input paragraph can contain input programming addresses and code labels. It is up to 
+! the input paragraph can contain input programming labels and code labels. It is up to 
 ! input programming what code alabels become part of the transformation object.
 !endnote
 
@@ -1416,7 +1388,7 @@
 !endheader
 !Latex
 !\begin{itemize}
-!\item The conrol came to the starting address or to the beginning of the include file 
+!\item The conrol came to the starting label or to the beginning of the include file 
 !from outside the current include file using a ;incl command. Then ;return returns the control to upper level include 
 ! file or to the sit> prompt.
 !\item The control came to the starting label from within the same include file using
@@ -1434,7 +1406,7 @@
 !It is often natural to index object names, and often we need to refer object
 ! names having consecutive index numbers or index letters. In Jlp22 versions before version 3.0 it
 ! was possible to generate object lists using ... -construct which replaced part of
-! the input line with the names of objects being between the the object 
+! the input line with the names of objects being between the object 
 ! name before ... and after ... . Now the dots construct is no more done as
 ! part of the input programming but in the interpret subroutine which interprets the
 ! input line and generates the integer vector for function and argument indices.
@@ -1458,7 +1430,7 @@ $$=300
 !/
 !Continue=0
 !endex
-!enddsection
+!endsection
 
 !Section inpulistelem @List(index) Gets a name from a LIST
 !The name of an object in a LIST can be obtained into the input using the following example.
@@ -1558,7 +1530,7 @@ $$=300
 
 !Section output Output of a function
 
-!  There are the the following cases with respect to
+!  There are the following cases with respect to
  ! the output of the function
  
  ! \begin{itemize}
@@ -1621,7 +1593,7 @@ $$=300
 !Often in matrix computations, a REAL is a limiting value of a sequence of matrices.
 !To facilitate such computations, matrixa(1) and matrixa(1,1) are legal ways to refer to matrixa even if it is REAL.
 !If matrixa is REAL, then expression matrixa(3) is causing error:\\
-!matrixa is REAL, ranges            5  are illegal, only (1) or (1,1) are allowed
+!matrixa is REAL, ranges            3  are illegal, only (1) or (1,1) are allowed
 !endsection
 
 
@@ -1650,10 +1622,13 @@ $$=300
 ! the object cannot produce anything, there will be an error message:\\
 ! produce   but it is not a function or object which can provide something then
 !there will be an error message:\\
-!* (object name) cannot produce anything\\
-!But if the object is REAL then the error message can be \\
+!* (object name) cannot produce anything
+!endsection
+
+!Section isreal is REAL ranges .. illegal  -error
+!If the object is REAL then the error message can be \\
 !matrixa is REAL, ranges            5  are illegal, only (1) or (1,1) are allowed\\
-! because a REAL can be treated as a 1x1 MATRIX.
+! A REAL can be treated as a 1x1 MATRIX, so for REAL ]var[ var(2,2) means illegal dimensions.
 !endsection
 
 
@@ -1838,23 +1813,21 @@ $$=300
 
 ! \item  subroutine tautsp used in j\_function tautspline
 ! from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
-! No licence restrictions known
-! distribution:  http://pages.cs.wisc.edu/~deboor/ pgs/tautsp.f
+! No licence restrictions known.
+! Distribution: \\
+! \url{https://www.researchgate.net/publication/200744645_A_Practical_Guide_to_Spline},
+! see also \url{ http://pages.cs.wisc.edu/~deboor}
 
-! \item  real function ppvalu used in Jlp22 function value
-! from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
-! No licence restrictions known
-! distribution: http://pages.cs.wisc.edu/ ~deboor/pgs/tautsp.f
 
-! \item subroutine interv , used in function ppvalue
-! from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
-! No licence restrictions known
-! obtained from: http://pages.cs.wisc.edu/ ~deboor/pgs/tautsp.f
-! Lapack matrix routines
+! ! \item subroutine interv , used in function ppvalue
+! ! from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
+! ! No licence restrictions known
+! ! obtained from: http://pages.cs.wisc.edu/ ~deboor/ pgs/tautsp.f
+! ! Lapack matrix routines
 
-! \item Several subroutines from www.netlib.org/lapack 
+! \item Several subroutines from \url{www.netlib.org/lapack}
 !with licence :\\
-! http://www.netlib.org/lapack/LICENSE.txt
+! \url{http://www.netlib.org/lapack/LICENSE.txt}
 ! \end{itemize}
 ! endlatex
 ! endsection
@@ -1965,12 +1938,12 @@ $$=300
 !endsection
 
 !Section arith Arithmetic and logical functions and operations
-!Jlp has all the standard arithmetic and logical opertaions and functions.
+!Jlp22 has all the standard arithmetic and logical operations and functions.
 !The arithmetic and logical functions return single REAL value or a MATRIX.
 !endsection
 
-! Section numer Numeric operations
-! An arithmetic expression consisting of ordinary arithmetic operations is formed in 
+! Section numer Numeric operations -, +, *, **, ***, /, *., /.
+! An arithmetic expression consisting of ordinary arith metic operations is formed in 
 ! the standard way. The operations are in the order of their precedence.
 ! Latex
 ! \begin{itemize}
@@ -1987,24 +1960,24 @@ $$=300
 ! The reason for having a different integer power is that it is faster to compute and a negative 
 ! value can have an integer power but not a real power.
 
- ! In matrix computations there are two additional opertations.
+ ! In matrix computations there are two additional operations.
  
- ! Latex
+ 
 ! \begin{itemize}
 ! \item *. elementwise product (Hadamard product)
 ! \item /. elementwise division
 ! \end{itemize}
-! endlatex
+
 
 ! The matrix operations are explained in section ?. Their operation rules extent
 ! the standard rules. 
 ! endsection
 !!!'\textbf{J}'
-! Section logic Logical and relational expressions
+! Section logic Logic and relation .eq. .ne. .gt. .ge. .lt. .le. .not. .and. .or. .eqv. .neqv.
 ! There are following relational and logical operations. The first alternatives
 ! follow Fortan style:
 !endheader
-! Latex
+
  ! \begin{itemize}
 ! \item .eq. == equal to
 ! \item .ne. <> not equal
@@ -2020,9 +1993,9 @@ $$=300
 ! \end{itemize}
 
 ! The relational and logical expressions produce value 1 for True and value 0 for False. 
-! Note: Testing equivalence can be done also using 'equal to' and 'not equal', as the same truth 
+! Note Testing equivalence can be done also using 'equal to' and 'not equal', as the same truth 
 ! value is expressed with the same numeric value.
-! endlatex
+!endnote
 ! Note when the truth value of an expression is tested with if(), then all nonzero real values
 ! means that the expression is true. 
 ! endnote
@@ -2044,6 +2017,51 @@ $$=300
 ! \item abs(x) absolute value
 ! \end{itemize}
 !endsection
+
+!Section trigfu Trig sin(),sind(),cos(),cosd(),tan(),tand(),cotan(),cotand()
+! In sin(), etc,  argument is in radians, in sind(), etc in degrees
+! \begin{itemize}
+! \item sin()
+! \item sind()
+! \item cos()
+! \item cosd()
+! \item tan()
+! \item tand()
+! \item cotan()
+! \item cotand()
+!\end itemize
+!endsection
+
+!Section atrigfu arc-trig asin() asind() acos() acosd() atan() atand() acotan() acotand()
+! Inverse trigonometric functions. In asin(), etc,  argument is in radians, in asind(), etc in degrees
+! \begin{itemize}
+! \item asin()
+! \item asind()
+! \item acos()
+! \item acosd()
+! \item atan()
+! \item atand()
+! \item acotan()
+! \item acotand()
+!\end itemize
+!endsection
+
+!Section hyper Hyperbolic  sinh() cosh() tanh()
+! \begin{itemize}
+! \item sinh()
+! \item cosh()
+! \item tanh()
+! \end{itemize}
+!endsection
+
+! Section mod Functions mod() fraction()
+! \begin{itemize}
+! \item mod()
+! \item fraction()
+! \end{itemize}
+! endsection
+
+
 !Section conversion Conversion to integer
 
 ! \begin{itemize}
@@ -2230,7 +2248,7 @@ $$=300
 ! endex
 ! Note return is automatically put to the end of transformation object.
 ! endnote
-! Note Labels in a transformation object are without ';' as the addresses in an include file start with ';'.
+! Note Labels in a transformation object are without ';' as the labels in an include file start with ';'.
 ! endnote
 
 ! endsection
@@ -2240,26 +2258,26 @@ $$=300
 ! as when an error occurs.
 ! endheader
 
-! Ex errexitex
+! Ex errexitex errexit() returns as if error had occured
 ! transa=trans()
 ! if(a.eq.0)errexit('illegal value ',a)
-! s=3/a; ! division with zero is teste automatically
+! s=3/a; ! division with zero is tested automatically
 ! /
 ! a=3.7
 ! call(transa)
 ! transa(s); !tr can also be used as a function
 ! a=0
-!Continue=1  !Do not stop in thsi seflmade error
+!Continue=1  !Do not stop in this selfmade error
 ! call(transa)
 !Continue=0
 ! endex
 ! endsection
 
 
-!Section goto goto() goto a different place in TRANS
-! Control can be transfered to a line in a transformation set with goto().
-! There are two types of goto's, unconditional goto to a given address and goto 
-! to an address from a group af adresses based on a condition (Computed goto in Fortran).
+!Section goto goto() goto a label in TRANS
+! Control can be transfered to a label in a transformation set with goto().
+! There are two types of goto's, unconditional goto to a given label and goto 
+! to an label from a group af labels based on a condition (Computed goto in Fortran).
 ! These are decribed in separate subsections. Notes common to both are presented here.
 ! endheader
 ! Note  It is not recommended to use goto() according to modern computation practices.  
@@ -2277,7 +2295,7 @@ $$=300
 !endsection
 
 !Section goto1 goto(label) Unconditional goto 
-!An unconditional goto() has only one address argument.
+!An unconditional goto() has only one label argument.
 !endheader
 ! Ex gotoex Example of unconditional goto
 ! transa=trans() 
@@ -2388,43 +2406,159 @@ a call to function assone()
 !endheader
 !endsection
 
-! Section figu Figures inp Jlp22
-! Figures are made using Gnuplot. Jlp22 transmits information into Gnuplot using text files.
+! Section Plotting Plotting figures
+! The graphiscs of the current version of Jlp22 is produced with Gnuplot, see
+!\url{http://www.overleaf.com}
+! Jlp22 offers an alternative interface
+! to Gnuplot, and it is quite easy to add more ploting routines later.
+! endsection
+! Section figu Figures 
+! Figures are made using Gnuplot, see \url{http://gnuplot.info}. Jlp22 transmits information into Gnuplot using text files.
 ! Jlp22 generates the files using .jfig extension. Necessary files are generated  by deleting old
 ! files without asking permission. If ]fig[ is the output of a figure function, then
 ! Jlp22 creates always, except in 3D, file with name ]fig[.jfig and possibly other files with
 ! .jfi0, jfi1  etc extensions.
-! All figure functions use the following options.
-! endheader
-! Option
-! Output & 1& FIGURE & The FIGURE object created or updated
-! @@figure
-! endoption
-! Note is possible to show a figure using show() function. It can have either the ]fig[ object as the
- ! argument or the file name of ]fig[.jfig -file. Thus it is possible
- ! to edit the file using Gnuplot capabilites.
- ! endnote
- !Note It is possible to change the terminal type used by Gnuplot by giving 
- ! the name of the terminal to the predefine CHAR variable ]Terminal[.
- ! The default is \newline ]Terminal[='qt'. 
- !endnote
- !@@terminal
-!Note The default writte by Gnuplot does not look nice and is not implemented.
-! The user can write own legends using label-> option in drawline().
-!endnote
-!Note Easiest way to delete an nonmatrix object ]fi[ is ]fi[=0, which makes it possible
-! to use append-> also for an ]fi[ wihtout the need to construct if then-
-!structures.
-!endnote
-!Note  Graphic functions produce FIGURE objects. Each FIGURE object can consist of 
-! several subfigures. Each FIGURE object stores information of x- and y axes, the 
+
+
+! Graphic functions produce FIG objects, except plot3d() which is plotting 3-d figures 
+! without FIG. Each FIG can consist of 
+! several subfigures. Each FIG  stores information of x- and y axes, the 
 ! range of all x- and y-values, and for each sub-figure information of the ranges 
 ! of x and y in the subfigure plus the subfigure type and the needed data values. 
-! Currently, when Gnuplot is used for graphics, most data values are stored 
-! in text files which Gnuplot reads. Function plot3d() is plotting 3-d figures 
-! without making a FIGURE object.
+
+!Graphics functions which produce small number of points 
+! store the points in the ]fig[.jfig file. Large number of points produced e.g. plotyx() are 
+!placed into different files.
+!endsection
+
+!Section show show(), show->  and continue->
+!By default, plotting functions plots (shows) FIGs immediately. When the final figure
+!consists of several subfigures, it is convenient to prevent plotting using show->0.
+! In developing scripts, it is convenient to switch with show->. This can be done by giving
+! option in form show->showfig, then the ploting can be controlled with REAL showfig.
+
+!Withing show() it is possible to define or redefine xlabel->, ylabel->,title->,
+!xrange-> and yrange->
+
+!By default Jlp22 generates pause() after showing a FIG. During pause(), the user can give
+! any commands. If the user types 'e', then Jlp22 generates a error condition causing return to
+!to sit>.
+
+
+! It is possible to collect a FIG first (e.g. using loops), and 
+! show then the FIG using show() function. The argument of show() can be
+!  either a FIG or the name of the .jfig file withing apostrohes.
+ ! Thus it is possible
+ ! to edit the file using Gnuplot capabilities.
+ !endheader
+ 
+ ! Ex showex Example of show()
+	! fi=draw(func->sqrt2(x),x->x,xrange->(-50,50),continue->fcont)
+	! show(fi,xrange->(-60,60),xlabel->'NEWX]Times Roman,16[',ylabel->'NEWY]Courier,10[',continue->fcont)
+	! show(fi,axes->10,continue->fcont)
+	! show(fi,axes->01,continue->fcont)
+	! show(fi,axes->00,continue->fcont)
+	! Window='400,800'
+	! show(fi,continue->fcont)
+	! Window='700,700'
+	! fi=drawline(1,10,3,1,color->Red,continue->fcont)
+	! show(fi,xrange->(1.1,11),continue->fcont) !the line is not visible
+	! dat=data(read->(x,y),in->)
+	! 1,4
+	! 2,6
+	! 3,2
+	! 5,1
+	! /
+	! stat()
+	! fi=plotyx(y,x,continue->fcont)  ! Gnuplot hides points at border
+	! show(fi,xrange->(0,6),yrange->(0,7),continue->fcont)
+ 
+	! endex
+ 
+ !endsection
+ !Section axes axes-> tells what axes are drawn
+ ! axes-> option works as follows
+! \begin{itemize}
+! \item axes->11 Both axes are drawn. (Default)
+! \item axes->10 x- axes is  drawn, y-axes not. 
+! \item axes->01 x- axes is  drawn, y-axes not. ~ axes->1.
+! \item axes->00 Neiher axes is drawn.
+!\end{itemize}
+!endheader
+!Note The argument of axes-> is REAL, thus axes->01 is equivalent to axes->1 and 
+!axes->00 is equivalent to axes->, but the using 01 and 00 is easier to understand.
 !endnote
-! endsection
+!endsection
+
+ 
+!Section terminal Terminal
+! It is possible to change the terminal type used by Gnuplot by giving 
+ ! the name of the terminal to the predefine CHAR variable ]Terminal[.
+ ! The default is \newline ]Terminal[='qt'. 
+ !endsection
+ 
+ !Section window Window size and shape
+! It is possible to change the window size and shape of Gnuplot by 
+! using the predefined CHAR variable Window.
+! The default is \newline
+! Window='700,700'
+!endsection
+
+!Section color color->]Black[, ]Red[, ]Green[, ]Blue[, ]Cyan[ , ]Violet[, ]Yellow[, ]Orange[
+!Gnuplot allows arbitrary color definitions. Currently the above colors can be used.
+!General color definitions are implemented  when requested.
+!endsection
+
+
+!Section legend Legends
+!\item The default legends by Gnuplot do not look nice, and they are not implemented.
+! The user can write own legends using label-> option in drawline().
+!endsection
+
+!Section font Font in title->, xlabel->, ylabel->, label->
+!It is possible to change the the font by appending the the font defintion 
+! between ][ at the end of the label, e.g., \\
+!xlabel->'My-xlabel]Times-Roman,15['\\
+!where 15 is the size of the font. Available fonts vary from system to system. Web provides further inforamtion, see e.g
+!\url{https://gnuplot.sourceforge.net/docs_4.2/node356.html}\\
+!According to this page, the following fonts may be available
+! Helvetica	 
+ 	! Helvetica Bold	 
+ 	! Helvetica Oblique	 
+ 	! Helvetica Bold Oblique	 \\
+ 	! Times Roman	 
+ 	! Times Bold	 
+ 	! Times Italic	 
+ 	! Times Bold Italic	 \\
+ 	! Courier	 
+ 	! Courier Bold	 
+ 	! Courier Oblique	 
+ 	! Courier Bold Oblique	 \\
+ 	! Symbol	 \\
+ 	! Hershey/Cartographic_Roman	 
+ 	! Hershey/Cartographic_Greek	 
+ 	! Hershey/Simplex_Roman	 
+ 	! Hershey/Simplex_Greek	 
+ 	! Hershey/Simplex_Script	\\ 
+ 	! Hershey/Complex_Roman	 
+ 	! Hershey/Complex_Greek	 
+ 	! Hershey/Complex_Script	 
+ 	! Hershey/Complex_Italic	 
+ 	! Hershey/Complex_Cyrillic	 
+ 	! Hershey/Duplex_Roman	 
+ 	! Hershey/Triplex_Roman	 
+ 	! Hershey/Triplex_Italic	\\ 
+ 	! Hershey/Gothic_German	 
+ 	! Hershey/Gothic_English	 
+ 	! Hershey/Gothic_Italian	 
+ 	! Hershey/Symbol_Set_1	 
+ 	! Hershey/Symbol_Set_2	 
+ 	! Hershey/Symbol_Math	 \\
+ 	! ZapfDingbats.
+!space within font name can be replaced with '-', e.g. Times-Roman.	
+ !endsection
+ 
+
 
 !Section joperation Operation of Jlp22
 !In this section the main structure of the operation of Jlp22 and tools
@@ -2462,11 +2596,20 @@ a call to function assone()
 ! The amount of printing is controlled with ]Printinput[ variable. 
 ! the dafault is Printinput=1. A problem in printing the input is how much should be
 !printed when many input lines are produced with ;do()
-!\endsection
+!endsection
 
 !Section printcommand # -lines are printed in one-line commands.
 ! The input lines which go directly to execution are printed starting with #.
-!\endsection
+!endsection
+
+!Section printcom Comments starting with !!, !*,** or *! are printed
+! The first non blank character in a command line is '!' or '*'.
+!If there are two consecutive comment characters, the line is printed, dropping the first
+!character.
+!endheader
+!Note There can be comment lines between continuation lines.
+!endnote
+!endsection
 
 !Section printoutput ]Printoutput[ guides printing of functions.
 ! The amount of printing in functions is guided with with variable [Printoutput[.
@@ -2475,7 +2618,7 @@ a call to function assone()
 !Several functions have print-> option which overrules ]Printoutput[
 ! The number of printed lines when printing MATRIX,TEXT, or TXT is controlled with 
 !variable ]Maxlines[, which is overruled with maxlines option in some functions.
-!\endsection
+!endsection
 
 
 !Section interactive Interactive operation
@@ -2516,7 +2659,7 @@ a call to function assone()
  ! Then it is not necessary to change anything if the file is stored in a different name.
  ! Thereafter comes the shortcut definitions for different sections.
  ! the same 
-! For instance, if the the section
+! For instance, if the section
 ! label is \\
 ! ;thistask:\\
 ! then the shortcut definition could be
@@ -2536,10 +2679,10 @@ a call to function assone()
 ! in place the problems started.
 
 ! If a Jlp22 code line, either in the input paragraph defining a transformation object
- ! or outside it, ends with ';' or ';;', the the output object of the code line may be printed.
-! The output of ';'-line is printed if the variable ]Printoutput[ has value 1 or 3 at the time when the the
+ ! or outside it, ends with ';' or ';;', the output object of the code line may be printed.
+! The output of ';'-line is printed if the variable ]Printoutput[ has value 1 or 3 at the time when the
  ! code line is computed.
- ! The output of ';;'-line is printed if the variable ]Printoutput[ has value 2 or 3 at the time when the the
+ ! The output of ';;'-line is printed if the variable ]Printoutput[ has value 2 or 3 at the time when the
  ! code line is computed.
  
  ! If a code line within a tranformation has function pause('text'), then a pause is generated during which
@@ -2558,7 +2701,7 @@ a call to function assone()
  ! What happens when an error is encountered is dependent on the value of variable ]Continue[. If ]Continue[ has
  ! value 0 (the default case), the control comes into sit> prompt when an real error occurs or if an atrficial 
  ! error condition is generated with errexit(). If ]Continue[ has value 1 then the computation continues in
- ! the same script file where the error occured. This property is used in file jexaples.inc to demonstrate 
+ ! the same script file where the error occured. This property is used in file jexamples.inc to demonstrate 
  ! possible error conditions so that the computation continues as if no error had occured.
 
  
@@ -2699,18 +2842,15 @@ a call to function assone()
 ! LP problems found in forest management planning.
 ! endsection
 
-! Section Plotting Plotting figures
-! The graphiscs of the current version of Jlp22 is produced Gnuplot. Jlp22 offers nowan alternative interface
-! to Gnuplot, and it is quite easy to add more plotinng routines later.
-! endsection
+
 
 ! Section spline Splines, stem splines,  and volume functions
 ! There are several spline functions.
 !endsection
 
 !Section bit Bit functions
-! bit functions help to store large amound of binary variables in small space. 
-! These functions are used in domain calcualtions
+! bit functions help to store large amount of binary variables in small space. 
+! These functions are used in domain calculations
 ! endsection
 
 !Section misc Misc. functions
@@ -2755,7 +2895,7 @@ a call to function assone()
   
  
  
- ! \bibitem{LL},
+ ! \bibitem{LL}
     !Lappi, Juha and Lempinen, Reetta (2014)
     ! \emph{A linear programming algorithm and software 
 		! for forest-level planning problems
@@ -2763,10 +2903,10 @@ a call to function assone()
     ! Scandinavian Journal of Forest Research,29 Supplement 178--184",
    ! DOI =  http://dx.doi.org/10.1080/02827581.2014.886714
  
- \bibitem{gnu}
-Thomas Williams, Thomas and Kelley, Colin (2022),
-  \emph{Gnuplot 5.5},
-  url = http://gnuplot.info/docs_5.5/
+ ! \bibitem{gnu}
+! Thomas Williams, Thomas and Kelley, Colin (2022),
+  ! \emph{Gnuplot 5.5},
+  ! url = http://gnuplot.info/docs_5.5/
 
 
  
@@ -2778,7 +2918,7 @@ Thomas Williams, Thomas and Kelley, Colin (2022),
 ! endsection
 
 ! Section future Future development
-!The previous version contained possiblities to include factories into the optimization.
+!The previous version contained possibilities to include factories into the optimization.
 ! Factory optimization is not available in the current version, because I'm now 
 ! building a completely new version. I have already cleaned the data structures
 ! of linear programming
@@ -2790,21 +2930,21 @@ Thomas Williams, Thomas and Kelley, Colin (2022),
 ! I think that the current version of Jlp22 provides many possibilities for future developments.
 ! For instance:
 ! \begin{itemize}
-! \item\item The current version does not have any special functions 
+! \itemThe current version does not have any special functions 
 ! for making simulators. The new goto() commands, possibility to work with submatrices, 
 ! and the new transdata() function provide much more efficient ways to develop simulators.
 ! Examples will be provided shortly.
 ! \item Using the possibility to compute derivatives using the analytic derivates makes it quite straightforward
 ! to make it possible to have a nonlinear objective function and nonlinear constraints. These things
 ! are under design.
-!\item It would be quite easy to inclued tools for piecewise linear constraints
+!\item It would be quite easy to include tools for piecewise linear constraints
 !and objectives.
 ! \item It would be quite easy to develop Jlp22 so that integer solution is produced with respect to the 
 ! schedule weight.
 ! \item It would be interesting to see how Jlp22 can put to work with Heureka.
-! \item The possiblity to run R scripts from Jlp22 and Jlp22 scripts from R provide new possiblities.
+! \item The possibility to run R scripts from Jlp22 and Jlp22 scripts from R provide new possibilities.
 ! \item Jlp22 can now be used as an interface to Gnuplot. 
-! Google search show how many possiblities Gnuplot provides.
+! Google search show how many possibilities Gnuplot provides.
 ! It is quite straightforward to implement these graphs if it is not currently possible.
 ! \item The possibility to generate random numbers from any discrete or continuous distribution provide new 
 ! possibilities to study the effects of random errors in the optimization.
@@ -2813,42 +2953,175 @@ Thomas Williams, Thomas and Kelley, Colin (2022),
 ! \end{itemize}
 ! endsection
 
-! Section LP Linear programming theory
-! This chapter will later describe more closely the theoretical aspects of the linear programming
+!Section LP Linear programming
+! This chapter decribes the key points  of the Jlp-algoritm and the available 
+! Jlp22 functions. 
+!endsection
+
+
+! Section JLPalgo JLP linear programming algorithm 
+! This section will later describe more closely the theoretical aspects of the linear programming
 ! functions. Now only some key concepts are listed. Now the reader is referred to the old
-! JLP manual (Lappi 1992) and Hyv\"onen et al 
+! JLP manual \href{run:./jlp92.pdf}{jlp92.pdf}, the description of the factory optimization in
+!\href{run:./lappilempinen.pdf}{lappilempinen.pdf}, and an application of the factory optimization in 
+! \href{run:./hyvonenetal2019.pdf}{hyvonenetal2019.pdf}
 
-! The concepts in the JLP algorithm
-
+! The development of JLP algorithm
+!
+! \begin{itemize}
+ !\item JLP
 
 ! \begin{itemize}
+!\item The JLP algorithm was designed for forest management planning problems having the following structure.
+! A simulator generates a large number of treatment schedules
+ ! for each stand in a group of stands. 
+ !\item In an optimization problem a linear combination of sums of
+  ! variables (e.g. amount of harvested sawlogs during a period) produced in treatments is maximized or minimized subject to constraints which are also
+	! linear combinations of variables.
+	
+! \item The key point is 
+! the generalized upper bound (GUB) technique of Dantzik and Van Slyke (see \href{run:./gub.pdf}{gub.pdf})
+! which I reinvented. The key idea is to remove with algebraic tricks 
+! the area constraints. 
+
 ! \item In a optimization problem with schedules generated for each stand, there must be a area 
 ! constraint for each stand telling that shares of schedules add up to one in each stand.
-! \item In the generalized upper bound (GUB) technique of Dantzik and van Slyke, the area contraints can
-! be dropped with slight overhead cost.
+! \item In the GUB technique, the area contraints can
+! be dropped with slight overhead cost. In a typical problem,the data can consist of 10000 stands, and and 
+! optimization problem can consist of 10 contraints for the sums ofe variables. Using an ordinary LP software 
+! in one iterative optimization step, a matrix consisting of 100200100 elements is updated. 
+!In JLP the equivalent 
+! step is computed by updating a matrix consisting 100 elements.
+
 ! \item The heuristic algorithm of Hoganson and Rose (1984) and 
-! Hoganson and Kapple (1991) lead to similar computations where a schedule
+! Hoganson and Kapple (1991) leads to similar computations where a schedule
  ! in  a stand is selected using shadow prices. Their shadow prices are updated heuritically but 
  ! JLP algorith updates the prices using the linear programming theory.
+ 
  ! \item The key concept in GUB is the key variable, in our case the key schedule, which is
  ! any of the schedules which has nonzero weight.
+ 
 ! \item JLP algorithm is also using the ordinary upper bound technique. If there is both
 ! lower and upper bound in a contraint, the standard theory assumes that the lower bound and upper bound
 ! constraints are presented  as different constraints. In the ordinary upper bound technique there
 ! is only one constraint, and the algorithm keeps either of the bounds as the active bound.
-! \item JLP of Lappi (1992) introduced domains, i.e.. subsets of stands into the problem
+! \item JLP used own matrix subroutines which computed all the time the explicit inverse
+! of the basis matrix. 
+ !\item When a constraint is not binding, in standard algorithms, a residual variable tells 
+! the difference between the contraint row and the active bound. JLP reduced the dimension of the basis matrix,
+!which was a feasible solution because the explicit inverse of the basis was used.
+! \item JLP  introduced domains, i.e.. subsets of stands into the problem
 ! defition. They decrease the memory needs and help to formulate more reasonable problems.
 ! Their utility to define spatial constraints is not fully utilized.
-! \item When a constraint is not binding, standard algorithms, a residual variable tells 
-! the difference between the contraint row and the active bound. Algorithm of Lappi (1992)
-! reduced the dimension of the basis matrix. 
-! \item Lappi (1992) used own matrix subroutines which computed all the time the explicit inverse
-! of the basis matrix. Jlp22 is using matrix routines of Fletcher based on Flethcer (1996)
-! \item In Lappi and Lempinen (2014) the GUB technique is extended to deal with
-! constraints telling that all harvested logs are transported to somewhere. Hyv\"onen et
-! al (2019) applied the algorithm in a small project in North-Carelia. Note that the DTRAN algoritm can deal with 
-! factories also.
-! \item In optimization with factories, there is for any log type harvested in a given time a
-! key factory to which something is transported.
+! \item JLP allowed to compute new variables from the simulated variables. 
+! I have suggested (in vain) since 1992 that Mela would compute only forest variables and economic variables
+! would be feeded in JLP. This way it would not be necessary to resimulate when trying different prices.
+!\item JLP offered the possibility to duplicate a schdedule. GAYA group has utilized this by duplicating a schdeule so tha that
+! in one copy of a no-harvest schedule the final stae has postive net presetn value and anothe copy does not.
+!\item JLP was written in Fortran77, which did not have
+! dynamic allocation, pointers or own data types.
+! \item In writing the JLP algorithm, oaly very small part of the working time went to get the algorithm work correctly
+! mathematically. The most difficult thing was the fight against rounding errors, i.e. trying to infer whther a small
+!number is zero or not, and whether a number is really larger than another number even if the computer values indicated that.
+!\item JLP had a precompiler which could be used to handle compiler options and the sizes of vectors.
+!Fortran77 did not have dynamic alloacation of vectors.
 ! \end{itemize}
+! \item J, the successor for JLP
+! \begin{itemize}
+! \item Version 0.9.3 was published in 2004
+! \item Initially the same JLP algorithm but J was using matrix routines of Fletcher which were changed into
+! double precision. Flethcer's code was written in Fortran77.
+! \item J was written in Fortran90 which has dynamic allocation of vectors, pointers etc.
+! \item New tools 
+	! for preprocessing of data and postprocessing of results, and these computations
+! can be used  also without LP problems.
+!\item Mela has not
+ ! included J as
+ ! as the optimizer, but it is possible to pull out simulated schedules from Mela and then
+ ! define and solve linear programming problems using J. 
+!item  J version 2.0. published in 2013 made it possible optimize simultatenously
+ ! forestry and transportations to factories
+ ! and factory production. Theory is published in \href{run:./lappilempinen.pdf}{Lappi and Lempinen 2014} \hspace{0.2cm} Paper explaining the theory behing factory optimization.
+!\item The generalized upper bound tehcnique is extended 
+ ! for constraints which tell that
+ ! all harvested timber volume in a stand is transported somewhere. 
+ !\item The key idea is to have in each stand and for all harvested log types and for all periods a key factory to which some timber is tranported
+ ! provided that the cuttings produce that log type for that period.
+!end{itemize}
+!\item  DTRAN algoritm of Hoganson is an competitor of Jlp22 because it can deal with
+! factories also.
+!
+! \end{itemize}
+!endsection
+
+!Section error Error handling
+!There can happen basically three kinds of errors:
+!endsection
+
+! Section errortype Error types
+! \begin{itemize}
+! \item The user makes an error an Jlp22 detects the error, writes the proper error message
+! and returns the control to the sit> prompt in the console, if variable Continue has value zero. If Continue has a nonzero value
+! Jlp22 continues one level above the console.
+
+! The user makes an error, but Jlp22 does not recognize this. As Jlp22 should recognize all errors the
+! user can make, this case is thus also a programming deficiency.
+! In this case Jlp22 
+! behaves similarly as in the following case.
+
+! \item The error is a programming error in Jlp22. Then two cases can happen:
+! \begin{itemize}
+! \item Jlp22 does not recognize that something is in error, and the system crashes. The debug
+! version writes then more information than the release version. It is important that Jlp22 is
+! used in the commend prompt, so that it does not just disappear.
+! \item Jlp22 recognizes in lower level subroutines that something is wrong, but the 
+! lower level subroutine does not know waht is the reason. Thwe Jlp22 prints an error message
+! starting with *j*. Even if the user recognizes that she was guilty, thes cases should be reported
+! so that detection of user errors can be improved.
+! \end{itemize}
+!\end{itemize}
+!endsection
+
+! Section errorhand Handling of errors
+! There are two control layers, input programming and execution of one-line commands. Both can utilize
+! the code obtained with parser, but input programming is utilizing the parser only a little.
+! Jlp22 function can use TRANS objects containing packed parsed code in many different ways.
+! There can be nesting both in input programming and executing TRANS objects. The ;incl files 
+! can be nested up to 5 levels. Functions can be recursive in many different ways. A function can call itself
+! through many routes. 
+
+! In case of error should be able to tell for all nested ;incl files what line is 
+! processed, and errors within TRANS objects should be able to tell through the calling sequence 
+! which line is under execution.
+! Let us test this in the following example.
+! endheader
+
+!Ex errorex
+! round=5
+! write('inca.txt',$,'**we are in inca.txt')
+! write('inca.txt',$,'round;')
+! write('inca.txt',$,';incl(incb.txt)')
+! close('inca.txt')
+! print_f('inca.txt')
+! write('incb.txt',$,'**we are in incb.txt')
+! write('incb.txt',$,'round;')
+! write('incb.txt',$,'round=round-1;')
+! write('incb.txt',$,'call(transa)')
+! write('incb.txt',$,';incl(inca.txt)')
+! close('incb.txt')
+! print_f('incb.txt')
+! transa=trans()
+! c=4/round;
+! /
+! ** let us see what happens
+! Continue=1
+! ;incl(inca.txt)
+! ** maximum ;incl nesting was obtained
+
+! round=2
+! ** what happens now?
+! ;incl(inca.txt)
+! Continue=0
+! delete_f('inca.txt','incb.txt')
+! endex
 !endsection

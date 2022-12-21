@@ -3,7 +3,7 @@
 #
 
 JR<-function(input="j.par",output="JR.log",print=TRUE) {
-      result<-.Fortran("j",as.character(input),FALSE)
+      result<-.Fortran("Jlp22",as.character(input),FALSE)
 #      if (result[[2]]) print("A call to j returned an error")
       if (print) a<-system("cat fort.6")
       file.rename("fort.6",output)

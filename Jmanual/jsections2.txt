@@ -15,16 +15,28 @@ section changes
 
 section intro
 subsection intro1
+!subsection system
 subsection intro2
 
 section git
 subsection gitpack
 subsection gitload
+
+section install
+subsection installjlp22
+subsection installgnuplot
+subsection installrscript
+subsection afterinstall
 section typo
+subsection wrfunc
+subsection wropt
+subsection wrinpu
+subsection wrobj
+subsection wrtype
 section license
-section start
-subsection install
-subsection runex
+!section start
+
+section runex
 !!!;return
 !!!ubsection compo
 section cominout
@@ -66,6 +78,7 @@ subsubsection datafunc
 subsubsection transfunc
 subsubsection regrfunc
 subsubsection isnotfunc
+subsubsection isreal
 
 subsection arguments
 subsection options
@@ -74,6 +87,10 @@ subsubsection codeoption
 
 section arith
 subsection arfu1
+subsection trigfu
+subsection atrigfu
+subsection hyper
+subsection mod
 subsection conversion
 subsection minmax min() and max()
 subsection sign
@@ -91,6 +108,7 @@ subsection basicloop
 subsection printing
 subsubsection printinpu
 subsubsection printcommand
+subsubsection printcom
 subsubsection printoutput
 subsection interactive
 subsubsection inpupause
@@ -105,21 +123,6 @@ subsection type
 subsection delete_o delete_o()
 subsection existo  exist_o()
 subsection name name()
-
-!!subsection jfunc
-
-
-
-
-section system
-!subsection setup
-!subsection firstuse
-
-
-
-
-
-
 
 
 section jtrans
@@ -140,18 +143,7 @@ subsection list20 list2()
 subsection setcode setcodeopt()
 subsection own
 
-
-
-
-
 section Transformations
-
-! subsection trans trans()
-!!!subsection call call()
-
-!subsection noptions noptions()
-
-
 
 
 section loops Loops and controls structures
@@ -297,6 +289,7 @@ section file File handling
 
 subsection existf
 subsection delete_f
+subsection printf
 subsection close
 subsection showdir
 subsection setdir
@@ -307,6 +300,7 @@ section io io-functions
 subsection read read()
 subsection write write()
 subsection print print()
+subsection printf
 subsection ask	ask() asking REAL value
 subsection askc askc() asking character
 subsection printresult 
@@ -342,6 +336,8 @@ subsection newdata newdata(): making a new DATA from matrices posssibly with tra
 subsection datawcase datawcase(): making a new DATA having names for cases
 subsection exceldata exeldata(): making DATA from excel file 
 subsection linkdata linkdata(): linking two DATA objects
+subsection splitdata linkdata(): splitting
+subsection joindata 
 subsection getobs getobs(): getting an observation from DATA
 subsection nobs nobs(): number of observations
 subsection classvector classvector(): extracting information from grouped data 
@@ -365,15 +361,16 @@ subsection classify classify(): group means, group standard devitions and standa
 subsection class class(): class of a given observation
 !
 section LP
-section jlpintro Linear programming
+subsection JLPalgo
+!!subsection jlpintro Linear programming
 subsection problemo PROBLEM object
 subsection problem problem(): defining a a PROBLEM object
 !subsection problem2 problem(): defining a a PROBLEM object
 subsection jlp jlp(): solving a PROBLEM with schedules data,
 subsection jlpz jlpz(): solving an ordinary Lp-problem
-subsection jlpcoef 
-subsection weights weights() weights of schedules
-subsection partweights
+subsection jlpcoef  
+!!subsection weights weights() weights of schedules
+!!subsection partweights
 !subsection unit unit() unit of a schedule
 ! subsection schedcum schedcum(): cumulative schedule number
 ! subsection schedw schedw(): within unit schedule number
@@ -393,13 +390,22 @@ subsection partweights
 !
 	
 section Plotting figures
-subsection figu
+!subsection figu
+!subsubsection FIGu
+subsection show
+subsection font
+subsection color
+subsection terminal
+subsection window
+subsection legend
+
+
 !!subsubsection figureo
 subsection plotyx plotyx(): scatterplot
 subsection draw draw() drawing a function
 subsection drawclass drawclass() drawing classmeans and possibly se's of class means
 subsection drawline drawline(): line through points, used also for labels
-subsection show show(): showing a FIGURE object, possibly with updated paramters
+!subsection show show(): showing a FIGURE object, possibly with updated paramters
 subsection plot3d plot3d() 3d plot 
 !
 section spline Splines, stem splines,  and volume functions
@@ -431,6 +437,10 @@ subsection cpu cpu()
 subsection secnds secnds()
 !
 !
+section error
+subsection errortype
+subsection errorhand
+
 section JR
 subsection R R()
 subsection Rcalls
