@@ -156,25 +156,25 @@ subroutine pullout(LWSLL1)
 	!j_yes=j_err
 	j_err=.false.
  
-	call j_defmatrix(0,'Pomatrix',p_nrow,p_nrow,j_matreg,p_ivpomatrix)
+	call j_defmatrix(j_ivout,'%basis',p_nrow,p_nrow,j_matreg,p_ivpomatrix)
 	! call j_defmatrix(0,'po%xps'//ch,1,p_nrow+1,j_matreg,iv)
 	! j_o(iv)%d(1:p_nrow+1)=p_xps
 	! call j_defmatrix(0,'po%xrow'//ch,1,p_nrow+1,j_matreg,ivrow)
 	! j_o(ivrow)%d(1:p_nrow+1)=p_xps
 	! call j_defmatrix(0,'po%rhsw'//ch,1,p_nrow,j_matreg,ivrhs)
-	call j_defmatrix(0,'Pox',1,p_nrow,j_matreg,p_ivpox)
+	call j_defmatrix(j_ivout,'%x',1,p_nrow,j_matreg,p_ivpox)
 	! call j_defmatrix(0,'po%vc'//ch,1,p_nrow,j_matreg,ivc)
-	call j_defmatrix(0,'Pobj',1,p_nrow,j_matreg,p_ivpoobj) !ivob)
+	call j_defmatrix(j_ivout,'%obj',1,p_nrow,j_matreg,p_ivpoobj) !ivob)
 	if(p_xpresent)then
-		call j_deflistobject(0,'Pounit',p_ivpounit,list0=p_nrow,ilist=.true.)
-		call j_deflistobject(0,'Pokey',p_ivpokey,list0=p_nrow,ilist=.true.)
-		call j_deflistobject(0,'Pos',p_ivpos,list0=p_nrow,ilist=.true.)
-		call j_deflistobject(0,'Pibaunit',p_ivpoibaunit,list0=p_nrow,ilist=.true.)
+		call j_deflistobject(j_ivout,'%unit',p_ivpounit,list0=p_nrow,ilist=.true.)
+		call j_deflistobject(j_ivout,'%key',p_ivpokey,list0=p_nrow,ilist=.true.)
+		call j_deflistobject(j_ivout,'%s',p_ivpos,list0=p_nrow,ilist=.true.)
+		call j_deflistobject(j_ivout,'%baunit',p_ivpoibaunit,list0=p_nrow,ilist=.true.)
  
-		call j_deflistobject(0,'Polist',ivpolist,list0=6)
+		call j_deflistobject(j_ivout,'%list',ivpolist,list0=6)
 		j_o(ivpolist)%i2(1:6)=(/p_ivpomatrix,p_ivpox,p_ivpoobj,p_ivpounit,p_ivpokey,p_ivpoibaunit/)
 	else
-		call j_deflistobject(0,'Polist',ivpolist,list0=3)
+		call j_deflistobject(j_ivout,'%list',ivpolist,list0=3)
 		j_o(ivpolist)%i2(1:3)=(/p_ivpomatrix,p_ivpox,p_ivpoobj/)
 	endif !if(p_xpresent)    168
 	! call j_defmatrix(0,'po%a'//ch,p_nrow,p_mxn+1,j_matreg,iv)
