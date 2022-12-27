@@ -54,6 +54,7 @@ module jmod
 	double precision,parameter::j_pi=3.14159265358979323
 	double precision,parameter::j_0=0.d0
 	double precision,parameter::j_1=1.d0
+	integer*8  ::j_18=1
 	double precision,parameter::j_m1=-1.d0
 	double precision,parameter::j_deg=j_pi/180.d0 !100.d0  !korjaa  j_deg makes degrees to radians
 	double precision,parameter::j_todeg=180.d0/j_pi !korjaa !makes radians to degrees
@@ -303,7 +304,7 @@ module jmod
 		1,4,4,&
 		! 'interpolate','plane','bilin', & !3
  
-		0,2,2,1,2,1,1,2,2,&
+		0,1,2,1,2,1,1,2,2,&
 		! 'list','merge','difference','index','index_v','len','ilist','putlist','table',& ! 8
  
 		0,0, &
@@ -385,7 +386,7 @@ module jmod
 		1,4,4,&
 		! 'interpolate','plane','bilin', & !3
  
-		0,2,2,1,2,1,1,2,2,&
+		0,9999,2,1,2,1,1,2,2,&
 		! 'list','merge','difference','index','index_v','len','ilist','putlist','table',& ! 8
  
 		0,0, &
@@ -458,7 +459,7 @@ module jmod
  
  
 	!free options free$
-	parameter (j_noptions_=211) !!!option number of j_ options
+	parameter (j_noptions_=212) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 		'extra','subextra','mean', 'min','max',& ! 1-10
@@ -481,7 +482,7 @@ module jmod
 		'stop','rfvars','first','last','echo','list','delete','ext','got','do','set','xlabel', & !171-179
 		'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
 		'tailtofirst','tailtolast','cumulative','time','missing','clean','factgroup','dpivot','int','pullout',&
-		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170
+		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -518,7 +519,7 @@ module jmod
 	parameter (j_mtailtofirst=194,j_mtailtolast=195,j_mcumulative=196,j_mtime=197,j_mmissing=198)
 	parameter (j_mclean=199,j_mfactgroup=200,j_mdpivot=201,j_mineuueut=202,j_mpullout=203)
 	parameter (j_mbasis=204,j_mcondition=205,j_mfastdif=206,j_mmarksize=207,j_mkeepopen=208)
-	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211)
+	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211,j_milist=212)
 	integer,parameter :: j_nnamedoptarg=58
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
 	data j_namedoptarg / & !%%options which should have named objects as arguments
@@ -892,6 +893,7 @@ module jmod
 	type j_basicobject  ! defines basic J-object types
 	real, dimension(:),allocatable ::r  ! real vector associated with each  object
 	integer, dimension(:),allocatable ::i ! integer vector associated w ith each object
+	!	integer*8, dimension(:),allocatable ::i8 ! integer vector associated w ith each object
 	integer, dimension(:),allocatable::i2  !second integer vector, contains usually object indexes of subobjects
 	double precision, dimension(:),allocatable::d ! double precision vector associatedhh
 	character*1,dimension(:), allocatable::ch ! character*1 -vector associated with each object
@@ -1011,6 +1013,7 @@ module jmod
 	!!module showmod
 	integer j_ivrfile,j_icolors
 	integer j_ivgo_on
+	integer*8 j_i8
 	!!end motule
 	!!module tracemod
 	!integer :: j_level
@@ -1028,7 +1031,7 @@ module jmod
 	integer, dimension(:),allocatable::j_traceline,j_traceiv,j_traceii
 	integer,parameter::j_txtlen=160
 	character*160,dimension(:),allocatable::j_temptxt
-	double precision,dimension(:),allocatable::j_tempvector
+	double precision,dimension(:),allocatable::j_tempvector,j_tempvector2
 	integer,dimension(:),allocatable::j_itempvector,j_itempvector2,j_itempvector3
 	!	integer,dimension(:,:),allocatable::j_itempvector2d
  
@@ -1057,11 +1060,15 @@ module jmod
 	!	integer j_ndatasets
  
 	!	integer j_levels,j_level
-	integer::j_divdata,j_dnobs,j_dfilterlink,j_drejectlink,j_divtrans,j_divvars,j_dimat,j_divvars2
+	integer::j_divdata,j_dfilterlink,j_drejectlink,j_divtrans,j_divvars,j_dimat,j_divvars2
+	integer::j_dnobs
+	integer*8::j_dnobs8
 	integer::j_dnkeep,j_divkeep,j_dimatup,j_divkeepup,j_dnkeepup,j_divnobsw
-	integer::j_divobsup,j_dnextobs,j_diba,j_dibaup,j_divobsw,j_divobs,j_diob,j_dobsup
+	!integer::j_dnkeep,j_divkeep,j_dimatup,j_divkeepup,j_dnkeepup,j_divnobsw
+	integer::j_divobsup,j_divobsw,j_divobs,j_diob,j_dobsup
 	logical::j_disup,j_distrans,j_disreject,j_disfilter,j_disprint
-	integer::j_dfrom,j_duntil,j_dprint,j_depilog
+	integer*8::j_dfrom,j_duntil,j_diba,j_dibaup,j_dnextobs
+	integer ::j_dprint,j_depilog
  
 	integer::j_dnup
 	integer,parameter:: j_dmaxlevels=20
@@ -1474,6 +1481,7 @@ module jmod
 	double precision, dimension(:),pointer:: p_redcost
  
 	integer p_ivshpx,p_ivlr,p_ivlri,p_ivlx,p_ivlxi,p_ivlz,p_ivlzi,p_ivredcost,p_ivrefac
+	integer p_ivvaluek,p_ivvalueopt
 	! unit information for columns of D
 	integer p_lunit0		! first unit
 	!*next	next(0:mxn) !  is used to travel through columns of D so that
@@ -1716,7 +1724,7 @@ module jmod
 	integer p_ivdatac !
 	integer p_ivs ! index of schedule variable
  
-	integer p_nstot
+	integer*8 :: p_nstot
 	logical p_tried
 	integer p_maxrounds
 	integer ::p_itran,p_itrans,p_itemp,p_maxns,p_ivcdata  !,p_ncvararea,p_needc
@@ -1849,12 +1857,14 @@ module jmod
 	integer p_pivot9,p_iunitprev,p_pivotold
 	integer p_iunit55
 	integer p_icolold,p_icolnew,p_pivotcase
+	integer p_ivpivotcases,p_ivroute67
 	integer p_i1
 	logical p_goto401
 	logical p_goto900,p_goto1234,p_goto1578,p_goto400,p_goto36
 	logical p_goto100,p_goto5316,p_goto222,p_goto55,p_goto112233
 	logical p_goto8888,p_goto8889,p_goto700 ! input for leaving
 	integer p_zerob
+	logical p_isobj0,p_isobj2
 	! logical p_oto401
  
  
@@ -1932,6 +1942,7 @@ module jmod
 		end subroutine !subroutine j_getoption_name(iob,option,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg,istart)
 	end interface !interface j_getoption
  
+ 
 	! interface j_getoption2
 	! subroutine j_getoption2_index(iob,io,moption,minarg,maxarg,iptype,needsarg,noptarg,optarg)
 	! integer, intent(in):: iob
@@ -1971,27 +1982,29 @@ module jmod
 	! character*(*), intent(in):: option
 	! end function
 	! end interface
-	interface j_putmatrix
-		subroutine j_putmatrix_s(ivmat,irow,icol,val)
-			integer, intent(in):: ivmat,irow,icol
-			real, intent(in):: val
-		end subroutine !subroutine j_putmatrix(ivmat,irow,icol,val)
-		subroutine j_putmatrix_d(ivmat,irow,icol,val)
-			integer, intent(in):: ivmat,irow,icol
-			double precision, intent(in):: val
-		end subroutine !subroutine j_putmatrix(ivmat,irow,icol,val)
-	end interface
+	! interface j_putmatrix
+	! subroutine j_putmatrix_s(ivmat,irow,icol,val)
+	! integer, intent(in):: ivmat
+	! integer*4,intent(in) ::irow,icol
+	! real, intent(in):: val
+	! end subroutine !subroutine j_putmatrix(ivmat,irow,icol,val)
+	! subroutine j_putmatrix_d(ivmat,irow,icol,val)
+	! integer, intent(in):: ivmat
+	! integer*4,intent(in)::irow,icol
+	! double precision, intent(in):: val
+	! end subroutine !subroutine j_putmatrix(ivmat,irow,icol,val)
+	! end interface
  
  
  
-	interface j_chr8
-		character*8 function j_chr8_s(a)
-			real, intent(in):: a
-		end function !character*8 function j_chr8(a)
-		character*8 function j_chr8_d(a)
-			double precision, intent(in):: a
-		end function !character*8 function j_chr8(a)
-	end interface
+	! interface j_chr8
+	! character*8 function j_chr8_s(a)
+	! real, intent(in):: a
+	! end function !character*8 function j_chr8(a)
+	! character*4 function j_chr8_d(a)
+	! double precision, intent(in):: a
+	! end function !character*8 function j_chr8(a)
+	! end interface
  
  
  
@@ -2313,6 +2326,15 @@ module jmod
 			integer, intent(in):: iv
 		end subroutine !subroutine j_del(iv)
  
+		integer*8 function  j_i4i8(i4)
+			integer,dimension(2),intent(in)::i4
+		end function
+ 
+		subroutine j_i8i4(i8,i4)
+			integer,dimension(2),intent(out)::i4
+			integer*8,intent(in)::i8
+		endsubroutine
+ 
 		subroutine j_del0(iv) !deletes object, NOT subobjects  !!object
 			integer, intent(in):: iv
 		end subroutine !subroutine j_del0(iv)
@@ -2347,14 +2369,43 @@ module jmod
 		end subroutine !subroutine j_deftext2(iv,name,lines,leng,lines2,ivout)
  
 		!20150812(arg1<->arg2) oli: 		subroutine defmatrix(name,iv,ndim1,ndim2,itype,ivout)
-		subroutine j_defmatrix(iv,name,ndim1,ndim2,itype,ivout,single)
-			integer, intent(in):: iv,ndim1,ndim2,itype
-			integer, intent(out):: ivout
-			character*(*), intent(in):: name
-			logical,intent(in),optional:: single
-		end subroutine !subroutine j_defmatrix(iv,name,ndim1,ndim2,itype,expand,ivout)
  
 		!20150812(arg1<->arg2) oli: 		subroutine defdata(name,iv,ivmat,ivkeep,ivcases,ivprolog,ivmaketrans,ivtrans,&
+ 
+		integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod)
+			integer, intent(in):: iv,itype
+			integer,intent(in) ::ndim1,ndim2
+			character*(*), intent(in):: name
+			logical,intent(in),optional:: single
+			logical,intent(in),optional:: nod
+		end function !subroutine j_defmatrix(iv,na
+ 
+ 
+ 
+		integer	function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod)
+			integer, intent(in):: iv,itype
+			integer*8,intent(in) ::ndim1,ndim2
+			character*(*), intent(in):: name
+			logical,intent(in),optional:: single
+			logical,intent(in),optional:: nod
+		end function !subroutine j_defmatrix(iv,name,ndim1,ndim2,itype,expand,ivout)
+ 
+		subroutine j_putmatrix(ivmat,irow,icol,val)
+			integer, intent(in):: ivmat
+			integer*4,intent(in) ::irow,icol
+			double precision, intent(in):: val
+		end subroutine !subroutine j_putmatrix(ivmat,irow,icol,val)
+ 
+		subroutine j_putmatrix8(ivmat,irow,icol,val)
+			integer, intent(in):: ivmat
+			integer*8,intent(in) ::irow,icol
+			double precision, intent(in):: val
+		end subroutine !subroutine j_putmatrix(ivmat,irow,icol,val)
+ 
+ 
+ 
+ 
+ 
 		subroutine j_defdata(iv,ivmat,ivkeep,ivcases)
 			integer, intent(in):: iv,ivmat,ivkeep
 			!	integer, intent(in):: ivsub,ivnobsw,ivup,ivobsw,ivnobswcum
@@ -2394,6 +2445,18 @@ module jmod
 			integer,intent(in) ::iv
 			!j_dataobs=j_o(iv)%i(12)
 		end function !integer function j_dataobs(iv)
+ 
+		integer*8 function j_nrows(iv)
+			integer,intent(in)::iv
+		end function
+		integer*8 function j_ncols(iv)
+			integer,intent(in)::iv
+		end function
+ 
+		integer*8 function j_nelem(iv)
+			integer,intent(in)::iv
+		end function
+ 
  
 		integer function j_dataobsw(iv)  ! !!data
 			integer,intent(in) ::iv
@@ -2794,9 +2857,10 @@ module jmod
 		end function !function j_nextlim0(inp,ial,lop,limit)
  
 		!nextlim(inp,ial,lop,limit) :  Finds the next limiter.
-		function j_nextlim(inp,ial,lop,limit)
+		function j_nextlim(inp,ial,lop,limit,inhipsu)
 			character*(*), intent(in):: inp, limit
 			integer, intent(in):: ial,lop
+			logical,optional, intent(in):: inhipsu
 		end function !function j_nextlim(inp,ial,lop,limit)
  
 		function j_prevlim(inp,ial,limit)
@@ -3348,7 +3412,7 @@ module jmod
 		end function
  
 		subroutine j_getobs(iobs)
-			integer,intent(in)::iobs
+			integer*8,intent(in)::iobs
 		end subroutine
  
 		subroutine j_getobsup(iobs)
@@ -3383,7 +3447,7 @@ module jmod
  
 		subroutine j_getobs0(ivdata,iobs)  !get observation iob in dta set ivdta (upper levels not used)
 			integer, intent(in):: ivdata !data object
-			integer, intent(in) ::iobs
+			integer*8, intent(in) ::iobs
 		end subroutine !subroutine j_getob(ivdata,iob)
  
  
@@ -3463,7 +3527,7 @@ module jmod
 		subroutine j_getvalues(ix,value9,nval,iz,value2,nval2)
 			integer, intent(in):: ix, iz
 			double precision, dimension(*), intent(out):: value9,value2
-			integer, intent(out):: nval, nval2
+			integer*8, intent(out):: nval, nval2
 		end subroutine !subroutine j_getvalues(ix,value9,nval,iz,value2,nval2)
  
 		subroutine j_bitset(ifunc,irow,icol,val)
@@ -3761,7 +3825,7 @@ module jmod
 			integer, intent(in)::mets
 			double precision, intent(in),dimension(*)::y
 			integer, intent(in)::lkm
-			integer,intent(out)::n
+			integer*8,intent(out)::n
 			integer, intent(out)::nmets
 			double precision,intent(out),dimension(*) ::bias,sd,sb,sw,pien,suur,bias2
 			double precision, intent(out):: s2out

@@ -118,16 +118,30 @@
 ! debugging tools, so I hope that all users would now send problematic
 !runs to me.
 
-!Version Dec 20 2022 provides simple data formats for stroring schedules so that in the simulation tree only thos
-! nodes after branchinh are stored. See keepopen-> and continue-> options in data(). Function joindata() is
-! used to build the schedules from their components. Function splitdata() can be used to split data caontaining whole
-! schedules into thesae new compponent datas. splitdata() can be used to convert data generated with previous simulators
-! into this new format. It is recommeneded that a simulator generating data for Jlp22 startys to write directly into this new format.
+!In version 27.12. 2022 the main change is the possiblity to handle so large matrices that their
+! elements cannot be referred with 4-byte integers. Such matrices are needed for schedules from the whole 
+! country. This change did cause a large amount of boring editing.
+! There are places which are not put into 8-byte integer mode, and I will update
+! these places whenever needed. 
+!In the data structures, I have the hidden property to work with single precision matrices and with tree-structure
+! data which is not made into the tabular form using joindata() function. I will start to 
+! utilize these implicit properties when there is lack of memory even in the 64-bit environment. 
+! In this Github publication,
+! the release exe-file is not updated.
 
-! Now the variable telling the number of observations in DATA datab is always datab%obs. Similarly the variable
-! telling how many children that observation has in the lower level is now always datab%nobsw and it must be the 
-! telling how many children that observation has in the lower level is now always datab%nobsw and it must be the 
-! first varaible in the list of variables. This new legisaltion was necessary to keep the new multilevel 
+!Version Dec 20 2022 provides simple data formats for stroring schedules so that in the simulation tree only thos
+! nodes after branching are stored. See keepopen-> and continue-> options in data(). Function joindata() is
+! used to build the schedules from their components. Function splitdata() can be used to split data caontaining whole
+! schedules into these new compponent datas. splitdata() can be used to convert data generated with previous simulators
+! into this new format. It is recommeneded that a simulator generating data for Jlp22 
+!starts to write directly into this new format.
+
+! Now the variable telling the number of observations in DATA datab is always datab%obs.
+!  Similarly the variable
+! telling how many children that observation has in the lower level 
+! is now always datab%nobsw and it must be the 
+! first varaible in the list of variables. If the first variable is %nobsw, then its name is automatically
+! changed into the proper form. This new legislation was necessary to keep the new multilevel 
 !datas in order.
 
 !Version Dec 20 2022 gives possibility to change fonts in figures.
@@ -207,22 +221,24 @@
   ! Luke cannot let me take care of the publication but the leaders wanted to publish J
  ! themselves. This started a frustrating and humillating process which lasted until 7.10. 2021. 
  
- ! It has been difficult for me to recover from the time when I waited so many years
+ ! It has been difficult for me to recover from the time when I waited many years
  !  for the possibility to complete my life's work and saw that the days of my life were just running out without  
- ! giving me that possibility, just because the leaders of Luke had so decided. This process has been
+ ! giving me that possibility, just because the leaders of Luke so decided. This process has been
 ! a me-too experience for me, or perhaps a similar experience what
-! a mother undergoes when social workers take her child and put him into a orphanage where the child is
-!  given only water and bread but no education or care. In the previous versions of the preface, I decribed the process with details which 
- ! kept my bitterness alive. From this version I have dropped the names of the involved eleven leaders and all details of their doings
+! a mother undergoes when social workers take her child and put him into a dark room in an orphanage
+!where the child gets no education or care. In the previous versions of the preface, I decribed the process with details which 
+ ! kept my bitterness alive. From this version (or actually already in 24 Dec 2022)  I have dropped the names of the involved eleven leaders and all details of their doings
  ! and wrong doings. But I anyhow want to tell what was the essence of the process from my point of view.
  
- ! The process can be described as a hostile take over. I waited that the leaders would make the opening decision
+ ! The process can be described as a hostile take over. 
+ ! While still working in Luke, I waited that the leaders would make the opening decision
  !so that I could start develop J after my retirement. But finally I retired in February 2017 without getting that decision.
 ! Research director Johanna Buchert signed the opening decision 30. 8. 2017.
  ! I was not informed of the decision. I heard later that such decision has been made but 
  !I was not told what the decision contained even if I asked. 
  ! After my retirement I had make several improvements and bug corrections. 
- ! Luke rejected my co operation offer to include these codes in the publication it was preparing. Luke pretended
+ ! Luke rejected my co operation offer to include these codes in the publication it was preparing.
+!  Luke pretended
  ! that it did not need anything from me. This put Reetta into a difficult position because
  !of course she would need my support for preparing publication of tens of thousands 
  ! code and manual lines I had written. 
@@ -247,21 +263,19 @@
 !   is no explanation.
 !   Are the leaders brave enough to state their view now publicly?
  ! Does the the board of Luke and the Ministry of Agriculture and Forestry
- !agree with me or the leaders of Luke? A task of the Board of Directors is promote cooperation with stakeholders. 
-!  I am now a stakeholder in this matter, and other stakeholders are also linked to this project through their 
-!  cooperation with me. Can the board of Directors help to solve this dispute. 
-!  Or are the leaders even so brave that they could admit that they did not recognize during 
-!  the process that a researcher has the right to publish 
-!  his results but they have changed their opinion? I got finally the permission to publish my results, 
-!  but if the leaders of Luke do not accept this as right of a researcher, 
-!  other reseachers will be in trouble in the future.
+ !agree with me or the leaders of Luke? 
+ 
+ !I got finally, after a six-and-half years painful fight,the permission to publish my results, 
+!  but if the leaders of Luke do not accept this as a fundamental right of a researcher, 
+!  other reseachers will be in trouble in the future 
+! if they get results that leaders of Luke want to publish themselves.
  
  
  !Putting the ethical and legal aspects aside, the behaviour of the leaders of 
- ! Luke was not rational with respect to the interests of Luke. 
+ ! Luke was not rational with respect to the interests and tasks of Luke. 
 ! During the hostile take over, the leaders knew nothing of the code, and were not willing to
- ! learn to know.
-! Thus the leaders did not know that
+ ! learn to know. 
+! The leaders did not know that
  !the code contained so much dirty code
  ! that it could not be maintained and developed without my assistance.
  ! For instance, the linear programming, the most important part of the software, 
@@ -277,11 +291,19 @@
  ! start from clean table.
  ! The code without my support
  ! provided only slightly better perspectives than a one-time exe- file.
+ !The eleven leaders involved  were so eager to publish the code from which they knew nothing
+!  that they did not have time to listen to the person who knew everyhing in this matter
+ ! from the guiding ideas to dirty goto statements. 
  
- !Could the leaders of Luke be even so brave that they could admit that during their efforts to advance 
- ! the interests of Luke they were actually making harm to these because they 
- ! were not willing to listen the person who knew everyhing in this matter
- ! from the guiding ideas to dirty goto statements? 
+ !Luke states on its web pages that: 
+ !Luke’s task is to promote competitive business based on the sustainable use of renewable natural resources.
+ ! Could the leaders of Luke explain to me, to the public, to the Board of directors and to the ministry of
+! agriculture and forestry, how they promoted their task when they  
+! prevented me for over six years to develop the Jlp22 software without any salary?
+!Director general Johanna Buchert told in Olavinlinna 7.10. 2021 that 
+! there has actually been no disagreement between me and Luke. At this age, wasting six years is 
+! something, even if it may just be nothing to such big institutes as Luke.
+ 
  
 	
   
@@ -335,7 +357,7 @@
 !for the permission to use the portrait she drawed for my 70 yr birthday in 2021.
 
 !\vspace{0.5cm}
-!Suonenjoki 21.12.2022
+!Suonenjoki 27.12.2022
 !\vspace{0.5cm}
 !  Juha Lappi
 
@@ -1768,7 +1790,14 @@ $$=300
 ! option is on).
 ! endnote
 ! Ex jfuncex Examples of Jlp22-functions
-! a = sin(cos(c)+b) ! Usual arithmetic functions have numeric values as arguments
+!b,c=2,3;
+! a = sin(cos(c)+b); ! Usual arithmetic functions can have numeric values as arguments
+!c=matrix(2,2,in->);
+!1,2
+!3,4
+!/
+! ** now c is MATRIX
+! a = sin(cos(c)+b); 
 ! ! here the value of the argument of cos is obtained by 'computing' the value of real variable c.
 ! Dm=matrix(do->(0.1,40))
 !nob=nrows(Dm)

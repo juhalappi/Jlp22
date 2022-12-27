@@ -72,22 +72,24 @@ The leaders of Luke told that it is a good idea to open the software, and this i
 Luke cannot let me take care of the publication but the leaders wanted to publish \textbf{J} 
 themselves. This started a frustrating and humillating process which lasted until 7.10. 2021. 
  
-It has been difficult for me to recover from the time when I waited so many years 
+It has been difficult for me to recover from the time when I waited many years 
 for the possibility to complete my life's work and saw that the days of my life were just running out without 
-giving me that possibility, just because the leaders of Luke had so decided. This process has been 
+giving me that possibility, just because the leaders of Luke so decided. This process has been 
 a me-too experience for me, or perhaps a similar experience what 
-a mother undergoes when social workers take her child and put him into a orphanage where the child is 
-given only water and bread but no education or care. In the previous versions of the preface, I decribed the process with details which 
-kept my bitterness alive. From this version I have dropped the names of the involved eleven leaders and all details of their doings 
+a mother undergoes when social workers take her child and put him into a dark room in an orphanage 
+where the child gets no education or care. In the previous versions of the preface, I decribed the process with details which 
+kept my bitterness alive. From this version (or actually already in 24 Dec 2022)  I have dropped the names of the involved eleven leaders and all details of their doings 
 and wrong doings. But I anyhow want to tell what was the essence of the process from my point of view. 
  
-The process can be described as a hostile take over. I waited that the leaders would make the opening decision 
+The process can be described as a hostile take over. 
+While still working in Luke, I waited that the leaders would make the opening decision 
 so that I could start develop \textbf{J} after my retirement. But finally I retired in February 2017 without getting that decision. 
 Research director Johanna Buchert signed the opening decision 30. 8. 2017. 
 I was not informed of the decision. I heard later that such decision has been made but 
 I was not told what the decision contained even if I asked. 
 After my retirement I had make several improvements and bug corrections. 
-Luke rejected my co operation offer to include these codes in the publication it was preparing. Luke pretended 
+Luke rejected my co operation offer to include these codes in the publication it was preparing. 
+Luke pretended 
 that it did not need anything from me. This put Reetta into a difficult position because 
 of course she would need my support for preparing publication of tens of thousands 
 code and manual lines I had written. 
@@ -112,21 +114,19 @@ they do not agree. They made it clear already when when I was employed by Luke, 
 is no explanation. 
 Are the leaders brave enough to state their view now publicly? 
 Does the the board of Luke and the Ministry of Agriculture and Forestry 
-agree with me or the leaders of Luke? A task of the Board of Directors is promote cooperation with stakeholders. 
-I am now a stakeholder in this matter, and other stakeholders are also linked to this project through their 
-cooperation with me. Can the board of Directors help to solve this dispute. 
-Or are the leaders even so brave that they could admit that they did not recognize during 
-the process that a researcher has the right to publish 
-his results but they have changed their opinion? I got finally the permission to publish my results, 
-but if the leaders of Luke do not accept this as right of a researcher, 
-other reseachers will be in trouble in the future. 
+agree with me or the leaders of Luke? 
+ 
+I got finally, after a six-and-half years painful fight,the permission to publish my results, 
+but if the leaders of Luke do not accept this as a fundamental right of a researcher, 
+other reseachers will be in trouble in the future 
+if they get results that leaders of Luke want to publish themselves. 
  
  
 Putting the ethical and legal aspects aside, the behaviour of the leaders of 
-Luke was not rational with respect to the interests of Luke. 
+Luke was not rational with respect to the interests and tasks of Luke. 
 During the hostile take over, the leaders knew nothing of the code, and were not willing to 
 learn to know. 
-Thus the leaders did not know that 
+The leaders did not know that 
 the code contained so much dirty code 
 that it could not be maintained and developed without my assistance. 
 For instance, the linear programming, the most important part of the software, 
@@ -142,11 +142,19 @@ real improvements she should
 start from clean table. 
 The code without my support 
 provided only slightly better perspectives than a one-time exe- file. 
+The eleven leaders involved  were so eager to publish the code from which they knew nothing 
+that they did not have time to listen to the person who knew everyhing in this matter 
+from the guiding ideas to dirty goto statements. 
  
-Could the leaders of Luke be even so brave that they could admit that during their efforts to advance 
-the interests of Luke they were actually making harm to these because they 
-were not willing to listen the person who knew everyhing in this matter 
-from the guiding ideas to dirty goto statements? 
+Luke states on its web pages that: 
+Luke’s task is to promote competitive business based on the sustainable use of renewable natural resources. 
+Could the leaders of Luke explain to me, to the public, to the Board of directors and to the ministry of 
+agriculture and forestry, how they promoted their task when they 
+prevented me for over six years to develop the \textbf{Jlp22} software without any salary? 
+Director general Johanna Buchert told in Olavinlinna 7.10. 2021 that 
+there has actually been no disagreement between me and Luke. At this age, wasting six years is 
+something, even if it may just be nothing to such big institutes as Luke. 
+ 
  
  
  
@@ -200,7 +208,7 @@ I thank my grand daughter Ella
 for the permission to use the portrait she drawed for my 70 yr birthday in 2021. 
  
 \vspace{0.5cm} 
-Suonenjoki 21.12.2022 
+Suonenjoki 27.12.2022 
 \vspace{0.5cm} 
 Juha Lappi 
  
@@ -218,16 +226,30 @@ This situation will not happen in ordinary linear programming problems. When hun
 debugging tools, so I hope that all users would now send problematic 
 runs to me. 
  
-Version Dec 20 2022 provides simple data formats for stroring schedules so that in the simulation tree only thos 
-nodes after branchinh are stored. See keepopen-> and \textcolor{blue}{continue->} options in \textcolor{VioletRed}{data}(). Function \textcolor{VioletRed}{joindata}() is 
-used to build the schedules from their components. Function \textcolor{VioletRed}{splitdata}() can be used to split data caontaining whole 
-schedules into thesae new compponent datas. \textcolor{VioletRed}{splitdata}() can be used to convert data generated with previous simulators 
-into this new format. It is recommeneded that a simulator generating data for \textbf{Jlp22} startys to write directly into this new format. 
+In version 27.12. 2022 the main change is the possiblity to handle so large matrices that their 
+elements cannot be referred with 4-byte integers. Such matrices are needed for schedules from the whole 
+country. This change did cause a large amount of boring editing. 
+There are places which are not put into 8-byte integer mode, and I will update 
+these places whenever needed. 
+In the data structures, I have the hidden property to work with single precision matrices and with tree-structure 
+data which is not made into the tabular form using \textcolor{VioletRed}{joindata}() function. I will start to 
+utilize these implicit properties when there is lack of memory even in the 64-bit environment. 
+In this Github publication, 
+the release exe-file is not updated. 
  
-Now the variable telling the number of observations in \textcolor{teal}{DATA} \textcolor{teal}{datab} is always \textcolor{teal}{datab}\%obs. Similarly the variable 
-telling how many children that observation has in the lower level is now always \textcolor{teal}{datab}\%nobsw and it must be the 
-telling how many children that observation has in the lower level is now always \textcolor{teal}{datab}\%nobsw and it must be the 
-first varaible in the list of variables. This new legisaltion was necessary to keep the new multilevel 
+Version Dec 20 2022 provides simple data formats for stroring schedules so that in the simulation tree only thos 
+nodes after branching are stored. See keepopen-> and \textcolor{blue}{continue->} options in \textcolor{VioletRed}{data}(). Function \textcolor{VioletRed}{joindata}() is 
+used to build the schedules from their components. Function \textcolor{VioletRed}{splitdata}() can be used to split data caontaining whole 
+schedules into these new compponent datas. \textcolor{VioletRed}{splitdata}() can be used to convert data generated with previous simulators 
+into this new format. It is recommeneded that a simulator generating data for \textbf{Jlp22} 
+starts to write directly into this new format. 
+ 
+Now the variable telling the number of observations in \textcolor{teal}{DATA} \textcolor{teal}{datab} is always \textcolor{teal}{datab}\%obs. 
+Similarly the variable 
+telling how many children that observation has in the lower level 
+is now always \textcolor{teal}{datab}\%nobsw and it must be the 
+first varaible in the list of variables. If the first variable is \%nobsw, then its name is automatically 
+changed into the proper form. This new legislation was necessary to keep the new multilevel 
 datas in order. 
  
 Version Dec 20 2022 gives possibility to change fonts in figures. 
@@ -1151,7 +1173,6 @@ The following objects are generated during the initilaization.
  
  
 \noindent \textcolor{teal}{Pi} \tabto{25mm }  \textcolor{teal}{REAL} \tabto{45mm }  The value of \textcolor{teal}{Pi} (=3.1415926535897931) 
- 
  
  
  
@@ -3081,42 +3102,23 @@ sub=\textcolor{VioletRed}{list}(@sub,@sub\#"i")\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsection{\textcolor{VioletRed}{merge}() Merges LISTs}\index{merge()} 
+\subsection{\textcolor{VioletRed}{merge}() Merges LISTs and ILISTs by dropping duplicates.}\index{merge()} 
 \label{merge} 
-\textcolor{VioletRed}{merge}() will produce of list consisting of separate objects 
-in argument lists and argument objects. 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent Output \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{LIST} \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent A list which is produced by first putting all elements of 
-argument lists and non-list arguments into a vector, and then duplicate objects are dropped. 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent Args \tabto{3cm} 2- \tabto{5cm}  LIST|OBJ \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{LIST} and separate non-list objects. 
-\end {changemargin} 
+\textcolor{VioletRed}{merge}() will produce of a \textcolor{teal}{LIST} consisting of separate objects or values 
+in the arguments. 
+	! 
 \hrule 
 \vspace{0.2cm} 
 \singlespacing 
 \begin{example}[mergex]Merging list\\ 
 \label{mergex} 
-\noindent \textcolor{teal}{x1}...\textcolor{teal}{x3}=1,2,3\\ 
-mat=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{values->}(4,5,6))\\ 
-lis0=\textcolor{VioletRed}{list}(\textcolor{teal}{x2},\textcolor{teal}{x1})\\ 
-lis2=\textcolor{VioletRed}{merge}(\textcolor{teal}{x1},mat,lis0)\\ 
-\textcolor{VioletRed}{print}(lis2)\\ 
-\color{Green} 
-\begin{verbatim} 
-<print(lis2) 
-lis2 is list with            3  elements: 
-x1 mat x2 
-\end{verbatim} 
-\color{Black} 
+\noindent \textcolor{teal}{lista}=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5,\textcolor{teal}{x3});\\ 
+{\color{ForestGreen}** LISTs must be expanded with @}\\ 
+\textcolor{teal}{listb}=\textcolor{VioletRed}{merge}(@\textcolor{teal}{lista})\\ 
+ilista=\textcolor{VioletRed}{ilist}(1...5,3);\\ 
+ilistb=\textcolor{VioletRed}{merge}(ilista,ilist->);\\ 
+{\color{ForestGreen}*** without ilist the arguments are interpreted as object indices}\\ 
+ilistc=\textcolor{VioletRed}{merge}(ilista);\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -3155,9 +3157,14 @@ liser=\textcolor{VioletRed}{difference}(Lis,\textcolor{teal}{x3});\,\,{\color{Fo
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsection{\textcolor{VioletRed}{index}() Index in a \textcolor{teal}{LIST}}\index{index()} 
+\subsection{\textcolor{VioletRed}{index}() Index in a \textcolor{teal}{LIST} or \textcolor{teal}{MATRIX}}\index{index()} 
 \label{index} 
-To be documented later 
+\textcolor{VioletRed}{index}(obj,list) return the index of object obj in \textcolor{teal}{LIST} list. Fuction returns zero 
+if list is not in \textcolor{teal}{LIST} list.\\ 
+\textcolor{VioletRed}{index}(valuea,\textcolor{teal}{matrixa}) returns the location of valuea in \textcolor{teal}{MATRIX} \textcolor{teal}{matrixa} when going 
+the matrix through in row order. If valuea is not in \textcolor{teal}{matrixa} \textcolor{VioletRed}{index}() returns zero.\\ 
+\textcolor{VioletRed}{index}(valuea,\textcolor{teal}{matrixa},\textcolor{blue}{any->}) returns the location of the first element which is greater or equal 
+to valuea. 
 \subsection{\textcolor{VioletRed}{len}() Length of \textcolor{teal}{LIST}, \textcolor{teal}{ILIST} or \textcolor{teal}{MATRIX}}\index{len()} 
 \label{len} 
 \textcolor{VioletRed}{len}(\textcolor{teal}{arg})  Lenghts for the following argument types 
@@ -4022,7 +4029,8 @@ is used in the analysis.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{read}  \tabto{3cm} 0|1- \tabto{5cm}  REAL|List \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Variables read from the input files. If no arguments are given and there is no readfirst-> option 
+\noindent  Variables read from the input files. If the first variable is \%nobsw its 
+name is changed into Output\%nobsw which is assumed in hierarchical data. 	If no arguments are given and there is no readfirst-> option 
 then the variables to read in are stored in the first line of the data file separated 
 with commas.?? Also the … -shortcut can be used to define the varaible list. If no arguments are given and 
 there is readfirst-> option then the variable names are read from the second 
@@ -4359,6 +4367,15 @@ matrices.
 \noindent \textcolor{blue}{time} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  If \textcolor{blue}{time->} is present, the cpu-time and total time in function are printed 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{delete} \tabto{3cm} -1|0|1  \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If present, then the new data matrix is made sequentially so that used data 
+matrices are deleted. This takes more time, but may be needed if there is shortage of 
+memory. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -6576,7 +6593,8 @@ xy=\textcolor{teal}{x}*\textcolor{teal}{y}\\
 /                           \\ 
 \textcolor{VioletRed}{call}(\textcolor{teal}{transa})\\ 
 fi=\textcolor{VioletRed}{plot3d}(mat,\textcolor{blue}{sorted->},\textcolor{blue}{continue->}fcont)\\ 
-fi=\textcolor{VioletRed}{plot3d}(mat2,\textcolor{blue}{sorted->},\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}** This is commneted becaseu it takes some time}\\ 
+{\color{ForestGreen}** fi=plot3d(mat2,sorted->,continue->fcont)}\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
