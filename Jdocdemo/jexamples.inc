@@ -90,7 +90,7 @@ fcont=.not.fpause
  
  
 ;inpuparag:  
-** Example of inputparagraph (line   1286 file jsections.txt)
+** Example of inputparagraph (line   1234 file jsections.txt)
 transa=trans()
 a=log(b)
 write($,'(~sinlog is=~,f4.0)',sin(a))
@@ -104,7 +104,7 @@ b=matrix(2,3,in->)
  
  
 ;shortex:  
-** Example of using shortcuts and include files (line   1304 file jsections.txt)
+** Example of using shortcuts and include files (line   1252 file jsections.txt)
 short1='sin(Pi)+cos(Pi);'
 short1
 te=text()
@@ -133,7 +133,7 @@ te=0 !delete also text object te
  
  
 ;dotsex:  
-** Example of dots construct (line   1439 file jsections.txt)
+** Example of dots construct (line   1387 file jsections.txt)
 dat=data(read->(x4...x7),in->)
 1,2,3,4
 11,12,13,14
@@ -152,7 +152,7 @@ Continue=0
  
  
 ;inpulistelem:  
-** Getting name from list (line   1460 file jsections.txt)
+** Getting name from list (line   1408 file jsections.txt)
 lis=list(c2...c5);
 @lis=2...5;
 @lis(2)=6;
@@ -163,7 +163,7 @@ lis=list(c2...c5);
  
  
 ;expandex:  
-** Example of expanding lists with @ (line   1483 file jsections.txt)
+** Example of expanding lists with @ (line   1431 file jsections.txt)
 list0=list(site,altitude)
 list1=list(
 ;do(i,1,3)
@@ -180,7 +180,7 @@ stat()
  
  
 ;subobjex:  
-** Seeing subobjects (line   1504 file jsections.txt)
+** Seeing subobjects (line   1452 file jsections.txt)
 dat=data(in->,read->(x,y))
 1,2
 3,4
@@ -193,7 +193,7 @@ subob=;list(dat%?) ! makes the list of subobjects and prints it
  
  
 ;relativesex:  
-** Seeing relatives (line   1513 file jsections.txt)
+** Seeing relatives (line   1461 file jsections.txt)
 x1a...x3a=3...5
 x?a;
 rel=;list(x?a);
@@ -203,7 +203,7 @@ rel=;list(x?a);
  
  
 ;jfuncex:  
-** Examples of Jlp22-functions (line   1792 file jsections.txt)
+** Examples of Jlp22-functions (line   1740 file jsections.txt)
 b,c=2,3;
 a = sin(cos(c)+b); ! Usual arithmetic functions can have numeric values as arguments
 c=matrix(2,2,in->);
@@ -229,7 +229,7 @@ c = inverse(h+t(g)); ! The argument can be intermediate result from matrix compu
  
  
 ;codeoptex:  
-** Codeoptions (line   1825 file jsections.txt)
+** Codeoptions (line   1773 file jsections.txt)
 dat=data(read->(D,H),in->)
 3,2
 2,4
@@ -243,7 +243,7 @@ continue->fcont,xlabel->'x',width->2) ! the func-> option transmits the function
  
  
 ;comoptex:  
-** data1 (line   1890 file jsections.txt)
+** data1 (line   1838 file jsections.txt)
 dat=data(read->(x,y),in->)
 1,2
 3,4
@@ -259,7 +259,7 @@ stat(trans->transa)
  
  
 ;recursion:  
-** Recursion produces system crash. (line   1931 file jsections.txt)
+** Recursion produces system crash. (line   1879 file jsections.txt)
 transa=trans() !level will be initialized as zero
 level;
 level=level+1
@@ -273,7 +273,7 @@ Continue=0
  
  
 ;transfunc:  
-** Transformation as a function (line   1954 file jsections.txt)
+** Transformation as a function (line   1902 file jsections.txt)
 delete_o(a,c)
 transa=trans()
 a=8;
@@ -290,7 +290,7 @@ a=c+transb(a)+c+transa(a);
  
  
 ;matrixop:  
-** Matrix operations (line   2174 file jsections.txt)
+** Matrix operations (line   2122 file jsections.txt)
 A=matrix(3,4,do->);
 A+2;
 A-1;
@@ -320,7 +320,7 @@ Continue=0
  
  
 ;doex:  
-** do-loop (line   2249 file jsections.txt)
+** do-loop (line   2197 file jsections.txt)
 !!begin
 transa=trans()
 do(i,1,5)
@@ -337,7 +337,7 @@ call(transa)
  
  
 ;retex:  
-** example of return and goto () (line   2270 file jsections.txt)
+** example of return and goto () (line   2218 file jsections.txt)
 transa=trans()
 ad1:r=ran();
 if(r.lt.0.2)return
@@ -349,7 +349,7 @@ call(transa)
  
  
 ;errexitex:  
-** errexit() returns as if error had occured (line   2290 file jsections.txt)
+** errexit() returns as if error had occured (line   2238 file jsections.txt)
 transa=trans()
 if(a.eq.0)errexit('illegal value ',a)
 s=3/a; ! division with zero is tested automatically
@@ -366,7 +366,7 @@ Continue=0
  
  
 ;gotoex:  
-** Example of unconditional goto (line   2329 file jsections.txt)
+** Example of unconditional goto (line   2277 file jsections.txt)
 transa=trans()
 i=0
 if(i.eq.0)goto(koe)
@@ -380,7 +380,7 @@ out;
  
  
 ;congotoex:  
-** (line   2344 file jsections.txt)
+** (line   2292 file jsections.txt)
 transa=trans()
 out=999
 goto(ad1)
@@ -412,7 +412,7 @@ Continue=0
  
  
 ;assignex:  
-** Examples of assignments (line   2409 file jsections.txt)
+** Examples of assignments (line   2357 file jsections.txt)
 a=matrix(2,3);
 a=4;
 a=rann();
@@ -427,7 +427,7 @@ Continue=0
  
  
 ;showex:  
-** Example of show() (line   2484 file jsections.txt)
+** Example of show() (line   2432 file jsections.txt)
 fi=draw(func->sqrt2(x),x->x,xrange->(-50,50),continue->fcont)
 show(fi,xrange->(-60,60),xlabel->'NEWX]Times Roman,16[',ylabel->'NEWY]Courier,10[',continue->fcont)
 show(fi,axes->10,continue->fcont)
@@ -452,7 +452,7 @@ show(fi,xrange->(0,6),yrange->(0,7),continue->fcont)
  
  
 ;errorex:  
-** (line   3128 file jsections.txt)
+** (line   3076 file jsections.txt)
 round=5
 write('inca.txt',$,'**we are in inca.txt')
 write('inca.txt',$,'round;')
