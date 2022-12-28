@@ -3906,7 +3906,7 @@ subroutine jlpz(iob,io)
 	endif !if(noptarg.gt.0)   3265
 	p_nz=p_ncol
 	p_nrowtot=p_nrow+1
-!	write(6,*)' tas '
+	!	write(6,*)' tas '
 	iv=j_igetopt(iob,io,j_mdpivot)
 	if(j_err)return
 	if(iv.gt.0)then

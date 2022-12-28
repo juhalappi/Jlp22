@@ -459,7 +459,7 @@ module jmod
  
  
 	!free options free$
-	parameter (j_noptions_=212) !!!option number of j_ options
+	parameter (j_noptions_=213) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 		'extra','subextra','mean', 'min','max',& ! 1-10
@@ -482,7 +482,8 @@ module jmod
 		'stop','rfvars','first','last','echo','list','delete','ext','got','do','set','xlabel', & !171-179
 		'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
 		'tailtofirst','tailtolast','cumulative','time','missing','clean','factgroup','dpivot','int','pullout',&
-		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170
+		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist',&
+		'nrowtot'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -519,7 +520,7 @@ module jmod
 	parameter (j_mtailtofirst=194,j_mtailtolast=195,j_mcumulative=196,j_mtime=197,j_mmissing=198)
 	parameter (j_mclean=199,j_mfactgroup=200,j_mdpivot=201,j_mineuueut=202,j_mpullout=203)
 	parameter (j_mbasis=204,j_mcondition=205,j_mfastdif=206,j_mmarksize=207,j_mkeepopen=208)
-	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211,j_milist=212)
+	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211,j_milist=212,j_mnrowtot=213)
 	integer,parameter :: j_nnamedoptarg=58
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
 	data j_namedoptarg / & !%%options which should have named objects as arguments
@@ -2372,22 +2373,24 @@ module jmod
  
 		!20150812(arg1<->arg2) oli: 		subroutine defdata(name,iv,ivmat,ivkeep,ivcases,ivprolog,ivmaketrans,ivtrans,&
  
-		integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod)
+		integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot)
 			integer, intent(in):: iv,itype
 			integer,intent(in) ::ndim1,ndim2
 			character*(*), intent(in):: name
 			logical,intent(in),optional:: single
 			logical,intent(in),optional:: nod
+			integer,intent(in),optional::rowtot
 		end function !subroutine j_defmatrix(iv,na
  
  
  
-		integer	function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod)
+		integer	function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot)
 			integer, intent(in):: iv,itype
 			integer*8,intent(in) ::ndim1,ndim2
 			character*(*), intent(in):: name
 			logical,intent(in),optional:: single
 			logical,intent(in),optional:: nod
+			integer*8,intent(in),optional ::rowtot
 		end function !subroutine j_defmatrix(iv,name,ndim1,ndim2,itype,expand,ivout)
  
 		subroutine j_putmatrix(ivmat,irow,icol,val)
@@ -2447,6 +2450,9 @@ module jmod
 		end function !integer function j_dataobs(iv)
  
 		integer*8 function j_nrows(iv)
+			integer,intent(in)::iv
+		end function
+		integer*8 function j_nrowtot(iv)
 			integer,intent(in)::iv
 		end function
 		integer*8 function j_ncols(iv)

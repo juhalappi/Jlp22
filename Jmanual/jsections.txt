@@ -118,6 +118,10 @@
 ! debugging tools, so I hope that all users would now send problematic
 !runs to me.
 
+!In version 28.12. 2022 joindata() which builds schedules data from tree format data has two new options
+! which allow combining several data sets faster and it is possible to save memory so that larger
+! schedules data fits the memory. Some fine tuning of the preface of the manual.
+
 !In version 27.12. 2022 the main change is the possiblity to handle so large matrices that their
 ! elements cannot be referred with 4-byte integers. Such matrices are needed for schedules from the whole 
 ! country. This change did cause a large amount of boring editing.
@@ -219,29 +223,9 @@
  ! an open source software so that I could continue its development after my retirement. 
 ! The leaders of Luke told that it is a good idea to open the software, and this is so important that
   ! Luke cannot let me take care of the publication but the leaders wanted to publish J
- ! themselves. This started a frustrating and humillating process which lasted until 7.10. 2021. 
+ ! themselves. This started a frustrating and humillating process which lasted six and half years. 
  
- ! In the previous versions of this preface, I have described details of the process which can be 
- ! described as a hostile take over. Eleven leaders of Luke insisted that they will publish the software.
-!  With resepct to this I would like to ask only:
-
-! Is it really so that a reseacher of a government research institute has no right to
-! publish the results of his
-! research if the leaders think that the results are so important that the leaders want to publish them?
-
-!The eleven leaders who insisted that they will publish the software knew nothing of the 
-! code they wanted to publish without any cooperation with me. Thus they did not know, 
-! and were not willing to learn to know, that the software did contain so much dirty
-!  code that no one could develop the software without my involvement. The leaders were ready
-! to destroy a large part of my life's work their only justification being that they have legal right to 
-! do so. Luke states on its web pages that: 
- !Luke’s task is to promote competitive business based on the sustainable use of 
- ! renewable natural resources. With respect to this, I would like to ask:
- 
- !Why do the leaders of Luke have no interest to fulfill the tasks of Luke? 
- 
- 
-!When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke.
+ !When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke.
  ! The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall
  ! in the medieval Olavinlinna castle in Savonlinna.
  
@@ -253,8 +237,25 @@
  ! was not necessary as Reetta adviced me how to use Github.
  
  
+ ! In the previous versions of this preface, I have described details of the process which can be 
+ ! described as a hostile take over. Eleven leaders of Luke insisted that they will publish the software.
+!  I would like to ask:
+
+! Is it really so that a reseacher of a government research institute has no right to
+! publish the results of his
+! research if the leaders think that the results are so important that the leaders want to publish them?
+
+!The eleven leaders wanting to publish the software knew nothing of the 
+! code they wanted to publish without any cooperation with me. They did not know, 
+! and were not willing to learn to know, that the software did contain so much dirty
+!  code that no one could develop the software without my involvement. The leaders were ready
+! to destroy a large part of my life's work their only justification being that they have legal right to 
+! do so. Luke states on its web pages that: 
+ !Luke’s task is to promote competitive business based on the sustainable use of 
+ ! renewable natural resources. I would like to ask:
  
-	
+ !How preventing the development of Jlp22 software for six and half years supported this task? 
+ 
   
  ! \subsection*{Rewriting the software}
 !\addcontentsline{toc}{subsection}{Rewriting the software}
@@ -264,7 +265,8 @@
  ! After my retirement I have rewritten completely the software, 
  ! the most part after the agreement in 7.10.2021. 
  ! Only the sceleton and innermost loops in the optimization come from the time I worked 
- ! for Metla and Luke. The following manual tells what Jlp22 can do now.
+ ! for Metla and Luke. One important change was to put the software into 64-bit which
+ ! allows the analysis of big data sets. The following manual tells what Jlp22 can do now.
  ! The factory optimization is under development, and I will be published it later. 
  ! Reetta has participated
  ! in testing, in addition to teaching the use of Github.

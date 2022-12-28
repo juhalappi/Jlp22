@@ -70,27 +70,7 @@ When my retirement was approaching, I suggested Luke that \textbf{J} would be pu
 an open source software so that I could continue its development after my retirement. 
 The leaders of Luke told that it is a good idea to open the software, and this is so important that 
 Luke cannot let me take care of the publication but the leaders wanted to publish \textbf{J} 
-themselves. This started a frustrating and humillating process which lasted until 7.10. 2021. 
- 
-In the previous versions of this preface, I have described details of the process which can be 
-described as a hostile take over. Eleven leaders of Luke insisted that they will publish the software. 
-With resepct to this I would like to ask only: 
- 
-Is it really so that a reseacher of a government research institute has no right to 
-publish the results of his 
-research if the leaders think that the results are so important that the leaders want to publish them? 
- 
-The eleven leaders who insisted that they will publish the software knew nothing of the 
-code they wanted to publish without any cooperation with me. Thus they did not know, 
-and were not willing to learn to know, that the software did contain so much dirty 
-code that no one could develop the software without my involvement. The leaders were ready 
-to destroy a large part of my life's work their only justification being that they have legal right to 
-do so. Luke states on its web pages that: 
-Luke’s task is to promote competitive business based on the sustainable use of 
-renewable natural resources. With respect to this, I would like to ask: 
- 
-Why do the leaders of Luke have no interest to fulfill the tasks of Luke? 
- 
+themselves. This started a frustrating and humillating process which lasted six and half years. 
  
 When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke. 
 The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall 
@@ -104,7 +84,24 @@ Luke should provide me access to CSC supercomputers.  Luke should distribute \te
 was not necessary as Reetta adviced me how to use Github. 
  
  
+In the previous versions of this preface, I have described details of the process which can be 
+described as a hostile take over. Eleven leaders of Luke insisted that they will publish the software. 
+I would like to ask: 
  
+Is it really so that a reseacher of a government research institute has no right to 
+publish the results of his 
+research if the leaders think that the results are so important that the leaders want to publish them? 
+ 
+The eleven leaders wanting to publish the software knew nothing of the 
+code they wanted to publish without any cooperation with me. They did not know, 
+and were not willing to learn to know, that the software did contain so much dirty 
+code that no one could develop the software without my involvement. The leaders were ready 
+to destroy a large part of my life's work their only justification being that they have legal right to 
+do so. Luke states on its web pages that: 
+Luke’s task is to promote competitive business based on the sustainable use of 
+renewable natural resources. I would like to ask: 
+ 
+How preventing the development of \textbf{Jlp22} software for six and half years supported this task? 
  
  
 \subsection*{Rewriting the software} 
@@ -115,7 +112,8 @@ It contained many errors, but I wanted to get the open \textbf{J} started.
 After my retirement I have rewritten completely the software, 
 the most part after the agreement in 7.10.2021. 
 Only the sceleton and innermost loops in the optimization come from the time I worked 
-for Metla and Luke. The following manual tells what \textbf{Jlp22} can do now. 
+for Metla and Luke. One important change was to put the software into 64-bit which 
+allows the analysis of big data sets. The following manual tells what \textbf{Jlp22} can do now. 
 The factory optimization is under development, and I will be published it later. 
 Reetta has participated 
 in testing, in addition to teaching the use of Github. 
@@ -173,6 +171,10 @@ are in the basis, the code computed wrong shadow prices, and the objective was g
 This situation will not happen in ordinary linear programming problems. When hunting the bug, I developed new 
 debugging tools, so I hope that all users would now send problematic 
 runs to me. 
+ 
+In version 28.12. 2022 \textcolor{VioletRed}{joindata}() which builds schedules data from tree format data has two new options 
+which allow combining several data sets faster and it is possible to save memory so that larger 
+schedules data fits the memory. Some fine tuning of the preface of the manual. 
  
 In version 27.12. 2022 the main change is the possiblity to handle so large matrices that their 
 elements cannot be referred with 4-byte integers. Such matrices are needed for schedules from the whole 
@@ -1120,6 +1122,7 @@ The following objects are generated during the initilaization.
  
  
  
+ 
 \noindent \textcolor{teal}{Pi} \tabto{25mm }  \textcolor{teal}{REAL} \tabto{45mm }  The value of \textcolor{teal}{Pi} (=3.1415926535897931) 
  
  
@@ -1185,7 +1188,6 @@ The following objects are generated during the initilaization.
  
  
 \noindent \textcolor{teal}{Data}  \tabto{25mm }  List \tabto{45mm }    List object used to indicate current data setsDat 
- 
  
  
  
@@ -4643,7 +4645,10 @@ In the second case the call is like \\
 xdata2=\textcolor{VioletRed}{joindata}(cdata,xdata\#1...xdata\#p)\\ 
 DATAs xdata\#1...xdata\#p contain different periods (levels) in hierarchical data and 
 the will contain whole schedules. This new data is automatically linked to 
-to the first argument \textcolor{teal}{DATA} (cdata). 
+to the first argument \textcolor{teal}{DATA} (cdata). There can be two options:\\ 
+nrowtot-> gives the total number of observations when joindata is used several times to put several DATAs into 
+the same \textcolor{teal}{DATA}.\\ 
+\textcolor{blue}{append->} current data are appended to a \textcolor{teal}{DATA} for which space has been reserved with nrowtot-> 
 \begin{note} 
 In the second case: As the output will be connected to the first argument, the link from the second argument 
 to the first argument will be lost. 
@@ -4700,12 +4705,21 @@ nobscur=xdataP\#"i"\%nobsw\%sum;\\
 contd=1\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}xdataP\#"i")\\ 
 \textcolor{Red}{;enddo}\\ 
+ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}cdata)\\ 
 xdatanew=\textcolor{VioletRed}{joindata}(cdata,xdataP\#1...xdataP\#5)\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}xdatanew)\\ 
  
 {\color{ForestGreen}** Did the procedure loose any data}\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}xdata)\\ 
+{\color{ForestGreen}** use nrowtot-> and append-> to put more data into the same DATA}\\ 
+{\color{ForestGreen}** here the same DATA is put twice}\\ 
+{\color{ForestGreen}** the number of observations in the tree format data is the same as}\\ 
+{\color{ForestGreen}**the number of observations in the data for the last period.}\\ 
+nobstot=2*\textcolor{VioletRed}{nobs}(xdataP\#5);\\ 
+Xdatanew=\textcolor{VioletRed}{joindata}(cdata,xdataP\#1...xdataP\#5,nrowtot->nobstot)\\ 
+Xdatanew=\textcolor{VioletRed}{joindata}(cdata,xdataP\#1...xdataP\#5,\textcolor{blue}{append->})\\ 
+\textcolor{VioletRed}{stat}()\\ 
 {\color{ForestGreen}** remove the created file}\\ 
 \textcolor{VioletRed}{delete\_f}('xdatap.txt')\\ 
 \end{example} 
