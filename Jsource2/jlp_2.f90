@@ -4857,7 +4857,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! but the output indicates that e.g. the following objects are created. Many other objects are created
 	! but they are currently used for debuggging purposes and they will be described later. They can be
 	! used also to teach how the algorithm proceeds.
-	!begin{itemize}
+	!\begin{itemize}
 	!\item Output%weights The weights of the schedules, see teh example below.
 	!\item  Output%objective= value of the objective function
 	!\item  	Output%rows= the vector the valuef of the constraint rows.
@@ -4882,11 +4882,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!stop&-1|1&CODE& codeoption telling when iterations over units stop. The variables
 	! Round (current number of rounds over units), Change% (change of objective during the last 10
 	! rounds), Imp (number of entering schedules outside the active set when updating the active set),
-! 	Active% ( %-size of the active set) and all global variables in JLP22.
+	! 	Active% ( %-size of the active set) and all global variables in JLP22.
 	!default is stop->(Change%.lt.0.01.and.Round.ge.10).
 	! fast%&-1|1&CODE & codeoption computing Fast%. All schedules whose price is larger than Fast%
 	!of the current key schedule. Same variables can be used as for stop->.
-	! A possible rule is fast%->(min(Fast%+5-(Imp.gt.0)*10,98))).
+	! A possible rule is fast%->(min(Fast%+5-(Imp.gt.0)*10,98))). The default is Fast%=85.
 	!report&-1|1& CHAR & the results are written to the file spesified.
 	!echo|-1|0& & &When results are printed to a file, echo-> implies that they are written alo to the terminal.
 	!refac&-1|1|&REAL& refac->value tells that the factors of the basis matrix are recomputed after value pivot operations.
@@ -5169,7 +5169,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
 	!p_n16=16
 	!p_p=.true.
-!	write(6,*)'p_ivmatc,p_ivmatx ',p_ivmatc,p_ivmatx
+	!	write(6,*)'p_ivmatc,p_ivmatx ',p_ivmatc,p_ivmatx
 	!xpresent2: are there ordinary x-variables
 	p_xpresent2 = p_nxvar.ne.0
  
@@ -7294,7 +7294,7 @@ subroutine initjlp2(iob,io)
 	call j_getname(p_ivdatax)
  
 	write(6,*)'xdata ',j_oname(1:j_loname)  !,' cdata ',j_oname2(1:j_loname2),' xdata ',j_oname3(1:j_loname3)
-!	write(6,*)'level ',level ,p_ivdatac,p_ivdatax
+	!	write(6,*)'level ',level ,p_ivdatac,p_ivdatax
 	!	call j_getdataobject(iob,io,ivdata=p_ivdatax)
  
 	!		endif
@@ -7364,7 +7364,7 @@ subroutine initjlp2(iob,io)
  
 		j_ivns=j_o(p_ivdatac)%i(4)   !variable 'Ns' telling the number of schedules in each unit (nobsw variable)
 		iiv=j_inlistobject(j_ivns,p_ivkeepc)
-	!	write(6,*)'cdatai ',j_o(p_ivdatac)%i(1:10)
+		!	write(6,*)'cdatai ',j_o(p_ivdatac)%i(1:10)
 		if(iiv.le.0)then
 			call j_printname('**nobsw variable ',j_ivns,' not in the cdata')
 			j_err=.true.;return
@@ -7639,7 +7639,7 @@ subroutine initxdata()
 	!p xrowcur
 	ivkeep=j_o(p_ivdatax)%i(11)    !2)
 	call j_getname(ivkeep)
-!	write(6,*)'ivkeep',ivkeep,j_oname(1:j_loname)
+	!	write(6,*)'ivkeep',ivkeep,j_oname(1:j_loname)
 	do ival=1,p_nterm
 		i=p_termvars(ival)
 		ikeep=j_inlistobject(i,ivkeep)
@@ -7680,7 +7680,7 @@ subroutine initxdata()
 			p_xtermvars(nxval)=p_termvars(i)
 		endif !if(p_isxval(i))   6484
 	enddo !i=1,p_nterm   6483
-!	write(6,*)'nxrowcur',p_nxrowcur
+	!	write(6,*)'nxrowcur',p_nxrowcur
  
 	call j_deflistobject(j_ivout,'%xrowcur',p_ivxrowcur,list0=p_nxrowcur,ilist=.true.)
 	p_xrowcur=>j_o(p_ivxrowcur)%i2(1:p_nxrowcur)

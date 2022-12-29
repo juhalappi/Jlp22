@@ -567,7 +567,7 @@ prob=problem()
  
  
 ;getset:  
-** Get or set submatrices (line   1984 file c:/jlp22/j.f90)
+** Get or set submatrices (line   1990 file c:/jlp22/j.f90)
 A=matrix(3,4,do->);
 B=A(1,-2,3,-4);
 A(1,-2,3,-4)=B+3;
@@ -581,7 +581,7 @@ H(3,-4,diag->)=matrix(2,values->(4,7));
  
  
 ;list2ex:  
-** (line   3433 file c:/jlp22/j.f90)
+** (line   3439 file c:/jlp22/j.f90)
 lis2=list2(x1...x4,3,5);
 li1=list(x1,x2);
 li2=list(z,y);
@@ -591,7 +591,7 @@ lis=list2(@li1,@li2,77);
  
  
 ;ilistex:  
-** ILIST examples (line   3480 file c:/jlp22/j.f90)
+** ILIST examples (line   3486 file c:/jlp22/j.f90)
 {1,4,5};
 {4...1};
 A=matrix(4,4)
@@ -601,7 +601,7 @@ A({1,5},{3}=
  
  
 ;typeex:  
-** Example of type (line   3623 file c:/jlp22/j.f90)
+** Example of type (line   3629 file c:/jlp22/j.f90)
 ttt=8;   !REAL
 type(ttt);
 type('ttt'); !type is CHAR
@@ -614,7 +614,7 @@ type(cttt,content->);
  
  
 ;deleteoex:  
-** Delete object (line   3676 file c:/jlp22/j.f90)
+** Delete object (line   3682 file c:/jlp22/j.f90)
 a=matrix(2,3,do->);
 b=t(a);
 delete_o(a,b)
@@ -624,7 +624,7 @@ a,b;
  
  
 ;deletfex:  
-** Deletef file (line   3699 file c:/jlp22/j.f90)
+** Deletef file (line   3705 file c:/jlp22/j.f90)
 write('delete_fex.txt',$,'a=matrix(2,4,do->);')
 write('delete_fex.txt',$,'delete_o(a)')
 write('delete_fex.txt',$,'a;')
@@ -636,7 +636,7 @@ delete_f('delete_fex.txt')
  
  
 ;whichex:  
-** Example of which() (line   3975 file c:/jlp22/j.f90)
+** Example of which() (line   3981 file c:/jlp22/j.f90)
 c=9
 which(a.eq.3.or.c.gt.8,5,a.eq.7,55);
 a=7
@@ -649,7 +649,7 @@ which(a.eq.3.or.c.gt.8,5,a.eq.7,55,108);
  
  
 ;findex:  
-** Finding something from matrix (line   6832 file c:/jlp22/j.f90)
+** Finding something from matrix (line   6838 file c:/jlp22/j.f90)
 ** Example of find, illustrating also rann() (line   6426 file c:/j3/j.f90)
 ** Repeating the example, different results will be obtained
 rm=matrix(500)
@@ -670,7 +670,7 @@ mean(large2),min(large2),max(large2);
  
  
 ;newdataex:  
-** newdata() generates a new data object. (line   7256 file c:/jlp22/j.f90)
+** newdata() generates a new data object. (line   7262 file c:/jlp22/j.f90)
 data1=data(read->(x1...x3),in->)
 1,2,3
 4,5,6
@@ -695,7 +695,7 @@ print(new)
  
  
 ;classdata:  
-** Hierarchical data (line   8296 file c:/jlp22/j.f90)
+** Hierarchical data (line   8302 file c:/jlp22/j.f90)
 nstand=10
 xm=matrix(nstand)
 xm=rann(3)
@@ -738,7 +738,7 @@ ex2=treedata(x)-x
  
  
 ;logisticex:  
-** Example of logistic function (line   9121 file c:/jlp22/j.f90)
+** Example of logistic function (line   9127 file c:/jlp22/j.f90)
 transa=trans()
 der(a,x0)
 f=logistic(a*(x-x0));
@@ -750,7 +750,7 @@ call(transa)
  
  
 ;datawcaseex:  
-** Example of datawcase (line   9871 file c:/jlp22/j.f90)
+** Example of datawcase (line   9877 file c:/jlp22/j.f90)
 sawmills=datawcase(read->(capacity1...capacity4))
 Kotka,110,120,130,140
 Oulu,210,220,230,240
@@ -764,7 +764,7 @@ stat()
  
  
 ;plot3dex:  
-** plot3d() example see p.  328 in Mehtatalo & Lappi 2020 (line  10724 file c:/jlp22/j.f90)
+** plot3d() example see p.  328 in Mehtatalo & Lappi 2020 (line  10730 file c:/jlp22/j.f90)
 mat=matrix(1000000,3)
 mat2=matrix(1000000,3)
 transa=trans() !second order response surface
@@ -801,7 +801,7 @@ fi=plot3d(mat,sorted->,continue->fcont)
  
  
 ;ranex:  
-** (line  13292 file c:/jlp22/j.f90)
+** (line  13298 file c:/jlp22/j.f90)
 ran();
 ran();
 cpu0=cpu()
@@ -821,7 +821,7 @@ cpu()-cpu0;
  
  
 ;selectex:  
-** Random selection (line  13348 file c:/jlp22/j.f90)
+** Random selection (line  13354 file c:/jlp22/j.f90)
 ** select 500 numbers without replacement from 10000
 ** output is vector of 10000 rows containing 0 or 1
 S=select(500,10000)
@@ -831,7 +831,7 @@ nrows(S),mean(S),sum(S),500/10000;
  
  
 ;rannex:  
-** Random normal variates, illustrating also find (line  13520 file c:/jlp22/j.f90)
+** Random normal variates, illustrating also find (line  13526 file c:/jlp22/j.f90)
 rx=rann();  !Output is REAL
 rm=matrix(1000)
 rm=rann()
@@ -855,7 +855,7 @@ large=find(rm2,filter->($.ge.14),any->)
  
  
 ;ranbinex:  
-** Random binomial (line  13634 file c:/jlp22/j.f90)
+** Random binomial (line  13640 file c:/jlp22/j.f90)
 ranbin(10,0.1);
 ranbin(10,0.1);
 A=matrix(1000,2)
@@ -877,7 +877,7 @@ fi=drawclass(cl,histogram->,color->Red,append->,continue->fcont)
  
  
 ;cpuex:  
-** Example of cpu-timing (line  13711 file c:/jlp22/j.f90)
+** Example of cpu-timing (line  13717 file c:/jlp22/j.f90)
 cpu0=cpu()
 a=matrix(100000)
 a=ran() !uniform
@@ -889,7 +889,7 @@ elapsed=cpu1-cpu0;
  
  
 ;secondsex:  
-** Example of elapsed time (line  13896 file c:/jlp22/j.f90)
+** Example of elapsed time (line  13902 file c:/jlp22/j.f90)
 cpu0=cpu()
 sec0=secnds()
 a=matrix(100000)
@@ -904,7 +904,7 @@ selapsed=sec1-sec0;
  
  
 ;drawex:  
-** Example of draw() (line  14112 file c:/jlp22/j.f90)
+** Example of draw() (line  14118 file c:/jlp22/j.f90)
 fi=draw(func->sin(x),x->x,xrange->(0,2*Pi),color->Blue,continue->fcont)
 fi=draw(func->cos(x),x->x,xrange->(0,2*Pi),color->Red,append->,continue->fcont)
 ;if(type(figyx).ne.FIGURE)plotyxex
@@ -933,7 +933,7 @@ Continue=0
  
  
 ;drawlineex:  
-** Example of drawline() (line  14307 file c:/jlp22/j.f90)
+** Example of drawline() (line  14313 file c:/jlp22/j.f90)
 ;drawlineex:
 ** Example of drawline() (line  13761 file c:/j3/j.f90)
 fi=draw(func->sin(x),x->x,xrange->(0,2*Pi),color->Blue,continue->fcont)
@@ -970,7 +970,7 @@ Continue=0
  
  
 ;drawclassex:  
-** Examples of drawclass() (line  14760 file c:/jlp22/j.f90)
+** Examples of drawclass() (line  14766 file c:/jlp22/j.f90)
 X=matrix(do->(1,100,0.1))
 e=matrix(nrows(X))
 e=rann()
@@ -994,7 +994,7 @@ fi=draw(func->pdf(0,rmse(reg)),x->x,xrange->,append->,continue->fcont) ! xrange 
  
  
 ;plotyxex:  
-** plotyx() (line  15016 file c:/jlp22/j.f90)
+** plotyx() (line  15022 file c:/jlp22/j.f90)
 xmat=matrix(do->(0,10,0.001))
 transa=trans()
 y=2+3*x+0.4*x*x+4*rann()
@@ -1011,7 +1011,7 @@ fir=plotyx(Resid,x,continue->fcont)
  
  
 ;joindataex:  
-** splitting and joining period DATA (line  15226 file c:/jlp22/j.f90)
+** splitting and joining period DATA (line  15232 file c:/jlp22/j.f90)
 cdata=data(in->'cdat.txt',read->(cdata%nobsw,site))
 stat()
 xdata=data(in->'xdat.txt',read->(npv#0,npv#5,income1...income5),time->)
@@ -1064,7 +1064,7 @@ delete_f('xdatap.txt')
  
  
 ;linkdataex:  
-** Example for linkdata. (line  15980 file c:/jlp22/j.f90)
+** Example for linkdata. (line  15986 file c:/jlp22/j.f90)
 ** make upper level DATA
 dataa=data(read->(dataa%nobsw,site),in->)
 2,4
@@ -1114,7 +1114,7 @@ datac%matrix;
  
  
 ;askex:  
-** Examples for ask() (line  16319 file c:/jlp22/j.f90)
+** Examples for ask() (line  16325 file c:/jlp22/j.f90)
 a=ask(default->8)
 ask(a,default->8)
 print(ask()+ask()) ! ask without argument is a numeric function
@@ -1124,7 +1124,7 @@ ask(v,q->'Give v>')
  
  
 ;inverseex:  
-** inverse() and condition number (line  17483 file c:/jlp22/j.f90)
+** inverse() and condition number (line  17558 file c:/jlp22/j.f90)
 matrixa=matrix(4,4)
 matrixa=1
 ***  well conditoned matrix
@@ -1149,7 +1149,7 @@ color->Blue,continue->fcont)
  
  
 ;mergex:  
-** Merging list (line  17682 file c:/jlp22/j.f90)
+** Merging list (line  17757 file c:/jlp22/j.f90)
 lista=list(x1...x5,x3);
 ** LISTs must be expanded with @
 listb=merge(@lista)
@@ -1162,7 +1162,7 @@ ilistc=merge(ilista);
  
  
 ;dataex:  
-** data() generates a new data object by reading data. (line  18564 file c:/jlp22/j.f90)
+** data() generates a new data object by reading data. (line  18639 file c:/jlp22/j.f90)
 data1=data(read->(x1...x3),in->)
 1,2,3
 4,5,6
@@ -1173,7 +1173,7 @@ data1=data(read->(x1...x3),in->)
  
  
 ;statex:  
-** stat() computes minimums, maximums, means and std deviatons (line  19701 file c:/jlp22/j.f90)
+** stat() computes minimums, maximums, means and std deviatons (line  19776 file c:/jlp22/j.f90)
 ;if(type(data1).ne.DATA)dataex
 ;if(type(data1).ne.DATA)dataex
 stat()
@@ -1187,7 +1187,7 @@ stat(x1,weight->(x2**1.2))
  
  
 ;covex:  
-** Example of covariance (line  20068 file c:/jlp22/j.f90)
+** Example of covariance (line  20143 file c:/jlp22/j.f90)
 X1=matrix(200)
 X1=rann()
 ;do(i,2,6)
@@ -1206,14 +1206,14 @@ co=cov(dat%keep);
  
  
 ;matrixex:  
-** Example of generating matrices (line  20286 file c:/jlp22/j.f90)
+** Example of generating matrices (line  20361 file c:/jlp22/j.f90)
 A=matrix(3,
 ;if(wait);pause
 ;return
  
  
 ;transex:  
-** Demonstrates also error handling (line  21097 file c:/jlp22/j.f90)
+** Demonstrates also error handling (line  21172 file c:/jlp22/j.f90)
 transa=trans()
 $x3=x1+3
 x2=2/$x3;
@@ -1240,7 +1240,7 @@ call(transc)
  
  
 ;list2ex:  
-** (line  21421 file c:/jlp22/j.f90)
+** (line  21496 file c:/jlp22/j.f90)
 all=list();  ! empty list
 sub=list();
 nper=3
@@ -1255,7 +1255,7 @@ sub=list(@sub,@sub#"i")
  
  
 ;Rex:  
-** Example of Rscript (line  22545 file c:/jlp22/j.f90)
+** Example of Rscript (line  22620 file c:/jlp22/j.f90)
 rscript=text()
 # A simple R-script that generates a small data to file mydat.txt
 wd<-"C:/jlp22/jmanual"
@@ -1274,7 +1274,7 @@ delete_f('mydat.txt','miniscript.r')
  
  
 ;diffex:  
-** (line  23321 file c:/jlp22/j.f90)
+** (line  23396 file c:/jlp22/j.f90)
 lis=list(x1...x3,z3..z5);
 lis2=list(x1,z5);
 liso=difference(lis,lis2);
@@ -1288,7 +1288,7 @@ Continue=0
  
  
 ;derex:  
-** Derivatives with der() (line  23671 file c:/jlp22/j.f90)
+** Derivatives with der() (line  23746 file c:/jlp22/j.f90)
 transa=trans()
 der(x)
 f=(1+x)*cos(x)
@@ -1300,7 +1300,7 @@ fi=draw(func->transa(f),x->x,xrange->(0,10),color->Cyan,append->,continue->fcont
  
  
 ;derex2:  
-** (line  23679 file c:/jlp22/j.f90)
+** (line  23754 file c:/jlp22/j.f90)
 X=matrix(do->(0,1000,10))
 e=matrix(nrows(X))
 e=rann(0,2);
@@ -1327,7 +1327,7 @@ fi=draw(func->(transa(f)),x->I,xrange->(0,1000),color->Violet,append->,continue-
  
  
 ;densityex:  
-** Example of distributions (line  24527 file c:/jlp22/j.f90)
+** Example of distributions (line  24602 file c:/jlp22/j.f90)
 ber=density(func->(1-p+(2*p-1)*$),xrange->(0,1),discrete->); Bernoully
 bim=matrix(100)
 bim=random(ber)

@@ -3329,50 +3329,54 @@ hfunction.
 \end{note} 
 \subsection{\textcolor{VioletRed}{write}() Writes to console or to file}\index{write()} 
 \label{write} 
-\textcolor{VioletRed}{write}(file,format,val1,…,valn[,\textcolor{blue}{tab->}][,\textcolor{blue}{rows->}])! case[1/6] 
-Writes real values to a file or to the console. If val1 is a matrix then this matrix (or usually 
-vector) is written or at most as many values as given in the \textcolor{blue}{values->} option. 
-Arguments: 
+\textcolor{VioletRed}{write}(file,format,arg1,…,argn)\\ 
+Writes real values and text to a file or to the console. \\ 
+ 
+Arguments:\\ 
 file variable \$ (indicating the console), or the name of the file as a character variable 
-or a character constant, or variable \$Buffer 
+or a character constant.\\ 
 format 
-\$ indicates the '*' format of Fortran, works only for numeric values. 
-A character expression, with the following possibilities: 
-A format starting with '\textcolor{teal}{b}' will indicate binary file. Now '\textcolor{teal}{b}' indicates ordinary 
-unformatted write, later there will be other binary formats 
-A Fortran format statement, e.g. ($\sim$the values were $\sim$,4f6.0), with this 
-format pure text can be written by having no object to write (e.g. 
-\textcolor{VioletRed}{write}('out.txt','($\sim$kukuu$\sim$)')). 
-For these formats, other arguments are supposed to be real variables or numeric 
-expressions or there is a matrix argument. If they are not, then just the real value 
-which is anyhow associated with each \textbf{Jlp22} object is printed (usually it will be zero). 
-If the val1 argument is a matrix, then all values are printed. 
-val1,…,valn 
-real values 
-Options: 
-tab if format is a Fortran format then, \textcolor{blue}{tab->} option indicates that sequences of 
+\begin{itemize} 
+\item \$ indicates the '*' format of Fortran for numeric values. The numeric values are converted to single precision. 
+this format can be used also when there are \textcolor{teal}{CHAR} and \textcolor{teal}{REAL} arguments. 
+\item \$\$ indicates the '*' format of Fortran, works only for numeric values. 
+The numeric values are printed in double precision. 
+\item '\textcolor{teal}{b}' The values are converted to single precision and written to a binary file 
+\item '\textcolor{teal}{B}' The values are written to a binary file in double precision 
+\item A Fortran format statement, e.g. ($\sim$the values were $\sim$,4f6.0) when there are numeric values to be written 
+\item If there are no arguments and the format is a \textcolor{teal}{CHAR}, then this is written. 
+\end{itemize} 
+For other arguments the following rules apply: 
+\begin{itemize} 
+\item If the format is \$ and the arguments are \textcolor{teal}{REAL} or \textcolor{teal}{CHAR} in any order, arguments are written 
+\item If there is one \textcolor{teal}{MATRIX} argument then this matrix is written row after 
+row using the format indicated. 
+\item If there are several arguments which are \textcolor{teal}{REAL} or \textcolor{teal}{MATRIX}, then the values are put into a vector which is then written. If format is '\textcolor{teal}{b}' or  \$ then 
+the values are converted to single precision. For matrices, all values written 
+without paying attention to to number of rows or columns. If matrices needs to be written 
+row by row, the matrices can be put into a single matrix with matrix operations 
+and then this matrix can be used as a single argument (after file and format). 
+\end{itemize} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{tab} \tabto{3cm} -1-1 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  if format is a Fortran format then, \textcolor{blue}{tab->} option indicates that sequences of 
 spaces are replaced by tab character so that written text can be easily converted 
 to Ms Word tables. If there are no decimals after the decimal point also the 
 decimal point is dropped. 
-rows If val1 is a matrix or a vector and \textcolor{blue}{rows->} has one argument then at most as 
-many values are written as given in this option, if there are two arguments then 
-the option gives the range of written rows in the form \textcolor{blue}{rows->}(row1,-row2). If the 
-upper limit is greater than the number of rows, no error is produced, all available 
-rows are just written. 
-\textcolor{VioletRed}{write}(file,'t',t1,val1,t2,val2,…,tn,valn[,\textcolor{blue}{tab->}]) ! case[2/6] 
-Tabulation format. positive tab position values indicate that the value is written starting from 
-that position, negative tab positions indicate that the value is written up to that position. The 
-values can be either numeric expressions or character variables or character constants. Tab 
-positions can be in any order. 
-Arguments: 
-file variable \$ (indicating the console), or the name of the file as a character variable 
-or a character constant, or variable \$Buffer 
-'t' tabulation format 
-t1,val1,t2,val2,…,tn,valn 
-KUVAUS 
-Options: 
-tab option indicates that sequences of spaces are replaced by tab character so that 
-writ-ten text can be easily converted to Ms Word tables. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+There have been options to describe the format with tab and 
+width parameters but they may not work now. If such formats are needed, 
+I can reinstall them. 
+\end{note} 
+\begin{note} 
+Also text objects can be written, but I must check how this works now. 
+\end{note} 
  
 \subsection{\textcolor{VioletRed}{print}() Prints objects to file or console}\index{print()} 
 \label{print} 

@@ -3756,10 +3756,18 @@ module jmod
 		! integer,intent(in) :: iel
 		! end subroutine j_checkl!subroutine j_puti(ivec,iel,ival)
  
-		subroutine j_checkd(dvec,iel)
+		subroutine j_checkd(dvec,iel,lenn)
 			double precision, dimension(:),intent(inout), allocatable::dvec
 			integer,intent(in) :: iel
-		end subroutine j_checkd!subroutine j_puti(ivec,iel,ival)
+			integer,optional,intent(out)::lenn
+		end subroutine j_checkd  !subroutine j_puti(ivec,iel,ival)
+ 
+		subroutine j_checkr(dvec,iel,lenn)
+			real, dimension(:),intent(inout), allocatable::dvec
+			integer,intent(in) :: iel
+			integer,optional,intent(out)::lenn
+		end subroutine j_checkr  !subroutine j_puti(ivec,iel,ival)
+ 
  
 		subroutine j_putl(ivec,iel,ival)
 			logical,dimension(:), intent(inout), pointer::ivec  ! HHir. 8.3/2011    =>null()
@@ -3780,16 +3788,18 @@ module jmod
 		! real, intent(in) ::val
 		! end subroutine
  
-		subroutine j_putr(rvec,iel,val)
+		subroutine j_putr(rvec,iel,val,lenn)
 			real,dimension(:), allocatable::rvec ! HHir. 8.3/2011   =>null()
 			integer,intent(in) :: iel
 			real, intent(in) ::val
+			integer,optional,intent(out)::lenn
 		end subroutine j_putr !subroutine j_putr(rvec,iel,val)
  
-		subroutine j_putd(rvec,iel,val)
+		subroutine j_putd(rvec,iel,val,lenn)
 			double precision,dimension(:), allocatable::rvec ! HHir. 8.3/2011   =>null()
 			integer,intent(in) :: iel
 			double precision, intent(in) ::val
+			integer,optional,intent(out)::lenn
 		end subroutine j_putd !subroutine j_putr(rvec,iel,val)
  
 		logical function j_isweak(i,nop2)
