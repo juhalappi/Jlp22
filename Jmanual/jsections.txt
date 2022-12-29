@@ -225,6 +225,11 @@
   ! Luke cannot let me take care of the publication but the leaders wanted to publish J
  ! themselves. This started a frustrating and humillating process which lasted six and half years. 
  
+ !I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017.
+ ! I was not informed of the decision. I heard later that such decision has been made but 
+ !I was not told what the decision contained even if I asked. Later leaders of Luke told
+ ! that Luke is not interested in any co-operation with me in the publication of the software.
+ 
  !When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke.
  ! The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall
  ! in the medieval Olavinlinna castle in Savonlinna.
@@ -307,7 +312,7 @@
 !for the permission to use the portrait she drawed for my 70 yr birthday in 2021.
 
 !\vspace{0.5cm}
-!Suonenjoki 27.12.2022
+!Suonenjoki 29.12.2022
 !\vspace{0.5cm}
 !  Juha Lappi
 
@@ -2263,7 +2268,7 @@ $$=300
 ! However, it was easier to implement cycle and exitdo with goto(). 
 !endnote
 ! Note It is not allowed to jump in to a loop or into if -then structure. This is 
-! checked already in in the parser. 
+! checked already in in the parser. DOES NOT WORK NOW, WILL BE CORRECTED
 ! endnote
 ! Note Even if the labels are
 ! logically character arguments, they are not treated using CHARs. The parser

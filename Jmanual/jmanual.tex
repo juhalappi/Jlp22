@@ -72,6 +72,11 @@ The leaders of Luke told that it is a good idea to open the software, and this i
 Luke cannot let me take care of the publication but the leaders wanted to publish \textbf{J} 
 themselves. This started a frustrating and humillating process which lasted six and half years. 
  
+I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017. 
+I was not informed of the decision. I heard later that such decision has been made but 
+I was not told what the decision contained even if I asked. Later leaders of Luke told 
+that Luke is not interested in any co-operation with me in the publication of the software. 
+ 
 When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke. 
 The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall 
 in the medieval Olavinlinna castle in Savonlinna. 
@@ -154,7 +159,7 @@ I thank my grand daughter Ella
 for the permission to use the portrait she drawed for my 70 yr birthday in 2021. 
  
 \vspace{0.5cm} 
-Suonenjoki 27.12.2022 
+Suonenjoki 29.12.2022 
 \vspace{0.5cm} 
 Juha Lappi 
  
@@ -2348,7 +2353,7 @@ However, it was easier to implement cycle and exitdo with \textcolor{VioletRed}{
 \end{note} 
 \begin{note} 
 It is not allowed to jump in to a loop or into if -then structure. This is 
-checked already in in the parser. 
+checked already in in the parser. DOES NOT WORK NOW, WILL BE CORRECTED 
 \end{note} 
 \begin{note} 
 Even if the labels are 
@@ -4623,6 +4628,11 @@ of the plannin horizon must put to the last list in periodvars, because it can b
 after the whole planning horizon is simulated. 
 \end{note} 
 \begin{note} 
+If the stand data has variable nobswold then the initial value of the nobsw variable 
+is put into this variable. The easiest way to add this variable is to use 
+\textcolor{blue}{extra->}nobswold when making the stand data 
+\end{note} 
+\begin{note} 
 All generated matrices files can be written into one (e.g. binary) file starting 
 from the first to the last period. These DATAS can be the read in using 
 keepopen-> and \textcolor{blue}{continue->} options of \textcolor{VioletRed}{data}(). See below in the \textcolor{VioletRed}{joindata}() section 
@@ -5722,7 +5732,7 @@ schedules data. Without schedules \textcolor{VioletRed}{jlpz}() must be used.
 but the output indicates that e.g. the following objects are created. Many other objects are created 
 but they are currently used for debuggging purposes and they will be described later. They can be 
 used also to teach how the algorithm proceeds. 
-begin{itemize} 
+\begin{itemize} 
 \item Output\%weights The weights of the schedules, see teh example below. 
 \item  Output\%objective= value of the objective function 
 \item  	Output\%rows= the vector the valuef of the constraint rows. 
@@ -5774,7 +5784,26 @@ printing. Default level is 1.
 After the debugging pivot, \textbf{Jlp22} generates \textcolor{VioletRed}{pause}() and during the pause the user can do any computations. Before 
 the pause some additional matrices are generated in addition to matrices which are used 
 the computations. 
-default is \textcolor{blue}{stop->}(Change\%.lt.0.01.and.\textcolor{teal}{Round}.ge.30). 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{stop} \tabto{3cm} -1|1 \tabto{5cm}  CODE \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  codeoption telling when iterations over units stop. The variables 
+\textcolor{teal}{Round} (current number of rounds over units), Change\% (change of objective during the last 10 
+rounds), \textcolor{teal}{Imp} (number of entering schedules outside the active set when updating the active set), 
+Active\% ( \%-size of the active set) and all global variables in JLP22. 
+default is \textcolor{blue}{stop->}(Change\%.lt.0.01.and.\textcolor{teal}{Round}.ge.10). 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent fast\% \tabto{3cm} -1|1 \tabto{5cm}  CODE  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  codeoption computing Fast\%. All schedules whose price is larger than Fast\% 
+of the current key schedule. Same variables can be used as for \textcolor{blue}{stop->}. 
+A possible rule is fast\%->(\textcolor{VioletRed}{min}(Fast\%+5-(\textcolor{teal}{Imp}.gt.0)*10,98))). The default is Fast\%=85. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
