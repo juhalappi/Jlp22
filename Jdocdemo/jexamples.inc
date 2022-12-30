@@ -90,7 +90,7 @@ fcont=.not.fpause
  
  
 ;inpuparag:  
-** Example of inputparagraph (line   1241 file jsections.txt)
+** Example of inputparagraph (line   1246 file jsections.txt)
 transa=trans()
 a=log(b)
 write($,'(~sinlog is=~,f4.0)',sin(a))
@@ -104,7 +104,7 @@ b=matrix(2,3,in->)
  
  
 ;shortex:  
-** Example of using shortcuts and include files (line   1259 file jsections.txt)
+** Example of using shortcuts and include files (line   1264 file jsections.txt)
 short1='sin(Pi)+cos(Pi);'
 short1
 te=text()
@@ -133,7 +133,7 @@ te=0 !delete also text object te
  
  
 ;dotsex:  
-** Example of dots construct (line   1394 file jsections.txt)
+** Example of dots construct (line   1399 file jsections.txt)
 dat=data(read->(x4...x7),in->)
 1,2,3,4
 11,12,13,14
@@ -152,7 +152,7 @@ Continue=0
  
  
 ;inpulistelem:  
-** Getting name from list (line   1415 file jsections.txt)
+** Getting name from list (line   1420 file jsections.txt)
 lis=list(c2...c5);
 @lis=2...5;
 @lis(2)=6;
@@ -163,7 +163,7 @@ lis=list(c2...c5);
  
  
 ;expandex:  
-** Example of expanding lists with @ (line   1438 file jsections.txt)
+** Example of expanding lists with @ (line   1443 file jsections.txt)
 list0=list(site,altitude)
 list1=list(
 ;do(i,1,3)
@@ -180,7 +180,7 @@ stat()
  
  
 ;subobjex:  
-** Seeing subobjects (line   1459 file jsections.txt)
+** Seeing subobjects (line   1464 file jsections.txt)
 dat=data(in->,read->(x,y))
 1,2
 3,4
@@ -193,7 +193,7 @@ subob=;list(dat%?) ! makes the list of subobjects and prints it
  
  
 ;relativesex:  
-** Seeing relatives (line   1468 file jsections.txt)
+** Seeing relatives (line   1473 file jsections.txt)
 x1a...x3a=3...5
 x?a;
 rel=;list(x?a);
@@ -203,7 +203,7 @@ rel=;list(x?a);
  
  
 ;jfuncex:  
-** Examples of Jlp22-functions (line   1747 file jsections.txt)
+** Examples of Jlp22-functions (line   1752 file jsections.txt)
 b,c=2,3;
 a = sin(cos(c)+b); ! Usual arithmetic functions can have numeric values as arguments
 c=matrix(2,2,in->);
@@ -229,7 +229,7 @@ c = inverse(h+t(g)); ! The argument can be intermediate result from matrix compu
  
  
 ;codeoptex:  
-** Codeoptions (line   1780 file jsections.txt)
+** Codeoptions (line   1785 file jsections.txt)
 dat=data(read->(D,H),in->)
 3,2
 2,4
@@ -243,7 +243,7 @@ continue->fcont,xlabel->'x',width->2) ! the func-> option transmits the function
  
  
 ;comoptex:  
-** data1 (line   1845 file jsections.txt)
+** data1 (line   1850 file jsections.txt)
 dat=data(read->(x,y),in->)
 1,2
 3,4
@@ -259,7 +259,7 @@ stat(trans->transa)
  
  
 ;recursion:  
-** Recursion produces system crash. (line   1886 file jsections.txt)
+** Recursion produces system crash. (line   1891 file jsections.txt)
 transa=trans() !level will be initialized as zero
 level;
 level=level+1
@@ -273,7 +273,7 @@ Continue=0
  
  
 ;transfunc:  
-** Transformation as a function (line   1909 file jsections.txt)
+** Transformation as a function (line   1914 file jsections.txt)
 delete_o(a,c)
 transa=trans()
 a=8;
@@ -290,7 +290,7 @@ a=c+transb(a)+c+transa(a);
  
  
 ;matrixop:  
-** Matrix operations (line   2129 file jsections.txt)
+** Matrix operations (line   2134 file jsections.txt)
 A=matrix(3,4,do->);
 A+2;
 A-1;
@@ -320,7 +320,7 @@ Continue=0
  
  
 ;doex:  
-** do-loop (line   2204 file jsections.txt)
+** do-loop (line   2209 file jsections.txt)
 !!begin
 transa=trans()
 do(i,1,5)
@@ -337,7 +337,7 @@ call(transa)
  
  
 ;retex:  
-** example of return and goto () (line   2225 file jsections.txt)
+** example of return and goto () (line   2230 file jsections.txt)
 transa=trans()
 ad1:r=ran();
 if(r.lt.0.2)return
@@ -349,7 +349,7 @@ call(transa)
  
  
 ;errexitex:  
-** errexit() returns as if error had occured (line   2245 file jsections.txt)
+** errexit() returns as if error had occured (line   2250 file jsections.txt)
 transa=trans()
 if(a.eq.0)errexit('illegal value ',a)
 s=3/a; ! division with zero is tested automatically
@@ -366,7 +366,7 @@ Continue=0
  
  
 ;gotoex:  
-** Example of unconditional goto (line   2284 file jsections.txt)
+** Example of unconditional goto (line   2289 file jsections.txt)
 transa=trans()
 i=0
 if(i.eq.0)goto(koe)
@@ -380,7 +380,7 @@ out;
  
  
 ;congotoex:  
-** (line   2299 file jsections.txt)
+** (line   2304 file jsections.txt)
 transa=trans()
 out=999
 goto(ad1)
@@ -412,7 +412,7 @@ Continue=0
  
  
 ;assignex:  
-** Examples of assignments (line   2364 file jsections.txt)
+** Examples of assignments (line   2369 file jsections.txt)
 a=matrix(2,3);
 a=4;
 a=rann();
@@ -427,7 +427,7 @@ Continue=0
  
  
 ;showex:  
-** Example of show() (line   2439 file jsections.txt)
+** Example of show() (line   2444 file jsections.txt)
 fi=draw(func->sqrt2(x),x->x,xrange->(-50,50),continue->fcont)
 show(fi,xrange->(-60,60),xlabel->'NEWX]Times Roman,16[',ylabel->'NEWY]Courier,10[',continue->fcont)
 show(fi,axes->10,continue->fcont)
@@ -452,7 +452,7 @@ show(fi,xrange->(0,6),yrange->(0,7),continue->fcont)
  
  
 ;errorex:  
-** (line   3083 file jsections.txt)
+** (line   3088 file jsections.txt)
 round=5
 write('inca.txt',$,'**we are in inca.txt')
 write('inca.txt',$,'round;')
@@ -1404,7 +1404,7 @@ jlpza=jlpz(zmatrix->jlpcoefa%matrix,rhs->jlpcoefa%rhs,rhs2->jlpcoefa%rhs2,min->j
  
  
 ;jlpex:  
-** jlp() solves linear programming problem (line   4109 file c:/jlp22/jlp.f90)
+** jlp() solves linear programming problem (line   4119 file c:/jlp22/jlp.f90)
 cdata=data(in->'cdat.txt',read->(cdata%nobsw,site))
 stat()
 xdata=data(in->'xdat.txt',read->(npv#0,npv#5,income1...income5))
@@ -1421,9 +1421,14 @@ npv#5-npv#0>0
 /
 plist=;list(proba%?);
 @plist;
-jlpa=jlp(problem->proba,data->cdata)
+jlpa=jlp(problem->proba,data->cdata,showdomain->('site.le.3','site.gt.3'))
+** sums of x-variables are stored into the same variables with jlpa%prefix
+jlpa%income5;
+jlpa%income5[site.le.3];
+** Note income variables are in theory equal but as their
+** values are computed numerically, they differ.
 jlist=;list(jlpa%?);
-@jlist;
+**  these could be printed with @jlist;
 ** jlpa%weights gets the weights of schdedules
 ** combain the weights with the data
 xdataw=newdata(xdata,jlpa%weights,read->w)
@@ -1453,8 +1458,11 @@ income"i"-income"i-1"=0
 npv#5-npv#0>0
 /
 plistb=;list(probb%?);
-@plistb;
-jlpb=jlp(problem->probb,data->cdata)
+*** these  could be printed with @plistb;
+jlpb=jlp(problem->probb,data->cdata,showdomain->'3.lt.site')
+jlpb%income5;
+jlpb%income5[site.gt.3];
+jlpb%income5[3.lt.site];
 ;if(wait);pause
 ;return
  

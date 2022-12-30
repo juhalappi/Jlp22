@@ -73,7 +73,7 @@ Luke cannot let me take care of the publication but the leaders wanted to publis
 themselves. This started a frustrating and humillating process which lasted six and half years. 
  
 I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017. 
-I was not informed of the decision. I heard later that such decision has been made but 
+I was not informed of the decision. I heard that such decision has been made but 
 I was not told what the decision contained even if I asked. Later leaders of Luke told 
 that Luke is not interested in any co-operation with me in the publication of the software. 
  
@@ -95,7 +95,7 @@ I would like to ask:
  
 Is it really so that a reseacher of a government research institute has no right to 
 publish the results of his 
-research if the leaders think that the results are so important that the leaders want to publish them? 
+research if the leaders think that the results are so important that they want to publish them? 
  
 The eleven leaders wanting to publish the software knew nothing of the 
 code they wanted to publish without any cooperation with me. They did not know, 
@@ -171,11 +171,10 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
-I (in this manual 'I' refers to the first author) found recently a bug in Fletchers code. When after some pivot steps only residual variables 
-are in the basis, the code computed wrong shadow prices, and the objective was getting worse. 
-This situation will not happen in ordinary linear programming problems. When hunting the bug, I developed new 
-debugging tools, so I hope that all users would now send problematic 
-runs to me. 
+Version 30.12.2022 \textcolor{VioletRed}{jlp}() has now showdomain-> option which defines additional domains for which the sums 
+of \textcolor{teal}{x}-variables are also computed. This option was already in JLP. 
+All sums of \textcolor{teal}{x}-variables are now stored into variables with names starting with Output\%. Sums 
+in domains are stored in variables with postfix [domaindefinition], e.g. [site.lt.3]. 
  
 In version 28.12. 2022 \textcolor{VioletRed}{joindata}() which builds schedules data from tree format data has two new options 
 which allow combining several data sets faster and it is possible to save memory so that larger 
@@ -192,12 +191,18 @@ utilize these implicit properties when there is lack of memory even in the 64-bi
 In this Github publication, 
 the release exe-file is not updated. 
  
-Version Dec 20 2022 provides simple data formats for stroring schedules so that in the simulation tree only thos 
+Version Dec 20 2022 provides simple data formats for storing schedules so that in the simulation tree only thos 
 nodes after branching are stored. See keepopen-> and \textcolor{blue}{continue->} options in \textcolor{VioletRed}{data}(). Function \textcolor{VioletRed}{joindata}() is 
 used to build the schedules from their components. Function \textcolor{VioletRed}{splitdata}() can be used to split data caontaining whole 
 schedules into these new compponent datas. \textcolor{VioletRed}{splitdata}() can be used to convert data generated with previous simulators 
 into this new format. It is recommeneded that a simulator generating data for \textbf{Jlp22} 
 starts to write directly into this new format. 
+ 
+A bug in Fletchers code was found. When after some pivot steps only residual variables 
+are in the basis, the code computed wrong shadow prices, and the objective was getting worse. 
+This situation will not happen in ordinary linear programming problems. When hunting the bug, I developed new 
+debugging tools, so I hope that all users would now send problematic 
+runs to me. 
  
 Now the variable telling the number of observations in \textcolor{teal}{DATA} \textcolor{teal}{datab} is always \textcolor{teal}{datab}\%obs. 
 Similarly the variable 
@@ -3338,7 +3343,7 @@ or a character constant.\\
 format 
 \begin{itemize} 
 \item \$ indicates the '*' format of Fortran for numeric values. The numeric values are converted to single precision. 
-this format can be used also when there are \textcolor{teal}{CHAR} and \textcolor{teal}{REAL} arguments. 
+This format can be used also when there are \textcolor{teal}{CHAR} and \textcolor{teal}{REAL} arguments. 
 \item \$\$ indicates the '*' format of Fortran, works only for numeric values. 
 The numeric values are printed in double precision. 
 \item '\textcolor{teal}{b}' The values are converted to single precision and written to a binary file 
@@ -5762,13 +5767,24 @@ Output\%xvarsproblem= \textcolor{teal}{LIST} of \textcolor{teal}{x}-variables in
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Unit data when schedules data is linked to it with \textcolor{VioletRed}{linkdata}() or schedules data when 
 \textcolor{blue}{unit->} gives the  unit variable which changes when unit changes. 
+	! 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent \textcolor{teal}{z} \tabto{3cm} -1|0  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent This option must be present when there are \textcolor{teal}{z}-variables in the problem. 
+\noindent This option must be present when there are \textcolor{teal}{z}-variables in the problem, but the \textcolor{teal}{z}-variables 
+need not to be listed. The reason for this option is that often the purpose 
+is to define the problem using only \textcolor{teal}{x}-variables, but due to typing errors all variables 
+are not among \textcolor{teal}{x}-variables. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent showdomain \tabto{3cm} -1-99 \tabto{5cm}  \textcolor{teal}{CHAR} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent the sums of the \textcolor{teal}{x}-variables are computed also for these domains. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5806,7 +5822,7 @@ default is \textcolor{blue}{stop->}(Change\%.lt.0.01.and.\textcolor{teal}{Round}
 \noindent fast\% \tabto{3cm} -1|1 \tabto{5cm}  CODE  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  codeoption computing Fast\%. All schedules whose price is larger than Fast\% 
-of the current key schedule. Same variables can be used as for \textcolor{blue}{stop->}. 
+of the current key schedule. Same variables can be used as for \textcolor{blue}{stop->} and also current Fast\%. 
 A possible rule is fast\%->(\textcolor{VioletRed}{min}(Fast\%+5-(\textcolor{teal}{Imp}.gt.0)*10,98))). The default is Fast\%=85. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -5844,6 +5860,11 @@ The default is \textcolor{blue}{refac->}1000.
 \begin{note} 
 In small problems dCPU, i.e. increase of used CPU time is not very accurate. 
 \end{note} 
+\begin{note} 
+\textcolor{VioletRed}{jlp}() stores the sums of \textcolor{teal}{x}-variables into output\% -variables. If there are domains 
+or showdomains, the variable names get postfix [domaindefinition], show examples 
+below 
+\end{note} 
 \singlespacing 
 \begin{example}[jlpex]jlp() solves linear programming problem\\ 
 \label{jlpex} 
@@ -5865,9 +5886,14 @@ npv\#5-npv\#0>0\\
 plist=;list(\textcolor{teal}{proba}\%?);\\ 
 @plist;\\ 
  
-\textcolor{teal}{jlpa}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{proba},\textcolor{blue}{data->}cdata)\\ 
+\textcolor{teal}{jlpa}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{proba},\textcolor{blue}{data->}cdata,showdomain->('site.le.3','site.gt.3'))\\ 
+{\color{ForestGreen}** sums of x-variables are stored into the same variables with jlpa\%prefix}\\ 
+\textcolor{teal}{jlpa}\%income5;\\ 
+\textcolor{teal}{jlpa}\%income5[site.le.3];\\ 
+{\color{ForestGreen}** Note income variables are in theory equal but as their}\\ 
+{\color{ForestGreen}** values are computed numerically, they differ.}\\ 
 jlist=;list(\textcolor{teal}{jlpa}\%?);\\ 
-@jlist;\\ 
+{\color{ForestGreen}**  these could be printed with @jlist;}\\ 
  
 {\color{ForestGreen}** jlpa\%weights gets the weights of schdedules}\\ 
 {\color{ForestGreen}** combain the weights with the data}\\ 
@@ -5898,9 +5924,11 @@ income"i"-income"i-1"=0\\
 npv\#5-npv\#0>0\\ 
 /            \\ 
 plistb=;list(\textcolor{teal}{probb}\%?);\\ 
-@plistb;\\ 
-\textcolor{teal}{jlpb}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{probb},\textcolor{blue}{data->}cdata)\\ 
- 
+{\color{ForestGreen}*** these  could be printed with @plistb;}\\ 
+\textcolor{teal}{jlpb}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{probb},\textcolor{blue}{data->}cdata,showdomain->'3.lt.site')\\ 
+\textcolor{teal}{jlpb}\%income5;\\ 
+\textcolor{teal}{jlpb}\%income5[site.gt.3];\\ 
+\textcolor{teal}{jlpb}\%income5[3.lt.site];\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 

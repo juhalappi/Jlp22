@@ -112,11 +112,10 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
-! I (in this manual 'I' refers to the first author) found recently a bug in Fletchers code. When after some pivot steps only residual variables
-! are in the basis, the code computed wrong shadow prices, and the objective was getting worse.
-! This situation will not happen in ordinary linear programming problems. When hunting the bug, I developed new 
-! debugging tools, so I hope that all users would now send problematic
-!runs to me.
+!Version 30.12.2022 jlp() has now showdomain-> option which defines additional domains for which the sums
+!  of x-variables are also computed. This option was already in JLP.
+! All sums of x-variables are now stored into variables with names starting with Output%. Sums
+! in domains are stored in variables with postfix [domaindefinition], e.g. [site.lt.3].
 
 !In version 28.12. 2022 joindata() which builds schedules data from tree format data has two new options
 ! which allow combining several data sets faster and it is possible to save memory so that larger
@@ -133,12 +132,18 @@
 ! In this Github publication,
 ! the release exe-file is not updated.
 
-!Version Dec 20 2022 provides simple data formats for stroring schedules so that in the simulation tree only thos
+!Version Dec 20 2022 provides simple data formats for storing schedules so that in the simulation tree only thos
 ! nodes after branching are stored. See keepopen-> and continue-> options in data(). Function joindata() is
 ! used to build the schedules from their components. Function splitdata() can be used to split data caontaining whole
 ! schedules into these new compponent datas. splitdata() can be used to convert data generated with previous simulators
 ! into this new format. It is recommeneded that a simulator generating data for Jlp22 
 !starts to write directly into this new format.
+
+! A bug in Fletchers code was found. When after some pivot steps only residual variables
+! are in the basis, the code computed wrong shadow prices, and the objective was getting worse.
+! This situation will not happen in ordinary linear programming problems. When hunting the bug, I developed new 
+! debugging tools, so I hope that all users would now send problematic
+!runs to me.
 
 ! Now the variable telling the number of observations in DATA datab is always datab%obs.
 !  Similarly the variable
@@ -226,7 +231,7 @@
  ! themselves. This started a frustrating and humillating process which lasted six and half years. 
  
  !I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017.
- ! I was not informed of the decision. I heard later that such decision has been made but 
+ ! I was not informed of the decision. I heard that such decision has been made but 
  !I was not told what the decision contained even if I asked. Later leaders of Luke told
  ! that Luke is not interested in any co-operation with me in the publication of the software.
  
@@ -248,7 +253,7 @@
 
 ! Is it really so that a reseacher of a government research institute has no right to
 ! publish the results of his
-! research if the leaders think that the results are so important that the leaders want to publish them?
+! research if the leaders think that the results are so important that they want to publish them?
 
 !The eleven leaders wanting to publish the software knew nothing of the 
 ! code they wanted to publish without any cooperation with me. They did not know, 

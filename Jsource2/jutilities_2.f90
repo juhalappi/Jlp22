@@ -1190,7 +1190,6 @@ recursive subroutine j_command(commandline,passoptions) !execute single %%functi
 	use jmod, only: j_tempchar
 	use jmod, only: j_clean
 	use jmod, only: j_parser
-	use jmod, only: j_o
 	use jmod, only: j_ninc
 	use jmod, only: j_v
 	use jmod, only: j_ivprintinput
@@ -1254,9 +1253,9 @@ recursive subroutine j_command(commandline,passoptions) !execute single %%functi
 	!	if(j_v(j_ivdollar).eq.783.d0)write(6,*)'cl:',commandline,j_recursion
 	!	write(6,*)'from interpret:',j_o(ivjcommand(recursion))%i(1:j_o(ivjcommand(recursion))%i(0))
 	if(j_err)goto 900
-	write(6,*)'<333>',commandline
+	write(6,*)commandline
  
-	write(6,*)'aft33 ',j_o(ivjcommand(j_recursion))%i(0:20)
+	!	write(6,*)'aft33 ',j_o(ivjcommand(j_recursion))%i(0:20)
 	call dotrans(ivjcommand(j_recursion),1)
 	!	write(6,*)'{{',1
 	!	if(j_v(j_ivdollar).eq.783.d0)write(6,*)'claft:',commandline,j_recursion
