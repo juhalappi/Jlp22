@@ -112,6 +112,10 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+!Version 31.1.2022. jlp() solves (again) problems without any constraints. 
+!The showdomain-> works also for problems without contraints. The new subroutines needed for this
+! will smooth the road to factory optimization.
+
 !Version 30.12.2022 jlp() has now showdomain-> option which defines additional domains for which the sums
 !  of x-variables are also computed. This option was already in JLP.
 ! All sums of x-variables are now stored into variables with names starting with Output%. Sums

@@ -171,6 +171,10 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 31.1.2022. \textcolor{VioletRed}{jlp}() solves (again) problems without any constraints. 
+The showdomain-> works also for problems without contraints. The new subroutines needed for this 
+will smooth the road to factory optimization. 
+ 
 Version 30.12.2022 \textcolor{VioletRed}{jlp}() has now showdomain-> option which defines additional domains for which the sums 
 of \textcolor{teal}{x}-variables are also computed. This option was already in JLP. 
 All sums of \textcolor{teal}{x}-variables are now stored into variables with names starting with Output\%. Sums 
@@ -5929,6 +5933,11 @@ plistb=;list(\textcolor{teal}{probb}\%?);\\
 \textcolor{teal}{jlpb}\%income5;\\ 
 \textcolor{teal}{jlpb}\%income5[site.gt.3];\\ 
 \textcolor{teal}{jlpb}\%income5[3.lt.site];\\ 
+{\color{ForestGreen}** Now problem without constraints}\\ 
+probc=\textcolor{VioletRed}{problem}();\\ 
+npv\#0==max\\ 
+/         \\ 
+jlpc=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}probc,\textcolor{blue}{data->}cdata,showdomain->'3.lt.site')\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
