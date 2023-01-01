@@ -172,10 +172,10 @@ should look at the manual. All the examples of the manual should now go through 
 jexamples.inc. 
  
 Version 31.1.2022. \textcolor{VioletRed}{jlp}() solves (again) problems without any constraints. 
-The showdomain-> works also for problems without contraints. The new subroutines needed for this 
+The \textcolor{blue}{showdomain->} works also for problems without contraints. The new subroutines needed for this 
 will smooth the road to factory optimization. 
  
-Version 30.12.2022 \textcolor{VioletRed}{jlp}() has now showdomain-> option which defines additional domains for which the sums 
+Version 30.12.2022 \textcolor{VioletRed}{jlp}() has now \textcolor{blue}{showdomain->} option which defines additional domains for which the sums 
 of \textcolor{teal}{x}-variables are also computed. This option was already in JLP. 
 All sums of \textcolor{teal}{x}-variables are now stored into variables with names starting with Output\%. Sums 
 in domains are stored in variables with postfix [domaindefinition], e.g. [site.lt.3]. 
@@ -196,7 +196,7 @@ In this Github publication,
 the release exe-file is not updated. 
  
 Version Dec 20 2022 provides simple data formats for storing schedules so that in the simulation tree only thos 
-nodes after branching are stored. See keepopen-> and \textcolor{blue}{continue->} options in \textcolor{VioletRed}{data}(). Function \textcolor{VioletRed}{joindata}() is 
+nodes after branching are stored. See \textcolor{blue}{keepopen->} and \textcolor{blue}{continue->} options in \textcolor{VioletRed}{data}(). Function \textcolor{VioletRed}{joindata}() is 
 used to build the schedules from their components. Function \textcolor{VioletRed}{splitdata}() can be used to split data caontaining whole 
 schedules into these new compponent datas. \textcolor{VioletRed}{splitdata}() can be used to convert data generated with previous simulators 
 into this new format. It is recommeneded that a simulator generating data for \textbf{Jlp22} 
@@ -903,30 +903,44 @@ file or to the \textcolor{Red}{sit>} prompt.
 an explicit \textcolor{Red}{;incl} or \textcolor{Red}{;incl} is generated 
 with command shortcut. 
 \end{itemize} 
-\subsection{\textcolor{Red}{;where} the current lines in \textcolor{Red}{;incl} -files}\index{;where;incl} 
+\subsection{\textcolor{Red}{;where} the current line in \textcolor{Red}{;incl} -files}\index{;where;incl} 
 \label{inpuwhere} 
-\subsection{Access using part of the name} 
+\subsection{Objects with common part of name} 
 \label{inpusubobj} 
-The subobjects generated with a function can be seen according 
-to the following example. The second example shows how objects having a common part in the 
-name can be printed. 
+There are two ways to acces objects having common part in name. These methods are especially useful 
+when seeing sub objects or side object produced with funtion whose names start with output\%. 
+\subsubsection{Printing names of subobjects} 
+\label{inpusub1} 
+The names of subobjects generated with a function can be seen according 
+to the following example. 
 \singlespacing 
 \begin{example}[subobjex]Seeing subobjects\\ 
 \label{subobjex} 
-\noindent dat=\textcolor{VioletRed}{data}(\textcolor{blue}{in->},\textcolor{blue}{read->}(\textcolor{teal}{x},\textcolor{teal}{y}))\\ 
+\noindent \textcolor{teal}{dataa}=\textcolor{VioletRed}{data}(\textcolor{blue}{in->},\textcolor{blue}{read->}(\textcolor{teal}{x},\textcolor{teal}{y}))\\ 
 1,2\\ 
 3,4\\ 
 /  \\ 
-dat\%?;\,{\color{ForestGreen}!prints subobjects}\\ 
-subob=;list(dat\%?)\,{\color{ForestGreen}! makes the list of subobjects and prints it}\\ 
-@subob;\,\,{\color{ForestGreen}! prints the subobjects}\\ 
+\textcolor{teal}{dataa}\%?;\,{\color{ForestGreen}!prints subobjects}\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
+\subsubsection{;list(part\%?) \textcolor{teal}{LIST} of objects having common part in name} 
+\label{inpusub2} 
+;list() Makes a list of objects. The example shows how the list can be printed and how 
+to print all objects in the list. 
+ 
 \singlespacing 
-\begin{example}[relativesex]Seeing relatives\\ 
-\label{relativesex} 
-\noindent x1a...x3a=3...5\\ 
+\begin{example}[subobjex2]ex2\\ 
+\label{subobjex2} 
+\noindent \textcolor{teal}{dataa}=\textcolor{VioletRed}{data}(\textcolor{blue}{in->},\textcolor{blue}{read->}(\textcolor{teal}{x},\textcolor{teal}{y}))\\ 
+1,2\\ 
+3,4\\ 
+/  \\ 
+\textcolor{teal}{lista}=;list(\textcolor{teal}{dataa}\%?);\\ 
+{\color{ForestGreen}**Then all objects in the list are printed.}\\ 
+@lista;\\ 
+{\color{ForestGreen}**Seeing and printing relatives}\\ 
+x1a...x3a=3...5\\ 
 x?a;\\ 
 rel=;list(x?a);\\ 
 @rel;\\ 
@@ -1693,7 +1707,7 @@ commands can be given.
 \subsection{Batch mode} 
 \label{batch} 
 If the default main program is replaced with a program which tells that Jlp is operated 
-in the batch mode, or if the initial   \textcolor{Red}{;incl} -file containscommand batch(), the \textbf{Jlp22} is operated in 
+in the batch mode, or if the initial   \textcolor{Red}{;incl} -file containscommand \textcolor{VioletRed}{batch}(), the \textbf{Jlp22} is operated in 
 the batch mode. In the batch mode, the control never starts to read commands from the 
 console at \textcolor{Red}{sit>} prompt. Using \textbf{Jlp22} from R, developed with Lauri Meht\"atalo is using \textbf{Jlp22} in the batch mode. 
 \subsection{Using shortcuts and sections in \textcolor{Red}{;incl} files}\index{;incl} 
@@ -3066,6 +3080,24 @@ sub=\textcolor{VioletRed}{list}(@sub,@sub\#"i")\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
+\subsection{;list(part\%?) \textcolor{teal}{LIST} of objects having common part in name} 
+\label{inpusub2b} 
+;list() Makes a list of objects. The example shows how the list can be printed and how 
+to print all objects in the list. This function is described also in section \ref{inpusub2} 
+ 
+\singlespacing 
+\begin{example}[subobjex2]ex2\\ 
+\label{subobjex2} 
+\noindent \textcolor{teal}{dataa}=\textcolor{VioletRed}{data}(\textcolor{blue}{in->},\textcolor{blue}{read->}(\textcolor{teal}{x},\textcolor{teal}{y}))\\ 
+1,2\\ 
+3,4\\ 
+/  \\ 
+\textcolor{teal}{lista}=;list(\textcolor{teal}{dataa}\%?);\\ 
+{\color{ForestGreen}**Then all objects in the list are printed.}\\ 
+@lista;\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \subsection{\textcolor{VioletRed}{merge}() Merges LISTs and ILISTs by dropping duplicates.}\index{merge()} 
 \label{merge} 
 \textcolor{VioletRed}{merge}() will produce of a \textcolor{teal}{LIST} consisting of separate objects or values 
@@ -3080,7 +3112,7 @@ in the arguments.
 {\color{ForestGreen}** LISTs must be expanded with @}\\ 
 \textcolor{teal}{listb}=\textcolor{VioletRed}{merge}(@\textcolor{teal}{lista})\\ 
 ilista=\textcolor{VioletRed}{ilist}(1...5,3);\\ 
-ilistb=\textcolor{VioletRed}{merge}(ilista,ilist->);\\ 
+ilistb=\textcolor{VioletRed}{merge}(ilista,\textcolor{blue}{ilist->});\\ 
 {\color{ForestGreen}*** without ilist the arguments are interpreted as object indices}\\ 
 ilistc=\textcolor{VioletRed}{merge}(ilista);\\ 
 \end{example} 
@@ -3216,6 +3248,17 @@ put OBJ into \textcolor{teal}{LIST}
 Usage:\\ 
 Output=\textcolor{VioletRed}{table}(rowlist,collist)\\ 
 This can be used in factory optimizations 
+\subsection{\textcolor{teal}{lista}(2,-4) makes \textcolor{teal}{LIST} from part of \textcolor{teal}{LIST} \textcolor{teal}{lista}} 
+\label{sublist} 
+A list can be made taking a part of \textcolor{teal}{LIST}. 
+\singlespacing 
+\begin{example}[sublistex]taking sublist\\ 
+\label{sublistex} 
+\noindent \textcolor{teal}{lista}=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5);\\ 
+lista2\%5=\textcolor{teal}{lista}(2,-5);\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \section{TEXT and \textcolor{teal}{TXT} text objects} 
 \label{texts} 
 The are now two object types for text. 
@@ -4078,7 +4121,7 @@ there are multiple input files defined in option \textcolor{blue}{in->}.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent keepopen  \tabto{3cm} -1:1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\noindent \textcolor{blue}{keepopen}  \tabto{3cm} -1:1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  This option tells that if \textcolor{blue}{nobs->} option gives the number of observations 
 then after the current \textcolor{teal}{DATA} is read in, the file remains open so that other DATAs can be read from the same file. 
@@ -4092,7 +4135,7 @@ with \textcolor{VioletRed}{joindata}(). See also \textcolor{VioletRed}{splitdata
 \noindent \textcolor{blue}{continue}   \tabto{3cm} -1:1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  This tells that the reading continues from 
-the file which was left open with the previous keepopen-> option. 
+the file which was left open with the previous \textcolor{blue}{keepopen->} option. 
  
  
 subread,…,subobs sub data options similar as \textcolor{blue}{read->}…obs-> for the upper level data. 
@@ -4539,7 +4582,7 @@ level and lower level data are read from the same file, then \textcolor{VioletRe
 \end{note} 
 \begin{note} 
 When using linked data in  functions, the values of the upper level variables are 
-automatically obtained when accessing lower level observations, if option up-> is present. 
+automatically obtained when accessing lower level observations, if option \textcolor{blue}{up->} is present. 
 \end{note} 
  
 \begin{note} 
@@ -4578,9 +4621,9 @@ stand and schedule data can be given in \textcolor{blue}{unit->} option
 {\color{ForestGreen}** if up-> is present}\\ 
 {\color{ForestGreen}**   even if they are not part of the data matrix as seen from datab\%keep.}\\ 
 \textcolor{VioletRed}{stat}()\\ 
-\textcolor{VioletRed}{stat}(up->)\\ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{up->})\\ 
  
-**                               \\ 
+**                                                 \\ 
 {\color{ForestGreen}** Note stat() and all functions assume that the last DATA created is used}\\ 
 {\color{ForestGreen}** Thus when there are several DATAs around it is safer all use data-> option}\\ 
 {\color{ForestGreen}** i.e. the above could/should be stat(data->datab)}\\ 
@@ -4626,7 +4669,7 @@ then the \textcolor{VioletRed}{splitdata}() generates DATAs xdatab\#1...,xdatab\
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent periodvars \tabto{3cm} 2- \tabto{5cm}  \textcolor{teal}{LIST} \tabto{7cm} 
+\noindent \textcolor{blue}{periodvars} \tabto{3cm} 2- \tabto{5cm}  \textcolor{teal}{LIST} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  \textcolor{teal}{LIST} of LISTs, each list telling variables which 
 are simulated for the corresponding period. 
@@ -4648,7 +4691,7 @@ is put into this variable. The easiest way to add this variable is to use
 \begin{note} 
 All generated matrices files can be written into one (e.g. binary) file starting 
 from the first to the last period. These DATAS can be the read in using 
-keepopen-> and \textcolor{blue}{continue->} options of \textcolor{VioletRed}{data}(). See below in the \textcolor{VioletRed}{joindata}() section 
+\textcolor{blue}{keepopen->} and \textcolor{blue}{continue->} options of \textcolor{VioletRed}{data}(). See below in the \textcolor{VioletRed}{joindata}() section 
 \end{note} 
 \begin{note} 
 The first variable in \textcolor{teal}{DATA} \textcolor{teal}{dataa} is \textcolor{teal}{dataa}\%nobsw 
@@ -4669,9 +4712,9 @@ xdata2=\textcolor{VioletRed}{joindata}(cdata,xdata\#1...xdata\#p)\\
 DATAs xdata\#1...xdata\#p contain different periods (levels) in hierarchical data and 
 the will contain whole schedules. This new data is automatically linked to 
 to the first argument \textcolor{teal}{DATA} (cdata). There can be two options:\\ 
-nrowtot-> gives the total number of observations when joindata is used several times to put several DATAs into 
+\textcolor{blue}{nrowtot->} gives the total number of observations when joindata is used several times to put several DATAs into 
 the same \textcolor{teal}{DATA}.\\ 
-\textcolor{blue}{append->} current data are appended to a \textcolor{teal}{DATA} for which space has been reserved with nrowtot-> 
+\textcolor{blue}{append->} current data are appended to a \textcolor{teal}{DATA} for which space has been reserved with \textcolor{blue}{nrowtot->} 
 \begin{note} 
 In the second case: As the output will be connected to the first argument, the link from the second argument 
 to the first argument will be lost. 
@@ -4692,7 +4735,7 @@ xdata=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'xdat.txt',\textcolor{bl
 \textcolor{VioletRed}{stat}()\\ 
  
 \textcolor{VioletRed}{linkdata}(\textcolor{blue}{data->}cdata,\textcolor{blue}{subdata->}xdata)\\ 
-\textcolor{VioletRed}{stat}(up->)\\ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{up->})\\ 
  
  
 \textcolor{Red}{;do}(i,1,4)\\ 
@@ -4700,7 +4743,7 @@ pv"i"=\textcolor{VioletRed}{list}(income"i")\\
 \textcolor{Red}{;enddo}\\ 
 pv5=\textcolor{VioletRed}{list}(income5,npv\#0,npv\#5)\\ 
  
-xdatap=\textcolor{VioletRed}{splitdata}(xdata,periodvars->(pv1...pv5))\\ 
+xdatap=\textcolor{VioletRed}{splitdata}(xdata,\textcolor{blue}{periodvars->}(pv1...pv5))\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}cdata)\\ 
  
 \textcolor{Red}{;do}(i,1,5)\\ 
@@ -4722,7 +4765,7 @@ Pv"i"=\textcolor{VioletRed}{list}(xdataP\#"i"\%nobsw,@pv"i")\\
  
 \textcolor{Red}{;do}(i,1,5)\\ 
 ;if(i.eq.5)keepo=0\\ 
-xdataP\#"i"=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'xdatap.txt',\textcolor{blue}{read->}(@Pv"i"),keepopen->keepo,\textcolor{blue}{continue->}contd,\textcolor{blue}{nobs->}nobscur)\\ 
+xdataP\#"i"=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'xdatap.txt',\textcolor{blue}{read->}(@Pv"i"),\textcolor{blue}{keepopen->}keepo,\textcolor{blue}{continue->}contd,\textcolor{blue}{nobs->}nobscur)\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}xdataP\#"i",\textcolor{blue}{sum->})\\ 
 nobscur=xdataP\#"i"\%nobsw\%sum;\\ 
 contd=1\\ 
@@ -4740,7 +4783,7 @@ xdatanew=\textcolor{VioletRed}{joindata}(cdata,xdataP\#1...xdataP\#5)\\
 {\color{ForestGreen}** the number of observations in the tree format data is the same as}\\ 
 {\color{ForestGreen}**the number of observations in the data for the last period.}\\ 
 nobstot=2*\textcolor{VioletRed}{nobs}(xdataP\#5);\\ 
-Xdatanew=\textcolor{VioletRed}{joindata}(cdata,xdataP\#1...xdataP\#5,nrowtot->nobstot)\\ 
+Xdatanew=\textcolor{VioletRed}{joindata}(cdata,xdataP\#1...xdataP\#5,\textcolor{blue}{nrowtot->}nobstot)\\ 
 Xdatanew=\textcolor{VioletRed}{joindata}(cdata,xdataP\#1...xdataP\#5,\textcolor{blue}{append->})\\ 
 \textcolor{VioletRed}{stat}()\\ 
 {\color{ForestGreen}** remove the created file}\\ 
@@ -4767,7 +4810,7 @@ If insisting on double precision data storage, use format '\textcolor{teal}{B}'.
 computed using \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}cdata,\textcolor{blue}{sum->}). This sum tells the number of period 1 observations. 
 \item After making a period \textcolor{teal}{DATA}, the number of observations in next period is computed similarly. 
 It simplifies coding when the data for the last period has also \%nobsw variable which is zero. 
-\item keepopen-> keeps the file open making it possible to continue reading from the same file, 
+\item \textcolor{blue}{keepopen->} keeps the file open making it possible to continue reading from the same file, 
 which is indicated with the \textcolor{blue}{continue->} option. 
 It would be possible to use keepopen also for the last period and close the file after 
 reading all periods. 
@@ -5786,7 +5829,7 @@ are not among \textcolor{teal}{x}-variables.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent showdomain \tabto{3cm} -1-99 \tabto{5cm}  \textcolor{teal}{CHAR} \tabto{7cm} 
+\noindent \textcolor{blue}{showdomain} \tabto{3cm} -1-99 \tabto{5cm}  \textcolor{teal}{CHAR} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent the sums of the \textcolor{teal}{x}-variables are computed also for these domains. 
 \end{changemargin} 
@@ -5890,7 +5933,7 @@ npv\#5-npv\#0>0\\
 plist=;list(\textcolor{teal}{proba}\%?);\\ 
 @plist;\\ 
  
-\textcolor{teal}{jlpa}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{proba},\textcolor{blue}{data->}cdata,showdomain->('site.le.3','site.gt.3'))\\ 
+\textcolor{teal}{jlpa}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{proba},\textcolor{blue}{data->}cdata,\textcolor{blue}{showdomain->}('site.le.3','site.gt.3'))\\ 
 {\color{ForestGreen}** sums of x-variables are stored into the same variables with jlpa\%prefix}\\ 
 \textcolor{teal}{jlpa}\%income5;\\ 
 \textcolor{teal}{jlpa}\%income5[site.le.3];\\ 
@@ -5929,7 +5972,7 @@ npv\#5-npv\#0>0\\
 /            \\ 
 plistb=;list(\textcolor{teal}{probb}\%?);\\ 
 {\color{ForestGreen}*** these  could be printed with @plistb;}\\ 
-\textcolor{teal}{jlpb}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{probb},\textcolor{blue}{data->}cdata,showdomain->'3.lt.site')\\ 
+\textcolor{teal}{jlpb}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{probb},\textcolor{blue}{data->}cdata,\textcolor{blue}{showdomain->}'3.lt.site')\\ 
 \textcolor{teal}{jlpb}\%income5;\\ 
 \textcolor{teal}{jlpb}\%income5[site.gt.3];\\ 
 \textcolor{teal}{jlpb}\%income5[3.lt.site];\\ 
@@ -5937,7 +5980,7 @@ plistb=;list(\textcolor{teal}{probb}\%?);\\
 probc=\textcolor{VioletRed}{problem}();\\ 
 npv\#0==max\\ 
 /         \\ 
-jlpc=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}probc,\textcolor{blue}{data->}cdata,showdomain->'3.lt.site')\\ 
+jlpc=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}probc,\textcolor{blue}{data->}cdata,\textcolor{blue}{showdomain->}'3.lt.site')\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -6722,18 +6765,18 @@ elapsed=cpu1-cpu0;\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsection{secnds() Clock time} 
+\subsection{\textcolor{VioletRed}{secnds}() Clock time}\index{secnds()} 
 \label{secnds} 
 \singlespacing 
 \begin{example}[secondsex]Example of elapsed time\\ 
 \label{secondsex} 
 \noindent cpu0=\textcolor{VioletRed}{cpu}()\\ 
-sec0=secnds()\\ 
+sec0=\textcolor{VioletRed}{secnds}()\\ 
 a=\textcolor{VioletRed}{matrix}(100000)\\ 
 a=\textcolor{VioletRed}{ran}()\,{\color{ForestGreen}!uniform}\\ 
 \textcolor{VioletRed}{mean}(a),\textcolor{VioletRed}{sd}(a),\textcolor{VioletRed}{min}(a),\textcolor{VioletRed}{max}(a);\\ 
 cpu1=\textcolor{VioletRed}{cpu}()\\ 
-sec1=secnds()\\ 
+sec1=\textcolor{VioletRed}{secnds}()\\ 
 elapsed=cpu1-cpu0;\\ 
 selapsed=sec1-sec0;\\ 
 \end{example} 

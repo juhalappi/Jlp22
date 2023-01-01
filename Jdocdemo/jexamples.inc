@@ -1,4 +1,4 @@
- ** this file contains           66  examples of using Jlp22
+ ** this file contains           68  examples of using Jlp22
 ** launch Jlp22 in the command promt in the folder of this file 
 ** using: Jlp22 jexamples.inc
 ** if you want to pause after each example answer to first question with 1
@@ -11,9 +11,11 @@ inpuparag=';incl(exfile,from->inpuparag)'
 shortex=';incl(exfile,from->shortex)'
 dotsex=';incl(exfile,from->dotsex)'
 inpulistelem=';incl(exfile,from->inpulistelem)'
+sublistex=';incl(exfile,from->sublistex)'
 expandex=';incl(exfile,from->expandex)'
 subobjex=';incl(exfile,from->subobjex)'
-relativesex=';incl(exfile,from->relativesex)'
+subobjex2=';incl(exfile,from->subobjex2)'
+subobjex2=';incl(exfile,from->subobjex2)'
 jfuncex=';incl(exfile,from->jfuncex)'
 codeoptex=';incl(exfile,from->codeoptex)'
 comoptex=';incl(exfile,from->comoptex)'
@@ -162,8 +164,16 @@ lis=list(c2...c5);
 ;return
  
  
+;sublistex:  
+** taking sublist (line   1436 file jsections.txt)
+lista=list(x1...x5);
+lista2%5=lista(2,-5);
+;if(wait);pause
+;return
+ 
+ 
 ;expandex:  
-** Example of expanding lists with @ (line   1447 file jsections.txt)
+** Example of expanding lists with @ (line   1456 file jsections.txt)
 list0=list(site,altitude)
 list1=list(
 ;do(i,1,3)
@@ -180,20 +190,26 @@ stat()
  
  
 ;subobjex:  
-** Seeing subobjects (line   1468 file jsections.txt)
-dat=data(in->,read->(x,y))
+** Seeing subobjects (line   1480 file jsections.txt)
+dataa=data(in->,read->(x,y))
 1,2
 3,4
 /
-dat%?; !prints subobjects
-subob=;list(dat%?) ! makes the list of subobjects and prints it
-@subob;  ! prints the subobjects
+dataa%?; !prints subobjects
 ;if(wait);pause
 ;return
  
  
-;relativesex:  
-** Seeing relatives (line   1477 file jsections.txt)
+;subobjex2:  
+** (line   1494 file jsections.txt)
+dataa=data(in->,read->(x,y))
+1,2
+3,4
+/
+lista=;list(dataa%?);
+**Then all objects in the list are printed.
+@lista;
+**Seeing and printing relatives
 x1a...x3a=3...5
 x?a;
 rel=;list(x?a);
@@ -202,8 +218,21 @@ rel=;list(x?a);
 ;return
  
  
+;subobjex2:  
+** (line   1515 file jsections.txt)
+dataa=data(in->,read->(x,y))
+1,2
+3,4
+/
+lista=;list(dataa%?);
+**Then all objects in the list are printed.
+@lista;
+;if(wait);pause
+;return
+ 
+ 
 ;jfuncex:  
-** Examples of Jlp22-functions (line   1756 file jsections.txt)
+** Examples of Jlp22-functions (line   1797 file jsections.txt)
 b,c=2,3;
 a = sin(cos(c)+b); ! Usual arithmetic functions can have numeric values as arguments
 c=matrix(2,2,in->);
@@ -229,7 +258,7 @@ c = inverse(h+t(g)); ! The argument can be intermediate result from matrix compu
  
  
 ;codeoptex:  
-** Codeoptions (line   1789 file jsections.txt)
+** Codeoptions (line   1830 file jsections.txt)
 dat=data(read->(D,H),in->)
 3,2
 2,4
@@ -243,7 +272,7 @@ continue->fcont,xlabel->'x',width->2) ! the func-> option transmits the function
  
  
 ;comoptex:  
-** data1 (line   1854 file jsections.txt)
+** data1 (line   1895 file jsections.txt)
 dat=data(read->(x,y),in->)
 1,2
 3,4
@@ -259,7 +288,7 @@ stat(trans->transa)
  
  
 ;recursion:  
-** Recursion produces system crash. (line   1895 file jsections.txt)
+** Recursion produces system crash. (line   1936 file jsections.txt)
 transa=trans() !level will be initialized as zero
 level;
 level=level+1
@@ -273,7 +302,7 @@ Continue=0
  
  
 ;transfunc:  
-** Transformation as a function (line   1918 file jsections.txt)
+** Transformation as a function (line   1959 file jsections.txt)
 delete_o(a,c)
 transa=trans()
 a=8;
@@ -290,7 +319,7 @@ a=c+transb(a)+c+transa(a);
  
  
 ;matrixop:  
-** Matrix operations (line   2138 file jsections.txt)
+** Matrix operations (line   2179 file jsections.txt)
 A=matrix(3,4,do->);
 A+2;
 A-1;
@@ -320,7 +349,7 @@ Continue=0
  
  
 ;doex:  
-** do-loop (line   2213 file jsections.txt)
+** do-loop (line   2254 file jsections.txt)
 !!begin
 transa=trans()
 do(i,1,5)
@@ -337,7 +366,7 @@ call(transa)
  
  
 ;retex:  
-** example of return and goto () (line   2234 file jsections.txt)
+** example of return and goto () (line   2275 file jsections.txt)
 transa=trans()
 ad1:r=ran();
 if(r.lt.0.2)return
@@ -349,7 +378,7 @@ call(transa)
  
  
 ;errexitex:  
-** errexit() returns as if error had occured (line   2254 file jsections.txt)
+** errexit() returns as if error had occured (line   2295 file jsections.txt)
 transa=trans()
 if(a.eq.0)errexit('illegal value ',a)
 s=3/a; ! division with zero is tested automatically
@@ -366,7 +395,7 @@ Continue=0
  
  
 ;gotoex:  
-** Example of unconditional goto (line   2293 file jsections.txt)
+** Example of unconditional goto (line   2334 file jsections.txt)
 transa=trans()
 i=0
 if(i.eq.0)goto(koe)
@@ -380,7 +409,7 @@ out;
  
  
 ;congotoex:  
-** (line   2308 file jsections.txt)
+** (line   2349 file jsections.txt)
 transa=trans()
 out=999
 goto(ad1)
@@ -412,7 +441,7 @@ Continue=0
  
  
 ;assignex:  
-** Examples of assignments (line   2373 file jsections.txt)
+** Examples of assignments (line   2414 file jsections.txt)
 a=matrix(2,3);
 a=4;
 a=rann();
@@ -427,7 +456,7 @@ Continue=0
  
  
 ;showex:  
-** Example of show() (line   2448 file jsections.txt)
+** Example of show() (line   2489 file jsections.txt)
 fi=draw(func->sqrt2(x),x->x,xrange->(-50,50),continue->fcont)
 show(fi,xrange->(-60,60),xlabel->'NEWX]Times Roman,16[',ylabel->'NEWY]Courier,10[',continue->fcont)
 show(fi,axes->10,continue->fcont)
@@ -452,7 +481,7 @@ show(fi,xrange->(0,6),yrange->(0,7),continue->fcont)
  
  
 ;errorex:  
-** (line   3092 file jsections.txt)
+** (line   3133 file jsections.txt)
 round=5
 write('inca.txt',$,'**we are in inca.txt')
 write('inca.txt',$,'round;')
@@ -1410,6 +1439,14 @@ stat()
 xdata=data(in->'xdat.txt',read->(npv#0,npv#5,income1...income5))
 stat()
 linkdata(data->cdata,subdata->xdata)
+** Now problem without constraints
+probc=problem();
+npv#0==max
+/
+jlpc=jlp(problem->probc,data->cdata,showdomain->'3.lt.site')
+
+;return
+
 proba=problem();
 ** In this problem the 4% net present value at the beginning is maximixe
 ** subject to the constraints telling that net incomes are nondecreasing
@@ -1477,9 +1514,11 @@ inpuparag
 shortex
 dotsex
 inpulistelem
+sublistex
 expandex
 subobjex
-relativesex
+subobjex2
+subobjex2
 jfuncex
 codeoptex
 comoptex

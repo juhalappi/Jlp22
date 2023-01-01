@@ -55,6 +55,8 @@ subsection inpupause
 subsection inpureturn 
 subsection inpuwhere
 subsection inpusubobj
+subsubsection inpusub1
+subsubsection inpusub2
 subsection inpulistelem
 subsection expand
 subsection dots
@@ -272,6 +274,7 @@ subsection bilin bilin()
 section  lists List functions
 subsection listo List object
 subsection  list
+subsection inpusub2b
 subsection merge
 subsection difference
 subsection index
@@ -280,6 +283,7 @@ subsection len
 subsection ilist
 subsection putlist
 subsection table
+subsection sublist
 !
 section texts 
 subsection text text()

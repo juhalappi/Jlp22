@@ -2348,7 +2348,7 @@ integer function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! def
 	! else !if(sing)then
 	!write(6,*)'<34defm,j_namedv',j_namedv
 	!	write(6,*)'defm ',iv,name,'_je_err ',j_err
-	
+ 
 	!	write(6,*)'deaft ',iv,name,'_je_err ',j_err,'ivout',ivout
 	!	write(6,*)'defm ',iv,name,'_je_err ',j_err,ivout
 	!write(6,*)'<34defmivout,namedv',ivout,j_namedv
@@ -13624,7 +13624,7 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
 	!endsection
 	!!Inpuf ;where
  
-	!Section inpuwhere ;where the current lines in ;incl -files
+	!Section inpuwhere ;where the current line in ;incl -files
 	!endsection
  
 	!Section inpupause ;pause in script processing

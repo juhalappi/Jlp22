@@ -1430,6 +1430,15 @@ $$=300
 !endex
 !endsection
 
+!Section sublist lista(2,-4) makes LIST from part of LIST lista
+! A list can be made taking a part of LIST.
+!endheader
+!Ex sublistex taking sublist
+!lista=list(x1...x5);
+!lista2%5=lista(2,-5);
+!endex
+!endsection
+
 
 !Section expand @List expands a LIST 
 !If a LIST is generated explicitly with list() function or as a byproduct of an other function,
@@ -1459,26 +1468,58 @@ $$=300
 !endex
 
 !endsection
+!Section inpusubobj Objects with common part of name
+! There are two ways to acces objects having common part in name. These methods are especially useful
+! when seeing sub objects or side object produced with funtion whose names start with output%.
+!endsection
 
-!Section inpusubobj Access using part of the name
-!The subobjects generated with a function can be seen according 
-! to the following example. The second example shows how objects having a common part in the 
-! name can be printed.
+!Section inpusub1 Printing names of subobjects
+!The names of subobjects generated with a function can be seen according 
+! to the following example. 
 !endheader
 !Ex subobjex Seeing subobjects
-!dat=data(in->,read->(x,y))
+!dataa=data(in->,read->(x,y))
 !1,2
 !3,4
 !/
-!dat%?; !prints subobjects
-!subob=;list(dat%?) ! makes the list of subobjects and prints it
-!@subob;  ! prints the subobjects
+!dataa%?; !prints subobjects
 !endex
-!Ex relativesex Seeing relatives 
+!endsection
+
+!Section inpusub2 ;list(part%?) LIST of objects having common part in name
+! ;list() Makes a list of objects. The example shows how the list can be printed and how 
+!to print all objects in the list.
+!endheader
+
+!Ex subobjex2 
+!dataa=data(in->,read->(x,y))
+!1,2
+!3,4
+!/
+!lista=;list(dataa%?);
+!**Then all objects in the list are printed.
+!@lista;
+!**Seeing and printing relatives 
 ! x1a...x3a=3...5
 !x?a;
 !rel=;list(x?a);
 !@rel;
+!endex
+!endsection
+
+!Section inpusub2b ;list(part%?) LIST of objects having common part in name
+! ;list() Makes a list of objects. The example shows how the list can be printed and how 
+!to print all objects in the list. This function is described also in section \ref{inpusub2}
+!endheader
+
+!Ex subobjex2 
+!dataa=data(in->,read->(x,y))
+!1,2
+!3,4
+!/
+!lista=;list(dataa%?);
+!**Then all objects in the list are printed.
+!@lista;
 !endex
 !endsection
 

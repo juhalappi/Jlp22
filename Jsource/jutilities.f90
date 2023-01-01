@@ -12187,7 +12187,7 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
 	!endsection
 	!!Inpuf ;where
  
-	!Section inpuwhere ;where the current lines in ;incl -files
+	!Section inpuwhere ;where the current line in ;incl -files
 	!endsection
  
 	!Section inpupause ;pause in script processing

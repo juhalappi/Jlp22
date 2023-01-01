@@ -137,7 +137,7 @@ integer:: niter
 	do i=1,89
 		lobject(i)=len_trim(objects(i))
 	enddo
-	! logical, dimension(10)::logi
+	! logical, dimension(1 0)::logi
 	! integer,dimension(10)::inte/
 	niter=0
 	!nitemize=0
@@ -161,9 +161,9 @@ integer:: niter
 	enddo
 	! character*(len=*),parameter :: fucol='\textcolor{VioletRed}{'
 	! lfucolp=len(fucol)+1
-	! character*(len=*),parameter :: inpucol='\textcolor{Red}{'
+	! character*(len=*),paramet er :: inpucol='\textcolor{Red}{'
 	! linpucolp=len(fucol)+1
-	! character*(len=*),parameter ::boxcol='\colorbox{GreenYellow}{'
+	! character*(len=*),parameter ::boxcola='\colorbox{GreenYellow}{'
 	! lboxvolp=len(boxcol)+1
 	! character*(len=*),parameter :: optcol='\textcolor{blue}{'
 	! loptcolp=len(optcol)+1
