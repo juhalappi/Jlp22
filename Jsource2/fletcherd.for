@@ -2073,8 +2073,9 @@ c  set storage map for dense factors
       lc1=lc+1
       li=lc+mxm1
       li1=li+1
-c     write(nout,*)'ls',(ls(ij),ij=1,nk)
-c     write(nout,*)'ls',(ls(ij),ij=nm+1,nmi)
+c			write(6,*)'mode',mode
+  !   write(6,*)'ls',(ls(ij),ij=1,nk)
+  !   write(6,*)'ls',(ls(ij),ij=nm+1,nmi)
       if(mode.ge.3)then
         call re_factor(n,nm,a,la,aa,aa(ns1),aa(nt1),ll,ll(lc1),ll(li1))
         call check_L(n,aa,ifail)
@@ -2154,6 +2155,7 @@ c  shift designated bounds to end
       mm=mm0
       j=1
     2 continue
+c		write(6,*)'j,nk',j,nk
         if(j.gt.nk)goto3
         q=abs(ls(j))
 c  extend factors
@@ -2225,6 +2227,7 @@ c       e(q)=max(emin,abs(eq))
         goto2
     3 continue
 c  complete the vector ls
+   !   write(6,*)'nn,n',nn,n
       do i=nn+1,n
         nk=nk+1
         ls(nk)=ll(i)
@@ -2232,20 +2235,22 @@ c  complete the vector ls
       j=nk
       do i=m1+1,nn
         j=j+1
-C	write(6,*)'j,i',j,i
+c	write(6,*)'j,i',j,i
         ls(j)=ll(i)
       enddo
-C	write(6,*)'lsmax',j,'llmax',nn,'m1',m1 !per
+c	write(6,*)'lsmax',j,'llmax',nn,'m1',m1 !per
       do j=nm+1,nmi
         e(abs(ls(j)))=1.D0
       enddo
       j=n
+c				write(6,*)'hup0'
       do i=1,nmi
         if(e(i).eq.0.D0)then
           j=j+1
           ls(j)=i
         endif
       enddo
+c			write(6,*)'hup',mode
       do j=nm+1,nmi
         e(abs(ls(j)))=0.D0
       enddo
@@ -2276,6 +2281,7 @@ c     call checkout(n,a,la,aa,ll,ll(lc1),ll(li1))
       mp=-1
       mq=-1
       ifail=0
+!			write(6,*)'hfhfhf'
       return
       end subroutine
 

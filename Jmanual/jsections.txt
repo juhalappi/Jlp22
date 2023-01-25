@@ -112,7 +112,11 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
-!Version 31.1.2022. jlp() solves (again) problems without any constraints. 
+
+!Version 25.1.2023. Factory optimization started. It does not work yet
+! but the example shows how it can be used in the future.
+
+!Version 31.12.2022. jlp() solves (again) problems without any constraints. 
 !The showdomain-> works also for problems without contraints. The new subroutines needed for this
 ! will smooth the road to factory optimization.
 
@@ -232,12 +236,14 @@
  ! an open source software so that I could continue its development after my retirement. 
 ! The leaders of Luke told that it is a good idea to open the software, and this is so important that
   ! Luke cannot let me take care of the publication but the leaders wanted to publish J
- ! themselves. This started a frustrating and humillating process which lasted six and half years. 
+ ! themselves. This started a frustrating and humillating process which lasted six 
+ !and half years. Eleven
+ ! leaders of Luke were involved in the process.
  
  !I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017.
- ! I was not informed of the decision. I heard that such decision has been made but 
- !I was not told what the decision contained even if I asked. Later leaders of Luke told
- ! that Luke is not interested in any co-operation with me in the publication of the software.
+ ! I was not informed of the decision. Later Luke turned down any cooperation
+ ! in the publication or in the development of 
+ ! the software.
  
  !When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke.
  ! The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall
@@ -250,26 +256,23 @@
  ! Luke should provide me access to CSC supercomputers.  Luke should distribute Jlp22 via Github.  This point
  ! was not necessary as Reetta adviced me how to use Github.
  
- 
- ! In the previous versions of this preface, I have described details of the process which can be 
- ! described as a hostile take over. Eleven leaders of Luke insisted that they will publish the software.
-!  I would like to ask:
+ ! I was told in Olavinlinna that there has actually been no disagreement
+! between me and Luke in this process.
+ ! As I could not accept the interpretation that I had fighted six and half years against wind mills, 
+ ! I described in previous versions some details of the process. This kept my bitterness
+! alive which was unfortunate for my mind and also because
+! I knew well how pathetic old bitter men are. After some recent rounds of argumentation, the research director
+! called me in January 12 2023 and admitted that Luke did not handle the opening and publication properly
+! and that Luke will improve its procedures. I want now look forward, and I make 
+!only two comments.
+! First, I think that if a government research institute decides that a sowtware can be
+!opened and published, the principal author should have the right to participate in the
+!preparation of the formal opening decision and to take care of the publication. Second.
+! The software contained so much dirty code that it could not be developed without my involvement,
+! and barely even maintained. This
+! suggests that an expert organization should listen the best experts before 
+! turning down the cooperation with them.
 
-! Is it really so that a reseacher of a government research institute has no right to
-! publish the results of his
-! research if the leaders think that the results are so important that they want to publish them?
-
-!The eleven leaders wanting to publish the software knew nothing of the 
-! code they wanted to publish without any cooperation with me. They did not know, 
-! and were not willing to learn to know, that the software did contain so much dirty
-!  code that no one could develop the software without my involvement. The leaders were ready
-! to destroy a large part of my life's work their only justification being that they have legal right to 
-! do so. Luke states on its web pages that: 
- !Luke’s task is to promote competitive business based on the sustainable use of 
- ! renewable natural resources. I would like to ask:
- 
- !How preventing the development of Jlp22 software for six and half years supported this task? 
- 
   
  ! \subsection*{Rewriting the software}
 !\addcontentsline{toc}{subsection}{Rewriting the software}
@@ -283,18 +286,17 @@
  ! allows the analysis of big data sets. The following manual tells what Jlp22 can do now.
  ! The factory optimization is under development, and I will be published it later. 
  ! Reetta has participated
- ! in testing, in addition to teaching the use of Github.
+ ! in testing, in addition to teaching the use of Github and giving encouragement all the time.
  
  
  !\subsection*{Book: Linear and nonlinear programming methods}
  !\addcontentsline{toc}{subsection}{Book: Linear and nonlinear programming methods}
  !I signed in Dec 15 2022 with Chapman \& Hall the author agreement that I will write 
- !a book with title: 'Linear and nonlinear programmng methods for joint analysis of forestry 
+ !a book with title: 'Linear and nonlinear programming methods for joint analysis of forestry 
  ! and factories: Jlp22 approach'.
  
  !The book will be published with Open Access if I pay 16500 Euro when the book is ready.
-!  I want it be OA as it is utilizing a software which I was allowed to publish as Open Source after a long 
-! and painful fight. Alongside with the book, there will be a script file so that the readers
+!  I want it be OA as it is based on an open software. Alongside with the book, there will be a script file so that the readers
 ! can repeat computations just writing the name of the example, similarly as the users
  ! of Jlp22 can compute the examples in this manual. So I need data which I can utilize for such OA
  ! computations. My current agreement with Luke does not allow such utilizitation of Luke's data. 
@@ -307,21 +309,21 @@
 
 
  
- !I acknowledge the positive contribution of 
+ !I acknowledge the contribution of 
  ! Even Bergseng and Victor Strimbu from NMBU for co-operation in the development of J, Kyle Eyvindson from NMBU/Luke for 
  ! providing me access to CSC supercomputer, Hannu Salminen for co-operation. 
  ! Hannu Hirvel\"a  provided me Mela data, and Pekka Hyv\"onen factory data. 
  !Lauri Meht\"atalo was building with me the links between J and R. 
  !Ron Shepard adviced in Fortran Discourse to make expansion of allocated
  !vectors faster, in addition to advicing to chance the name of J software.
- !I thank Reetta Lempinen from Luke for being a loyal colleague for a long time. 
+ !I thank Reetta Lempinen for being a loyal colleague for a long time. 
  
 
  !I thank my grand daughter Ella
 !for the permission to use the portrait she drawed for my 70 yr birthday in 2021.
 
 !\vspace{0.5cm}
-!Suonenjoki 29.12.2022
+!Suonenjoki 25.1.2023
 !\vspace{0.5cm}
 !  Juha Lappi
 
@@ -2137,7 +2139,7 @@ $$=300
 ! in Section  \ref{matrix}
 !endsection
 
-!Section matrixf  Matrix functions
+!Section matrixf  MATRIX functions
 ! There are matrix function which can create matrices (objects with type Matrix), take submatrices from larger matrices,
 ! make matrices from submatrices, compute statitics from matrices, solve linear equations,
 ! compute inverse and transpose of a matrix.
