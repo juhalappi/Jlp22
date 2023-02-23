@@ -122,7 +122,7 @@ subroutine pullout(LWSLL1)
 	use jmod, only: p_objfv
 	use jmod, only: p_xpresent
 	use jmod, only: p_ivunit
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_ivtmax
 	use jmod, only: p_tmax
 	use jmod, only: p_ivcolold
@@ -155,9 +155,8 @@ subroutine pullout(LWSLL1)
 	use jmod, only: p_ivpox
 	use jmod, only: p_ivpoobj
 	use jmod, only: p_mxnm
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: p_ivpounit
-	use jmod, only: p_ivpokey
 	use jmod, only: p_ivpos
 	use jmod, only: j_o
 	use jmod, only: p_ivpoibaunit
@@ -167,7 +166,6 @@ subroutine pullout(LWSLL1)
 	use jmod, only: p_abas
 	use jmod, only: p_nrowz
 	use jmod, only: p_lunit
-	use jmod, only: p_keys
 	use jmod, only: p_isch
 	use jmod, only: p_ibaunit
 	use jmod, only: p_objr
@@ -188,7 +186,7 @@ subroutine pullout(LWSLL1)
 	j_v(p_ivfeasible)=j_0
 	if(p_feasible)j_v(p_ivfeasible)=j_1
 	j_v(p_ivobjective0)=p_objfv
-	if(p_xpresent)j_v(p_ivunit)=p_iunit
+	if(p_xpresent)j_v(p_ivunit)=p_unit
 	j_v(p_ivtmax)=p_tmax
 	j_v(p_ivcolold)=p_icolold
 	j_v(p_ivcolnew)=p_icolnew
@@ -208,7 +206,7 @@ subroutine pullout(LWSLL1)
 	! j_o(iv)%d(1)=p_pivot
 	! j_o(iv)%d(2)=p_objf
 	! j_o(iv)%d(3)=p_objfv
-	! j_o(iv)%d(4)=p_iunit
+	! j_o(iv)%d(4)=p_unit
 	! j_o(iv)%d(5)=p_lr0
 	! j_o(iv)%d(6)=p_lz0
 	! j_o(iv)%d(7)=p_lx0
@@ -226,7 +224,7 @@ subroutine pullout(LWSLL1)
 		p_ivpomatrix=j_defmatrix(j_ivout,'%basis',p_nrow,p_nrow,j_matreg)
 		! call j_defmatrix(0,'po%xps'//ch,1,p_nrow+1,j_matreg,iv)
 		! j_o(iv)%d(1:p_nrow+1)=p_xps
-		! call j_defmatrix(0,'po%xrow'//ch,1,p_nrow+1,j_matreg,ivrow)
+		! call j_defmatrix(0,'po%rowx'//ch,1,p_nrow+1,j_matreg,ivrow)
 		! j_o(ivrow)%d(1:p_nrow+1)=p_xps
 		! call j_defmatrix(0,'po%rhsw'//ch,1,p_nrow,j_matreg,ivrhs)
 		p_ivpox=j_defmatrix(j_ivout,'%x',1,p_nrow,j_matreg)
@@ -234,15 +232,15 @@ subroutine pullout(LWSLL1)
 	! call j_defmatrix(0,'po%vc'//ch,1,p_nrow,j_matreg,ivc)
 	p_ivpoobj=j_defmatrix(j_ivout,'%obj',1,p_mxnm,j_matreg) !ivob)
 	if(p_xpresent.and.p_nrow.gt.0)then
-		p_ivpounit=j_deflistobject(j_ivout,'%unit',list0=p_nrow,ilist=.true.)
-		p_ivpokey=j_deflistobject(j_ivout,'%key',list0=p_nrow,ilist=.true.)
-		p_ivpos=j_deflistobject(j_ivout,'%s',list0=p_nrow,ilist=.true.)
-		!	call j_deflistobject(j_ivout,'%baunit',p_ivpoibaunit,list0=p_nrow,ilist=.true.)
+		p_ivpounit=j_deflist(j_ivout,'%unit',list0=p_nrow,ilist=.true.)
+		!		p_ivpokey=j_deflist(j_ivout,'%key',list0=p_nrow,ilist=.true.)
+		p_ivpos=j_deflist(j_ivout,'%s',list0=p_nrow,ilist=.true.)
+		!	call j_deflist(j_ivout,'%baunit',p_ivpoibaunit,list0=p_nrow,ilist=.true.)
  
-		ivpolist=j_deflistobject(j_ivout,'%list',list0=6)
-		j_o(ivpolist)%i2(1:6)=(/p_ivpomatrix,p_ivpox,p_ivpoobj,p_ivpounit,p_ivpokey,p_ivpoibaunit/)
+		ivpolist=j_deflist(j_ivout,'%list',list0=5)
+		j_o(ivpolist)%i2(1:5)=(/p_ivpomatrix,p_ivpox,p_ivpoobj,p_ivpounit,p_ivpoibaunit/)
 	else
-		ivpolist=j_deflistobject(j_ivout,'%list',list0=3)
+		ivpolist=j_deflist(j_ivout,'%list',list0=3)
 		j_o(ivpolist)%i2(1:3)=(/p_ivpomatrix,p_ivpox,p_ivpoobj/)
 	endif !if(p_xpresent.and.p_nrow.gt.0)    173
 	! call j_defmatrix(0,'po%a'//ch,p_nrow,p_mxn+1,j_matreg,iv)
@@ -280,7 +278,7 @@ subroutine pullout(LWSLL1)
 					!	j_o(ivob)%d(p_lr0+p_lz0+i)=p_objr(p_nrowz+p_lx(i))
 					iunit=p_lunit(p_ls(i)-p_nrowz)
 					j_o(p_ivpounit)%i2(i)=iunit
-					j_o(p_ivpokey)%i2(i)=p_keys( iunit ) !p_keys(p_lunit(p_lcur))
+					!j_o(p_ivpokey)%i2(i)=p_keys( iunit ) !p_keys(p_lunit(p_lcur))
 					j_o(p_ivpos)%i2(i)=p_isch(p_ls(i)-p_nrowz)
 					j_o(p_ivpoibaunit)%i2(i)=p_ibaunit( iunit)
 					!		j_o(p_ivpoobj)%d(1)=j_o(p_ivpoobj)%d(1)+p_x(p_ls(i))*p_objr(p_ls(i))
@@ -448,7 +446,7 @@ end subroutine
 
 ! p_lavecsp(p_lavecsp(p_lavecsp(0)+icr):last(icr))=p_icolapu(1:ie)
 
-! end subroutine !subroutine j_subcol(ic1,ic2,icr)
+! end subroutine !subroutine j_supcol(ic1,ic2,icr)
 
 !end module !module jlpdmod
 
@@ -478,7 +476,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	use jmod, only: j_inp
 	use jmod, only: j_linp
 	use jmod, only: j_yes
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: p_ivrhsvars
 	use jmod, only: p_ivrhsplus
 	use jmod, only: p_ivrhs2vars
@@ -771,7 +769,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	!	double precision, dimension(:),pointer::rhs_   !lower bounds
 	!	double precision, dimension(:),pointer::rhs2_  !upper bounds
 	!integer, dimension(:), allocatable::isetd  ! nsetr,nsetd pois
-	integer, dimension(:), allocatable:: pvars,termvars,coefvars,isplus
+	integer, dimension(:), allocatable:: pvars,termvar,coefvars,isplus
 	!logical, dimension(:), allocatable:: isplus
 	integer, dimension(:),allocatable :: nterminrow
 	!	double precision, dimension(:),allocatable::coef
@@ -804,8 +802,8 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	!if(.not.allocated(isetd))allocate(isetd(1:1000))
 	if(.not.allocated(pvars))allocate(pvars(0:1000))  !problem variables
 	pvars(0)=0
-	allocate(termvars(1:5000),nterminrow(1:500),isplus(1:5000),coefvars(1:5000))
-	! write(6,*)'allo termvars'
+	allocate(termvar(1:5000),nterminrow(1:500),isplus(1:5000),coefvars(1:5000))
+	! write(6,*)'allo termvar'
 	isplus=0
 	p_p8=j_v(j_ivdollar2).eq.8.d0
 	nterminrow=0
@@ -825,7 +823,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	!	p_fpresent=nfactgroup.gt.0
 	!	write(6,*)'<444fpresent',p_fpresent,nfactgroup
 	! if(p_fpresent)then
-	! call j_deflistobject(ivproblem,'%factgroup',ivfactgroup,list0=nfactgroup,list=p_factgroup)
+	! call j_deflist(ivproblem,'%factgroup',ivfactgroup,list0=nfactgroup,list=p_factgroup)
 	! nfact=0
 	! p_factgroup=>j_o(ivfactgroup)%i2(1:nfactgroup)
 	! do i=1,nfactgroup
@@ -833,7 +831,7 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	! enddo !i=1,nfactgroup    449
 	! write(6,*)'factgroup-> gave ',nfactgroup,' factory groups containing ',nfact ,' factories'
 	! write(6,*)' '
-	! call j_deflistobject(ivproblem,'%fact',ivfact,nres=nfact)
+	! call j_deflist(ivproblem,'%fact',ivfact,nres=nfact)
 	! p_fact=>j_o(ivfact)%i2(1:nfact)
 	! nfact=0
 	! do i=1,nfactgroup
@@ -856,18 +854,18 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	! if(j_err)return
 	! ivutiltrans=j_optarg0(1)
 	! ivutilout=j_o(ivutiltrans)%i2(2)
-	! call j_deflistobject(ivproblem,'%uxkf',ivuxkf,nres=1000)
-	! call j_deflistobject(ivproblem,'%utillist',ivutillist,nres=20)
-	! call j_deflistobject(ivproblem,'%xk',ivxk,nres=40)
-	! call j_deflistobject(ivproblem,'%xkf',ivxkf,nres=1000)
+	! call j_deflist(ivproblem,'%uxkf',ivuxkf,nres=1000)
+	! call j_deflist(ivproblem,'%utillist',ivutillist,nres=20)
+	! call j_deflist(ivproblem,'%xk',ivxk,nres=40)
+	! call j_deflist(ivproblem,'%xkf',ivxkf,nres=1000)
 	! write(6,*)'<%uxkf',ivuxkf,'%utillist',ivutillist,'%xk',ivxk
  
  
-	! ! call j_deflistobject(ivproblem,'%xpart',ivxpart,nres=1000) later
-	! ! call j_deflistobject(ivproblem,'%fpart',ivfpart,nres=1000)
-	! if(allocated(j_itempvector))deallocate(j_itempvector) !xpart
+	! ! call j_deflist(ivproblem,'%logpart',ivlogpart,nres=1000) later
+	! ! call j_deflist(ivproblem,'%factpart',ivfactpart,nres=1000)
+	! if(allocated(j_itempvector))deallocate(j_itempvector) !logpart
  
-	! if(allocated(j_itempvector2))deallocate(j_itempvector2) !fpart
+	! if(allocated(j_itempvector2))deallocate(j_itempvector2) !factpart
  
 	! if(allocated(j_itempvector3))deallocate(j_itempvector3) !upart
  
@@ -975,14 +973,14 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	!	write(6,*)'prob1',nrowtot,linptot,ivproblem
 	!	call j_defmatrix(ivproblem,'%rhs',nrow,1,j_matreg,p_ivrhs)
 	if(nrow.gt.0)then
-		p_ivrhsvars=j_deflistobject(ivproblem,'%rhsvars',list0=nrow)
-		p_ivrhsplus=j_deflistobject(ivproblem,'%rhsplus',list0=nrow,ilist=.true.)
+		p_ivrhsvars=j_deflist(ivproblem,'%rhsvars',list0=nrow)
+		p_ivrhsplus=j_deflist(ivproblem,'%rhsplus',list0=nrow,ilist=.true.)
  
 		!	rhs_=>j_o(ivrhs)%d
  
 		!	call j_defmatrix(ivproblem,'%rhs2',nrow,1,j_matreg,p_ivrhs2)
-		p_ivrhs2vars=j_deflistobject(ivproblem,'%rhsvars2',list0=nrow)
-		p_ivrhs2plus=j_deflistobject(ivproblem,'%rhs2plus',list0=nrow,ilist=.true.)
+		p_ivrhs2vars=j_deflist(ivproblem,'%rhsvars2',list0=nrow)
+		p_ivrhs2plus=j_deflist(ivproblem,'%rhs2plus',list0=nrow,ilist=.true.)
 	endif !if(nrow.gt.0)    862
 	!	rhs2_=>j_o(ivrhs2)%d
  
@@ -992,10 +990,10 @@ subroutine problem(iob,io)   !new version old version is problem2  %%jlp  !!!!
 	!	write(6,*)j_oname(1:j_loname)
 	!write(6,*)'p_isdomain ',p_isdomain
 	if(p_isdomain)then
-		p_ivdomvars=j_deflistobject(ivproblem,'%domvars',nres=p_ndoms)
+		p_ivdomvars=j_deflist(ivproblem,'%domvars',nres=p_ndoms)
 		iper=j_putlistobject(p_ivdomvars,single=j_ivall)
-		ivrowdomvar=j_deflistobject(ivproblem,'%rowdomain',nres=nrowtot)
-		ivrowdomnum=j_deflistobject(ivproblem,'%rowdomnum',nres=nrowtot,ilist=.true.)
+		ivrowdomvar=j_deflist(ivproblem,'%rowdomain',nres=nrowtot)
+		ivrowdomnum=j_deflist(ivproblem,'%rowdomnum',nres=nrowtot,ilist=.true.)
 		j_otype(ivrowdomnum)=j_ipilist
 		!		ndefdomain=100
  
@@ -1090,11 +1088,11 @@ mainloop:	do while(.true.)
 					p_nrowtot=p_nrowtot+nlin
 					p_nrow=p_nrowtot-1
 					!	call j_checkd(coef,nterm2)
-					call j_checki(termvars,nterm2)
+					call j_checki(termvar,nterm2)
 					call j_checki(coefvars,nterm2)
 					call j_checki(isplus,nterm2)
 					!	coef(nterm+1:nterm+ntermd)=coef(nterm1:nterm2)
-					termvars(nterm+1:nterm+ntermd)=termvars(nterm1:nterm2)
+					termvar(nterm+1:nterm+ntermd)=termvar(nterm1:nterm2)
 					coefvars(nterm+1:nterm+ntermd)=coefvars(nterm1:nterm2)
 					isplus(nterm+1:nterm+ntermd)=isplus(nterm1:nterm2)
  
@@ -1205,7 +1203,7 @@ mainloop:	do while(.true.)
  
  
 		!	write(6,*)'<344343>'
-		call p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
+		call p_getrow(le,nterminrow,nterm,termvar,pvars,coefvars,isplus)
 		!	write(6,*)'<34434399>'
 		!write(6,*)'<aftergetrow,888,nterm ',nterm,j_inp(1:j_linp),'p_nrowtot ',p_nrowtot
 		if(j_err)return
@@ -1265,7 +1263,7 @@ mainloop:	do while(.true.)
 	!	j_o(iv)%d(1:nrowtot)=rhs2_(1:nrowtot)
 	!	deallocate(rhs2_)
 	!write(6,*)'npvar ',npvar
-	iv=j_deflistobject(ivproblem,'%vars',list0=npvar,list=pvars(1:npvar)) !p-variables
+	iv=j_deflist(ivproblem,'%vars',list0=npvar,list=pvars(1:npvar)) !p-variables
 	j_o(ivproblem)%i(3)=iv
 	deallocate(pvars) !all variables of the problem
  
@@ -1289,7 +1287,7 @@ mainloop:	do while(.true.)
 				if(j_o(ivrowdomvar)%i2(iro).ne.j_o(ivrowdomvar)%i2(iro1))goto 200
 			endif !if(p_isdomain)   1173
 			do j=1,nterminrow(iro)
-				if(termvars(ibas+j).ne.termvars(ibas1+j))goto 200
+				if(termvar(ibas+j).ne.termvar(ibas1+j))goto 200
 				if(coefvars(ibas+j).ne.coefvars(ibas1+j))goto 200
 				!	if(coef(ibas+j).ne.coef(ibas1+j))goto 200
 			enddo !j=1,nterminrow(iro)   1176
@@ -1305,7 +1303,7 @@ mainloop:	do while(.true.)
 	enddo !iro=3,p_nrowtot   1167
 	if(j_err)return
 	write(6,*)'number of constraints ',p_nrow,' total number of elements ',nterm
-	iv=j_deflistobject(ivproblem,'%rowofterm',list0=nterm,ilist=.true.) !row of each term
+	iv=j_deflist(ivproblem,'%rowofterm',list0=nterm,ilist=.true.) !row of each term
 	it=0
 	do ir=1,p_nrowtot
 		do j=1,nterminrow(ir)
@@ -1317,14 +1315,14 @@ mainloop:	do while(.true.)
 	j_o(ivproblem)%i(6)=iv
  
 	!write(6,*)'%%%%%%%%%%% ',p_nrowtot,p_nrowtot
-	iv=j_deflistobject(ivproblem,'%nterminrow',list0=p_nrowtot,list=nterminrow(1:p_nrowtot),ilist=.true.)
+	iv=j_deflist(ivproblem,'%nterminrow',list0=p_nrowtot,list=nterminrow(1:p_nrowtot),ilist=.true.)
 	j_o(ivproblem)%i(7)=iv  !number of terms for each row
 	deallocate(nterminrow)
  
  
-	iv=j_deflistobject(ivproblem,'%termvars',list0=nterm,list=termvars(1:nterm))
+	iv=j_deflist(ivproblem,'%termvar',list0=nterm,list=termvar(1:nterm))
 	j_o(ivproblem)%i(8)=iv
-	deallocate(termvars)
+	deallocate(termvar)
  
  
 	! call j_defmatrix(ivproblem,'%coef',nterm,1,j_matreg,iv) !vector of coeffcients
@@ -1339,7 +1337,7 @@ mainloop:	do while(.true.)
 	if(p_isdomain)then
 		!		write(6,*)'<ndom,ivdomains ',ivdomains(1:ndom)
 		!if(p_p8)write(6,*)'<6646 ivdomains ',ivdomains(1:ndom)
-		!call j_deflistobject(ivproblem,'%domvars',iv,list0=ndom,list=ivdomains(1:ndom))
+		!call j_deflist(ivproblem,'%domvars',iv,list0=ndom,list=ivdomains(1:ndom))
 		!variable showing for each domain if domain is
 		j_o(ivproblem)%i(10)=p_ivdomvars
 		!	deallocate(ivdomains)
@@ -1382,8 +1380,8 @@ mainloop:	do while(.true.)
  
 	endif !if(p_isdomain)   1224
  
-	iv=j_deflistobject(ivproblem,'%coefvars',list0=nterm,list=coefvars(1:nterm))
-	iv2=j_deflistobject(ivproblem,'%coefplus',list0=nterm,list=isplus(1:nterm))
+	iv=j_deflist(ivproblem,'%coefvars',list0=nterm,list=coefvars(1:nterm))
+	iv2=j_deflist(ivproblem,'%coefplus',list0=nterm,list=isplus(1:nterm))
 	j_otype(iv2)=j_ipilist
 	j_o(ivproblem)%i(17)=iv
 	j_o(ivproblem)%i(18)=iv2
@@ -1407,16 +1405,16 @@ mainloop:	do while(.true.)
 	! j_o(ivproblem)%i(19)=ivxk
 	! j_o(ivproblem)%i(20)=ivutiltrans
  
-	! call j_deflistobject(ivproblem,'%xpart',iv,list0=npvar,list=j_itempvector(1:npvar),ilist=.true.)
-	! j_o(ivproblem)%i(21)=iv  !ivxpart
+	! call j_deflist(ivproblem,'%logpart',iv,list0=npvar,list=j_itempvector(1:npvar),ilist=.true.)
+	! j_o(ivproblem)%i(21)=iv  !ivlogpart
 	! nxkf=count(j_itempvector(1:nterm).ne.0)
 	! deallocate(j_itempvector)
  
-	! call j_deflistobject(ivproblem,'%fpart',iv,list0=npvar,list=j_itempvector2(1:npvar),ilist=.true.)
+	! call j_deflist(ivproblem,'%factpart',iv,list0=npvar,list=j_itempvector2(1:npvar),ilist=.true.)
 	! j_o(ivproblem)%i(22)=iv
 	! deallocate(j_itempvector2)
  
-	! call j_deflistobject(ivproblem,'%upart',iv,list0=npvar,list=j_itempvector3(1:npvar),ilist=.true.)
+	! call j_deflist(ivproblem,'%upart',iv,list0=npvar,list=j_itempvector3(1:npvar),ilist=.true.)
 	! j_o(ivproblem)%i(23)=iv
 	! deallocate(j_itempvector3)
  
@@ -1521,7 +1519,7 @@ end subroutine
 
 
 
-subroutine p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
+subroutine p_getrow(le,nterminrow,nterm,termvar,pvars,coefvars,isplus)
 	use jmod, only: j_inp
 	use jmod, only: j_ivone
 	use jmod, only: j_nextlim
@@ -1535,7 +1533,7 @@ subroutine p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
 	use jmod, only: j_putlist
 	use jmod, only: p_nrowtot
 	integer::le !length os the left side
-	integer, dimension(:), allocatable :: nterminrow,termvars,pvars,coefvars,isplus
+	integer, dimension(:), allocatable :: nterminrow,termvar,pvars,coefvars,isplus
  
 	!	double precision,allocatable, dimension(:)::coef
  
@@ -1547,7 +1545,7 @@ subroutine p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
 	!	p_nrowtot=p_nrowtot+1
 	!write(6,*)'<477474,iip',iip,j_inp(1:j_linp),' p_ivrow',p_ivrow, 'interpret coef','idomain ',p_isdomain
  
-	!	write(6,*)'getrow',le,nterm,allocated(nterminrow),allocated(termvars),allocated(pvars),allocated(coefvars),allocated(isplus)
+	!	write(6,*)'getrow',le,nterm,allocated(nterminrow),allocated(termvar),allocated(pvars),allocated(coefvars),allocated(isplus)
 	! interpret:
 	!			call j_puti(nterminrow,p_nrowtot,0)
  
@@ -1659,7 +1657,7 @@ subroutine p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
  
 		! if(j_otype(ivvar).ne.j_ipreal.and.j_otype(ivvar).ne.j_iplist.and.j_otype(ivvar).ne.j_iptable)then
 		! call j_getname(ivvar)
-		! write(6,*)'wrn* deleting ',j_oname(1:j_loname),' which was ',j_objecttypes(j_otype(ivvar))
+		! write(6,*)'wrn* deleting ',j_oname(1:j_loname),' which was ',j_otypes(j_otype(ivvar))
 		! call j_del(ivvar)
 		! endif !if(j_otype(ivvar).ne.j_ipreal.and.j_otype(ivvar).ne.j_ipli   1364
  
@@ -1672,7 +1670,7 @@ subroutine p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
 		! endif !if(coevec)   1371
 		nterm=nterm+1
 		!	call j_putd(coef,nterm,coe)  !coeffcients of terms
-		call j_puti(termvars,nterm,ivvar)  !termvars variables of terms
+		call j_puti(termvar,nterm,ivvar)  !termvar variables of terms
 		ipo= j_putlist(ivvar,pvars)
 		call j_puti(nterminrow,p_nrowtot,nterminrow(p_nrowtot)+1)  !increase number of variables
 		!write(6,*)'nterm,ivcoe',nterm,ivcoe,isplus0
@@ -1690,7 +1688,7 @@ subroutine p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
 		! do j=1,j_o(ivvar)%i(1)
 		! nterm=nterm+1
 		! call j_putd(coef,nterm,j_o(ivcoe)%d(j))  !coeffcients of terms
-		! call j_puti(termvars,nterm,j_o(ivvar)%i2(j))  !termvars variables of terms
+		! call j_puti(termvar,nterm,j_o(ivvar)%i2(j))  !termvar variables of terms
 		! ipo= j_putlist(j_o(ivvar)%i2(j),pvars)
 		! call j_puti(nterminrow,p_nrowtot,nterminrow(p_nrowtot)+1)  !increase number of variables
 		! enddo !j=1,j_o(ivvar)%i(1)   1390
@@ -1698,7 +1696,7 @@ subroutine p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
 		! do j=1,j_o(ivvar)%i(1)
 		! nterm=nterm+1
 		! call j_putd(coef,nterm,coe)  !coeffcients of terms
-		! call j_puti(termvars,nterm,j_o(ivvar)%i2(j))  !termvars variables of terms
+		! call j_puti(termvar,nterm,j_o(ivvar)%i2(j))  !termvar variables of terms
 		! ipo= j_putlist(j_o(ivvar)%i2(j),pvars)
 		! call j_puti(nterminrow,p_nrowtot,nterminrow(p_nrowtot)+1)  !increase number of variables
 		! enddo !j=1,j_o(ivvar)%i(1)   1398
@@ -1712,7 +1710,7 @@ subroutine p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
  
 		! call j_putd(coef,nterm,dble(j_ivconst(coe)))
 		! endif !if(ivcoe.gt.0)   1409
-		! call j_puti(termvars,nterm,ivvar)  !termvars variables of terms
+		! call j_puti(termvar,nterm,ivvar)  !termvar variables of terms
 		! call j_puti(nterminrow,p_nrowtot,nterminrow(p_nrowtot)+1)  !increase number of variables
 		! ipo= j_putlist(ivvar,pvars)
 		! endif !if(j_otype(ivvar).eq.j_ipreal)   1370
@@ -1837,20 +1835,26 @@ end subroutine getrhs
 
 !	contains    !!!!
 subroutine jlpcurix()   !!!! p_idomba tells unit
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_nxrow0
-	use jmod, only: p_ido1
-	use jmod, only: p_ndomvars
-	use jmod, only: p_domainbits
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_nrowx0
+	use jmod, only: p_unit
 	use jmod, only: p_idomba
+	use jmod, only: p_ndomvars
+	use jmod, only: p_ido1
+	use jmod, only: p_domainbits
 	use jmod, only: p_icurint
 	use jmod, only: p_icurbit
 	use jmod, only: p_nixcu
-	use jmod, only: p_xrowcur
+	use jmod, only: p_rowcurx
 	use jmod, only: p_ixcurow
 	use jmod, only: p_ixcubas
 	use jmod, only: p_ndomv
-	!determines for each row if the unit iunit belonggs to the domain of the row
+	! determines for each row if the unit iunit belonggs to the domain of the row
+	! units are accessed one by one
+	! p_nrowcurx
+	! p_rowcurx
+	! p_idomba
+ 
  
 	! endif !if(p_ndom.le.0)    911
  
@@ -1858,62 +1862,69 @@ subroutine jlpcurix()   !!!! p_idomba tells unit
  
  
  
-	p_nxrowcur=p_nxrow0
+	p_nrowcurx=p_nrowx0
 	!p_ixcur=p_ixcur0
 	!	p_ixcur=.false.
-	!	write(6,*)'p_iunit,p_domba',p_iunit,p_idomba
-	!	write(6,*)'p_ido1,p_domvars',p_ido1,p_ndomvars,p_nxrow0,'*',p_xrowcur
+	write(6,*)'p_unit,p_domba,p_ndomvars,p_ido1',p_unit,p_idomba,p_ndomvars,p_ido1
+	!	write(6,*)'p_ido1,p_domvars',p_ido1,p_ndomvars,p_nrowx0,'*',p_rowcurx
 	do ido=p_ido1,p_ndomvars
 		!icurint=(id-1)/32+1
 		!	icurbit=p_id-(icurint-1)*32-1
+		!	write(6,*)'ido',p_icurint(ido),p_icurbit(ido)
 		!		if(p_p8)write(6,*)'curix,iuni,p_idomba,p_icurint(ido)',iuni,ido,p_idomba,p_icurint(ido)
 		if(btest(p_domainbits(p_idomba+p_icurint(ido)),p_icurbit(ido)))then
 			!	write(6,*)'idook ',ido,'nixcu',p_nixcu(ido),'bas',p_ixcubas(ido)
 			do j=1,p_nixcu(ido)
-				p_nxrowcur=p_nxrowcur+1
-				p_xrowcur(p_nxrowcur)=p_ixcurow(p_ixcubas(ido)+j)
-				! p_ixcur(p_xrowcur(p_nxrowcur))=.true.
+				p_nrowcurx=p_nrowcurx+1
+				p_rowcurx(p_nrowcurx)=p_ixcurow(p_ixcubas(ido)+j)
+				! p_ixcur(p_rowcurx(p_nrowcurx))=.true.
 				!		p_ixcur(p_ixcurow(p_ixcubas(ido)+j))=.true.
  
-			enddo !j=1,p_nixcu(ido)   1707
-		endif !if(btest(p_domainbits(p_idomba+p_icurint(ido)),p_icurbit(i   1705
-	enddo !ido=p_ido1,p_ndomvars   1701
-	!	p_nxrowcur=p_nxrow0
-	! p_nxrowcur=0
+			enddo !j=1,p_nixcu(ido)   1713
+		endif !if(btest(p_domainbits(p_idomba+p_icurint(ido)),p_icurbit(i   1711
+	enddo !ido=p_ido1,p_ndomvars   1706
+	!	p_nrowcurx=p_nrowx0
+	! p_nrowcurx=0
 	! do j=0,p_nrow
 	! if(p_ixcur(j))then
-	! p_nxrowcur=p_nxrowcur+1
-	! p_xrowcur(p_nxrowcur)=j
+	! p_nrowcurx=p_nrowcurx+1
+	! p_rowcurx(p_nrowcurx)=j
 	! endif !if(p_ixcur(j))   1257
 	! enddo !j=0,p_nrow   1256
 	! !if(p_p)write(p_n16,*)'p_ixcur0',p_ixcur0,p_idomba
 	!if(p_p)write(p_n16,*)'p_ixcur',p_ixcur
 	!	p_row0=1
-	!	if(p_xrowcur(1).eq.0)p_row0=2
+	!	if(p_rowcurx(1).eq.0)p_row0=2
 	p_idomba=p_idomba+p_ndomv
-	!write(6,*)'p_nxrowcur ',p_nxrowcur
+	!write(6,*)'p_nrowcurx ',p_nrowcurx
 end subroutine !subroutine j_curix(iuni)
 
 subroutine jlpcurix2(iuni)   !!!!
 	use jmod, only: p_ndomv
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_nxrow0
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_nrowx0
 	use jmod, only: p_ido1
 	use jmod, only: p_ndomvars
 	use jmod, only: p_domainbits
 	use jmod, only: p_icurint
 	use jmod, only: p_icurbit
 	use jmod, only: p_nixcu
-	use jmod, only: p_xrowcur
+	use jmod, only: p_rowcurx
 	use jmod, only: p_ixcurow
 	use jmod, only: p_ixcubas
+	! determines for each row if the unit iunit belonggs to the domain of the row
+	! units can be in random order
+	! p_nrowcurx
+	! p_rowcurx
+ 
 	!determines for each row if the unit iunit belonggs to the domain of the row
+ 
 	idomba=(iuni-1)*p_ndomv
-	p_nxrowcur=p_nxrow0
+	p_nrowcurx=p_nrowx0
 	!p_ixcur=p_ixcur0
 	!	p_ixcur=.false.
-	!	write(6,*)'p_iunitcurix3,p_domba',iuni,idomba
-	!	write(6,*)'p_ido1,p_domvars',p_ido1,p_ndomvars,p_nxrow0,'*',p_xrowcur
+	!	write(6,*)'p_unitcurix3,p_domba',iuni,idomba
+	!	write(6,*)'p_ido1,p_domvars',p_ido1,p_ndomvars,p_nrowx0,'*',p_rowcurx
 	do ido=p_ido1,p_ndomvars
 		!icurint=(id-1)/32+1
 		!	icurbit=p_id-(icurint-1)*32-1
@@ -1921,15 +1932,15 @@ subroutine jlpcurix2(iuni)   !!!!
 		if(btest(p_domainbits(idomba+p_icurint(ido)),p_icurbit(ido)))then
 			!	write(6,*)'idook ',ido,'nixcu',p_nixcu(ido),'bas',p_ixcubas(ido)
 			do j=1,p_nixcu(ido)
-				p_nxrowcur=p_nxrowcur+1
-				p_xrowcur(p_nxrowcur)=p_ixcurow(p_ixcubas(ido)+j)
-				! p_ixcur(p_xrowcur(p_nxrowcur))=.true.
+				p_nrowcurx=p_nrowcurx+1
+				p_rowcurx(p_nrowcurx)=p_ixcurow(p_ixcubas(ido)+j)
+				! p_ixcur(p_rowcurx(p_nrowcurx))=.true.
 				!		p_ixcur(p_ixcurow(p_ixcubas(ido)+j))=.true.
  
-			enddo !j=1,p_nixcu(ido)   1746
-		endif !if(btest(p_domainbits(idomba+p_icurint(ido)),p_icurbit(ido   1744
-	enddo !ido=p_ido1,p_ndomvars   1740
-	!	p_nxrowcur=p_nxrow0
+			enddo !j=1,p_nixcu(ido)   1758
+		endif !if(btest(p_domainbits(idomba+p_icurint(ido)),p_icurbit(ido   1756
+	enddo !ido=p_ido1,p_ndomvars   1752
+	!	p_nrowcurx=p_nrowx0
  
 end subroutine !subroutine
 
@@ -1940,17 +1951,17 @@ end subroutine !subroutine
 ! !matrix  domainbits(number,mxunit) contains bits for telling if unit belongs to certain domain
 
 ! ! nfxfrow : montako tehdasmuuttujaa rivillä on
-! ! fxrow : millä riveillä tehdasmuuttujia on
-! p_nfxrow=0
+! ! frowx : millä riveillä tehdasmuuttujia on
+! p_nfrowx=0
 ! if(p_ndom.le.0)then
 ! do jcurix=0,p_nrow
 ! p_ixcurfact(jcurix)=.false.
-! !  if(p_nfxrow(jcurix+1).ne.0)then  !j_irowrow(jcurix)=jcurix+-1
-! if(p_nfxrow(jcurix+1).ne.0)then  !j_irowrow(jcurix)=jcurix+-1
-! p_nfxrow=p_nfxrow+1
-! p_fxrow(p_nfxrow)=jcurix
+! !  if(p_nfrowx(jcurix+1).ne.0)then  !j_irowrow(jcurix)=jcurix+-1
+! if(p_nfrowx(jcurix+1).ne.0)then  !j_irowrow(jcurix)=jcurix+-1
+! p_nfrowx=p_nfrowx+1
+! p_frowx(p_nfrowx)=jcurix
 ! p_ixcurfact(jcurix)=.true.
-! endif !if(p_nfxrow(jcurix+1).ne.0)    963
+! endif !if(p_nfrowx(jcurix+1).ne.0)    963
 ! enddo;return !jcurix=0,p_nrow    960
 ! endif !if(p_ndom.le.0)    959
 
@@ -1958,17 +1969,17 @@ end subroutine !subroutine
 ! idombas=(iuni-1)*p_ndomv
 ! do jcurix=0,p_nrow
 ! p_ixcurfact(jcurix)=.false.
-! if(p_nfxrow(jcurix+1).ne.0)then !p_irowrow(jcurix)).ne.0)then
+! if(p_nfrowx(jcurix+1).ne.0)then !p_irowrow(jcurix)).ne.0)then
 
 ! icurint=(p_irowdomain(jcurix)-1)/32+1  !integer part
 ! icurbit=p_irowdomain(jcurix)-(icurint-1)*32-1  !bit part
 ! if(btest(p_domainbits(idombas+icurint),icurbit))then
 ! !		if(btest(p_domainbits(icurint,iuni),icurbit))then
-! p_nfxrow=p_nfxrow+1
-! p_fxrow(p_nfxrow)=jcurix
+! p_nfrowx=p_nfrowx+1
+! p_frowx(p_nfrowx)=jcurix
 ! p_ixcurfact(jcurix)=.true.
 ! endif !if(btest(p_domainbits(idombas+icurint),icurbit))    979
-! endif !if(p_nfxrow(jcurix+1).ne.0)    975
+! endif !if(p_nfrowx(jcurix+1).ne.0)    975
 ! enddo !jcurix=0,p_nrow    973
 ! end subroutine !subroutine j_fcurix(iuni)
 
@@ -2017,10 +2028,10 @@ end subroutine !subroutine
 ! if(p_ndom.le.0)then
 ! do jcurix=0,p_nrow
 ! irow_ = jcurix+1 !p_irowrow(jcurix)  !irow_jcurix+1
-! if((p_nfxrow(irow_).ne.0).or.(p_nfyrow(irow_).ne.0))then
+! if((p_nfrowx(irow_).ne.0).or.(p_nfyrow(irow_).ne.0))then
 ! p_irow2curix(0,irow_)=p_irow2curix(0,irow_)+1
 ! p_irow2curix(p_irow2curix(0,irow_),irow_)=jcurix
-! endif !if((p_nfxrow(irow_).ne.0).or.(p_nfyrow(irow_).ne.0))   1033
+! endif !if((p_nfrowx(irow_).ne.0).or.(p_nfyrow(irow_).ne.0))   1033
 ! enddo !jcurix=0,p_nrow   1031
 ! return !do jcurix=0,j_nrow
 ! endif !if(p_ndom.le.0)   1030
@@ -2031,14 +2042,14 @@ end subroutine !subroutine
 ! do jcurix=0,p_nrow
 ! irow_ = jcurix+1 !p_irowrow(jcurix)
 ! !	write(6,*)'<33>',jcurix,irow_
-! if((p_nfxrow(irow_).ne.0).or.(p_nfyrow(irow_).ne.0))then
+! if((p_nfrowx(irow_).ne.0).or.(p_nfyrow(irow_).ne.0))then
 ! icurint=(p_irowdomain(jcurix)-1)/32+1  !integer part
 ! icurbit=p_irowdomain(jcurix)-(icurint-1)*32-1  !bit part
 ! if(btest(p_domainbits(idombas+icurint),icurbit))then
 ! p_irow2curix(0,irow_)=p_irow2curix(0,irow_)+1
 ! p_irow2curix(p_irow2curix(0,irow_),irow_)=jcurix
 ! endif !if(btest(p_domainbits(idombas+icurint),icurbit))   1050
-! endif !if((p_nfxrow(irow_).ne.0).or.(p_nfyrow(irow_).ne.0))   1047
+! endif !if((p_nfrowx(irow_).ne.0).or.(p_nfyrow(irow_).ne.0))   1047
 ! enddo !jcurix=0,p_nrow   1044
 
 ! end subroutine !subroutine j_firow2curix(iuni)
@@ -2107,7 +2118,7 @@ p_buf='DOMAIN:'
 		! irowrow tells the the initial row in the nonexpanded problem
 		call j_getline(p_ivrow,ir+1,p_buf,le)
 		write(6,'(a)')p_buf(1:le)
-	endif !if(p_isdomain)   1910
+	endif !if(p_isdomain)   1922
 	return
 end subroutine!subroutine printrowinfo(ir)
 
@@ -2141,8 +2152,8 @@ subroutine priceunit(iob,io)  !!!!
 	use jmod, only: p_ibaunit
 	use jmod, only: p_keys
 	use jmod, only: p_ntemp0
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: p_vx
 	use jmod, only: p_xmat
 	use jmod, only: p_ix
@@ -2151,7 +2162,7 @@ subroutine priceunit(iob,io)  !!!!
 		write(6,*)'**priceunit: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   1942
+	endif !if(j_v(p_ivstartedjlp).eq.0)   1954
  
 	narg=j_o(iob)%i(io+1)
 	iout=j_o(iob)%i(io+2+narg)
@@ -2160,17 +2171,21 @@ subroutine priceunit(iob,io)  !!!!
 	if(iunit.gt.p_nunits.or.iunit.le.0)then
 		write(6,*)'**illegal unit in price%unit ',iunit,' max is',p_nunits
 		j_err=.true. ;return
-	endif !if(iunit.gt.p_nunits.or.iunit.le.0)   1952
-	if(p_isdomain)call jlpcurix2(iunit) !!determines for each row if the unit iunit belonggs to the domain of the row
-	! returns nrowp,xrowcur
+	endif !if(iunit.gt.p_nunits.or.iunit.le.0)   1964
+	if(p_isdomain)call jlpcurix2(iunit) !
+	! determines for each row if the unit iunit belonggs to the domain of the row
+	! units can be in random order
+	! p_nrowcurx
+	! p_rowcurx
+ 
 	p_value=j_0
 	iobs=p_ibaunit(iunit)+p_keys(iunit)
 	ibxmatx=(iobs-1)*p_ntemp0  !xmatiba(iobs) !,1)
-	do jj=1,p_nxrowcur
-		j=p_xrowcur(jj)
+	do jj=1,p_nrowcurx
+		j=p_rowcurx(jj)
 		!	j_value=j_value+j_vx(j)*j_xmat(j_ix(j),iobs) !v(ix(j))
 		p_value=p_value+p_vx(j)*p_xmat(ibxmatx+p_ix(j)) !v(ix(j))
-	enddo !jj=1,p_nxrowcur   1961
+	enddo !jj=1,p_nrowcurx   1977
 	j_v(iout)=p_value
  
 	!	io=io+narg+3
@@ -2192,8 +2207,8 @@ subroutine priceschedw(iob,io)   !!!!
 	use jmod, only: p_value
 	use jmod, only: p_ibaunit
 	use jmod, only: p_ntemp0
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: p_vx
 	use jmod, only: p_xmat
 	use jmod, only: p_ix
@@ -2202,7 +2217,7 @@ subroutine priceschedw(iob,io)   !!!!
 		write(6,*)'**priceschedw: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   1974
+	endif !if(j_v(p_ivstartedjlp).eq.0)   1990
 	narg=j_o(iob)%i(io+1)
 	iout=j_o(iob)%i(io+2+narg)
 	if(j_otype(iout).ne.j_ipreal)call j_del(iout)
@@ -2212,19 +2227,24 @@ subroutine priceschedw(iob,io)   !!!!
 	if(iunit.gt.p_nunits.or.iunit.le.0)then
 		write(6,*)'**illegal unit in price%schedw ',iunit,' max is',p_nunits
 		j_err=.true. ;return
-	endif !if(iunit.gt.p_nunits.or.iunit.le.0)   1985
+	endif !if(iunit.gt.p_nunits.or.iunit.le.0)   2001
 	if(is.gt.p_ns(iunit).or.is.le.0)then
 		write(6,*)'**illegal sched ',is,'  in price%schedw for unit ',iunit, 'max=',p_ns(iunit)
 		j_err=.true. ;return
-	endif !if(is.gt.p_ns(iunit).or.is.le.0)   1989
+	endif !if(is.gt.p_ns(iunit).or.is.le.0)   2005
 	if(p_isdomain)call jlpcurix2(iunit)
+	! determines for each row if the unit iunit belonggs to the domain of the row
+	! units can be in random order
+	! p_nrowcurx
+	! p_rowcurx
+ 
 	p_value=j_0
 	iobs=p_ibaunit(iunit)+is
 	ibxmatx=(iobs-1)*p_ntemp0  !xmatiba(iobs) ! ,1)
-	do jj=1,p_nxrowcur
-		j=p_xrowcur(jj)
+	do jj=1,p_nrowcurx
+		j=p_rowcurx(jj)
 		p_value=p_value+p_vx(j)*p_xmat(ibxmatx+p_ix(j)) ! ,iobs) !v(ix(j))
-	enddo !jj=1,p_nxrowcur   1997
+	enddo !jj=1,p_nrowcurx   2018
 	j_v(iout)=p_value
  
 	!	io=io+narg+3
@@ -2244,8 +2264,8 @@ subroutine priceschedcum(iob,io)   !!!!
 	use jmod, only: p_isdomain
 	use jmod, only: j_0
 	use jmod, only: p_value
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: p_vx
 	use jmod, only: p_xmat
 	use jmod, only: p_ix
@@ -2254,7 +2274,7 @@ subroutine priceschedcum(iob,io)   !!!!
 		write(6,*)'**priceschedcum: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2009
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2030
 	narg=j_o(iob)%i(io+1)
 	iout=j_o(iob)%i(io+2+narg)
 	if(j_otype(iout).ne.j_ipreal)call j_del(iout)
@@ -2262,15 +2282,19 @@ subroutine priceschedcum(iob,io)   !!!!
 	if(is.gt.p_lopp.or.is.le.0)then
 		write(6,*)'**illegal sched in price%schedcum: ',is,' max is',p_lopp
 		j_err=.true. ;return
-	endif !if(is.gt.p_lopp.or.is.le.0)   2018
+	endif !if(is.gt.p_lopp.or.is.le.0)   2039
 	ibxmatx=(is-1)*p_ntemp0  !xmatiba(is) !,1)
 	if(p_isdomain)call jlpcurix2(iunit)
+	! determines for each row if the unit iunit belonggs to the domain of the row
+	! units can be in random order
+	! p_nrowcurx
+	! p_rowcurx
 	p_value=j_0
-	do jj=1,p_nxrowcur
-		j=p_xrowcur(jj)
+	do jj=1,p_nrowcurx
+		j=p_rowcurx(jj)
 		!j_value=j_value+j_vx(j)*j_xmat(j_ix(j),is) !,is) !v(ix(j))
 		p_value=p_value+p_vx(j)*p_xmat(ibxmatx+p_ix(j)) !,is) !v(ix(j))
-	enddo !jj=1,p_nxrowcur   2025
+	enddo !jj=1,p_nrowcurx   2050
 	j_v(iout)=p_value
  
 	!	io=io+narg+3
@@ -2301,11 +2325,11 @@ subroutine weights(iob,io)   !!!!
 	! iunit=j_o(iob)%i(io+2)
 	! ns=0
 	! do i=1,p_ndiv
-	! if(p_iunitdiv(i).eq.iunit)then
+	! if(p_unitdiv(i).eq.iunit)then
 	! ns=ns+1
-	! elseif(p_iunitdiv(i).gt.iunit)then !if(j_iunitdiv(i).eq.iunit)then
+	! elseif(p_unitdiv(i).gt.iunit)then !if(j_iunitdiv(i).eq.iunit)then
 	! goto 77
-	! endif !if(p_iunitdiv(i).eq.iunit)   2020
+	! endif !if(p_unitdiv(i).eq.iunit)   2020
 	! end do !i=1,p_ndiv   2019
 	! ns=1
 	! !
@@ -2325,7 +2349,7 @@ function nweights()  !number of nonzero weights tehty Markulle  !!!!
 		write(6,*)'**nweights: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2073
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2098
  
 	nweights=p_nunits+p_lx0
  
@@ -2342,7 +2366,7 @@ subroutine partweights(iob,io)   !!!!
 	use jmod, only: j_ipreal
 	use jmod, only: j_del
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	! Section partweights partweight() weights of split schedules
 	! TO BE RAPORTED LATER
 	! endsection
@@ -2351,7 +2375,7 @@ subroutine partweights(iob,io)   !!!!
 		write(6,*)'**partweights: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2090
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2115
 	! if narg=1 then total number of weights, if narg=2 then weight in unit
 	narg=j_o(iob)%i(io+1)
 	iout=j_o(iob)%i(io+2+narg)
@@ -2363,12 +2387,12 @@ subroutine partweights(iob,io)   !!!!
 		iunit=j_o(iob)%i(io+2)
 		ns=0
 		do i=1,p_ndiv
-			if(p_iunitdiv(i).eq.iunit)then
+			if(p_unitdiv(i).eq.iunit)then
 				ns=ns+1
-			endif !if(p_iunitdiv(i).eq.iunit)   2106
-		enddo !i=1,p_ndiv   2105
+			endif !if(p_unitdiv(i).eq.iunit)   2131
+		enddo !i=1,p_ndiv   2130
 		77  j_v(iout)=ns
-	endif !if(narg.eq.0)   2100
+	endif !if(narg.eq.0)   2125
 	!	io=io+narg+3
 	return
 end subroutine!subroutine partweights(iob,io)
@@ -2382,12 +2406,12 @@ subroutine jlpunit(iob,io)   !!!!
 	use jmod, only: j_o
 	use jmod, only: p_nunits
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	if(j_v(p_ivstartedjlp).eq.0)then
 		write(6,*)'**unit: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2119
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2144
 	ibas=j_v(j_o(iob)%i(io+2))  ! for which the unit is wanted
 	if(ibas.le.0.or.ibas.gt.p_nunits+p_ndiv)then
 		j_err=.true.
@@ -2400,28 +2424,28 @@ subroutine jlpunit(iob,io)   !!!!
  
 		do j=1,p_ndiv
 			! ib=p_nunits before
-			iunit=p_iunitdiv(j) !o(isol)%i(p_nunits+j)
+			iunit=p_unitdiv(j) !o(isol)%i(p_nunits+j)
 			if(iunit.eq.iunitv)niv=niv+1
 			! write(6,*)'j,unit,niv',j,iunit,niv'
 			ib=iunit+niv
 			if(ib.ge.ibas)then
 				iunit=iunit-(ib-ibas)
 				goto 77
-			endif !if(ib.ge.ibas)   2140
+			endif !if(ib.ge.ibas)   2165
 			iunitv=iunit
-		enddo !j=1,p_ndiv   2134
+		enddo !j=1,p_ndiv   2159
 		! all
 		iunit=ibas-niv
 		77  j_v(j_o(iob)%i(io+j_o(iob)%i(io+1)+2))=iunit
  
-	endif !if(ibas.le.0.or.ibas.gt.p_nunits+p_ndiv)   2125
+	endif !if(ibas.le.0.or.ibas.gt.p_nunits+p_ndiv)   2150
 	!	90 io=io+j_o(iob)%i(io+1)+3
 	return
 end subroutine!subroutine jlpunit(iob,io)
 
 function lunit_(ibas)    !!!!
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
  
 	integer ibas ! for which the unit is wanted
 	! bas numbering: for each unit count the number of parts, subtract one
@@ -2432,16 +2456,16 @@ function lunit_(ibas)    !!!!
  
 	do j=1,p_ndiv
 		! ib=p_nunits before
-		iunit=p_iunitdiv(j) !o(isol)%i(p_nunits+j)
+		iunit=p_unitdiv(j) !o(isol)%i(p_nunits+j)
 		if(iunit.eq.iunitv)niv=niv+1
 		! write(6,*)'j,unit,niv',j,iunit,niv'
 		ib=iunit+niv
 		if(ib.ge.ibas)then
 			iunit=iunit-(ib-ibas)
 			goto 77
-		endif !if(ib.ge.ibas)   2170
+		endif !if(ib.ge.ibas)   2195
 		iunitv=iunit
-	enddo !j=1,p_ndiv   2164
+	enddo !j=1,p_ndiv   2189
 	! all
 	iunit=ibas-niv
 	77 lunit_=iunit
@@ -2458,13 +2482,13 @@ subroutine partunit(iob,io)   !!!!
 	use jmod, only: j_ipreal
 	use jmod, only: j_del
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
  
 	if(j_v(p_ivstartedjlp).eq.0)then
 		write(6,*)'**partunit: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2185
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2210
 	narg=j_o(iob)%i(io+1)
 	iout=j_o(iob)%i(io+2+narg)
 	if(j_otype(iout).ne.j_ipreal)call j_del(iout)
@@ -2473,9 +2497,9 @@ subroutine partunit(iob,io)   !!!!
 		j_err=.true.
 		write(6,*)'**trying to access partunit',idiv, 'maximum is:',p_ndiv
 	else !if(idiv.le.0.or.idiv.gt.j_ndiv)then
-		j_v(iout)=p_iunitdiv(idiv) !o(isol)%i(p_nunits+idiv)
+		j_v(iout)=p_unitdiv(idiv) !o(isol)%i(p_nunits+idiv)
 		! all
-	endif !if(idiv.le.0.or.idiv.gt.p_ndiv)   2194
+	endif !if(idiv.le.0.or.idiv.gt.p_ndiv)   2219
 	!	90 io=io+j_o(iob)%i(io+1)+3
 	return
 end subroutine !subroutine partunit(iob,io)
@@ -2487,13 +2511,13 @@ subroutine weight(iob,io)   !!!!
 	use jmod, only: j_o
 	use jmod, only: p_nunits
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_wdiv
 	if(j_v(p_ivstartedjlp).eq.0)then
 		write(6,*)'**weight: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2206
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2231
 	ibas=j_v(j_o(iob)%i(io+2))  ! for which the weight is wanted
 	if(ibas.le.0.or.ibas.gt.p_nunits+p_ndiv)then
 		j_err=.true.
@@ -2503,7 +2527,7 @@ subroutine weight(iob,io)   !!!!
 		niv=0 ! count of (numb of parts-1)
 		iunitv=-1
 		do j=1,p_ndiv
-			iunit=p_iunitdiv(j) !o(isol)%i(p_nunits+j)
+			iunit=p_unitdiv(j) !o(isol)%i(p_nunits+j)
 			if(iunit.eq.iunitv)niv=niv+1
 			ib=iunit+niv
 			if(ib.eq.ibas)then
@@ -2512,14 +2536,14 @@ subroutine weight(iob,io)   !!!!
 			else if(ib.gt.ibas)then !if(ib.eq.ibas)then
 				wei=1.   !are
 				goto 77
-			endif !if(ib.eq.ibas)   2223
+			endif !if(ib.eq.ibas)   2248
 			iunitv=iunit
-		enddo !j=1,p_ndiv   2219
+		enddo !j=1,p_ndiv   2244
 		! all
 		wei=1.
 		77  j_v(j_o(iob)%i(io+j_o(iob)%i(io+1)+2))=wei
  
-	endif !if(ibas.le.0.or.ibas.gt.p_nunits+p_ndiv)   2212
+	endif !if(ibas.le.0.or.ibas.gt.p_nunits+p_ndiv)   2237
 	!	90 io=io+j_o(iob)%i(io+1)+3
 	return
 end subroutine!subroutine weight(iob,io)
@@ -2527,7 +2551,7 @@ end subroutine!subroutine weight(iob,io)
 ! weight -funktion melaoptj versio
 function we_(ibas)    !!!!
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_wdiv
  
 	integer ibas ! for which the weight is wanted
@@ -2535,7 +2559,7 @@ function we_(ibas)    !!!!
 	iunitv=-1
 	do j=1,p_ndiv
 		! ib=p_nunits before
-		iunit=p_iunitdiv(j) !o(isol)%i(p_nunits+j)
+		iunit=p_unitdiv(j) !o(isol)%i(p_nunits+j)
 		if(iunit.eq.iunitv)niv=niv+1
 		ib=iunit+niv
 		if(ib.eq.ibas)then
@@ -2545,9 +2569,9 @@ function we_(ibas)    !!!!
 			wei=1.   !are
 			!  iunit=ibas-nivv
 			goto 77
-		endif !if(ib.eq.ibas)   2252
+		endif !if(ib.eq.ibas)   2277
 		iunitv=iunit
-	enddo !j=1,p_ndiv   2247
+	enddo !j=1,p_ndiv   2272
 	! all
 	wei=1.
 	77  we_=wei
@@ -2560,7 +2584,7 @@ subroutine schedweight(ibas,is,wei) !returns for ibas'th schedule twith nonzero 
 	use jmod, only: j_err
 	use jmod, only: p_nunits
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_wdiv
 	use jmod, only: p_ibaunit
 	use jmod, only: p_isdiv
@@ -2570,7 +2594,7 @@ subroutine schedweight(ibas,is,wei) !returns for ibas'th schedule twith nonzero 
 		write(6,*)'**schedweight: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2270
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2295
 	!  ibas for which the weight is wanted
 	if(ibas.le.0.or.ibas.gt.p_nunits+p_ndiv)then
 		j_err=.true.
@@ -2581,7 +2605,7 @@ subroutine schedweight(ibas,is,wei) !returns for ibas'th schedule twith nonzero 
 		iunitv=-1
 		do j=1,p_ndiv
 			! ib=p_nunits before
-			iunit=p_iunitdiv(j) !o(isol)%i(p_nunits+j)
+			iunit=p_unitdiv(j) !o(isol)%i(p_nunits+j)
 			if(iunit.eq.iunitv)niv=niv+1
 			ib=iunit+niv
 			if(ib.eq.ibas)then
@@ -2593,15 +2617,15 @@ subroutine schedweight(ibas,is,wei) !returns for ibas'th schedule twith nonzero 
 				is=p_ibaunit(iunit)+p_keys(iunit)
 				wei=1.   !are
 				goto 77
-			end if !if(ib.eq.ibas)   2288
+			end if !if(ib.eq.ibas)   2313
 			iunitv=iunit
-		end do !j=1,p_ndiv   2283
+		end do !j=1,p_ndiv   2308
 		! all
 		wei=1.
 		iunit=ibas-niv;is=p_ibaunit(iunit)+p_keys(iunit)
 		77  continue !  v(o(iob)%i(io+o(iob)%i(io+1)+2))=wei
  
-	end if !if(ibas.le.0.or.ibas.gt.p_nunits+p_ndiv)   2276
+	end if !if(ibas.le.0.or.ibas.gt.p_nunits+p_ndiv)   2301
  
 	return
 end subroutine!subroutine schedweight(ibas,is,wei)
@@ -2619,7 +2643,7 @@ subroutine weightschedcum(iob,io)   !!!!
 	use jmod, only: j_minteger
 	use jmod, only: j_clearoption
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_wdiv
 	use jmod, only: p_isdiv
 	use jmod, only: p_keys
@@ -2627,68 +2651,68 @@ subroutine weightschedcum(iob,io)   !!!!
 		write(6,*)'**weightschedcum: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2312
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2337
 	isc=j_v(j_o(iob)%i(io+2))  ! for which the weight is wanted
 	if(isc.le.0.or.isc.gt.p_lopp)then
 		j_err=.true.
 		write(6,*)'**weight%schedcum: trying to access weight',isc, 'maximum is:',p_lopp
 		return
-	endif !if(isc.le.0.or.isc.gt.p_lopp)   2318
+	endif !if(isc.le.0.or.isc.gt.p_lopp)   2343
  
 	iunit0=1+p_lopp/p_nunits;iunit0=min(p_nunits,iunit0)
 	if(isc.le.p_ibaunit(iunit0))then
 		do iunit=iunit0-1,1,-1
 			if(isc.gt.p_ibaunit(iunit))exit
-		enddo !iunit=iunit0-1,1,-1   2326
+		enddo !iunit=iunit0-1,1,-1   2351
 	else !if(isc.le.j_ibaunit(iunit0))then
 		do iunit=iunit0,p_nunits
 			if(isc.le.p_ibaunit(iunit+1))exit
-		enddo !iunit=iunit0,p_nunits   2330
-	endif !if(isc.le.p_ibaunit(iunit0))   2325
+		enddo !iunit=iunit0,p_nunits   2355
+	endif !if(isc.le.p_ibaunit(iunit0))   2350
 	is=isc-p_ibaunit(iunit)
  
 	if(j_linkoption(iob,io,j_minteger).ge.0)then
 		call j_clearoption(iob,io)  ! weightschedcum(iob,io)
 		do j=1,p_ndiv
 			! ib=p_nunits before
-			if(p_iunitdiv(j).eq.iunit)then
+			if(p_unitdiv(j).eq.iunit)then
 				jmax=j
 				do j2=j+1,p_ndiv
-					if(p_iunitdiv(j2).ne.iunit)exit
+					if(p_unitdiv(j2).ne.iunit)exit
 					if(p_wdiv(j2).gt.p_wdiv(jmax))jmax=j2
-				enddo !j2=j+1,p_ndiv   2342
+				enddo !j2=j+1,p_ndiv   2367
 				if(is.eq.p_isdiv(jmax))then
 					wei=1.
 				else !if(is.eq.j_isdiv(jmax))then
 					wei=0.
 					goto 90
-				endif !if(is.eq.p_isdiv(jmax))   2346
-			endif !if(p_iunitdiv(j).eq.iunit)   2340
-		enddo !j=1,p_ndiv   2338
+				endif !if(is.eq.p_isdiv(jmax))   2371
+			endif !if(p_unitdiv(j).eq.iunit)   2365
+		enddo !j=1,p_ndiv   2363
  
 	else !if(j_linkoption(iob,io,j_minteger).gt.0)then
  
 		do j=1,p_ndiv
 			! ib=p_nunits before
-			if(p_iunitdiv(j).eq.iunit)then
+			if(p_unitdiv(j).eq.iunit)then
 				do j2=j,p_ndiv
-					if(p_iunitdiv(j2).ne.iunit)exit
+					if(p_unitdiv(j2).ne.iunit)exit
 					if(is.eq.p_isdiv(j2))then
 						wei=p_wdiv(j2)
 						goto 90
-					endif !if(is.eq.p_isdiv(j2))   2362
-				enddo !j2=j,p_ndiv   2360
+					endif !if(is.eq.p_isdiv(j2))   2387
+				enddo !j2=j,p_ndiv   2385
 				wei=0.
 				goto 90
-			endif !if(p_iunitdiv(j).eq.iunit)   2359
-		enddo !j=1,p_ndiv   2357
-	endif !if(j_linkoption(iob,io,j_minteger).ge.0)   2336
+			endif !if(p_unitdiv(j).eq.iunit)   2384
+		enddo !j=1,p_ndiv   2382
+	endif !if(j_linkoption(iob,io,j_minteger).ge.0)   2361
  
 	if(is.eq.p_keys(iunit))then
 		wei=1.
 	else !if(is.eq.j_keys(iunit))then
 		wei=0.
-	endif !if(is.eq.p_keys(iunit))   2373
+	endif !if(is.eq.p_keys(iunit))   2398
 	90 continue
  
 	j_v(j_o(iob)%i(io+j_o(iob)%i(io+1)+2))=wei
@@ -2705,7 +2729,7 @@ subroutine integersched(iob,io)  !both schedw andf schedcum   !!!! EI TOIMI
 	use jmod, only: j_o
 	use jmod, only: p_nunits
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_wdiv
 	use jmod, only: p_isdiv
 	use jmod, only: p_keys
@@ -2714,26 +2738,26 @@ subroutine integersched(iob,io)  !both schedw andf schedcum   !!!! EI TOIMI
 		write(6,*)'**integersched: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2388
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2413
 	iunit=j_v(j_o(iob)%i(io+2))
 	if(iunit.le.0.or.iunit.gt.p_nunits)then
 		j_err=.true.
 		write(6,*)'**weight%schedw: trying to access unit',iunit, 'maximum is:',p_nunits
 		return
-	endif !if(iunit.le.0.or.iunit.gt.p_nunits)   2394
+	endif !if(iunit.le.0.or.iunit.gt.p_nunits)   2419
  
 	do j=1,p_ndiv
 		! ib=p_nunits before
-		if(p_iunitdiv(j).eq.iunit)then
+		if(p_unitdiv(j).eq.iunit)then
 			jmax=j
 			do j2=j+1,p_ndiv
-				if(p_iunitdiv(j2).ne.iunit)exit
+				if(p_unitdiv(j2).ne.iunit)exit
 				if(p_wdiv(j2).gt.p_wdiv(jmax))jmax=j2
-			enddo !j2=j+1,p_ndiv   2404
+			enddo !j2=j+1,p_ndiv   2429
 			wei=p_isdiv(jmax)
 			goto 90
-		endif !if(p_iunitdiv(j).eq.iunit)   2402
-	enddo !j=1,p_ndiv   2400
+		endif !if(p_unitdiv(j).eq.iunit)   2427
+	enddo !j=1,p_ndiv   2425
  
 	wei=p_keys(iunit)
  
@@ -2759,7 +2783,7 @@ subroutine weightschedw(iob,io)  !!!!
 	use jmod, only: j_minteger
 	use jmod, only: j_clearoption
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_wdiv
 	use jmod, only: p_isdiv
 	use jmod, only: p_keys
@@ -2768,64 +2792,64 @@ subroutine weightschedw(iob,io)  !!!!
 		write(6,*)'**weightschedw: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2428
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2453
  
 	iunit=j_v(j_o(iob)%i(io+2))
 	if(iunit.le.0.or.iunit.gt.p_nunits)then
 		j_err=.true.
 		write(6,*)'**weight%schedw: trying to access unit',iunit, 'maximum is:',p_nunits
 		return
-	endif !if(iunit.le.0.or.iunit.gt.p_nunits)   2435
+	endif !if(iunit.le.0.or.iunit.gt.p_nunits)   2460
 	is=j_v(j_o(iob)%i(io+3))  ! for which the weight is wanted
 	if(is.le.0.or.is.gt.p_ns(iunit))then
 		j_err=.true.
 		write(6,*)'**weight%schedw: trying to access sched',is, 'maximum is:',p_ns(iunit)
 		return
-	endif !if(is.le.0.or.is.gt.p_ns(iunit))   2441
+	endif !if(is.le.0.or.is.gt.p_ns(iunit))   2466
  
 	if(j_linkoption(iob,io,j_minteger).ge.0)then
 		call j_clearoption(iob,io)  ! ubroutine weightschedw(iob,io)
 		do j=1,p_ndiv
 			! ib=p_nunits before
-			if(p_iunitdiv(j).eq.iunit)then
+			if(p_unitdiv(j).eq.iunit)then
 				jmax=j
 				do j2=j+1,p_ndiv
-					if(p_iunitdiv(j2).ne.iunit)exit
+					if(p_unitdiv(j2).ne.iunit)exit
 					if(p_wdiv(j2).gt.p_wdiv(jmax))jmax=j2
-				enddo !j2=j+1,p_ndiv   2453
+				enddo !j2=j+1,p_ndiv   2478
 				if(is.eq.p_isdiv(jmax))then
 					wei=1.
 				else !if(is.eq.j_isdiv(jmax))then
 					wei=0.
 					goto 90
-				endif !if(is.eq.p_isdiv(jmax))   2457
-			endif !if(p_iunitdiv(j).eq.iunit)   2451
-		enddo !j=1,p_ndiv   2449
+				endif !if(is.eq.p_isdiv(jmax))   2482
+			endif !if(p_unitdiv(j).eq.iunit)   2476
+		enddo !j=1,p_ndiv   2474
  
 	else !if(j_linkoption(iob,io,j_minteger).gt.0)then
  
 		do j=1,p_ndiv
 			! ib=p_nunits before
-			if(p_iunitdiv(j).eq.iunit)then
+			if(p_unitdiv(j).eq.iunit)then
 				do j2=j,p_ndiv
-					if(p_iunitdiv(j2).ne.iunit)exit
+					if(p_unitdiv(j2).ne.iunit)exit
 					if(is.eq.p_isdiv(j2))then
 						wei=p_wdiv(j2)
 						goto 90
-					endif !if(is.eq.p_isdiv(j2))   2473
-				enddo !j2=j,p_ndiv   2471
+					endif !if(is.eq.p_isdiv(j2))   2498
+				enddo !j2=j,p_ndiv   2496
 				wei=0.
 				goto 90
-			endif !if(p_iunitdiv(j).eq.iunit)   2470
-		enddo !j=1,p_ndiv   2468
+			endif !if(p_unitdiv(j).eq.iunit)   2495
+		enddo !j=1,p_ndiv   2493
  
-	endif !if(j_linkoption(iob,io,j_minteger).ge.0)   2447
+	endif !if(j_linkoption(iob,io,j_minteger).ge.0)   2472
  
 	if(is.eq.p_keys(iunit))then
 		wei=1.
 	else !if(is.eq.j_keys(iunit))then
 		wei=0.
-	endif !if(is.eq.p_keys(iunit))   2485
+	endif !if(is.eq.p_keys(iunit))   2510
 	90 continue
  
 	j_v(j_o(iob)%i(io+j_o(iob)%i(io+1)+2))=wei
@@ -2850,7 +2874,7 @@ subroutine partweight(iob,io)  !!!!
 		write(6,*)'**partweight: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2501
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2526
 	narg=j_o(iob)%i(io+1)
 	iout=j_o(iob)%i(io+2+narg)
 	if(j_otype(iout).ne.j_ipreal)call j_del(iout)
@@ -2861,7 +2885,7 @@ subroutine partweight(iob,io)  !!!!
 	else !if(idiv.le.0.or.idiv.gt.j_ndiv)then
 		j_v(iout)=p_wdiv(idiv) !o(isol)%r(idiv)
 		! all
-	endif !if(idiv.le.0.or.idiv.gt.p_ndiv)   2510
+	endif !if(idiv.le.0.or.idiv.gt.p_ndiv)   2535
 	!	90 io=io+j_o(iob)%i(io+1)+3
 	return
 end subroutine !subroutine partweight(iob,io)
@@ -2874,14 +2898,14 @@ subroutine schedw(iob,io)  !!!!
 	use jmod, only: p_nunits
 	use jmod, only: p_lx0
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_isdiv
 	use jmod, only: p_keys
 	if(j_v(p_ivstartedjlp).eq.0)then
 		write(6,*)'**schedw: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2522
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2547
 	ibas=j_v(j_o(iob)%i(io+2))  ! for which the weight is wanted
 	if(ibas.le.0.or.ibas.gt.p_nunits+p_lx0)then
 		j_err=.true.
@@ -2892,7 +2916,7 @@ subroutine schedw(iob,io)  !!!!
 		do j=1,p_ndiv
 			! ib=p_nunits before
  
-			iunit=p_iunitdiv(j) ! o(isol)%i(p_nunits+j)
+			iunit=p_unitdiv(j) ! o(isol)%i(p_nunits+j)
 			if(iunit.eq.iunitv)niv=niv+1
 			ib=iunit+niv
 			if(ib.eq.ibas)then
@@ -2903,14 +2927,14 @@ subroutine schedw(iob,io)  !!!!
 				iunit=iunit-(ib-ibas)
 				is=p_keys(iunit) ! o(isol)%i(iunit)
 				goto 77
-			end if !if(ib.eq.ibas)   2540
+			end if !if(ib.eq.ibas)   2565
 			iunitv=iunit
-		end do !j=1,p_ndiv   2534
+		end do !j=1,p_ndiv   2559
 		! all
 		iunit=ibas-niv;is=p_keys(iunit) ! o(isol)%i(iunit)
 		77 j_v(j_o(iob)%i(io+j_o(iob)%i(io+1)+2))=is
  
-	end if !if(ibas.le.0.or.ibas.gt.p_nunits+p_lx0)   2528
+	end if !if(ibas.le.0.or.ibas.gt.p_nunits+p_lx0)   2553
  
 	!	90 io=io+j_o(iob)%i(io+1)+3
 	return
@@ -2919,7 +2943,7 @@ end subroutine!subroutine schedw(iob,io)
 ! schewd melaoptj versio
 function ls_(ibas)   !!!!
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_isdiv
 	use jmod, only: p_keys
 	! weight()
@@ -2930,7 +2954,7 @@ function ls_(ibas)   !!!!
 	do j=1,p_ndiv
 		! ib=p_nunits before
  
-		iunit=p_iunitdiv(j) ! o(isol)%i(p_nunits+j)
+		iunit=p_unitdiv(j) ! o(isol)%i(p_nunits+j)
 		if(iunit.eq.iunitv)niv=niv+1
 		ib=iunit+niv
 		if(ib.eq.ibas)then
@@ -2941,9 +2965,9 @@ function ls_(ibas)   !!!!
 			iunit=iunit-(ib-ibas)
 			is=p_keys(iunit) ! o(isol)%i(iunit)
 			goto 77
-		end if !if(ib.eq.ibas)   2574
+		end if !if(ib.eq.ibas)   2599
 		iunitv=iunit
-	end do !j=1,p_ndiv   2568
+	end do !j=1,p_ndiv   2593
 	! all
 	iunit=ibas-niv;is=p_keys(iunit) ! o(isol)%i(iunit)
 	77 ls_=is
@@ -2959,7 +2983,7 @@ subroutine schedcum(iob,io)  !!!!
 	use jmod, only: p_nunits
 	use jmod, only: p_lx0
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_ibaunit
 	use jmod, only: p_isdiv
 	use jmod, only: p_keys
@@ -2968,7 +2992,7 @@ subroutine schedcum(iob,io)  !!!!
 		write(6,*)'**schedcum: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2594
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2619
  
 	ibas=j_v(j_o(iob)%i(io+2))  ! for which the weight is wanted
 	if(ibas.le.0.or.ibas.gt.p_nunits+p_lx0)then
@@ -2979,7 +3003,7 @@ subroutine schedcum(iob,io)  !!!!
 		iunitv=-1
 		do j=1,p_ndiv
  
-			iunit=p_iunitdiv(j) !o(isol)%i(p_nunits+j)
+			iunit=p_unitdiv(j) !o(isol)%i(p_nunits+j)
 			if(iunit.eq.iunitv)niv=niv+1
 			ib=iunit+niv
 			if(ib.eq.ibas)then
@@ -2990,15 +3014,15 @@ subroutine schedcum(iob,io)  !!!!
 				iunit=iunit-(ib-ibas)
 				is=p_ibaunit(iunit)+p_keys(iunit) ! o(isol)%i(iunit)+o(isol)%i2(4+iunit)
 				goto 77
-			end if !if(ib.eq.ibas)   2612
+			end if !if(ib.eq.ibas)   2637
 			iunitv=iunit
-		end do !j=1,p_ndiv   2607
+		end do !j=1,p_ndiv   2632
 		! all
 		iunit=ibas-niv;is=p_ibaunit(iunit)+p_keys(iunit) !o(isol)%i(iunit)+ o(isol)%i2(4+iunit)
  
 		77  j_v(j_o(iob)%i(io+j_o(iob)%i(io+1)+2))=is
  
-	end if !if(ibas.le.0.or.ibas.gt.p_nunits+p_lx0)   2601
+	end if !if(ibas.le.0.or.ibas.gt.p_nunits+p_lx0)   2626
  
 	90 return
 !	io=io+j_o(iob)%i(io+1)+3
@@ -3020,7 +3044,7 @@ subroutine partschedw(iob,io)   !!!!
 		write(6,*)'**partschedw: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2637
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2662
 	narg=j_o(iob)%i(io+1)
  
 	iout=j_o(iob)%i(io+2+narg)
@@ -3035,7 +3059,7 @@ subroutine partschedw(iob,io)   !!!!
 		j_v(iout)=p_isdiv(idiv) !o(isol)%i(p_nunits+ndiv+idiv)
 		! all
  
-	endif !if(idiv.le.0.or.idiv.gt.p_ndiv)   2648
+	endif !if(idiv.le.0.or.idiv.gt.p_ndiv)   2673
 	return
 	!io=io+j_o(iob)%i(io+1)+3
 	!	return
@@ -3050,7 +3074,7 @@ subroutine partschedcum(iob,io)   !!!!
 	use jmod, only: j_ipreal
 	use jmod, only: j_del
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_ibaunit
 	use jmod, only: p_isdiv
 	if(j_v(p_ivstartedjlp).eq.0)then
@@ -3058,7 +3082,7 @@ subroutine partschedcum(iob,io)   !!!!
 		write(6,*)'**partschedcum: Started_jlp=0'
 		j_err=.true.
 		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2663
+	endif !if(j_v(p_ivstartedjlp).eq.0)   2688
 	narg=j_o(iob)%i(io+1)
 	isol=j_o(iob)%i(io+2)
  
@@ -3071,11 +3095,11 @@ subroutine partschedcum(iob,io)   !!!!
 		j_err=.true.
 		write(6,*)'**trying to access partsched',idiv, 'maximum is:',p_ndiv
 	else !if(idiv.le.0.or.idiv.gt.j_ndiv)then
-		iunit=p_iunitdiv(idiv) !o(isol)%i(p_nunits+idiv)
+		iunit=p_unitdiv(idiv) !o(isol)%i(p_nunits+idiv)
 		j_v(iout)=p_ibaunit(iunit)+p_isdiv(idiv) !o(isol)%i(p_nunits+ndiv+idiv)+o(isol)%i2(4+iunit)
 		! all
  
-	endif !if(idiv.le.0.or.idiv.gt.p_ndiv)   2677
+	endif !if(idiv.le.0.or.idiv.gt.p_ndiv)   2702
 	return
 	!	90 io=io+narg+3
 	!	return
@@ -3083,291 +3107,12 @@ end subroutine!subroutine partschedcum(iob,io)
 
 
 
-!factory
-subroutine xkf(iob,io) !!!!
-	use jmod, only: j_o
-	use jmod, only: j_otype
-	use jmod, only: j_ipreal
-	use jmod, only: j_del
-	use jmod, only: j_v
-	use jmod, only: p_ivstartedjlp
-	use jmod, only: j_err
-	use jmod, only: p_fpresent
-	use jmod, only: j_getoption
-	use jmod, only: j_mprint
-	use jmod, only: j_mtole
-	use jmod, only: j_0
-	use jmod, only: j_clearoption
-	use jmod, only: j_ivdollar
-	use jmod, only: j_ipchar
-	use jmod, only: j_iounit
-	use jmod, only: j_closeunit
-	use jmod, only: j_getfile
-	use jmod, only: j_printname
-	use jmod, only: p_ivlog
-	use jmod, only: j_command
-	use jmod, only: j_object_name
-	use jmod, only: j_leno
-	use jmod, only: p_ivfact
-	use jmod, only: p_nlog
-	use jmod, only: p_log
-	use jmod, only: p_nfact
-	use jmod, only: p_fact
-	use jmod, only: p_nunits
-	use jmod, only: p_ivtrans
-	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
-	use jmod, only: p_wdiv
-	use jmod, only: p_ibaunit
-	use jmod, only: p_isdiv
-	use jmod, only: j_getobsiv
-	use jmod, only: p_ivxdatmat
-	use jmod, only: p_ivkeepx
-	use jmod, only: p_keyfact
-	use jmod, only: p_keys
-	use jmod, only: p_i0_xkfsol
-	use jmod, only: p_lf0_xkfsol
-	use jmod, only: p_logfsol
-	use jmod, only: p_mxd
-	logical bin_ , dividedunit_
-	double precision, dimension(:,:),allocatable::sumxkf_
-	integer,dimension(:), pointer::arg=>null()
-	logical textform
-	character*10 faction
-	double precision ::amount0
-	logical p
-	integer kier
- 
-	narg=j_o(iob)%i(io+1)
-	ivfile=j_o(iob)%i(io+2)
-	ivout=j_o(iob)%i(io+narg+2)
-	if(j_otype(ivout).ne.j_ipreal)call j_del(ivout)
-	!	io=io+narg+3
-	nrec=0 !number of records writen
-	if(j_v(p_ivstartedjlp).eq.0)then
-		write(6,*)'**xkf: Started_jlp=0'
-		j_err=.true.
-		return
-	endif !if(j_v(p_ivstartedjlp).eq.0)   2710
-	if(.not.p_fpresent)then
-		write(6,*)'**xkf: Not a factory problem,  fpresent=.false.'
-		j_err=.true.
-		return
-	endif !if(.not.p_fpresent)   2715
-	call j_getoption(iob,io,j_mprint,-1,1,0,.true.,nprint_,arg)
-	textform=nprint_.ge.0
-	call j_getoption(iob,io,j_mtole,-1,1,0,.true.,ntole_,arg);if(j_err)return
-	amount0=j_0
-	if(ntole_.gt.0)amount0=j_v(arg(1))
-	call j_clearoption(iob,io)  !xkf(iob
-	! writef:n mukaisesti
-	if(ivfile.eq.j_ivdollar)then
-		nu=6
-	elseif(j_otype(ivfile).eq.j_ipchar)then !if(ivfile.eq.j_ivdollar)then
-		nu=j_iounit(ivfile)  !j_o(ivfile)%i(4)
-		if(nu.gt.0)then
-			inquire(nu,action=faction)
-			if(faction(1:4).eq.'READ')then
-				call j_closeunit(nu)
-				nu=0
-			endif !if(faction(1:4).eq.'READ')   2733
-		endif !if(nu.gt.0)   2731
-		if(nu.le.0)then
-			bin_ = .false.
-			!subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout)
-			call j_getfile(nu,'w',ivfile=ivfile,ivform=j_ivdollar)
-			!call j_getwritefile(ivfile,j_ivdollar,bin_)
-			if(j_err)return
-			!nu=j_iounit(ivfile) !j_o(ivfile)%i(4)
-		endif !if(nu.le.0)   2738
-	else !if(ivfile.eq.j_ivdollar)then
-		write(6,*)'**illegal file';j_err=.true.;return
-	endif !if(ivfile.eq.j_ivdollar)   2727
-	write(6,*)'*xkf: format is: stand, timber assortment,factory,transported amount '
-	if(.not.textform)then
-		call j_printname('timber assortment is the index in ',p_ivlog,' ')
-		call j_command('print('//j_object_name(p_ivlog,j_leno(p_ivlog))//')')
-		if(j_err)return
-		call j_printname('factory is the index in ',p_ivfact,' ')
-		call j_command('print('//j_object_name(p_ivfact,j_leno(p_ivfact))//')')
-		if(j_err)return
-	else !if(.not.textform)then
- 
-		len1=0
-		do i=1,p_nlog   !j_o(p_ivlog)%i(1)
-			le=j_leno(p_log(i))
-			len1=max(len1,le)
-		enddo !i=1,p_nlog   2760
- 
-		len2=0
-		do i=1,p_nfact  !p_nfact
-			le=j_leno(p_fact(i))
-			len2=max(len2,le)
-		enddo !i=1,p_nfact   2766
-	endif !if(.not.textform)   2750
- 
-	allocate(sumxkf_(1:p_nlog,1:p_nfact))
- 
-	do iuni_ = 1,p_nunits
-		p=iuni_.le.2
-		kier=0
-		100		sumxkf_= j_0
-		if(p_ivtrans.gt.0)then
-			call dotrans(p_ivtrans,1)							 		! muunnokset yksikön tiedoilla
-			if(j_err)then
-				write(6,*)'error for unit',iuni_
-				stop 778
-			endif !if(j_err)   2780
-		endif !if(p_ivtrans.gt.0)   2778
-		dividedunit_ = .false.
-		! a) yksiköllä vaihtoehtoja kannassa
-		if(p_ndiv>0) then
-			jj = 1
-			! yksikön alkukohta painovektorissa
-			do while((p_iunitdiv(jj)/=iuni_).and.(jj<p_ndiv))
-				jj = jj + 1
-			enddo !while((p_iunitdiv(jj)/=iuni_).and.(jj<p_ndiv))   2790
-			dividedunit_= p_iunitdiv(jj) == iuni_
-		endif !if(p_ndiv>0)   2787
- 
-		! yksikön painot
-		if (dividedunit_) then
- 
-			iuniw_ = p_iunitdiv(jj)
-			do while(iuniw_==iuni_)
-				wei_ = p_wdiv(jj)
-				iobs_=p_ibaunit(iuni_)+p_isdiv(jj)					! kantavaihtoehdon indeksi
-				call j_getobsiv(iobs_,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0)
-				!call j_getobs(iobs_)
-				if(j_err)then !subr xks
-					write(6,*)'error for observation ',iobs_
-					stop 635
-				endif !if(j_err)   2805
-				! if(p_ivsubtrans.gt.0)then
-				! call dotrans(p_ivsubtrans,1)
-				! if(j_err)then
-				! write(6,*)'error for schedule ',iobs_
-				! stop 941
-				! endif !if(j_err)   2748
-				! endif !if(p_ivsubtrans.gt.0)   2746
-				! viedään painojen mukaiset osuudet avaintehtaisiin
-				do ixk_=1,p_nlog	! puutavaralaji-muuttujat
-					keyf_ = p_keyfact(iuniixk_)
-					sumxkf_(ixk_,keyf_) = sumxkf_(ixk_,keyf_) + wei_*j_v(p_log(ixk_))
-					if(p.and.keyf_.eq.negf.and.ixk_.eq.negxk)&
-						write(6,*)'wei ',wei_,j_v(p_log(ixk_)),sumxkf_(ixk_,keyf_)
-				enddo !ixk_=1,p_nlog   2817
- 
-				if(jj<p_ndiv) then
-					jj = jj + 1
-					iuniw_ = (p_iunitdiv(jj))
-				else !if(jj<j_ndiv) then
-					iuniw_ = -1
-				endif !if(jj<p_ndiv)   2824
-			enddo !while(iuniw_==iuni_)   2800
- 
-		else !if (dividedunit_) then
- 
-			iobs_=p_ibaunit(iuni_)+p_keys(iuni_)						! yksikön avainvaihtoehdon indeksi
-			call j_getobsiv(iobs_,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0)		!xkf  avainvaihtoehdon tiedot v-vektoriin ?
-			if(j_err)then
-				write(6,*)'error for obs ',iobs_
-				stop 751
-			endif !if(j_err)   2836
-			! if(p_ivsubtrans.gt.0)then
-			! call dotrans(p_ivsubtrans,1)
-			! if(j_err)then
-			! write(6,*)'error for observation ',iobs_
-			! stop 955
-			! endif !if(j_err)   2779
- 
-			! endif !if(p_ivsubtrans.gt.0)   2777
-			! Avainve:n ptl-mjan määrät avaintehtaissa
-			do ixk_=1,p_nlog	! puutavaralaji-muuttujat
-				keyf_ = p_keyfact(iuni_ixk_)
-				sumxkf_(ixk_,keyf_) = sumxkf_(ixk_,keyf_) + j_v(p_log(ixk_))
-				if(p.and.keyf_.eq.negf.and.ixk_.eq.negxk)write(6,*)&
-					'keysched,' ,j_v(p_log(ixk_)),sumxkf_(ixk_,keyf_)
-			enddo !ixk_=1,p_nlog   2849
- 
-		endif !if (dividedunit_)   2797
- 
-		!nämä vain selittävinä kommentteina, vastaava suoritettava koodi aliohjelmassa defsoluf
-		!xkfsol koko: allocate(xkfsol(mxd+1:lf0))
-		!i0_xkfsol: xkfsol:in 1. indeksi (i0_xkfsol = mxd+1)
-		!lf0_xkfsol: xkfsol:in viimeinen  indeksi (lf0_xkfsol = lf0)
- 
-		icol_ = p_i0_xkfsol
-		if(icol_<=p_lf0_xkfsol) then
-			do while ((icol_<p_lf0_xkfsol).and.(p_logfsol(icol_)%iunit/= iuni_))
-				icol_=icol_+1
-			enddo !while ((icol_<p_lf0_xkfsol).and.(p_logfsol(icol_)%iunit/=   2865
- 
-			! tehdasmja-srkeet
-			if (p_logfsol(icol_)%iunit == iuni_) then
-				! käydään läpi yksikön tehdaskantasrkeet xkfsolissa
-				! saman yksikön sarakkeet (mjasta riippumatta) ketjutettu %next kentän kautta
-				! %next == mxd:  yksiköllä  ei ole enää muita tehdaskantasarakkeita
-				do while(icol_>p_mxd)
-					!%ixk	! puutavaramuuttujan indeksi xky-listalla
-					!	keyf_ = p_keyfact(iuni_,p_logfsol(icol_)%ixk)	! avaintehdas
- 
-					sumxkf_(p_logfsol(icol_)%ixk,keyf_) = &
-						sumxkf_(p_logfsol(icol_)%ixk,keyf_) - p_logfsol(icol_)%xkf
-					if(p.and.keyf_.eq.negf.and.	p_logfsol(icol_)%ixk.eq.negxk)&
-						write(6,*)'-sol',p_logfsol(icol_)%xkf,sumxkf_(p_logfsol(icol_)%ixk,keyf_)
-					sumxkf_(p_logfsol(icol_)%ixk,p_logfsol(icol_)%ifact) = &
-						sumxkf_(p_logfsol(icol_)%ixk,p_logfsol(icol_)%ifact) +  p_logfsol(icol_)%xkf
-					if(p.and.p_logfsol(icol_)%ifact.eq.negf.and. &
-						p_logfsol(icol_)%ixk.eq.negxk)&
-						write(6,*)'+sol',p_logfsol(icol_)%xkf,sumxkf_(p_logfsol(icol_)%ixk,p_logfsol(icol_)%ifact)
-					icol_ = p_logfsol(icol_)%next
-				enddo !while(icol_>p_mxd)   2874
-			endif !if (p_logfsol(icol_)%iunit == iuni_)   2870
-		endif !if(icol_<=p_lf0_xkfsol)   2864
- 
-		!tulostus
-		do if_= 1,p_nfact
-			do  ixk_= 1,p_nlog
-				if (sumxkf_(ixk_,if_)> amount0)  then
-					if(textform)then
-						if(kier.eq.0)write(nu,*) iuni_,j_object_name(p_log(ixk_),len1+1),&
-							j_object_name(p_fact(if_),len2+1),sumxkf_(ixk_,if_)
-					else !if(textform)then
-						if(kier.eq.0)write(nu,*) iuni_,ixk_,if_,sumxkf_(ixk_,if_)
-					endif !if(textform)   2896
-					nrec=nrec+1
-				elseif(sumxkf_(ixk_,if_)< -0.00001.and..not.p)  then !if (sumxkf_(ixk_,if_)> amount0)  then
-					!write(6,*)'***negative timber, unit ',iuni_,j_object_name(j_o(j_ivxk)%i2(ixk_),len1+1),&
-					!ixk_,j_object_name(j_o(j_ivfact)%i(if_),len2+1),if_,sumxkf_(ixk_,if_)
-					write(6,*)'***negative timber, unit ',iuni_,ixk_,if_,sumxkf_(ixk_,if_)
-					negf=if_
-					negxk=ixk_
-					p=.false.
- 
-				endif !if (sumxkf_(ixk_,if_)> amount0)   2895
-			enddo ! ixk_= 1,p_nlog   2894
-		enddo !if_= 1,p_nfact   2893
-		if(p.and.kier.eq.0)then
-			kier=1
-			goto 100
-		endif !if(p.and.kier.eq.0)   2914
-	enddo !iuni_ = 1,p_nunits   2774
- 
-	if(ivfile /= j_ivdollar) then
-		call j_closeunit(nu) ! JL 29.3. 2016
-	endif !if(ivfile /= j_ivdollar)   2920
-	deallocate(sumxkf_)
-	j_v(ivout)=nrec
-	return
-end subroutine !subroutine xkf(iob,io)
-
 
 integer function integerschedw(iunit)  ! %%integer solution   !!!!
 	use jmod, only: p_nunits
 	use jmod, only: j_err
 	use jmod, only: p_ndiv
-	use jmod, only: p_iunitdiv
+	use jmod, only: p_unitdiv
 	use jmod, only: p_wdiv
 	use jmod, only: p_isdiv
 	use jmod, only: p_keys
@@ -3378,20 +3123,20 @@ integer function integerschedw(iunit)  ! %%integer solution   !!!!
 		j_err=.true.
 		write(6,*)'*j* integersched trying to access unit',iunit, 'maximum is:',p_nunits
 		return
-	endif !if(iunit.le.0.or.iunit.gt.p_nunits)   2933
+	endif !if(iunit.le.0.or.iunit.gt.p_nunits)   2723
  
 	do j=1,p_ndiv
 		! ib=p_nunits before
-		if(p_iunitdiv(j).eq.iunit)then
+		if(p_unitdiv(j).eq.iunit)then
 			jmax=j
 			do j2=j+1,p_ndiv
-				if(p_iunitdiv(j2).ne.iunit)exit
+				if(p_unitdiv(j2).ne.iunit)exit
 				if(p_wdiv(j2).gt.p_wdiv(jmax))jmax=j2
-			enddo !j2=j+1,p_ndiv   2943
+			enddo !j2=j+1,p_ndiv   2733
 			wei=p_isdiv(jmax)
 			goto 90
-		endif !if(p_iunitdiv(j).eq.iunit)   2941
-	enddo !j=1,p_ndiv   2939
+		endif !if(p_unitdiv(j).eq.iunit)   2731
+	enddo !j=1,p_ndiv   2729
  
 	wei=p_keys(iunit)
  
@@ -3514,8 +3259,8 @@ subroutine pack2(itarget, is, n)    !!!!
 		if(is(i_)) then
 			i2_=i2_+1
 			itarget(i2_)=itarget(i_)
-		endif !if(is(i_))   3070
-	enddo !i_= 1,n   3069
+		endif !if(is(i_))   2860
+	enddo !i_= 1,n   2859
 	return
 end subroutine !subroutine pack2(itarget, is, n)
 
@@ -3527,7 +3272,7 @@ subroutine usejlpcoef(ivobjects)
 	use jmod, only: p_ivvars
 	use jmod, only: p_npvar
 	use jmod, only: p_ivcoef
-	use jmod, only: p_ivtermvars
+	use jmod, only: p_ivtermvar
 	use jmod, only: p_ivrowofterm
 	use jmod, only: p_nrow
 	use jmod, only: p_rhs
@@ -3535,7 +3280,7 @@ subroutine usejlpcoef(ivobjects)
 	use jmod, only: p_ncol
 	use jmod, only: p_vars
 	use jmod, only: p_nterm
-	use jmod, only: p_termvars
+	use jmod, only: p_termvar
 	use jmod, only: j_otype
 	use jmod, only: j_iptable
 	use jmod, only: p_fpresent
@@ -3561,7 +3306,7 @@ subroutine usejlpcoef(ivobjects)
 	! 	p_ivcoefvars=j_o(ivobjects)%i2(6)
 	!	p_ivcoefplus=j_o(ivobjects)%i2(7)
 	p_ivcoef=j_o(ivobjects)%i2(8)
-	p_ivtermvars=j_o(ivobjects)%i2(9)
+	p_ivtermvar=j_o(ivobjects)%i2(9)
 	p_ivrowofterm=j_o(ivobjects)%i2(10)
  
 	!	p_nrow=j_o(p_ivrhs)%i(3)
@@ -3570,12 +3315,12 @@ subroutine usejlpcoef(ivobjects)
 		!	write(6,*)'pnrow',p_nrow
 		p_rhs=>j_o(p_ivrhs)%d(1:p_nrow)
 		p_rhs2=>j_o(p_ivrhs2)%d(1:p_nrow)
-	endif !if(p_nrow.gt.0)   3094
+	endif !if(p_nrow.gt.0)   2884
 	p_ncol=j_o(p_ivvars)%i(1)
 	p_vars=>j_o(p_ivvars)%i2(1:p_ncol)
-	p_nterm=j_o(p_ivtermvars)%i(1)
-	p_termvars=>j_o(p_ivtermvars)%i2(1:p_nterm)
-	p_fpresent=any(j_otype(p_termvars).eq.j_iptable)
+	p_nterm=j_o(p_ivtermvar)%i(1)
+	p_termvar=>j_o(p_ivtermvar)%i2(1:p_nterm)
+	p_fpresent=any(j_otype(p_termvar).eq.j_iptable)
 	p_coef=>j_o(p_ivcoef)%d(1:p_nterm)
 	!	write(6,*)'pcoefhere',p_coef,p_nterm
 	p_rowofterm=>j_o(p_ivrowofterm)%i2(1:p_nterm)
@@ -3590,7 +3335,7 @@ subroutine usejlpcoef(ivobjects)
 	else
 		p_maxo=.false.
 		p_coefmax=j_m1
-	endif !if( j_v(j_o(ivobjects)%i2(13)).gt.j_0)   3112
+	endif !if( j_v(j_o(ivobjects)%i2(13)).gt.j_0)   2902
  
  
  
@@ -3877,7 +3622,7 @@ subroutine jlpz(iob,io)
 		p_iprint=2 !testauksen ajaksi
 	else !if(ivprint.gt.0)then
 		p_iprint=1
-	endif !if(ivprint.gt.0)   3295
+	endif !if(ivprint.gt.0)   3085
  
 	call j_getoption_index(iob,io,j_mproblem,-1,1,j_ipproblem,.true.,noptarg,j_optarg0)
 	if(j_err)return
@@ -3890,6 +3635,12 @@ subroutine jlpz(iob,io)
 		p_nrow=j_o(p_ivrow)%i(0)-1
 		p_nrowtot=p_nrow+1
 		call jlpcoef_(p_ivproblem,j_ivout,ivobjects)   !jlpz(
+		! p_coefvars
+		! p_termvar
+		!	p_nterminrow
+		! p_rowofterm
+		! p_coefplus
+		! p_vars
  
 		if(j_err)return
 		call usejlpcoef(ivobjects)
@@ -3899,7 +3650,7 @@ subroutine jlpz(iob,io)
 		if(j_err)then
 			write(6,*)'jlpz() there must be either problem-> or zmatrix->'
 			return
-		endif !if(j_err)   3321
+		endif !if(j_err)   3117
 		ivmatrix=j_optarg0(1)
 		p_nrow=j_o(ivmatrix)%i(1)
 		p_nrowtot=p_nrow+1
@@ -3913,7 +3664,7 @@ subroutine jlpz(iob,io)
 			write(6,*)'Rows in zmatrix->:',p_nrow
 			write(6,*)'Elements in rhs->:',j_o(p_ivrhs)%i(3)
 			j_err=.true.;return
-		endif !if(j_o(p_ivrhs)%i(3).ne.p_nrow)   3333
+		endif !if(j_o(p_ivrhs)%i(3).ne.p_nrow)   3129
  
 		call j_getoption_index(iob,io,j_mrhs2,1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
 		if(j_err)return
@@ -3924,7 +3675,7 @@ subroutine jlpz(iob,io)
 			write(6,*)'Rows in zmatrix->:',p_nrow
 			write(6,*)'Elements in rhs->:',j_o(p_ivrhs2)%i(3)
 			j_err=.true.;return
-		endif !if(j_o(p_ivrhs2)%i(3).ne.p_nrow)   3344
+		endif !if(j_o(p_ivrhs2)%i(3).ne.p_nrow)   3140
 		call j_getoption_index(iob,io,j_mmax,-1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
 		if(j_err)return
 		if(noptarg.gt.0)then
@@ -3937,18 +3688,18 @@ subroutine jlpz(iob,io)
 			if(noptarg.gt.0)then
 				p_maxo =.false.
 				p_coefmax=-j_1
-			endif !if(noptarg.gt.0)   3359
-		endif !if(noptarg.gt.0)   3352
+			endif !if(noptarg.gt.0)   3155
+		endif !if(noptarg.gt.0)   3148
 		ivob=j_optarg0(1)
 		if(j_o(ivob)%i(3).ne.p_ncol)then
 			call j_getname(ivobj,ivmatrix)
 			write(6,*)'objective ',j_oname(1:j_loname), 'has ',j_o(ivob)%i(3),' elements but zmatrix ',&
 				j_oname2(1:j_loname2),' has ',p_ncol,' columns'
 			j_err=.true.;return
-		endif !if(j_o(ivob)%i(3).ne.p_ncol)   3365
+		endif !if(j_o(ivob)%i(3).ne.p_ncol)   3161
 		p_objr00=>j_o(ivob)%d(1:p_ncol)
  
-	endif !if(noptarg.gt.0)   3310
+	endif !if(noptarg.gt.0)   3100
 	p_nz=p_ncol
 	!	p_nrowtot=p_nrow+1
 	!	write(6,*)' tas '
@@ -3958,7 +3709,7 @@ subroutine jlpz(iob,io)
 		p_pivotstep=j_v(iv)
 	else
 		p_pivotstep=100
-	endif !if(iv.gt.0)   3379
+	endif !if(iv.gt.0)   3175
 	!	write(6,*)'p_pivotstep',p_pivotstep
 	p_nz=p_npvar
 	p_ncol=p_nz
@@ -3974,11 +3725,39 @@ subroutine jlpz(iob,io)
 	if(p_nrow.eq.0)then
 		write(6,*)'jlpz() needs constraints'
 		j_err=.true.;return
-	endif !if(p_nrow.eq.0)   3396
+	endif !if(p_nrow.eq.0)   3192
  
  
  
 	call startlist()   !jlpz()
+	! p_ivls p_ls
+	! p_ivlsi p_lsi
+	! p_ivlr p_lr
+	! p_ivlri p_lri
+	! p_ivobjr0
+	! p_objr0
+	! p_ivobjr2
+	! p_objr2
+	! p_ivlz
+	! p_lz
+	! p_ivlx
+	! p_lx
+	! p_ivlxi
+	! p_lxi
+	! p_ivlf
+	! p_lf
+	! p_ivlfi
+	! p_lfi
+	! p_ivvc
+	! p_vc
+	! p_ivx
+	! p_x
+	! p_ivb
+	! p_b
+	! p_xmi
+	! p_xma
+	! p_iva
+	! p_a
 	if(p_p)write(6,*)'after startlis '
 	call initoptz()
 	if(p_p)write(6,*)'after initoptz'
@@ -3989,7 +3768,7 @@ subroutine jlpz(iob,io)
  
 	ival=0
 	!write(6,*)'p_nterminrow',p_nterminrow(0:p_nrow)
-	!write(6,*)'vars',p_termvars
+	!write(6,*)'vars',p_termvar
 	!write(6,*)'coef',p_coef
 	!write(6,*)'zvarsf',p_zvars(1:p_nz)
 	call cpu_time(p_time0)
@@ -4045,14 +3824,14 @@ subroutine jlpz(iob,io)
 				p_idebug=idebug2
 			else
 				p_idebug=p_idebug+1
-			endif !if(idebug1.ne.idebug2)   3466
-		endif !if(p_pivot.eq.p_idebug)   3458
+			endif !if(idebug1.ne.idebug2)   3290
+		endif !if(p_pivot.eq.p_idebug)   3282
 		if(j_err)then
 			!call pullout(LWSLL1)
  
 			return
  
-		endif !if(j_err)   3472
+		endif !if(j_err)   3296
 		!		if(p_p)write(6,*)'aftupdate'
 		iround=p_pivot/p_pivotstep
 		!	write(6,*)'dpiv',p_pivot,iround,p_pivotstep
@@ -4076,13 +3855,13 @@ subroutine jlpz(iob,io)
 				if(p_feasible)write(6,'(80x,a)')'*FEASIBLE'
 				write(6,'(i8,g19.12,6x,3i6,4x,i3,a,f5.2,i5,a,f5.2)')&
 					p_pivot,p_coefmax*p_objf,p_lr0,p_lz0,p_nnf,iminc,':',secd,imint,':',sect
-			endif !if(p_feasible.and.p_objfv.ne.p_small)   3491
+			endif !if(p_feasible.and.p_objfv.ne.p_small)   3315
  
  
 			p_objfv=p_objf
  
  
-		endif !if(iround*p_pivotstep.eq.p_pivot)   3481
+		endif !if(iround*p_pivotstep.eq.p_pivot)   3305
 		! if(p_goto8888.or.p_goto8889)then
 		! if(p_p)write(6,*)'befleaving'
 		! call leaving()
@@ -4115,15 +3894,15 @@ subroutine jlpz(iob,io)
 			!call fbsub(p_nrow,1,p_nrow,p_a,p_lavec,p_newc,p_a(1:,p_newa),r, & !!!!
 			call fbsub(p_nrow,1,p_nrow,p_a,p_lavec,p_newc,p_a(p_abas(p_newa)+1:),r, & !!!!
 				p_ls,wslu1,lwsll1,.false.)   !!!!
-		endif !if(p_ienter.gt.1)   3526
+		endif !if(p_ienter.gt.1)   3350
  
  
 		if(.not.p_post)then
 			do jj=1,p_nrow
 				r(p_ls(jj))=-r(p_ls(jj))
-			enddo !jj=1,p_nrow   3544
+			enddo !jj=1,p_nrow   3368
 			p_post=.true.   !!!!
-		endif !if(.not.p_post)   3543
+		endif !if(.not.p_post)   3367
 		p_tmax=j_inf
 		call zleavtmax()  !computes Ptmax if z leaves computes p_leavec leaving column (including p_nrow)
 		!	if(p_p)write(6,*)'leavec aft zleav ',p_leavec
@@ -4154,7 +3933,7 @@ subroutine jlpz(iob,io)
 			!  z enters
 			call jlplex(p_lz,p_ilzmax,p_lz0+1,p_lzi)
 			p_lz0=p_lz0+1
-		endif !if(p_ienter.eq.1)   3568
+		endif !if(p_ienter.eq.1)   3392
 		if(p_leavec.le.p_nrow)then
 			! resiadual leaves
 			! put leaving as first nonbasic
@@ -4163,12 +3942,12 @@ subroutine jlpz(iob,io)
 		else if(p_leavec.le.p_nrowz)then !if(p_leavec.le.j_nrow)then
 			call jlplex(p_lz,p_lz0,p_lzi(p_leavec-p_nrow),p_lzi)
 			p_lz0=p_lz0-1
-		endif !if(p_leavec.le.p_nrow)   3580
+		endif !if(p_leavec.le.p_nrow)   3404
 		!		call zenter()
  
  
  
-	enddo !while(.true.)   3449
+	enddo !while(.true.)   3273
  
  
 	call cpu_time(time)
@@ -4194,7 +3973,7 @@ subroutine jlpz(iob,io)
 			iminc,':',secd,imint,':',sect,' *NONFEASIBLE*'
  
  
-	endif !if(p_feasible)   3603
+	endif !if(p_feasible)   3427
  
 	!	write(6,*)'sol',p_nureport,p_ivreport
 	!call tulostele()
@@ -4203,14 +3982,14 @@ subroutine jlpz(iob,io)
  
 	call repoz(p_nureport)
 	if(p_echo.and.p_nureport.ne.6)call repoz(6)
-	! if(allocated(p_ls)) deallocate(p_ls)   !xvars;
-	! if(allocated(p_lsi)) deallocate(p_lsi)   !xvars;
-	! if(allocated(p_a)) deallocate(p_a)   !xvars;
+	! if(allocated(p_ls)) deallocate(p_ls)   !varx;
+	! if(allocated(p_lsi)) deallocate(p_lsi)   !varx;
+	! if(allocated(p_a)) deallocate(p_a)   !varx;
  
-	!	if(allocated(p_objr0)) deallocate(p_objr0)   !xvars;
-	!if(allocated(p_objr2)) deallocate(p_objr2)   !xvars;
-	if(allocated(p_xmi)) deallocate(p_xmi)   !xvars;
-	if(allocated(p_xma)) deallocate(p_xma)   !xvars;
+	!	if(allocated(p_objr0)) deallocate(p_objr0)   !varx;
+	!if(allocated(p_objr2)) deallocate(p_objr2)   !varx;
+	if(allocated(p_xmi)) deallocate(p_xmi)   !varx;
+	if(allocated(p_xma)) deallocate(p_xma)   !varx;
  
 	nullify(p_objr)
 	! if(allocated(p_lz)) deallocate(p_lz)
@@ -4228,7 +4007,7 @@ subroutine jlpz(iob,io)
 		p_buf='jlp error exit'
 	else !if(j_err) then
 		p_buf='jlp normal exit'
-	endif !if(j_err)   3649
+	endif !if(j_err)   3473
 	j_v(p_ivpivots)=p_pivot
 	call  cpu_time(p_time0)
 	write(p_nureport,*)'total cpu-time in jlp() ',p_time0-p_time00
@@ -4277,7 +4056,7 @@ subroutine initfltot()
 		write(6,*)'**at startup p_ifail=',p_ifail, 'tell J. Lappi'
 		j_err=.true.
 		return
-	endif !if(p_ifail.gt.0)   3691
+	endif !if(p_ifail.gt.0)   3515
 	!	write(6,*)'afdtrr',p_ifail
 	! if(allocated(p_lr))deallocate(p_lr);if(allocated(p_lri))deallocate(p_lri)
 	!allocate( p_lr(1:p_nrow),p_lri(1:p_nrow))
@@ -4438,10 +4217,10 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 	use jmod, only: j_loname
 	use jmod, only: j_err
 	use jmod, only: j_ivresult
-	use jmod, only: j_namedv
+	use jmod, only: j_named
 	use jmod, only: j_o
 	use jmod, only: p_coefvars
-	use jmod, only: p_termvars
+	use jmod, only: p_termvar
 	use jmod, only: p_nterminrow
 	use jmod, only: p_nrowtot
 	use jmod, only: p_rowofterm
@@ -4454,7 +4233,7 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 	use jmod, only: j_loname2
 	use jmod, only: j_ipreal
 	use jmod, only: j_ipchar
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: p_nrow
 	use jmod, only: j_defmatrix
 	use jmod, only: j_matreg
@@ -4464,6 +4243,13 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 	use jmod, only: j_inlistobject
 	use jmod, only: j_getobject
 	use jmod, only: j_v
+	! p_coefvars
+	! p_termvar
+	!	p_nterminrow
+	! p_rowofterm
+	! p_coefplus
+	! p_vars
+ 
 	integer,intent(in)::ivproblem,ivout
 	integer,intent(out)::ivobjects
  
@@ -4472,7 +4258,7 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 	integer ,dimension(:), pointer::coefvars  !=>null(
 	integer ,dimension(:), pointer::coefplus  !=>null(
 	double precision, dimension(:),pointer ::coef
-	integer ,dimension(:), pointer::termvars !=>null()
+	integer ,dimension(:), pointer::termvar !=>null()
 	integer  ,dimension(:), pointer::rowofterm  !=>null()
 	!	write(6,*)'jlpcoef_',ivproblem,ivout,ivobjects
 	! global pointer refer to the original
@@ -4480,18 +4266,18 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 		call j_getname(ivproblem)
 		write(6,*)'*jlpcoef: ',j_oname(1:j_loname),' is not PROB'
 		j_err=.true.;return
-	endif !if(j_otype(ivproblem).ne.j_ipproblem)   3857
-	if(ivout.eq.j_ivresult.or.ivout.le.20.or.ivout.gt.j_namedv)then
+	endif !if(j_otype(ivproblem).ne.j_ipproblem)   3688
+	if(ivout.eq.j_ivresult.or.ivout.le.20.or.ivout.gt.j_named)then
 		write(6,*)'*jlpcoef: illegal ivout ',ivout
 		j_err=.true.;return
-	endif !if(ivout.eq.j_ivresult.or.ivout.le.20.or.ivout.gt.j_namedv   3862
+	endif !if(ivout.eq.j_ivresult.or.ivout.le.20.or.ivout.gt.j_named)   3693
  
 	ivcoefvars= j_o(ivproblem)%i(17)
 	nterm=j_o(ivcoefvars)%i(1)  !local initial
 	p_coefvars=>j_o(ivcoefvars)%i2(1:nterm)
  
-	ivtermvars=j_o(ivproblem)%i(8)
-	p_termvars=>j_o(ivtermvars)%i2(1:nterm)
+	ivtermvar=j_o(ivproblem)%i(8)
+	p_termvar=>j_o(ivtermvar)%i2(1:nterm)
  
 	ivnterminrow=j_o(ivproblem)%i(7)
  
@@ -4514,7 +4300,8 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
  
 	do i=1,nterm
  
-		ivterm=p_termvars(i)
+		ivterm=p_termvar(i)
+ 
 		!	write(6,*)'ii',i,ivterm
 		if(j_otype(ivterm).eq.j_iptable)then
 			cycle
@@ -4530,21 +4317,21 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 						p_rowofterm(i),' have not same size'
 					j_err=.true. ;return
  
-				endif !if(j_o(ivcoe)%i(3).ne.j_o(ivterm)%i(1))   3905
+				endif !if(j_o(ivcoe)%i(3).ne.j_o(ivterm)%i(1))   3737
 			elseif(j_otype(ivcoe).ne.j_ipreal.and.j_otype(ivcoe).ne.j_ipchar)then
 				call j_getname(ivcoe)
 				write(6,*)'coefficient ',j_oname(1:j_loname), ' is not REAL or MATRIX'
 				j_err=.true. ;return
-			endif !if(j_otype(ivcoe).eq.j_ipmatrix)   3904
+			endif !if(j_otype(ivcoe).eq.j_ipmatrix)   3736
 			nad=nad+j_o(ivterm)%i(1)-1
  
-		endif !if(j_otype(ivterm).eq.j_iptable)   3897
-	enddo !i=1,nterm   3893
+		endif !if(j_otype(ivterm).eq.j_iptable)   3729
+	enddo !i=1,nterm   3724
  
 	nterm2=nterm+nad
 	npvar2=npvar+nad !may have some extra
  
-	ivnterminrow=j_deflistobject(ivout,'%nterminrow',list0=p_nrowtot, &
+	ivnterminrow=j_deflist(ivout,'%nterminrow',list0=p_nrowtot, &
 		list=p_nterminrow(0:p_nrow),ilist=.true.)
 	nterminrow(0:)=>j_o(ivnterminrow)%i2(1:p_nrowtot)
  
@@ -4558,22 +4345,22 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 		!reserve only space
  
  
-		ivvars=j_deflistobject(ivout,'%vars',nres=npvar2) !p-variables
+		ivvars=j_deflist(ivout,'%vars',nres=npvar2) !p-variables
 		vars=>j_o(ivvars)%i2(1:npvar2)
  
-		ivcoefvars=j_deflistobject(ivout,'%coefvars',list0=nterm2)
+		ivcoefvars=j_deflist(ivout,'%coefvars',list0=nterm2)
 		coefvars=>j_o(ivcoefvars)%i2(1:nterm2)
  
-		ivcoefplus=j_deflistobject(ivout,'%coefplus',list0=nterm2,ilist=.true.) !row of each term
+		ivcoefplus=j_deflist(ivout,'%coefplus',list0=nterm2,ilist=.true.) !row of each term
 		coefplus=>j_o(ivcoefplus)%i2(1:nterm2)
  
  
  
-		ivtermvars=j_deflistobject(ivout,'%termvars',list0=nterm2)
-		termvars=>j_o(ivtermvars)%i2(1:nterm2)
+		ivtermvar=j_deflist(ivout,'%termvar',list0=nterm2)
+		termvar=>j_o(ivtermvar)%i2(1:nterm2)
  
  
-		ivrowofterm=j_deflistobject(ivout,'%rowofterm',list0=nterm2,ilist=.true.) !row of each term
+		ivrowofterm=j_deflist(ivout,'%rowofterm',list0=nterm2,ilist=.true.) !row of each term
 		rowofterm=>j_o(ivrowofterm)%i2(1:nterm2)
  
 		!	nterminrow=p_nterminrow
@@ -4584,7 +4371,7 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
  
 			iro=p_rowofterm(i)
  
-			ivterm=p_termvars(i)
+			ivterm=p_termvar(i)
 			!	write(6,*)'ihere,iro',i,iro,' ivterm ',ivterm
 			if(j_otype(ivterm).eq.j_iplist)then
 				ivcoe=p_coefvars(i)
@@ -4593,7 +4380,7 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 				isiz=j_o(ivterm)%i(1)
 				call j_getname(ivcoe)
 				!write(6,*)'coef ',ivcoe,j_oname(1:j_loname),isiz,nterm2
-				termvars(nterm2+1:nterm2+isiz)=j_o(ivterm)%i2(1:isiz)
+				termvar(nterm2+1:nterm2+isiz)=j_o(ivterm)%i2(1:isiz)
 				if(j_otype(ivcoe).eq.j_ipmatrix)then
 					!write(6,*)'matrixcoef', j_o(ivcoe)%d(1:isiz)
 					if(p_coefplus(i).ne.0)then
@@ -4601,10 +4388,10 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 						coef(nterm2+1:nterm2+isiz)=j_o(ivcoe)%d(1:isiz)
 					else
 						coef(nterm2+1:nterm2+isiz)=-j_o(ivcoe)%d(1:isiz)
-					endif !if(p_coefplus(i).ne.0)   3977
+					endif !if(p_coefplus(i).ne.0)   3809
 					do j=1,isiz
 						coefvars(nterm2+j)=j_num2iv(j_o(ivcoe)%d(j))
-					enddo !j=1,isiz   3983
+					enddo !j=1,isiz   3815
  
 				else
 					if(p_coefplus(i).ne.0)then
@@ -4612,8 +4399,8 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 						coef(nterm2+1:nterm2+isiz)=j_iv2val(ivcoe)
 					else
 						coef(nterm2+1:nterm2+isiz)=-j_iv2val(ivcoe)
-					endif !if(p_coefplus(i).ne.0)   3988
-				endif !if(j_otype(ivcoe).eq.j_ipmatrix)   3975
+					endif !if(p_coefplus(i).ne.0)   3820
+				endif !if(j_otype(ivcoe).eq.j_ipmatrix)   3807
 				rowofterm(nterm2+1:nterm2+isiz)=iro
 				coefplus(nterm2+1:nterm2+isiz)=p_coefplus(i)
 				nterm2=nterm2+isiz
@@ -4623,16 +4410,16 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 					do k=1,npvar2
 						if(j_otype(vars(k)).eq.j_iplist) cycle loop
 						if(vars(k).eq.j_o(ivterm)%i2(j))cycle loop
-					enddo !k=1,npvar2   4001
+					enddo !k=1,npvar2   3833
 					npvar2=npvar2+1
 					vars(npvar2)=j_o(ivterm)%i2(j)
-				enddo loop !p:		do j=1,isiz   4000
+				enddo loop !p:		do j=1,isiz   3832
  
 			else
 				do k=1,npvar2
  
 					if(vars(k).eq.ivterm)goto 700
-				enddo !k=1,npvar2   4010
+				enddo !k=1,npvar2   3842
 				npvar2=npvar2+1
 				vars(npvar2)=ivterm
 	700			nterm2=nterm2+1
@@ -4643,13 +4430,13 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 				!write(6,*)'coeny ',j_oname(1:j_loname),' ',nterm2,p_coefvars(i),j_v(p_coefvars(i)),coef(nterm2)
  
 				if(p_coefplus(i).eq.0)coef(nterm2)=-coef(nterm2)
-				termvars(nterm2)=p_termvars(i)
+				termvar(nterm2)=p_termvar(i)
 				coefplus(nterm2)=p_coefplus(i)
 				coefvars(nterm2)=p_coefvars(i)
-			endif !if(j_otype(ivterm).eq.j_iplist)   3967
+			endif !if(j_otype(ivterm).eq.j_iplist)   3799
  
 			!write(6,*)'nterm ',nterm
-		enddo !i=1,nterm   3961
+		enddo !i=1,nterm   3793
  
  
 		!write(6,*)'nterm,npvar ',nterm,npvar
@@ -4660,36 +4447,38 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 		!write(6,*)'rofofebef',p_rowofterm
 		!	j_o(ivrowofterm)%i2(1:nterm2)=rowofterm(1:nterm2)
 		!write(6,*)p_rowofterm
-		!write(6,*)'termarsbef', p_termvars(1:p_nterm)
-		!		j_o(ivtermvars)%i2(1:nterm2)=termvars(1:nterm2)
+		!write(6,*)'termarsbef', p_termvar(1:p_nterm)
+		!		j_o(ivtermvar)%i2(1:nterm2)=termvar(1:nterm2)
  
-		!write(6,*)p_termvars(1:nterm)
+		!write(6,*)p_termvar(1:nterm)
 		!write(6,*)'coefbef',p_coef
 		!		j_o(ivcoef)%i2(1:nterm)=coef(1:nterm)
 		!write(6,*)p_coef
 		! if(j_ivout.ne.j_ivresult) then
-		! call j_deflistobject(j_ivout,'%vars',iv,list0=npvar,list=vars(1:npvar)) !p-variables
-		! call j_deflistobject(j_ivout,'%rowofterm',iv,list0=nterm,list=rowofterm(1:nterm),ilist=.true.) !row of each term
-		! call j_deflistobject(j_ivout,'%nterminrow',iv,list0=p_nrowtot,list=p_nterminrow(0:p_nrow),ilist=.true.)
-		! call j_deflistobject(j_ivout,'%termvars',iv,list0=nterm,list=termvars(1:nterm))
+		! call j_deflist(j_ivout,'%vars',iv,list0=npvar,list=vars(1:npvar)) !p-variables
+		! call j_deflist(j_ivout,'%rowofterm',iv,list0=nterm,list=rowofterm(1:nterm),ilist=.true.) !row of each term
+		! call j_deflist(j_ivout,'%nterminrow',iv,list0=p_nrowtot,list=p_nterminrow(0:p_nrow),ilist=.true.)
+		! call j_deflist(j_ivout,'%termvar',iv,list0=nterm,list=termvar(1:nterm))
 		! !
 		! !		j_o(iv)%d(1:nterm)=coef(1:nterm)
 		! endif !if(j_ivout.ne.j_ivresult)   4889
  
 	else
 		do i=1,nterm
-			!		if(j_otype(p_termvars(i)).eq.j_iptable)cycle
+			!		if(j_otype(p_termvar(i)).eq.j_iptable)cycle
 			j_o(ivcoef)%d(i)=j_iv2val(p_coefvars(i))
 			if(p_coefplus(i).eq.0)j_o(ivcoef)%d(i)=-j_o(ivcoef)%d(i)
-		enddo !i=1,nterm   4058
+		enddo !i=1,nterm   3890
  
 		j_o(ivcoefplus)%i2(1:nterm)=p_coefplus(1:nterm)
-		ivtermvars=j_deflistobject(ivout,'%termvars',list0=nterm,list=p_termvars(1:nterm))
-		ivnterminrow=j_deflistobject(ivout,'%nterminrow',list0=p_nrowtot,list=p_nterminrow(0:p_nrow),ilist=.true.)
-		ivvars=j_deflistobject(ivout,'%vars',list0=npvar,list=p_vars(1:npvar)) !p-variables
-		ivrowofterm=j_deflistobject(ivout,'%rowofterm',list0=nterm,list=p_rowofterm(1:nterm),ilist=.true.) !row of each term
+		ivtermvar=j_deflist(ivout,'%termvar',list0=nterm,list=p_termvar(1:nterm))
+		ivnterminrow=j_deflist(ivout,'%nterminrow',list0=p_nrowtot,list=p_nterminrow(0:p_nrow),ilist=.true.)
+		ivvars=j_deflist(ivout,'%vars',list0=npvar,list=p_vars(1:npvar)) !p-variables
+		ivrowofterm=j_deflist(ivout,'%rowofterm',list0=nterm,list=p_rowofterm(1:nterm),ilist=.true.) !row of each term
  
-	endif !if(nad.gt.0)   3935
+	endif !if(nad.gt.0)   3767
+ 
+ 
 	!	write(6,*)'hellurei'
 	! RHS
 	ivrhsvars=j_o(ivproblem)%i(1)
@@ -4703,22 +4492,23 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 		do i=1,p_nrow
 			j_o(ivrhs)%d(i)=j_iv2val(j_o(ivrhsvars)%i2(i))
 			j_o(ivrhs2)%d(i)=j_iv2val(j_o(ivrhs2vars)%i2(i))
-		enddo !i=1,p_nrow   4081
-	endif !if(p_nrow.gt.0)   4075
+		enddo !i=1,p_nrow   3915
+	endif !if(p_nrow.gt.0)   3909
+ 
 	ivobjective=j_defmatrix(ivout,'%objective',1,npvar,j_matreg)
 	do i=1,j_o(ivnterminrow)%i2(1)
-		ico=j_inlistobject(j_o(ivtermvars)%i2(i),ivvars)
+		ico=j_inlistobject(j_o(ivtermvar)%i2(i),ivvars)
 		j_o(ivobjective)%d(ico)=j_o(ivcoef)%d(i)
-	enddo !i=1,j_o(ivnterminrow)%i2(1)   4087
+	enddo !i=1,j_o(ivnterminrow)%i2(1)   3922
  
 	if(p_nrow.gt.0)ivmatrix=j_defmatrix(ivout,'%matrix',p_nrow,npvar,j_matreg)
 	do i=j_o(ivnterminrow)%i2(1)+1,nterm
 		iro=j_o(ivrowofterm)%i2(i)
-		ico=j_inlistobject(j_o(ivtermvars)%i2(i),ivvars)
+		ico=j_inlistobject(j_o(ivtermvar)%i2(i),ivvars)
 		j_o(ivmatrix)%d((iro-1)*npvar+ico)=j_o(ivcoef)%d(i)
-	enddo !i=j_o(ivnterminrow)%i2(1)+1,nterm   4093
+	enddo !i=j_o(ivnterminrow)%i2(1)+1,nterm   3928
  
-	ivobjects=j_deflistobject(ivout,'%objects',list0=13)
+	ivobjects=j_deflist(ivout,'%objects',list0=13)
 	j_o(ivobjects)%i2(1)=ivproblem
 	j_o(ivobjects)%i2(2)=ivrhs
 	j_o(ivobjects)%i2(3)=ivrhs2
@@ -4732,7 +4522,7 @@ subroutine jlpcoef_(ivproblem,ivout,ivobjects)
 	j_o(ivobjects)%i2(6)=ivcoefvars
 	j_o(ivobjects)%i2(7)=ivcoefplus
 	j_o(ivobjects)%i2(8)=ivcoef
-	j_o(ivobjects)%i2(9)=ivtermvars
+	j_o(ivobjects)%i2(9)=ivtermvar
 	j_o(ivobjects)%i2(10)=ivrowofterm
 	j_o(ivobjects)%i2(11)=ivobjective
 	j_o(ivobjects)%i2(12)=ivmatrix
@@ -4765,7 +4555,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: p_nrowtot
 	use jmod, only: p_isdomain
 	use jmod, only: p_ndom
-	use jmod, only: p_nfvar
+	use jmod, only: p_nvarf
 	use jmod, only: p_ivdomain
 	use jmod, only: j_getobject
 	use jmod, only: j_ipreal
@@ -4774,7 +4564,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: j_ipchar
 	use jmod, only: p_nshow
 	use jmod, only: p_show
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: p_ivshowunits
 	use jmod, only: j_deftext
 	use jmod, only: p_ivshowtext
@@ -4794,11 +4584,16 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: j_0
 	use jmod, only: p_isobj0
 	use jmod, only: p_isobj2
+	use jmod, only: p_nterm
 	use jmod, only: p_fpresent
+	use jmod, only: j_clearoption
+	use jmod, only: p_tabpart
+	use jmod, only: p_logpart
+	use jmod, only: p_factpart
 	use jmod, only: p_nxvar
 	use jmod, only: p_xpresent
 	use jmod, only: p_nxvartot
-	use jmod, only: p_ivkeepx
+	use jmod, only: p_nkeepx
 	use jmod, only: p_nsumx
 	use jmod, only: p_sumx
 	use jmod, only: j_igetopt
@@ -4822,8 +4617,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: p_rhs
 	use jmod, only: p_rhs2
 	use jmod, only: p_vars
-	use jmod, only: p_nterm
-	use jmod, only: p_termvars
+	use jmod, only: p_termvar
 	use jmod, only: p_coef
 	use jmod, only: p_rowofterm
 	use jmod, only: p_nterminrow
@@ -4831,12 +4625,6 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: p_isunit
 	use jmod, only: p_maxns
 	use jmod, only: p_ivdatac
-	use jmod, only: j_getdat
-	use jmod, only: p_ivdatax
-	use jmod, only: p_lopp
-	use jmod, only: p_ivxdatmat
-	use jmod, only: p_keepx
-	use jmod, only: p_xdatmat
 	use jmod, only: p_nz
 	use jmod, only: p_intapp
 	use jmod, only: p_lavec
@@ -4844,10 +4632,10 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: p_ncol
 	use jmod, only: p_mxnm
 	use jmod, only: p_nm
-	use jmod, only: p_ivxrow
-	use jmod, only: p_nxrow
-	use jmod, only: p_xrow
-	use jmod, only: p_xrowcur
+	use jmod, only: p_ivrowx
+	use jmod, only: p_nrowx
+	use jmod, only: p_rowx
+	use jmod, only: p_rowcurx
 	use jmod, only: j_inlistobject
 	use jmod, only: p_ivkeepc
 	use jmod, only: j_getname
@@ -4861,10 +4649,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: p_nlogfact
 	use jmod, only: p_zmatrix
 	use jmod, only: p_zopt
-	use jmod, only: j_clearoption
 	use jmod, only: p_objf
 	use jmod, only: p_small
-	use jmod, only: p_iunitv
+	use jmod, only: p_unitv
 	use jmod, only: p_kierv
 	use jmod, only: p_xirowold2
 	use jmod, only: p_next
@@ -4899,7 +4686,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: p_muutosb
 	use jmod, only: p_objfv
 	use jmod, only: p_maxo
-	use jmod, only: p_iunit55
+	use jmod, only: p_unit55
 	use jmod, only: p_niter
 	use jmod, only: p_nunits
 	use jmod, only: p_idebug
@@ -4939,7 +4726,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: p_kierstep
 	use jmod, only: p_kierout
 	use jmod, only: p_kier
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_nnf
 	use jmod, only: p_nnfold2
 	use jmod, only: p_fastmake
@@ -4951,7 +4738,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: p_activeunit
 	use jmod, only: p_ilog
 	use jmod, only: p_inebas
-	use jmod, only: p_iunitprev
+	use jmod, only: p_unitprev
 	use jmod, only: p_a
 	use jmod, only: p_ls
 	use jmod, only: p_ifail
@@ -4963,7 +4750,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: p_ivpivots
  
 	use fletdmod2   !closflet
-	logical zpresent
+	!	logical zpresent
 	character*2 chint
 	!	logical cancel
 	!Section jlp jlp() for schedules DATA
@@ -4980,14 +4767,14 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!\item  Output%objective= value of the objective function
 	!\item  	Output%rows= the vector the valuef of the constraint rows.
 	!\item   Output%shprice = vector of shadow prices of the rows
-	!\item  Output%xvars= LIST of xvariables in the schedules data
-	!Output%xvarsproblem= LIST of x-variables in the PROB
-	!\item  Output%xsum= Vector of sums of variables in Output%xvarsproblem
-	!\item  Output%xprice Shadow prices of the variables in Output%xvarsproblem
+	!\item  Output%varx= LIST of xvariables in the schedules data
+	!Output%varxproblem= LIST of x-variables in the PROB
+	!\item  Output%xsum= Vector of sums of variables in Output%varxproblem
+	!\item  Output%xprice Shadow prices of the variables in Output%varxproblem
 	!\item   Output%xsumint The sums of x-variables in the integer approximation, generated if integer-> is present
 	!\end{itemize}
 	!problem&1&PROB &Problem object produced with problem()
-	!data&1&DATA& Unit data when schedules data is linked to it with linkdata() or schedules data when
+	!data&1&DATA& Schedules data (Sic!) linked to it with unitdata if ubit-> is not given
 	!unit-> gives the  unit variable which changes when unit changes.
 	!
 	!z&-1|0 & &This option must be present when there are z-variables in the problem, but the z-variables
@@ -5010,13 +4797,15 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! fast%&-1|1&CODE & codeoption computing Fast%. All schedules whose price is larger than Fast%
 	!of the current key schedule. Same variables can be used as for stop-> and also current Fast%.
 	! A possible rule is fast%->(min(Fast%+5-(Imp.gt.0)*10,98))). The default is Fast%=85.
+	! maxrounds%&-1|1&REAL & maximum number of rounds over all units. Default maxrounds->3000
 	!report&-1|1& CHAR & the results are written to the file spesified.
 	!echo|-1|0& & &When results are printed to a file, echo-> implies that they are written alo to the terminal.
 	!refac&-1|1|&REAL& refac->value tells that the factors of the basis matrix are recomputed after value pivot operations.
 	!The default is refac->1000.
 	!tole&-1|1&REAL& tole->value tells that the default tolerances are multiplied with the value.
 	!endoption
- 
+	!Note The data-> must now always refer to schdedules data (for several reasons)
+	!endnote
 	!Note In small problems dCPU, i.e. increase of used CPU time is not very accurate.
 	!endnote
 	!Note jlp() stores the sums of x-variables into output% -variables. If there are domains
@@ -5026,9 +4815,9 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!Ex jlpex jlp() solves linear programming problem
 	! cdata=data(in->'cdat.txt',read->(cdata%nobsw,site))
 	! stat()
-	! xdata=data(in->'xdat.txt',read->(npv#0,npv#5,income1...income5))
+	! xdata=data(in->'xdat.txt',read->(npv#0,npv#5,income1...income5),up->cdata)
 	! stat()
-	! linkdata(data->cdata,subdata->xdata)
+ 
  
 	! proba=problem();
 	!** In this problem the 4% net present value at the beginning is maximixe
@@ -5042,7 +4831,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! plist=;list(proba%?);
 	! @plist;
  
-	! jlpa=jlp(problem->proba,data->cdata,showdomain->('site.le.3','site.gt.3'))
+	! jlpa=jlp(problem->proba,data->xdata,showdomain->('site.le.3','site.gt.3'))
 	! ** sums of x-variables are stored into the same variables with jlpa%prefix
 	!jlpa%income5;
 	!jlpa%income5[site.le.3];
@@ -5081,7 +4870,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! /
 	! plistb=;list(probb%?);
 	! *** these  could be printed with @plistb;
-	!jlpb=jlp(problem->probb,data->cdata,showdomain->'3.lt.site')
+	!jlpb=jlp(problem->probb,data->xdata,showdomain->'3.lt.site')
 	! jlpb%income5;
 	!jlpb%income5[site.gt.3];
 	! jlpb%income5[3.lt.site];
@@ -5089,13 +4878,13 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! probc=problem();
 	! npv#0==max
 	!/
-	!jlpc=jlp(problem->probc,data->cdata,showdomain->'3.lt.site')
+	!jlpc=jlp(problem->probc,data->xdata,showdomain->'3.lt.site')
 	!endex
 	!endsection
  
 	!Section factopt Factory opimization
 	! In factory optimization problems logs are transported to factories. The utility of tansported logs is defined
-	! introduced into the problem using terms which are TABLE objects. A TABLE consists of two LIST objects.
+	!  using terms which are TABLE objects. A TABLE consists of two LIST objects.
 	! The first LIST in factory optimization gives log types transported to to factories which are stored in the second LIST.
 	! The properties of the factories in one factory list are defined with datawcase() function, which produces a standard DATA
 	! object with an additional link to the
@@ -5116,10 +4905,10 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!endheader
 	!Option
 	! knn&1&REAL & When considering to which factory a log type is transported, only knn
-	! factories according to values in table%coef are considered.
-	!utiltran&1&TRANS& Transformation telling how table%coef are computed for each unit.
+	! best factories according to values in table%coef are considered.
+	!utiltrans&1&TRANS& Transformation telling how table%coef are computed for each unit.
 	!endoption
-	!Note If a given factory has no capacity for a given log type, no capacity constrain is needed.
+	!Note If a given factory has no capacity for a given log type, no capacity constraint is needed.
 	! The zero capacity is indicated by giving a negative utility in %coef matrix for a log type for which
 	! there is no capacity.
 	!endnote
@@ -5167,7 +4956,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
 	! xdata=newdata(xmat0,read->x1,maketrans->tr)
 	! stat()
-	! linkdata(data->cdata,subdata->xdata)
+	! linkdata(cdata,xdata)
  
 	! ** sawmill properties, X and Y are coordinates of sawmills
 	! sawdata=datawcase(read->(X,Y,capacity1...capacity5,util1...util5))
@@ -5247,7 +5036,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
 	! li=;list(fprob%?);
 	! @li;
-	! f=jlp(problem->fprob,data->cdata,utiltrans->util,knn->2)
+	! f=jlp(problem->fprob,data->xdata,utiltrans->util,knn->2)
 	! ;return
  
  
@@ -5255,6 +5044,125 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
 	!endex
 	!endsection
+	!VAR
+ 
+	!	p_ivproblem problem
+	! p_ivrow text for rows
+	! p_nrow number of constraint rows
+	! p_nrowtot =p_nrow+1
+	! p_isdomain are there domains
+	! p_ndom number of domains
+	! p_ivdomain  object
+	! p_ivobjective REAL for the objective
+	! p_nshow number of showdomains
+	! p_ivshowunits %showunits numbers of units
+	! p_ivshowtext '$showtext' domain defintions
+	! p_ivshowmatrix $showdom
+	! $showtrans transformation computing showdomains
+	! p_nshowin  number of input variables in showdoamin
+ 
+	! p_ivfeasible  %feasible
+	! p_nxvar number of ordinary x-variables
+	! p_nz number of z-variables
+	! p_xpresent are there x-variables (not necessary in factory problems
+	! p_fpresent are factories present
+	! p_factnow factories now
+	! p_nxvartot number of keep variables in xdata
+	! p_ivrowx ILIST for rows having x-var
+	! p_rowx points to x-rows
+	! p_nsumx currently p_nxvartot later possibly variables made with transformations
+	! p_fastdif given in fastdif->
+	! p_p8 p_p p_p9 printing logicals
+	! p_n16 unit for test writing
+	! p_feasible1
+	! p_time00 starting time
+	! p_ivrhs p_ivrhs2 p_ivrhsw
+	! p_rhs p_rhs2 p_rhsw p_rhscur pointers to RHS
+	! p_lower is lower bound active
+	! p_npvar number of variables in the problem
+	! p_vars point to variables
+	! p_nterm number of terms
+	! p_termvar variable of each term
+	! p_coef coefficients of the terms
+	! p_rowofterm row of term
+	! p_ix temp variables for roows 0:p_nrow
+ 
+ 
+	!optimization
+	! p_maxrounds maximum number of rounds
+	! p_kierstep ?
+	! p_kierout ?
+	! p_kier current round
+	! p_unit current unit
+	! p_xirowold2=p_objf ?
+	! p_coefmax -1 for minimization
+	! p_maxo is maximized
+	! p_objf  objective
+	! p_objfv  previous objective
+	! p_objfprev objective in the previous round
+	! p_ivstarted is optimization started
+	! p_newc
+	! p_muutosb  changes in the basis
+	! p_pivot number of pivots
+	! p_pivotold number of previous pivots
+	! p_idebug pivot where to debug
+	! p_fastmakes how many times fast made
+	! p_isfastp is fast%->
+	! p_activeunit is unit active
+	! p_nrefac refactorization
+	! p_isstop is stop->
+	! p_nimp !number of improvements outside active set
+	! p_warm
+	! p_time0 time when round started
+	! p_asv percent in the active set
+	! p_ienter entering
+	!        = 1 residual enters
+	!        =2
+	!        =3
+	!        4
+	! p_nnf number of infeasible rows
+	!	p_nnfold2=p_nnf
+ 
+	! output
+	! p_iprint is there printing
+	! p_nureport unit for report
+	! p_echo print to screen if p_nureport.ne.6
+ 
+ 
+	! FACTORIES
+	! p_ntable number of tables
+	! p_nfact number of factories
+	! p_fact  all factories
+	! p_nlog number of log types
+	! p_log all log types
+	! p_nlogfact number of log%2%fact terms
+	! p_logfactbas basis
+	! p_knn
+	! p_kntot
+	! p_kntot2  neigbours of all units
+	!
+ 
+	!DATA
+	! p_isunit is unit->
+	! p_nunits
+	! p_lopp number of schedules
+	! p_ivkeepc
+	! p_ivdatac p_ivdatax
+	! p_ivdatamatx
+	!
+	! Fletcher
+	! p_mxd max number of
+	! p_lavec
+	! p_mxn mx number of columns of A , D + z-var
+	! p_ncol =p_mxn
+	! p_nm=p_ncol+p_nrow
+	! p_nrowz=p_nrow+p_nz  ! basis (first element -1) of D part, when I is included
+	! p_xma maximum number of w
+	! p_lx0 number of basic w
+	! p_lz0 number of basix z
+	! p_lr0 number of basic residuasl
+	! p_lf0 number og basci factory vars
+ 
  
 	call j_startfunction(iob,io,0,narg,j_arg,j_ivout,needsout=.true.)
 	if(j_err)return
@@ -5264,14 +5172,20 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	p_ivproblem=j_optarg0(1)
 	p_ivrow=j_o(p_ivproblem)%i(4)  !text for rows
 	p_nrow=j_o(p_ivrow)%i(0)-1
+	
+	if(p_nrow.eq.0)then
+	write(6,*)'jlp() does not now work without constraints, sorry'
+	j_err=.true.
+	return
+	endif !if(p_nrow.eq.0)   4391
 	p_nrowtot=p_nrow+1
 	p_isdomain=j_o(p_ivproblem)%i(10).gt.0
 	p_ndom=0
-	p_nfvar=0
+	p_nvarf=0
 	if(p_isdomain)then
 		p_ivdomain=j_o(p_ivproblem)%i(11)
 		p_ndom=j_o(p_ivdomain)%i(0)
-	endif !if(p_isdomain)   4438
+	endif !if(p_isdomain)   4400
  
 	p_ivobjective=j_getobject(j_ivout,'%objective',j_ipreal)
 	!j_o(ivproblem)%i(4)=p_ivrow  !text for rows
@@ -5282,11 +5196,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	if(j_err)return
 	!	p_row0=1   !updated for domainprob
 	if(p_nshow.gt.0)then
-		p_ivshowunits=j_deflistobject(j_ivout,'%showunits',list0=p_nshow,ilist=.true.)
+		p_ivshowunits=j_deflist(j_ivout,'%showunits',list0=p_nshow,ilist=.true.)
 		les=0
 		do j=1,p_nshow
 			les=les+j_o(p_show(j))%i(2)-j_o(p_show(j))%i(1)+1
-		enddo !j=1,p_nshow   4454
+		enddo !j=1,p_nshow   4416
  
 		p_ivshowtext=j_deftext(0,'$showtext',p_nshow,les+10*p_nshow)
 		p_ivshowmatrix=j_defmatrix(0,'$showdom',p_nshow,1,j_matreg)
@@ -5296,14 +5210,14 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			if(j.ge.10)j1=1
 			call j_getchar(p_show(j),p_domainname,le)
 			call j_puttext(p_ivshowtext,'$showdom('//chint(j1:2)//')='//p_domainname(1:le))
-		enddo !j=1,p_nshow   4460
+		enddo !j=1,p_nshow   4422
  
 		call j_command('$showtrans=trans(in->$showtext)')
  
 		if(j_err)then
 			write(6,*)'*error in interpreting $showdomaintext'
 			return
-		endif !if(j_err)   4470
+		endif !if(j_err)   4432
 		p_ivshowtrans=j_object('$showtrans')
 		!j_o(ivout)%i2(1)=ivinl
 		write(6,*)'jlp2'
@@ -5311,7 +5225,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		p_nshowin=j_o(p_ivshowin)%i(1)
 	else
 		p_nshow=0
-	endif !if(p_nshow.gt.0)   4451
+	endif !if(p_nshow.gt.0)   4413
  
 	write(6,*)'jlp3',p_nshow
  
@@ -5323,6 +5237,12 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!	write(6,*)'heer'
  
 	call jlpcoef_(p_ivproblem,j_ivout,ivobjects)  !jlp(
+	! p_coefvars
+	! p_termvar
+	!	p_nterminrow
+	! p_rowofterm
+	! p_coefplus
+	! p_vars
 	!	write(6,*)'heer2,fpresent',p_fpresent,p_ntable
  
  
@@ -5334,16 +5254,68 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	if(j_err)return
 	call initdata0(iob,io)
 	if(j_err)return
-	if(p_fpresent)call fterms()
+	write(6,*)'problem has ',p_nterm,' terms'
+	! p_ivarea=
+	! p_isunit
+	!p_ivdatac=ivdata
+	! p_ivdatax=j_o(ivdata)%i(3)
+	! p_ivunit
+	!		p_ivkeepx=
+	! p_nkeepx=
+	! p_ivdatamatc=
+	! p_ivkeepc=
+	! p_ivunit=
+	! p_ivdatamatx=
+	! p_lopp=
+	! p_datamatx
+	! p_ivs
+	!	j_ivns
+	!j_filterlink
+	!p_filter_
+	!j_rejectlink=
+	!p_reject=
+	!p_filre
+	!p_isvarx
+	!p_istermx
+	!p_ivnxinrow=
+	!p_ninrowx(0:)
+	!p_nrowcurx
+	!p_nxvar
+	!p_nstot
+	!p_ibaunitbas
+	!p_nrejtot=
+	!p_maxns
+	!p_nunits
+	!p_ivxvar
+	!p_varx
+	!p_ivibaunit
+	!p_ibaunit
+	!p_ivkeys
+	!p_keys
+	!	p_ivns
+	!	p_ns=
+ 
+	if(p_fpresent)call fterms(iob,io)  !knn i checked here
+	call j_clearoption(iob,io)  !jlp()
+	if(p_fpresent)write(6,*)'aftfterms'
+	write(6,*)'tabpart',p_tabpart
+	write(6,*)'logpart',p_logpart
+	write(6,*)'factpart',p_factpart
 	if(j_err)return
 	!	call j_getname(ivobjects)
 	!write(6,*)'ivobjectstas ',j_oname(1:j_loname)
  
-	!	if(p_fpresent)call initfact()
+	if(p_fpresent)then
+ 
+		call initfact()
+		! else
+ 
+		! call initkeysx()
+	endif !if(p_fpresent)   4523
 	write(6,*)' '
 	write(6,*)'x-variables',p_nxvar
 	p_xpresent=p_nxvar.gt.0
-	p_nxvartot=j_o(p_ivkeepx)%i(1)
+	p_nxvartot=p_nkeepx  !j_o(p_ivkeepx)%i(1)
 	p_nsumx=p_nxvartot  !+p_noutsubtrans !p_ncvar+
 	ndom2=max(p_ndom,1)
 	if(allocated(p_sumx))deallocate(p_sumx)
@@ -5357,13 +5329,13 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		p_iprint=2 !testauksen ajaksi
 	else !if(ivprint.gt.0)then
 		p_iprint=1
-	endif !if(ivprint.gt.0)   4520
+	endif !if(ivprint.gt.0)   4540
 	if(p_nrow.eq.0)then
 		if(p_npvar.ne.p_nxvar.and..not.p_fpresent)then
 			write(6,*)p_npvar-p_nxvar,' variables were not in data'
 			j_err=.true.
  
-		endif !if(p_npvar.ne.p_nxvar.and..not.p_fpresent)   4529
+		endif !if(p_npvar.ne.p_nxvar.and..not.p_fpresent)   4549
 		j_v(p_ivfeasible)=j_1
 		call jlp00(iob,io)
 		if(j_err)return
@@ -5375,7 +5347,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		return
 		!		call tulostele
  
-	endif !if(p_nrow.eq.0)   4528
+	endif !if(p_nrow.eq.0)   4548
 	! if(ivout.eq.j_ivresult)then
 	! write(6,*)'jlp() needs now output'
 	! j_err=.true. ;return
@@ -5387,7 +5359,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!	p_row0=1   !updated for domainprob
  
  
-	!	ibaxdat(iobs)=(iobs-1)*p_keepx
+	!	ibaxdat(iobs)=(iobs-1)*p_nkeepx
 	p_p8=.false.  !.true. !.true. !j_v(j_ivdollar2).eq.8.d0
 	p_p=j_v(j_ivdollar2).eq.8.d0   !.false.  !.true.
 	p_p9=.false.  !.true.
@@ -5420,7 +5392,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! 	p_ivcoefvars=j_o(ivobjects)%i2(6)
 	!	p_ivcoefplus=j_o(ivobjects)%i2(7)
 	ivcoef=j_o(ivobjects)%i2(8)
-	ivtermvars=j_o(ivobjects)%i2(9)
+	ivtermvar=j_o(ivobjects)%i2(9)
 	ivrowofterm=j_o(ivobjects)%i2(10)
  
 	!	p_nrow=j_o(p_ivrhs)%i(3)
@@ -5432,11 +5404,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		!	write(6,*)'pnrow',p_nrow,p_rhs
 		!	return
 		p_rhs2=>j_o(p_ivrhs2)%d(1:p_nrow)
-	endif !if(p_nrow.gt.0)   4597
+	endif !if(p_nrow.gt.0)   4617
 	p_npvar=j_o(ivvars)%i(1)
 	p_vars=>j_o(ivvars)%i2(1:p_npvar)
-	p_nterm=j_o(ivtermvars)%i(1)
-	p_termvars=>j_o(ivtermvars)%i2(1:p_nterm)
+	p_nterm=j_o(ivtermvar)%i(1)
+	p_termvar=>j_o(ivtermvar)%i2(1:p_nterm)
 	p_coef=>j_o(ivcoef)%d(1:p_nterm)
 	p_rowofterm=>j_o(ivrowofterm)%i2(1:p_nterm)
 	p_nterminrow(0:)=>j_o(ivnterminrow)%i2(1:p_nrowtot)
@@ -5456,7 +5428,22 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
  
 	!if(p_xpresent)then
-	call initjlp2(iob,io)
+!	write(6,*) 'call inijlp2 ',p_xpresent
+	call initjlp2(iob,io)  ! jlp(
+	!get options and when xpresent
+	! p_ivtrans
+	! p_maxrounds
+	! p_zopt
+	! p_ivix
+	! p_ix
+	! p_nnotareavars
+	! p_tried
+	! p_fastusedsame
+	! p_intapp
+	! p_fastmake
+	! p_fastpros p_fastpros2  /100
+	! p_fast
+	! p_warm p_warmf
  
 	!	call initflet()
 	!	write(6,*)'xphe',p_xpresent
@@ -5468,28 +5455,71 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	if(.not.p_isunit)p_maxns=j_o(p_ivdatac)%i(9)
 	!is(p_p8)write(6,*)'<pmaxns ',p_maxns
  
-	call j_getdat(p_ivdatax,p_lopp,p_ivxdatmat,p_ivkeepx)
+	!	call j_getdat(p_ivdatax,p_lopp,p_ivdatamatx,p_ivkeepx)
  
 	if(j_err)return
-	p_keepx=j_o(p_ivkeepx)%i(1)
-	p_xdatmat=>j_o(p_ivxdatmat)%d(1:p_keepx*p_lopp)
- 
+	!	p_nkeepx=j_o(p_ivkeepx)%i(1)
+	!	p_datamatx=>j_o(p_ivdatamatx)%d(1:p_nkeepx*p_lopp)
+	write(6,*)'xpresent ',p_xpresent
 	if(p_xpresent)call initxdatawx()
-	call initxdata()
-	p_nz=p_npvar-p_nxvar-p_nfvar
+	! inits something of x-data used also with factories and without ordinary x-variables
+	!initilizes also some fact issues
+	! uses p_ninrowx (0p_nrow)
+	! p_ivxcoef
+	! p_xcoef  (1:p_nxval)
+	! p_ivxtermvar
+	! p_xtermvar x-term variables
+	! p_ivrowcurx  !current rowxs if there are now domaisn these are not updated
+	! p_rowcurx
+	! p_ibatemp  (1:p_nrowtot)
+	! p_nrowxtemp (1:p_nrowtot)
+	! p_ntemp0
+	! p_nrowxtemp (1:p_ntemp0) number of x- for each temp
+	! p_ivirowvarx= (j_ivout,'%irowvarx',list0=p_nxval)
+	!	p_irowvarx=>
+	!	p_ivnrowx2=j_deflist(j_ivout,'%nrowx2',list0=p_nrowcurx,ilist=.true.)
+	!	p_nrowx2=>j_o(p_ivnrowx2)%i2(1:p_nrowcurx)
+	!	p_irowvarx=pack(p_termvar,p_istermx)
+	! p_nrowx2=pack(p_ninrowx,p_ninrowx.gt.0) !numbers of x-variables in each
+	! p_ivxmat=j_defmatrix(j_ivout,'%xmat',p_lopp,p_ntemp0,j_matreg,single=.true.)
+	! p_xmat=>j_o(p_ivxmat)%r(1:p_ntemp0*p_lopp)
+	!	allocate(p_xmat(1:p_ntemp0*p_lopp))
+	! p_ivvxpack=  (j_ivout,'%vxpack',p_ntemp0,1,j_matreg,single=.true.)
+	! p_vxpack=>
+	! p_ivixpack=j_deflist(j_ivout,'%ixpack',list0=p_ntemp0,ilist=.true.)
+	! p_ixpack=>j_o(p_ivixpack)%i2(1:p_ntemp0)
+	! p_ivvarx=j_deflist(j_ivout,'%varx',list0=p_nxvar)
+	! p_varx=>j_o(p_ivvarx)%i2(1:p_nxvar)
+	! p_varx= pack(p_vars(1:p_npvar),p_isvarx)   ! c-variables are here included as x -variables
+	! p_ivibaunit= j_deflist(j_ivout,'%ibaunit',list0=p_nunits+1,ilist=.true.)
+	! p_ibaunit=>j_o(p_ivibaunit)%i2(1:p_nunits+1)
+ 
+ 
+	!	call initxdata()
+	! p_fastreject
+	! p_rejects
+	! p_xsmin p_xsmax
+	! p_xmin p_xmax
+	! p_ivxps
+	! p_xps
+	! p_ivvaluedif   j_defmatrix(j_ivout,'%valuedif',p_nunits,1,j_matreg)
+	!	p_ivobjdif       j_defmatrix(j_ivout,'%objdif',p_nunits,1,j_matreg)
+ 
+ 
+	p_nz=p_npvar-p_nxvar-p_nvarf
 	!	write(6,*)'nzhere',p_nz
 	if(p_intapp.and.p_nz.gt.0)then
 		write(6,*)' '
 		write(6,*)'*there were ',p_nz," z-variables, can't use integer->"
 		j_err=.true.;return
-	endif !if(p_intapp.and.p_nz.gt.0)   4648
+	endif !if(p_intapp.and.p_nz.gt.0)   4726
 	if(p_nz.gt.0)call initzvar()
 	!	write(6,*)'nshere',p_ns(1:5)
-	!if(allocated(p_xrowcur))write(6,*)'i8xrow cur ',p_xrowcur(1:p_nxrowcur)
-	!write(6,*)'allo ',allocated(p_xrowcur)
+	!if(allocated(p_rowcurx))write(6,*)'i8rowx cur ',p_rowcurx(1:p_nrowcurx)
+	!write(6,*)'allo ',allocated(p_rowcurx)
 	if(j_err)return
  
-	zpresent=p_nz.gt.0
+	!	zpresent=p_nz.gt.0
 	write(6,7777)'z-variables',p_nz
  
 	write(6,*)' '
@@ -5510,6 +5540,34 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	p_nm=p_ncol+p_nrow
  
 	call startlist()
+	! p_ivls p_ls
+	! p_ivlsi p_lsi
+	! p_ivlr p_lr
+	! p_ivlri p_lri
+	! p_ivobjr0
+	! p_objr0
+	! p_ivobjr2
+	! p_objr2
+	! p_ivlz
+	! p_lz
+	! p_ivlx
+	! p_lx
+	! p_ivlxi
+	! p_lxi
+	! p_ivlf
+	! p_lf
+	! p_ivlfi
+	! p_lfi
+	! p_ivvc
+	! p_vc
+	! p_ivx
+	! p_x
+	! p_ivb
+	! p_b
+	! p_xmi
+	! p_xma
+	! p_iva
+	! p_a
 	!	write(6,*)'afterstart'
 	!	write(6,*)'ls ',p_ls
 	!write(6,*)'nshye',p_ns(1:5)
@@ -5524,21 +5582,21 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		if(.not.p_xpresent)then
 			write(6,*)'there cannot be domains without constraints for x-variables'
 			j_err=.true.; return
-		endif !if(.not.p_xpresent)   4691
+		endif !if(.not.p_xpresent)   4797
  
 		call initdomain()
-		!	if(allocated(p_xrowcur))write(6,*)'i9xrow cur ',p_xrowcur(1:p_nxrowcur)
+		!	if(allocated(p_rowcurx))write(6,*)'i9rowx cur ',p_rowcurx(1:p_nrowcurx)
 		if(j_err)return
 	else
 		p_ndom=0
-		p_ivxrow= j_deflistobject(j_ivout,'%xrow',list0=p_nxrow,ilist=.true.)
-		p_xrow=>j_o(p_ivxrow)%i2(1:p_nxrow)
-		!	if(allocated(p_xrow))deallocate(p_xrow)
-		!p_nxrow=p_nxrowcur
-		!allocate(p_xrow(1:p_nxrow))
-		p_xrow=p_xrowcur(1:p_nxrow)
+		p_ivrowx= j_deflist(j_ivout,'%rowx',list0=p_nrowx,ilist=.true.)
+		p_rowx=>j_o(p_ivrowx)%i2(1:p_nrowx)
+		!	if(allocated(p_rowx))deallocate(p_rowx)
+		!p_nrowx=p_nrowcurx
+		!allocate(p_rowx(1:p_nrowx))
+		p_rowx=p_rowcurx(1:p_nrowx)
  
-	endif !if(p_isdomain)   4688
+	endif !if(p_isdomain)   4794
 	!write(6,*)'p_domv ',p_ndomv
  
 	if(p_nshow.gt.0)then
@@ -5558,27 +5616,27 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				' is not in c-data and is not the unit variable ',j_oname2(1:j_loname2)
 			j_err=.true.
  
-		enddo !j=1,p_nshowin   4714
+		enddo !j=1,p_nshowin   4820
 		if(j_err)return
  
-	endif !if(p_nshow.gt.0)   4711
+	endif !if(p_nshow.gt.0)   4817
  
 	!	write(6,*)'inttt',p_intapp
  
- 		 7777 format(a16,i5)
+ 		 7777 format(a17,i5)
  
  
-	if(p_fpresent)then
+	if(p_fpresent.or..true.)then
 		if(p_p)write(6,*)'start initfact'
 		if(p_p)write(6,*)' '
-		call initfact(iob,io)
+		!	call initfact(iob,io)
 		if(p_p)write(6,*)'end initfact'
 		if(j_err)return
 		write(6,7777)'tables',p_ntable
 		write(6,7777)'factories',p_nfact
 		write(6,7777)'log-variables',p_nlog
 		write(6,7777)'logfact-variables',p_nlogfact
- 
+		if(j_err)return
 		!	call initfact()
  
 		if(.not.p_zmatrix) p_nz=p_npvar-p_nxvar-p_nlogfact-p_ntable
@@ -5587,7 +5645,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		if(.not.p_zmatrix) p_nz=p_npvar-p_nxvar
  
  
-	endif !if(p_fpresent)   4738
+	endif !if(p_fpresent.or..true.)   4844
+ 
+	call initxdata()
+ 
+ 
 	if(p_p)write(6,*)'start initopt'
  
 	!	write(p_n16,*)'p_nm ',p_nm
@@ -5596,15 +5658,17 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!	write(p_n16,*)'p_nmaftinitop ',p_nm
 	if(j_err)return
 	if(p_p)write(6,*)'startt initxdatjlp'
-	!	if(allocated(p_xrowcur))write(6,*)'i66xrow cur ',p_xrowcur(1:p_nxrowcur)
+	!	if(allocated(p_rowcurx))write(6,*)'i66rowx cur ',p_rowcurx(1:p_nrowcurx)
+	write(6,*)'rethere'
+	if(p_fpresent)return
 	call initxdatjlp() !needs fact    updates p_ns
 	!write(6,*)'after',j_err
 	!write(6,*)'nshNYT',p_ns(1:5)
 	!	write(p_n16,*)'p_nmaftinitop ',p_nm
 	if(j_err)return
-	!	if(allocated(p_xrowcur))write(6,*)'i77xrow cur ',p_xrowcur(1:p_nxrowcur)
+	!	if(allocated(p_rowcurx))write(6,*)'i77rowx cur ',p_rowcurx(1:p_nrowcurx)
 	!	if(p_fpresent)call factxps(i),p_zopt
-	if(p_nz.gt.0)write(6,*)p_nz,' z-variables:'
+	write(6,*)p_nz,' z-variables:'
 	!write(6,*)'p_zopt,j_err',p_zopt,j_err
 	if(p_nz.gt.0)	call printz()
 	if(p_nz.gt.0.and. .not.p_zopt)then
@@ -5612,15 +5676,15 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		call printz()
 		j_err=.true.
 		return
-	endif !if(p_nz.gt.0.and. .not.p_zopt)   4777
+	endif !if(p_nz.gt.0.and. .not.p_zopt)   4889
  
 	call cpu_time(time1)
 	write(6,*)' '
 	write(6,*)'*jlp initialization took ',time1-p_time00,' sec',j_err
-	call j_clearoption(iob,io)  !jlp()
+ 
 	!p_n16=16
 	!p_p=.true.
-	!	write(6,*)'p_ivmatc,p_ivxdatmat ',p_ivmatc,p_ivxdatmat
+	!	write(6,*)'p_ivdatamatc,p_ivdatamatx ',p_ivdatamatc,p_ivdatamatx
 	!xpresent2: are there ordinary x-variables
 	!	p_xpresent= p_nxvar.ne.0
  
@@ -5632,11 +5696,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! end if !if(.not.p_xpresent)   2856
 	!if(p_nrow.ne.0.and..not.p_fpresent.and.p_nz.eq.0)call preopt()
 	!p_kier=0  !number of iterations through data !!!!
-	!if(allocated(p_xrowcur))write(6,*)'i555xrow cur ',p_xrowcur(1:p_nxrowcur)
+	!if(allocated(p_rowcurx))write(6,*)'i555rowx cur ',p_rowcurx(1:p_nrowcurx)
 	!write(6,*)'j_err bef feas ',j_err
 	p_objf=p_small
 	if(p_xpresent)call checkinfeas()
-	!if(allocated(p_xrowcur))write(6,*)'i5333xrow cur ',p_xrowcur(1:p_nxrowcur)
+	!if(allocated(p_rowcurx))write(6,*)'i5333rowx cur ',p_rowcurx(1:p_nrowcurx)
 	!	call checkinfeas()
 	!write(6,*)'j_err feas ',j_err
 	if(j_err)return
@@ -5647,9 +5711,12 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	call initfltot()
 	if(p_fpresent)then
 		write(6,*)'factory optimization works only this far'
-		j_err=.true.;return
-	endif !if(p_fpresent)   4815
-	p_iunitv=-1
+ 
+		!	if(j_ierr.gt.0)write(6,*)'**NOTE THERE WERE TRANSPORTATION PROBLEMS'
+		return
+		!	j_err=.true.;return
+	endif !if(p_fpresent)   4927
+	p_unitv=-1
 	p_kierv=1
 1234 continue  !we come here after failure,   !jl 20160510 siirretty tähän !!!!
 !write(6,*)'newstart'
@@ -5664,7 +5731,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		p_nextf=0
 		p_nextf(p_mxd,1:p_nlog)=p_mxd
 		p_iprevf(p_mxd,1:p_nlog)=p_mxd
-	endif !if(p_fpresent)   4829
+	endif !if(p_fpresent)   4944
 	!	endif !if(p_xpresent)   2904
 	if(allocated(p_lower)) deallocate(p_lower)
 	allocate(p_lower(1:p_nrow))
@@ -5682,7 +5749,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			else !if(j_xps(i).gt.j_rhs2(i).or..not.j_lbou(i))then
 				p_rhscur(i)=p_rhs(i)
 				p_lower(i)=.true.
-			endif !if(p_xps(i).gt.p_rhs2(i).or.p_rhs(i).eq.j_ninf)   4845
+			endif !if(p_xps(i).gt.p_rhs2(i).or.p_rhs(i).eq.j_ninf)   4960
 			!xps is the sum over key schedules
 			p_rhsw(i)=p_rhscur(i)-p_xps(i)  ! 6.27 and 6.28 p. 110 , get working rhs
 			!	if(i.eq.2)	write(27,*)'<353553rhs ',p_rhscur(i),p_xps(i)
@@ -5693,14 +5760,14 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			else !if(j_lbou(i))then
 				p_rhscur(i)=p_rhs2(i)
 				p_lower(i)=.false.
-			endif !if(p_lbou(i))   4857
+			endif !if(p_lbou(i))   4972
 			p_rhsw(i)=p_rhscur(i)
-		endif !if((p_ix(i).ne.0).or.p_fpresent)   4843
+		endif !if((p_ix(i).ne.0).or.p_fpresent)   4958
 		if(p_rhs2(i).lt.p_rhs(i))then
 			write(6,*)'*constraint ',i,' upper limit ',p_rhs2(i),' less than lower limit ',p_rhs(i)
 			j_err=.true.
-		endif !if(p_rhs2(i).lt.p_rhs(i))   4866
-	enddo !i=1,p_nrow   4841
+		endif !if(p_rhs2(i).lt.p_rhs(i))   4981
+	enddo !i=1,p_nrow   4956
 	if(j_err)return
 	!	write(6,*)'rhscur',p_rhscur
 	!	write(6,*)'rhsw',p_rhsw
@@ -5713,7 +5780,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! coefficients for d columns
 	do j=p_nrowz+1,p_mxnm !!!ncol ol liian vähän
 		p_xma(j)=1.  ! maximum value for w, later area of the unit
-	enddo !j=p_nrowz+1,p_mxnm   4881
+	enddo !j=p_nrowz+1,p_mxnm   4996
  
  
 	! pitäs olla sama kuin
@@ -5744,7 +5811,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			j_v(p_ivobjective)=-9.9
 			j_err=.true.
 			return
-		endif !if(p_nz.gt.0)   4907
+		endif !if(p_nz.gt.0)   5022
 		p_objf=p_xps(0)
 		p_vx(0)=1.
  
@@ -5755,7 +5822,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		if(p_xpresent)then
 			call defsolu()
 			call getsolx()
-		endif !if(p_xpresent)   4922
+		endif !if(p_xpresent)   5037
 		j_v(p_ivfeasible)=p_one
 		j_v(p_ivoptimal)=p_one
 		j_v(p_ivobjective)=p_coefmax*p_objf
@@ -5768,7 +5835,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		if(p_nureport.ne.6.and.p_echo)call repo(6)
  
 		return
-	endif !if(p_nrow.eq.0.and..not.p_fpresent)   4906
+	endif !if(p_nrow.eq.0.and..not.p_fpresent)   5021
 	j_v(p_ivstartedjlp)=j_1 !!!!
  
 	! milloin refactoroidaa, Fletcherin refactoroinnissa on bugi
@@ -5884,7 +5951,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
 	! compute the values of basic variables
 	if(.not.p_maxo)write(6,*)'**minimization: maximize -objective'
-	p_iunit55=0;p_niter=0
+	p_unit55=0;p_niter=0
 	!nkier=p_mxiter
 	nunits=p_nunits
 	! if(.not.p_xpresent2)then
@@ -5892,8 +5959,8 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! nunits=1
 	! endif !if(.not.p_xpresent2)   4635
 	!if(j_o(ivxdatmat)%r(10261*keepx).eq.0.)stop 90
-	! iba=ibaxmat(6841,1)
-	! iba2=ibaxmat(6842,2)
+	! iba=ibamatx(6841,1)
+	! iba2=ibamatx(6842,2)
 	! write(18,*)'<129>'
 	! write(18,*)j_o(ivxdatmat)%r(iba+1:iba+keepx)
 	! write(18,*)j_o(ivxdatmat)%r(iba2+1:iba2+keepx)
@@ -5909,21 +5976,21 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		if(j_yes)then
 			j_err=.true.
 			return
-		endif !if(j_yes)   5076
+		endif !if(j_yes)   5191
 		!if(p_pivot.ge.p_pullout1.or.j_err)call pullout(LWSLL1)
 		idebug2=j_v(j_ivdebug)
 		if(idebug1.ne.idebug2)then
 			p_idebug=idebug2
 		else
 			p_idebug=p_idebug+1
-		endif !if(idebug1.ne.idebug2)   5082
+		endif !if(idebug1.ne.idebug2)   5197
  
-	endif !if(p_idebug.eq.p_pivot.or.j_err)   5070
+	endif !if(p_idebug.eq.p_pivot.or.j_err)   5185
 	if(j_err)return
  
  
 	!write(16,*)'ALKU updgoto900,goto1234,goto8888,goto8889',goto900,goto1234,goto8888,goto8889,&
-	!p_iunit,p_pivot,j_objf
+	!p_unit,p_pivot,j_objf
 	p_goto900=.false.;p_goto1234=.false.;p_goto1578=.false.
 	p_goto400=.false.;p_goto36=.false.
 	p_goto100=.false.;p_goto5316=.false.;p_goto222=.false.;p_goto55=.false.
@@ -5939,14 +6006,14 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	nofact=0  !current number of rounds without factories
 	p_factnow=p_fpresent
  
-	!write(6,*)'alus',j_xmatlopp,j_xdatlopp,j_ibaxmats2,j_xdatibas2,j_xmatlast,j_xdatlast
+	!write(6,*)'alus',j_xmatlopp,j_xdatlopp,j_ibamatxs2,j_xdatibas2,j_xmatlast,j_xdatlast
 	!write(16,*)'ienteralsu',ienter,'p_nnf',p_nnf
 	!write(6,*)'br, bz, bs,bxkf =number of basic residuals, z-vars, scheds, xkf-vars'
 	call cpu_time(p_time0)
 	!write(6,*)'timehuis',time,p_time0,p_time00
 	write(6,*)'filling xmat took ',p_time0-p_time00,' cpu seconds'
-	!write(6,*)'ALLO',allocated(p_xrowcur)
-	!if(allocated(p_xrowcur))write(6,*)p_xrowcur
+	!write(6,*)'ALLO',allocated(p_rowcurx)
+	!if(allocated(p_rowcurx))write(6,*)p_rowcurx
 	write(6,*)' '
 	write(6,*)'*optimization options:'
 	p_pivotold=0
@@ -5962,7 +6029,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	else
  
 		write(6,*)'there was no fast%-> code option ,fast% will be ',p_fastpros
-	endif !if(p_isfastp)   5126
+	endif !if(p_isfastp)   5241
  
 	if(p_fpresent)write(6,*)'finterval->',iterxkf
  
@@ -5970,7 +6037,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		write(6,*)'stop->   :see jlp(stop->'
 	else !if(p_isstop)then
 		write(6,*)'stop->(Change%.lt.0.01.and.Round.ge.10)'
-	endif !if(p_isstop)   5136
+	endif !if(p_isstop)   5251
 	!endif !if(p_xpresent2)   4909
 	write(6,*)' '
 	write(6,*)'printing option, print->',p_iprint
@@ -5993,8 +6060,8 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!do ii=1,nunits
 	!do jj=1,6844
  
-	! iba=ibaxmat(6841,1)
-	! iba2=ibaxmat(6842,2)
+	! iba=ibamatx(6841,1)
+	! iba2=ibamatx(6842,2)
 	! write(18,*)'<19>'
 	! write(18,*)j_o(ivxdatmat)%r(iba+1:iba+keepx)
 	! write(18,*)j_o(ivxdatmat)%r(iba2+1:iba2+keepx)
@@ -6039,16 +6106,16 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		if(j_yes)then
 			j_err=.true.
 			return
-		endif !if(j_yes)   5206
+		endif !if(j_yes)   5321
 		!if(p_pivot.ge.p_pullout1.or.j_err)call pullout(LWSLL1)
 		idebug2=j_v(j_ivdebug)
 		if(idebug1.ne.idebug2)then
 			p_idebug=idebug2
 		else
 			p_idebug=p_idebug+1
-		endif !if(idebug1.ne.idebug2)   5212
+		endif !if(idebug1.ne.idebug2)   5327
  
-	endif !if(j_err)   5200
+	endif !if(j_err)   5315
  
 	if(p_nz.gt.0)then
 		p_ienter=0
@@ -6073,12 +6140,12 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
 				!if(p_pivot.ge.p_pullout1.or.j_err)call pullout(LWSLL1)
  
-			endif !if(j_err)   5231
+			endif !if(j_err)   5346
  
 			!	endif !if(.not.cancel)   4802
-		endif !if(p_ienter.ne.0)   5223
+		endif !if(p_ienter.ne.0)   5338
  
-	endif !if(p_nz.gt.0)   5220
+	endif !if(p_nz.gt.0)   5335
  
 	!	p_testl=.true.
 	p_kierstep=1
@@ -6086,12 +6153,12 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	kierloop: do p_kier=0,p_maxrounds
 	!	write(6,*)'kier ',p_kier
  
-		p_iunit=1
-		!	p_iunit=1
+		p_unit=1
+		!	p_unit=1
 		!if(p_pp)write(16,*)'p_kier,fast,fastmake',p_kier,fast,fastmake
 		! if(fastmake)then
 		! !if(p_pp)write(16,*)'fastmake alkaa',j_xmatinmemory,j_xdatinmemory,j_xdatfrodisk
-		! if(.not.j_xmatinmemory)j_xmatlast=0
+		! if(.not.j_xmatinfmemory)j_xmatlast=0
 		! if(.not.j_xdatinmemory)j_xdatlast=0
 		! endif
 		! how many round through all units
@@ -6109,7 +6176,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			if(kier.eq.10)p_kierstep=10
 			p_kierout=p_kierout+p_kierstep
  
-		endif !if(p_kier.eq.p_kierout)   5271
+		endif !if(p_kier.eq.p_kierout)   5386
 		!if(goto900)write(6,*)'<55>goto00nyt'
 		!	if(p_goto900)exit kierloop !return
 		!if(goto785)goto 785  !maxiter
@@ -6124,19 +6191,19 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		!	if(p_fastmake)write(6,*)'kier fastamke',p_kier,p_fastmakes
 		if(p_fpresent)p_logfactbas=0
  
-		unitloop: do p_iunit=1,p_nunits
+		unitloop: do p_unit=1,p_nunits
 			if(p_pivot.ne.ipivotstart)then
-				iunitchange=p_iunit
+				iunitchange=p_unit
  
-			elseif(p_iunit.eq.iunitchange)then
+			elseif(p_unit.eq.iunitchange)then
 				write(6,*)'*no change during the last Round'
  
 				if(p_feasible)write(6,*)'SOLUTION FOUND'
 				goto 900
-			endif !if(p_pivot.ne.ipivotstart)   5295
+			endif !if(p_pivot.ne.ipivotstart)   5410
 			ipivotstart=p_pivot
  
-			if(p_iunit.eq.1)p_idomba=0
+			if(p_unit.eq.1)p_idomba=0
  
 			!if(p_kier.gt.1.or.iunit.gt.1)
 			!write(6,*)'<57hei',goto401,j_xpresent2
@@ -6165,7 +6232,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					p_kier,p_pivot,p_coefmax*p_objf,p_as,p_lr0,p_lz0,p_lx0, &
 					p_lf0,p_nnf  !,iminc,':',secd,imint,':',sect
 				p_feasible1=.false.
-			endif !if(p_feasible.and.p_feasible1)   5325
+			endif !if(p_feasible.and.p_feasible1)   5440
 			! if(p_ispullout.or.j_err)then
 			! if(p_pivot.ge.p_pullout1.or.j_err)call pullout(LWSLL1)
  
@@ -6203,55 +6270,57 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
  
  
-			if(p_activeunit(p_iunit))then
+			if(p_activeunit(p_unit))then
 				if(p_fpresent)then
 					p_ilog=1
 					p_inebas=0
 					p_logfactbas=0
+ 
  
 	778				p_ienter=0
 					call fenter()
 					if(p_ienter.ne.0)then
 						call leaving()
 						goto 778
-					endif !if(p_ienter.ne.0)   5381
+					endif !if(p_ienter.ne.0)   5497
  
  
  
  
-				endif !if(p_fpresent)   5374
+				endif !if(p_fpresent)   5489
  
 				call senter()
  
  
-			endif !if(p_activeunit(p_iunit))   5373
+			endif !if(p_activeunit(p_unit))   5488
 			!		write(6,*)'senter ',p_ienter,p_goto36
  
 			if(p_ienter.eq.0)then
-				if(p_iunit.eq.p_iunitprev)then
+				if(p_unit.eq.p_unitprev)then
 					write(6,*)' '
 					write(6,*)'no change during last round'
 					write(6,*)'solution is optimal'
 					j_v(p_ivoptimal)=j_1
  
 					goto 900
-				endif !if(p_iunit.eq.p_iunitprev)   5398
+				endif !if(p_unit.eq.p_unitprev)   5514
  
 				cycle unitloop
  
-			endif !if(p_ienter.eq.0)   5397
+			endif !if(p_ienter.eq.0)   5513
 			!			if(p_ienter.ne.0)then
-			if(p_p)write(6,*)'s can enter ,unit ',p_iunit, 'pivot ',p_pivot
+			if(p_p)write(6,*)'s can enter ,unit ',p_unit, 'pivot ',p_pivot
 			call leaving()
 			!		if(.not.cancel)then
 			if(p_lr0.eq.p_nrow.and.p_pivot.gt.p_pivotold)then !due to a bug in Fletcher
 				write(6,*)'here888 startlist0',p_pivot,p_pivotold
 				call startlist0()
+				! initilize lists defined in startlist(
 				call initflet(p_nrow,p_ncol,p_a,p_nrow,p_lavec,p_ls,lu1,ll1,p_ifail,nrefac)
 				!	write(6,*)'here999'
  
 				p_pivotold=p_pivot
-			endif !if(p_lr0.eq.p_nrow.and.p_pivot.gt.p_pivotold)   5414
+			endif !if(p_lr0.eq.p_nrow.and.p_pivot.gt.p_pivotold)   5530
 	380				call updatejlp()
 			if(j_err)then
 				idebug1=j_v(j_ivdebug)
@@ -6263,19 +6332,19 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 				if(j_yes)then
 					j_err=.true.
 					return
-				endif !if(j_yes)   5430
+				endif !if(j_yes)   5547
 				!if(p_pivot.ge.p_pullout1.or.j_err)call pullout(LWSLL1)
 				idebug2=j_v(j_ivdebug)
 				if(idebug1.ne.idebug2)then
 					p_idebug=idebug2
 				else
 					p_idebug=p_idebug+1
-				endif !if(idebug1.ne.idebug2)   5436
+				endif !if(idebug1.ne.idebug2)   5553
  
-			endif !if(j_err)   5423
+			endif !if(j_err)   5540
  
  
-			j_o(p_ivobjdif)%d(p_iunit)=p_objf-p_objfv
+			j_o(p_ivobjdif)%d(p_unit)=p_objf-p_objfv
 			!		endif !if(.not.cancel)   4964
 			p_ienter=0  ! type of entering
  
@@ -6292,12 +6361,12 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					!	write(6,*)'here2'
  
 					p_pivotold=p_pivot
-				endif !if(p_lr0.eq.p_nrow.and.p_pivot.gt.p_pivotold)   5455
+				endif !if(p_lr0.eq.p_nrow.and.p_pivot.gt.p_pivotold)   5572
 				!		endif !if(.not.cancel)   5005
 				goto 380
 				!	cycle inunitloop
  
-			endif !if(p_ienter.gt.0)   5451
+			endif !if(p_ienter.gt.0)   5568
 			!				cycle unitloop
  
 			!			endif !if(p_ienter.ne.0)   4613
@@ -6319,10 +6388,10 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			! if(p_nextxkf) then   !!!!
 			!	tarkistetaan pitääkö laskea muunnokset !!!! <A1> tehdaan alussa
 			!	iunitrans yksikkö, jolle viimeksi laskettu tehdasmuunnokset
-			! if ((p_nfy.gt.0).and.(p_iunit/=p_iunitrans)) then
+			! if ((p_nfy.gt.0).and.(p_unit/=p_unitrans)) then
 			! do j=1,j_o(p_ivkeepc)%i(1)
 			! j_v(j_o(p_ivkeepc)%i2(j))= &
-			! j_o(p_ivmatc)%d((p_iunit-1)*j_o(p_ivkeepc)%i(1)+j)
+			! j_o(p_ivdatamatc)%d((p_unit-1)*j_o(p_ivkeepc)%i(1)+j)
 			! enddo !j=1,j_o(p_ivkeepc)%i(1)   3494
 			! do j=1,p_nutiltrans
 			! call dotrans(p_utiltrans(j),1)
@@ -6330,8 +6399,8 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			! write(6,*)'error for transformation ',j
 			! endif !if(j_err)   3500
 			! enddo !j=1,p_nutiltrans   3498
-			! p_iunitrans=p_iunit
-			! endif !if ((p_nfy.gt.0).and.(p_iunit/=p_iunitrans))   3493
+			! p_unitrans=p_unit
+			! endif !if ((p_nfy.gt.0).and.(p_unit/=p_unitrans))   3493
 			! if(p_p) write(p_n16,*)'<5836> nextxkf true'
 			! goto 5316   !!!! jatketaan seuraavasta tehdasmuuttujasta
 			!!! varmistetaan tehdasmjien läpikäynti alusta tilanteessa,
@@ -6348,11 +6417,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			!			cycle unitloop
  
 			!401 continue
-			p_iunitprev=p_iunit  !!!!
+			p_unitprev=p_unit  !!!!
 			!			p_goto401=.false. !we jump here when entering inunitloop first time
 			!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			!	call ispe(isper,1) !testing negative amounts
-			!write(20,*)'p_iunitv,p_kier,p_kierv,p_iunitprev',p_iunitv,p_kier,p_kierv,p_iunitprev
+			!write(20,*)'p_unitv,p_kier,p_kierv,p_unitprev',p_unitv,p_kier,p_kierv,p_unitprev
  
  
 			! 700   continue
@@ -6368,30 +6437,30 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 			! j_v(p_ivoptimal)=j_1
 			! exit kierloop !goto 900          !   <r1>
 			!			endif !if(.not.p_xpresent)   3449
-			!if(p_pp)write(16,*)'beforesenter,iente',p_ienter,p_iunit,j_objf,p_nnf,p_pivot,kier,goto400
+			!if(p_pp)write(16,*)'beforesenter,iente',p_ienter,p_unit,j_objf,p_nnf,p_pivot,kier,goto400
  
 			!			call senter()  !note p_ienter=3 is not yet set it is set in entercol
-			!if(p_pp)write(16,*)'senter,iente',p_ienter,p_iunit,j_objf,p_nnf,p_pivot,kier,goto400
+			!if(p_pp)write(16,*)'senter,iente',p_ienter,p_unit,j_objf,p_nnf,p_pivot,kier,goto400
 			!			if(p_goto400)exit inunitloop !cycle unitloop !goto 400
 			!			p_sentered=.true.
-			!write(17,*)'senter2,iente',p_ienter,p_iunit,j_objf,p_nnf,p_pivot,p_kier
+			!write(17,*)'senter2,iente',p_ienter,p_unit,j_objf,p_nnf,p_pivot,p_kier
 			! end tärkein looppi
 			!********************end: can a schedule enter
 			!222	continue !secondb
  
  
-			!if(p_pp)write(16,*)'unit,ns,valopt,valk,key,p_iopt',p_iunit,j_nsch(p_iunit),&
-			!j_valueopt,j_valuek,j_keys(p_iunit),p_iopt
+			!if(p_pp)write(16,*)'unit,ns,valopt,valk,key,p_iopt',p_unit,j_nsch(p_unit),&
+			!j_valueopt,j_valuek,j_keys(p_unit),p_iopt
 			! if finding feasible voisi suoraan katsoa, että valuoptin ja valuek:n eroa
  
-			! if(p_iopt.eq.p_keys(p_iunit))then  !!!!
+			! if(p_iopt.eq.p_keys(p_unit))then  !!!!
 			! if (.not.p_fpresent)then   !!!!
 			! !				exit inunitloop !cycle unitloop !goto 400   !goto next unit , 400 is earlier !!!!
 			! else !if (.not.j_fpresent)then
 			! !	write(16,*)'goto5316tas'
 			! goto 5316 ! fpresent &&  (p_iopt == key)  !!!!
 			! endif !if (.not.p_fpresent)   4763
-			! endif !if(p_iopt.eq.p_keys(p_iunit))   4762
+			! endif !if(p_iopt.eq.p_keys(p_unit))   4762
 			! if(p_valueopt.le.p_valuek+p_tolecur) then  !!!!
 			! if (.not.p_fpresent)then   !!!!
 			! exit inunitloop !cycle unitloop !goto 400   !goto next unit , 400 is earlier !!!!
@@ -6458,7 +6527,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
  
  
 			!write(17,*)'aftendinunitloop',kier,iunit
-		enddo unitloop !tloop: do p_iunit=1,p_nunits   5294
+		enddo unitloop !tloop: do p_unit=1,p_nunits   5409
  
 		if(p_fpresent.and.p_feasible)then
 			if(.not.p_factnow)then
@@ -6467,15 +6536,15 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 					write(6,*)'factories will now be checked,round,p_pivot,obj', p_kier,p_pivot,p_objf
 					p_factnow=.true.
 					nofact=0
-				endif !if(nofact.gt.iterxkf)   5633
+				endif !if(nofact.gt.iterxkf)   5750
 			else !if(.not.p_factnow)then
 				!	write(6,*)'round,p_factnow put to false',p_kier
 				!		p_factnow=.false.
-			endif !if(.not.p_factnow)   5631
-		endif !if(p_fpresent.and.p_feasible)   5630
+			endif !if(.not.p_factnow)   5748
+		endif !if(p_fpresent.and.p_feasible)   5747
  
-		!write(17,*)'aftunitloop',kier,p_iunit
-	enddo kierloop !rloop: do p_kier=0,p_maxrounds   5253
+		!write(17,*)'aftunitloop',kier,p_unit
+	enddo kierloop !rloop: do p_kier=0,p_maxrounds   5368
 	write(6,*)'iteration stops, maximum number of rounds through units ',p_maxrounds,' reached'
 	write(6,*)'note you can increase this using maxrounds-> option'
  
@@ -6492,15 +6561,15 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	call weightstot()
  
 	call closeflet()
-	! if(allocated(p_ls)) deallocate(p_ls)   !xvars;
-	! if(allocated(p_lsi)) deallocate(p_lsi)   !xvars;
-	! if(allocated(p_a)) deallocate(p_a)   !xvars;
-	! !	if(allocated(p_objr0)) deallocate(p_objr0)   !xvars;
-	! if(allocated(p_objr2)) deallocate(p_objr2)   !xvars;
-	! if(allocated(p_xmi)) deallocate(p_xmi)   !xvars;
-	! if(allocated(p_xma)) deallocate(p_xma)   !xvars;
-	! if(allocated(p_x)) deallocate(p_x)   !xvars;
-	! if(allocated(p_b)) deallocate(p_b)   !xvars;
+	! if(allocated(p_ls)) deallocate(p_ls)   !varx;
+	! if(allocated(p_lsi)) deallocate(p_lsi)   !varx;
+	! if(allocated(p_a)) deallocate(p_a)   !varx;
+	! !	if(allocated(p_objr0)) deallocate(p_objr0)   !varx;
+	! if(allocated(p_objr2)) deallocate(p_objr2)   !varx;
+	! if(allocated(p_xmi)) deallocate(p_xmi)   !varx;
+	! if(allocated(p_xma)) deallocate(p_xma)   !varx;
+	! if(allocated(p_x)) deallocate(p_x)   !varx;
+	! if(allocated(p_b)) deallocate(p_b)   !varx;
 	nullify(p_objr)
  
 930 	continue
@@ -6508,11 +6577,11 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 !	if(p_xpresent)then
 		!		if(allocated(p_ivdomains)) deallocate(p_ivdomains)
 	! if(allocated(p_ibatemp)) deallocate(p_ibatemp)
-	! if(allocated(p_nxrowtemp)) deallocate(p_nxrowtemp)
+	! if(allocated(p_nrowxtemp)) deallocate(p_nrowxtemp)
 	! !	if(allocated(p_ixprow)) deallocate(p_ixprow)
 	! if(allocated(p_xcoef)) deallocate(p_xcoef)
-	! if(allocated(p_irowxvars)) deallocate(p_irowxvars)
-	! if(allocated(p_nxrow2)) deallocate(p_nxrow2)
+	! if(allocated(p_irowvarx)) deallocate(p_irowvarx)
+	! if(allocated(p_nrowx2)) deallocate(p_nrowx2)
 	! !	if(allocated(p_nunitsrow)) deallocate(p_nunitsrow)
 	! if(allocated(p_xps)) deallocate(p_xps)  !nsch,keys,ibaunit
 	! if(allocated(p_xsmin)) deallocate(p_xsmin)  !nsch,keys,ibaunit
@@ -6543,7 +6612,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 		p_buf='jlp error exit'
 	else !if(j_err) then
 		p_buf='jlp normal exit'
-	endif !if(j_err)   5709
+	endif !if(j_err)   5826
 	write(p_nureport,'(a)')p_buf(1:79)
 	call  cpu_time(p_time0)
 	write(p_nureport,*)'total cpu-time in jlp() ',p_time0-p_time00
@@ -6604,7 +6673,7 @@ subroutine weightstot()
 	ivw=j_defmatrix(j_ivout,'%weights',p_lopp,1,j_matreg)
 	do iuni=1,p_nunits
 		j_o(ivw)%d(p_ibaunit(iuni)+p_keys(iuni))=j_1
-	enddo !iuni=1,p_nunits   5756
+	enddo !iuni=1,p_nunits   5873
  
 	do j=1,p_lx0
 		iuni=p_lunit(p_lx(j))
@@ -6613,7 +6682,7 @@ subroutine weightstot()
 		j_o(ivw)%d(p_ibaunit(iuni)+is)=j_dapu
 		j_o(ivw)%d(p_ibaunit(iuni)+p_keys(iuni))=j_o(ivw)%d(p_ibaunit(iuni)+p_keys(iuni))-j_dapu
  
-	enddo !j=1,p_lx0   5760
+	enddo !j=1,p_lx0   5877
  
 end subroutine
 ! subroutine initfl()
@@ -6691,7 +6760,7 @@ subroutine tulostele3()
 	use jmod, only: p_lf0
 	use jmod, only: p_nnf
  
-	!				if((p_iunitprev.eq.p_iunitv.and.p_kier.gt.p_kierv).or.(p_iunitv==-1.and.p_kier.gt.p_kierv))then
+	!				if((p_unitprev.eq.p_unitv.and.p_kier.gt.p_kierv).or.(p_unitv==-1.and.p_kier.gt.p_kierv))then
 	!!!!! there was no change since last visit to the same unit , optimum found,return !<B331>
 	!maxiter
 	!	write(16,*)'tasny,goto700',goto700
@@ -6727,14 +6796,14 @@ subroutine tulostele3()
 					p_kier,p_pivot,p_coefmax*p_objf,p_as,p_lr0,p_lz0,p_lx0, &
 					p_lf0,p_nnf,iminc,':',secd,imint,':',sect
  
-			endif !if(p_objfprev.ne.p_small)   5854
+			endif !if(p_objfprev.ne.p_small)   5971
 			! else !if(j_xpresent2)then
 			! write(6,*)'Feasible, objective:', &
 			! p_coefmax*p_objf,'basic residuals ', p_lr0, &
 			! ' basic z-vars ',p_lz0, ' cpu ',(time-p_time00)/60.
 			! endif !if(p_xpresent2)   5633
 			!time0=time
-		endif !if(p_feasible)   5841
+		endif !if(p_feasible)   5958
 	else !if(ipivot9.ne.p_pivot)then
 		!		if(p_xpresent2)then
 		!write(6,*)'tassa2'
@@ -6745,13 +6814,13 @@ subroutine tulostele3()
 		!	write(6,*)'Optimal, objective:', &
 		!		p_coefmax*p_objf,'basic residuals ', p_lr0, ' basic z-vars ',p_lz0, ' cpu ',(time-p_time00)/60.
 		!	endif !if(p_xpresent2)   4715
-	endif !if(ipivot9.ne.p_pivot)   5833
+	endif !if(ipivot9.ne.p_pivot)   5950
 	!write(6,*)'<654exitkier'
  
  
 	!			exit kierloop
 	!				endif !if(.not.p_goto700)   4675
-	!			endif !if((p_iunitprev.eq.p_iunitv.and.p_kier.gt.p_kierv).or.(p_i   4670
+	!			endif !if((p_unitprev.eq.p_unitv.and.p_kier.gt.p_kierv).or.(p_i   4670
  
  
  
@@ -6771,7 +6840,7 @@ subroutine commonopt(iob,io)
 	use jmod, only: p_idebug
 	use jmod, only: p_p
 	use jmod, only: p_ivpopar
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: j_ivout
 	use jmod, only: j_o
 	use jmod, only: p_ivfeasible
@@ -6849,7 +6918,7 @@ subroutine commonopt(iob,io)
 	use jmod, only: p_rhs
 	use jmod, only: p_ivrhscur
 	use jmod, only: p_rhscur
-	integer, dimension(:),allocatable,target::termvars,vars,rowofterm !,nterminrow
+	integer, dimension(:),allocatable,target::termvar,vars,rowofterm !,nterminrow
 	double precision, dimension(:),allocatable,target::coef
 	write(6,*)'commonopt'
  
@@ -6864,7 +6933,7 @@ subroutine commonopt(iob,io)
 	if(noptarg.ge.1)then
  
 		if(j_v(j_optarg0(1)).eq.0)p_ispullout=.false.
-	endif !if(noptarg.ge.1)   5907
+	endif !if(noptarg.ge.1)   6024
  
  
 	!	write(6,*)'ispullout',p_ispullout,p_pullout1,p_pullout2
@@ -6889,7 +6958,7 @@ subroutine commonopt(iob,io)
 	else
  
 		p_idebug=j_v(j_ivdebug)
-	endif !if(idebu.lt.0)   5928
+	endif !if(idebu.lt.0)   6045
 	! if(j_linkoption(iob,io,j_mdebug).ge.0)then
  
 	! ndebug=j_o(iob)%i(j_linkoption(iob,io,j_mdebug))  !number of arguments
@@ -6923,8 +6992,8 @@ subroutine commonopt(iob,io)
  
  
  
-	! call j_deflistobject(ivproblem,'%coefvars',iv,list0=nterm,list=coefvars(1:nterm))
-	! call j_deflistobject(ivproblem,'%coefplus',iv2,list0=nterm,list=isplus(1:nterm))
+	! call j_deflist(ivproblem,'%coefvars',iv,list0=nterm,list=coefvars(1:nterm))
+	! call j_deflist(ivproblem,'%coefplus',iv2,list0=nterm,list=isplus(1:nterm))
  
 	! j_o(ivproblem)%i(17)=iv
 	! j_o(ivproblem)%i(18)=iv2
@@ -6942,7 +7011,7 @@ subroutine commonopt(iob,io)
 	! nad=0 !
 	! do i=1,p_nterm
  
-	! ivterm=p_termvars(i)
+	! ivterm=p_termvar(i)
 	! !write(6,*)'iterm',i,ivterm
 	! if(j_otype(ivterm).eq.j_iplist)then
 	! ivcoe=j_o(p_ivcoefvars)%i2(i)
@@ -6970,8 +7039,8 @@ subroutine commonopt(iob,io)
 	! !write(6,*)'nad',nad
 	! if(nad.gt.0)then
 	! nterm=p_nterm+nad
-	! if(allocated(termvars))deallocate(termvars)
-	! allocate(termvars(1:nterm))
+	! if(allocated(termvar))deallocate(termvar)
+	! allocate(termvar(1:nterm))
 	! if(allocated(rowofterm))deallocate(rowofterm)
 	! allocate(rowofterm(1:nterm))
 	! if(allocated(coef))deallocate(coef)
@@ -6989,14 +7058,14 @@ subroutine commonopt(iob,io)
  
 	! iro=p_rowofterm(i)
 	! !write(6,*)'ihere,iro',i,iro
-	! ivterm=p_termvars(i)
+	! ivterm=p_termvar(i)
 	! j_yes=j_o(p_ivcoefplus)%i2(i).ne.0
 	! if(j_otype(ivterm).eq.j_iplist)then
 	! ivcoe=j_o(p_ivcoefvars)%i2(i)
 	! call j_getname(ivcoe)
 	! !write(6,*)'coe ',j_oname(1:j_loname),j_otype(ivcoe),j_ipmatrix
 	! isiz=j_o(ivterm)%i(1)
-	! termvars(nterm+1:nterm+isiz)=j_o(ivterm)%i2(1:isiz)
+	! termvar(nterm+1:nterm+isiz)=j_o(ivterm)%i2(1:isiz)
 	! if(j_otype(ivcoe).eq.j_ipmatrix)then
 	! if(j_yes)then
 	! coef(nterm+1:nterm+isiz)=j_o(ivcoe)%d(1:isiz)
@@ -7035,7 +7104,7 @@ subroutine commonopt(iob,io)
 	! rowofterm(nterm)=iro
 	! coef(nterm)=j_v(p_coefvars(i)) !p_coef(i)
 	! if(p_coefplus(i).eq.0)coef(nterm)=-coef(nterm)
-	! termvars(nterm)=p_termvars(i)
+	! termvar(nterm)=p_termvar(i)
 	! endif !if(j_otype(ivterm).eq.j_iplist)   5095
  
 	! !write(6,*)'nterm ',nterm
@@ -7049,17 +7118,17 @@ subroutine commonopt(iob,io)
 	! !write(6,*)'rofofebef',p_rowofterm
 	! p_rowofterm=>rowofterm(1:nterm)
 	! !write(6,*)p_rowofterm
-	! !write(6,*)'termarsbef', p_termvars(1:p_nterm)
-	! p_termvars=>termvars(1:nterm)
-	! !write(6,*)p_termvars(1:nterm)
+	! !write(6,*)'termarsbef', p_termvar(1:p_nterm)
+	! p_termvar=>termvar(1:nterm)
+	! !write(6,*)p_termvar(1:nterm)
 	! !write(6,*)'coefbef',p_coef
 	! p_coef=>coef(1:nterm)
 	! !write(6,*)p_coef
 	! if(j_ivout.ne.j_ivresult) then
-	! call j_deflistobject(j_ivout,'%vars',iv,list0=npvar,list=vars(1:npvar)) !p-variables
-	! call j_deflistobject(j_ivout,'%rowofterm',iv,list0=nterm,list=rowofterm(1:nterm),ilist=.true.) !row of each term
-	! call j_deflistobject(j_ivout,'%nterminrow',iv,list0=p_nrowtot,list=p_nterminrow(0:p_nrow),ilist=.true.)
-	! call j_deflistobject(j_ivout,'%termvars',iv,list0=nterm,list=termvars(1:nterm))
+	! call j_deflist(j_ivout,'%vars',iv,list0=npvar,list=vars(1:npvar)) !p-variables
+	! call j_deflist(j_ivout,'%rowofterm',iv,list0=nterm,list=rowofterm(1:nterm),ilist=.true.) !row of each term
+	! call j_deflist(j_ivout,'%nterminrow',iv,list0=p_nrowtot,list=p_nterminrow(0:p_nrow),ilist=.true.)
+	! call j_deflist(j_ivout,'%termvar',iv,list0=nterm,list=termvar(1:nterm))
 	! !
 	! !		j_o(iv)%d(1:nterm)=coef(1:nterm)
 	! endif !if(j_ivout.ne.j_ivresult)   5159
@@ -7077,7 +7146,7 @@ subroutine commonopt(iob,io)
 	! call j_defmatrix(j_ivout,'%coef',p_nterm,1,j_matreg,iv)
 	if(p_p)write(6,*)'tasapopar ',p_ivpopar
 	if(p_ivpopar.eq.0)then
-		p_ivpopar=j_deflistobject(j_ivout,'%jlppar',list0=15)
+		p_ivpopar=j_deflist(j_ivout,'%jlppar',list0=15)
 		j_o(p_ivpopar)%i2(1:15)= (/ p_ivfeasible, p_ivunbounded, p_ivobjective, p_ivobjective0, &
 			p_ivoptimal,p_ivpivots,p_ivtmax,p_ivcolold,p_ivcolnew,p_ivpivotcase,&
 			p_ivlr0,p_ivlz0,p_ivlx0,p_ivlf0,p_ivrefac/)
@@ -7093,7 +7162,7 @@ subroutine commonopt(iob,io)
 			p_ivcolold=j_getobject(j_ivout,'%colold',j_ipreal)
 			p_ivcolnew=j_getobject(j_ivout,'%colnew',j_ipreal)
 			p_ivpivotcase=j_getobject(j_ivout,'%pivotcase',j_ipreal)
-			p_ivpivotcases=j_deflistobject(j_ivout,'%pivotcases',list0=5,ilist=.true.)
+			p_ivpivotcases=j_deflist(j_ivout,'%pivotcases',list0=5,ilist=.true.)
 			p_ivroute67=j_getobject(j_ivout,'%route67',j_ipreal)
 			p_ivlr0=j_getobject(j_ivout,'%lr0',j_ipreal)
 			p_ivlz0=j_getobject(j_ivout,'%lz0',j_ipreal)
@@ -7102,10 +7171,10 @@ subroutine commonopt(iob,io)
 			p_ivrefac=j_getobject(j_ivout,'%refac',j_ipreal)
 			p_ivvaluek=j_getobject(j_ivout,'%valuek',j_ipreal)
 			p_ivvalueopt=j_getobject(j_ivout,'%valueopt',j_ipreal)
-		endif !if(p_nrow.gt.0)   6132
+		endif !if(p_nrow.gt.0)   6249
 		! else
 		! j_v(j_o(p_ivpopar)%i2)=j0
-	endif !if(p_ivpopar.eq.0)   6122
+	endif !if(p_ivpopar.eq.0)   6239
 	if(p_nrow.gt.0)j_v(p_ivtmax)=j_ninf
 	p_refac=0 !number of refactorizations
 	!	printlf=.false.
@@ -7140,7 +7209,7 @@ subroutine commonopt(iob,io)
 	p_echo=.true.
 	if(noptarg.gt.0)then
 		if(j_v(j_optarg0(1)).le.j_0)p_echo=.false.
-	endif !if(noptarg.gt.0)   6184
+	endif !if(noptarg.gt.0)   6301
  
 	p_feasible=.false.
 	p_icolold=-1
@@ -7158,11 +7227,11 @@ subroutine commonopt(iob,io)
 			!call j_getwritefile(p_ivreport,j_ivdollar,bin)
 			if(j_err)return
 			p_nureport=nuu  !j_iounit(p_ivreport) !j_o(p_ivreport)%i(4)
-		endif !if(p_nureport.le.0)   6197
+		endif !if(p_nureport.le.0)   6314
  
 	else !if(j_nargopt(iob,io,j_mreport).eq.1)then
 		p_nureport=6
-	endif !if(noptarg.eq.1)   6192
+	endif !if(noptarg.eq.1)   6309
 	!	write(6,*)'tassanyt'
 	!p_p9=p_iprint.eq.9
 	!	sparse=.false.
@@ -7185,7 +7254,7 @@ subroutine commonopt(iob,io)
 		p_nrefac=j_v(j_o(iob)%i(j_linkoption(iob,io,j_mrefac)+1))
 	else !if(j_linkoption(iob,io,j_mrefac).gt.0)then
 		p_nrefac=1000  !
-	endif !if(j_linkoption(iob,io,j_mrefac).gt.0)   6227
+	endif !if(j_linkoption(iob,io,j_mrefac).gt.0)   6344
 	!	write(6,*)'refac=',p_nrefac
  
 	! tole->
@@ -7196,7 +7265,7 @@ subroutine commonopt(iob,io)
 		p_tolep=j_v(j_optarg0(1))
 	else !if(j_linkoption(iob,io,j_mtole).gt.0)then
 		p_tolep=p_one
-	endif !if(noptarg.gt.0)   6237
+	endif !if(noptarg.gt.0)   6354
 	!write(6,*)'tole=',j_tolep
 	if(p_p)write(6,*)'tassanyt&& nrow ',p_nrow
  
@@ -7227,8 +7296,8 @@ subroutine commonopt(iob,io)
  
  
  
-	p_ivubou=j_deflistobject(j_ivout,'%ubou',list0=p_nrow,ilist=.true.) !p-variables
-	p_ivlbou=j_deflistobject(j_ivout,'%lbou',list0=p_nrow,ilist=.true.) !p-variables
+	p_ivubou=j_deflist(j_ivout,'%ubou',list0=p_nrow,ilist=.true.) !p-variables
+	p_ivlbou=j_deflist(j_ivout,'%lbou',list0=p_nrow,ilist=.true.) !p-variables
 	if(p_p)write(6,*)'tassan5i rhs2 '
 	!p_rhs2
 	p_ubou=p_rhs2.lt.j_inf   ! is there upper bound
@@ -7279,7 +7348,7 @@ subroutine getnvarz()
 	if(j_linkoption(iob,io,j_mdata).ge.0)then
 		write(6,*)'jlpz() cannot use data->, problems with schedules are solved with jlp()'
 		j_err=.true.;return
-	endif !if(j_linkoption(iob,io,j_mdata).ge.0)   6319
+	endif !if(j_linkoption(iob,io,j_mdata).ge.0)   6436
  
  
 end subroutine
@@ -7313,17 +7382,17 @@ subroutine startlist0()
 	use jmod, only: p_lf
 	use jmod, only: p_lfi
 	use jmod, only: p_lf0
-	use jmod, only: p_iunitrans
+	use jmod, only: p_unitrans
 	use jmod, only: p_ienter
- 
+	! initilize lists defined in startlist(
 	if(p_nz.gt.0)then
 		do i=1,p_nz
 			p_lz(i)=i		! list allz-cols in order
 			p_lzi(i)=i	! nrow not included
-		enddo !i=1,p_nz   6329
+		enddo !i=1,p_nz   6446
 		p_lz0=0
 		p_redcost=j_0
-	endif !if(p_nz.gt.0)   6328
+	endif !if(p_nz.gt.0)   6445
 	p_x=j_0
 	p_b=j_0
 	p_vc=j_0
@@ -7331,7 +7400,7 @@ subroutine startlist0()
 	p_abas(1)=p_nrow
 	do j=2,p_mxn
 		p_abas(j)=p_abas(j-1)+p_nrow
-	enddo !j=2,p_mxn   6341
+	enddo !j=2,p_mxn   6458
  
 	! if(allocated(p_a))deallocate(p_a)
 	! allocate(p_a(1:p_nrow,0:p_mxn) ) ;p_a=j_0
@@ -7341,36 +7410,36 @@ subroutine startlist0()
  
 	do j=1,p_nm !nm=ncol+nrow    ! number of columns in (I A)
 		p_lsi(j)=j    !intially ls is in order, residuasl are in the basis
-	enddo !j=1,p_nm   6351
+	enddo !j=1,p_nm   6468
 	!	write(6,*)p_nm,'lsi',p_lsi
 	do i=1,p_nrow
 		p_lr(i)=i
 		p_lri(i)=i	!inverse list
-	enddo !i=1,p_nrow   6355
+	enddo !i=1,p_nrow   6472
 	p_lr0=p_nrow
 	if(p_xpresent)then
 		do i=1,p_mxd
 			p_lx(i)=i          !lists columns of D
 			p_lxi(i)=i        !inverse list
-		enddo !i=1,p_mxd   6361
-	endif !if(p_xpresent)   6360
+		enddo !i=1,p_mxd   6478
+	endif !if(p_xpresent)   6477
 	if (p_fpresent) then
 		do i=p_mxd+1,2*p_mxd
 			p_lf(i-p_mxd)=i          !lists columns of D
 			p_lfi(i-p_mxd)=i       !inverse list
-		enddo !i=p_mxd+1,2*p_mxd   6367
+		enddo !i=p_mxd+1,2*p_mxd   6484
 		p_lf0=p_mxd
 		!jatketaanko seuraavasta tehdasmjasta tarkastelu/ienter, ixkenter alustukset
  
 		ixkenter = 0
-		p_iunitrans = 0	! yksikkö, jolle viimeksi laskettu tehdasmja muunnokset
-	endif !if (p_fpresent)   6366
+		p_unitrans = 0	! yksikkö, jolle viimeksi laskettu tehdasmja muunnokset
+	endif !if (p_fpresent)   6483
 	p_ienter= 0
  
 end subroutine startlist0
 
 subroutine startlist()
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: j_ivout
 	use jmod, only: p_ivls
 	use jmod, only: p_mxnm
@@ -7419,19 +7488,49 @@ subroutine startlist()
 	use jmod, only: p_lf
 	use jmod, only: p_ivlfi
 	use jmod, only: p_lfi
+	! p_ivls p_ls
+	! p_ivlsi p_lsi
+	! p_ivlr p_lr
+	! p_ivlri p_lri
+	! p_ivobjr0
+	! p_objr0
+	! p_ivobjr2
+	! p_objr2
+	! p_ivlz
+	! p_lz
+	! p_ivlx
+	! p_lx
+	! p_ivlxi
+	! p_lxi
+	! p_ivlf
+	! p_lf
+	! p_ivlfi
+	! p_lfi
+	! p_ivvc
+	! p_vc
+	! p_ivx
+	! p_x
+	! p_ivb
+	! p_b
+	! p_xmi
+	! p_xma
+	! p_iva
+	! p_a
+ 
+ 
 	!	write(6,*)'startlist',p_mxnm
  
  
-	p_ivls=j_deflistobject(j_ivout,'%ls',list0=p_mxnm,ilist=.true.)
+	p_ivls=j_deflist(j_ivout,'%ls',list0=p_mxnm,ilist=.true.)
 	p_ls=>j_o(p_ivls)%i2(1:p_mxnm)
  
-	p_ivlsi=j_deflistobject(j_ivout,'%lsi',list0=p_mxnm,ilist=.true.)
+	p_ivlsi=j_deflist(j_ivout,'%lsi',list0=p_mxnm,ilist=.true.)
 	p_lsi=>j_o(p_ivlsi)%i2(1:p_mxnm)
  
-	p_ivlr=j_deflistobject(j_ivout,'%lr',list0=p_mxnm,ilist=.true.)
+	p_ivlr=j_deflist(j_ivout,'%lr',list0=p_mxnm,ilist=.true.)
 	p_lr=>j_o(p_ivlr)%i2(1:p_mxnm)
  
-	p_ivlri=j_deflistobject(j_ivout,'%lri',list0=p_mxnm,ilist=.true.)
+	p_ivlri=j_deflist(j_ivout,'%lri',list0=p_mxnm,ilist=.true.)
 	p_lri=>j_o(p_ivlri)%i2(1:p_mxnm)
  
 	p_ivobjr0=j_defmatrix(j_ivout,'%objr0',1,p_mxnm,j_matreg)
@@ -7441,9 +7540,9 @@ subroutine startlist()
 	p_objr2=>j_o(p_ivobjr2)%d(1:p_mxnm)
  
 	if(p_nz.gt.0)then
-		p_ivlz=j_deflistobject(j_ivout,'%lz',list0=p_nz,ilist=.true.)
+		p_ivlz=j_deflist(j_ivout,'%lz',list0=p_nz,ilist=.true.)
 		p_lz=>j_o(p_ivlz)%i2(1:p_nz)
-		p_ivlzi=j_deflistobject(j_ivout,'%lzi',list0=p_nz,ilist=.true.)
+		p_ivlzi=j_deflist(j_ivout,'%lzi',list0=p_nz,ilist=.true.)
 		p_lzi=>j_o(p_ivlzi)%i2(1:p_nz)
 		p_ivredcost=j_defmatrix(j_ivout,'%redcost',p_nz,1,j_matreg)
 		p_redcost=>j_o(p_ivredcost)%d(1:p_nz)
@@ -7451,7 +7550,7 @@ subroutine startlist()
 		! redcost = reduced costs of z-variables
  
 		!allocate( p_lz(1:p_nz),p_lzi(1:p_nz),p_redcost(1:p_nz))  !miksei testata onko nz.eq.0  ??
-	endif !if(p_nz.gt.0)   6403
+	endif !if(p_nz.gt.0)   6550
  
  
 	p_ivvc=j_defmatrix(j_ivout,'%vc',p_nrow,1,j_matreg)
@@ -7487,116 +7586,75 @@ subroutine startlist()
  
  
 	if(p_xpresent)then
-		p_ivlx=j_deflistobject(j_ivout,'%lx',list0=p_mxd,ilist=.true.)
+		p_ivlx=j_deflist(j_ivout,'%lx',list0=p_mxd,ilist=.true.)
 		p_lx=>j_o(p_ivlx)%i2(1:p_mxd)
  
-		p_ivlxi=j_deflistobject(j_ivout,'%lxi',list0=p_mxd,ilist=.true.)
+		p_ivlxi=j_deflist(j_ivout,'%lxi',list0=p_mxd,ilist=.true.)
 		p_lxi=>j_o(p_ivlxi)%i2(1:p_mxd)
  
  
-	endif !if(p_xpresent)   6449
+	endif !if(p_xpresent)   6596
  
 	if(p_fpresent)then
-		p_ivlf=j_deflistobject(j_ivout,'%lf',list0=p_mxd,ilist=.true.)
+		p_ivlf=j_deflist(j_ivout,'%lf',list0=p_mxd,ilist=.true.)
 		p_lf=>j_o(p_ivlf)%i2(1:p_mxd)
  
-		p_ivlfi=j_deflistobject(j_ivout,'%lxi',list0=p_mxd,ilist=.true.)
+		p_ivlfi=j_deflist(j_ivout,'%lfi',list0=p_mxd,ilist=.true.)
 		p_lfi=>j_o(p_ivlfi)%i2(1:p_mxd)
  
  
-	endif !if(p_fpresent)   6459
+	endif !if(p_fpresent)   6606
 	!	write(6,*)'startlist0 from startlist'
 	call startlist0()
  
  
 end subroutine startlist
 
-subroutine initjlp(iob,io)
-	use jmod, only: j_getoption_index
-	use jmod, only: j_mnonlintrans
-	use jmod, only: j_iptrans
-	use jmod, only: j_optarg0
-	use jmod, only: j_err
-	use jmod, only: p_nonlintrans
-	use jmod, only: p_nonlin
-	use jmod, only: p_fpresent
-	use jmod, only: p_isxk0
-	use jmod, only: p_restarted
-	use jmod, only: p_mxd
-	use jmod, only: p_intapp
-	use jmod, only: p_justkey
-	use jmod, only: p_nz
-	use jmod, only: p_npvar
-	use jmod, only: p_niter
- 
-	integer,intent(in)::iob,io
-	write(6,*)'initjlp'
-	! this subroutine basically interprets the function call jlp() line
-	! Also xdata and cdata objects are accessed but not used
-	! because options are accessed iob and io myst be as arguments
- 
- 
-	!	p_e1234=.false.   !error
- 
- 
- 
- 
- 
- 
- 
-	call j_getoption_index(iob,io,j_mnonlintrans,-1,1,j_iptrans,.true.,noptarg,j_optarg0)
-	if(j_err)return
- 
-	if(noptarg.gt.0)then
-		p_nonlintrans=j_optarg0(1)
-		p_nonlin=.true.
-	endif !if(noptarg.gt.0)   6494
- 
- 
- 
- 
- 
-	p_fpresent=.false.
-	p_isxk0 = .false.
-	p_restarted = .false.
- 
-	p_mxd=0
-	p_intapp=.false.
- 
-	!j_ivvarsx=0
-	! p_nz=0 p_nz initilized later JL 112018
-	!write(6,*)'<55',iob
-	p_justkey=.false.
- 
- 
-	! report->
-	!	write(6,*)'hep8',p_zmatrix
- 
-	!	write(6,*)'tassaaa',p_zmatrix
- 
- 
- 
- 
- 
-	!if(p_p)write(6,*)'<88 ',p_nterminrow(0)
-	!nrow3=3*p_nrowtot
- 
- 
-	p_nz=p_npvar ! added 112018 JL
- 
- 
- 
-	p_niter=0
- 
- 
-	!p_needcinx=.false.
- 
-end subroutine initjlp
+! subroutine initjlp(iob,io)
+! !p_nonlintrans
+! !p_nonlin
+! ! p_fpresent
+! ! p_intapp
+! ! p_justkey
+
+! integer,intent(in)::iob,io
+! write(6,*)'initjlp'
+! ! this subroutine basically interprets the function call jlp() line
+! ! Also xdata and cdata objects are accessed but not used
+! ! because options are accessed iob and io myst be as arguments
+
+! call j_getoption_index(iob,io,j_mnonlintrans,-1,1,j_iptrans,.true.,noptarg,j_optarg0)
+! if(j_err)return
+
+! if(noptarg.gt.0)then
+! p_nonlintrans=j_optarg0(1)
+! p_nonlin=.true.
+! endif !if(noptarg.gt.0)   6494
+
+! p_fpresent=.false.
+! p_isxk0 = .false.
+! p_restarted = .false.
+
+! p_mxd=0
+! p_intapp=.false.
+
+! !j_ivvarsx=0
+! ! p_nz=0 p_nz initilized later JL 112018
+! !write(6,*)'<55',iob
+! p_justkey=.false.
+! ! report->
+! !	write(6,*)'hep8',p_zmatrix
+! !	write(6,*)'tassaaa',p_zmatrix
+
+! !if(p_p)write(6,*)'<88 ',p_nterminrow(0)
+! !nrow3=3*p_nrowtot
+! p_nz=p_npvar ! added 112018 JL
+! p_niter=0
+! !p_needcinx=.false.
+
+! end subroutine initjlp
 
 subroutine initjlp2(iob,io)
-	use jmod, only: j_igetopt
-	use jmod, only: j_mtrans
-	use jmod, only: p_ivtrans
 	use jmod, only: j_getoption
 	use jmod, only: j_mmaxrounds
 	use jmod, only: j_ipreal
@@ -7608,7 +7666,7 @@ subroutine initjlp2(iob,io)
 	use jmod, only: j_mz
 	use jmod, only: j_ipmatrix
 	use jmod, only: p_zopt
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: j_ivout
 	use jmod, only: p_ivix
 	use jmod, only: p_nrowtot
@@ -7625,6 +7683,7 @@ subroutine initjlp2(iob,io)
 	use jmod, only: p_fastmake
 	use jmod, only: j_minteger
 	use jmod, only: p_fastusesame
+	use jmod, only: j_igetopt
 	use jmod, only: j_mfastrounds
 	use jmod, only: p_fastpros
 	use jmod, only: j_ivfastp
@@ -7640,9 +7699,23 @@ subroutine initjlp2(iob,io)
 	use jmod, only: j_mwarm
 	use jmod, only: p_warm
 	use jmod, only: p_warmf
-	!get options and when xpresent
 	write(6,*)'initjlp2'
-	p_ivtrans=j_igetopt(iob,io,j_mtrans) !object given in trans-option
+	!get options and when xpresent
+	! p_ivtrans
+	! p_maxrounds
+	! p_zopt
+	! p_ivix
+	! p_ix
+	! p_nnotareavars
+	! p_tried
+	! p_fastusedsame
+	! p_intapp
+	! p_fastmake
+	! p_fastpros p_fastpros2  /100
+	! p_fast
+	! p_warm p_warmf
+ 
+	!p_ivtrans=j_igetopt(iob,io,j_mtrans) !object given in trans-option
 	!write(6,*)'<187>p_ivtrans',p_ivtrans
  
 	call j_getoption(iob,io,j_mmaxrounds,-1,999999,j_ipreal,.true.,nargopt,j_optarg0)
@@ -7651,8 +7724,8 @@ subroutine initjlp2(iob,io)
 		p_maxrounds=j_v(j_optarg0(1))
  
 	else !if(j_linkoption(iob,io,j_mmaxiter).gt.0)then
-		p_maxrounds=2000
-	endif !if(nargopt.gt.0)   6548
+		p_maxrounds=3000
+	endif !if(nargopt.gt.0)   6687
 	!	write(6,*)'djjdp_npvar ',p_npvar
  
 	call j_getoption_index(iob,io,j_mz,-1,0,j_ipmatrix,.false.,noptarg,j_optarg0)
@@ -7661,14 +7734,11 @@ subroutine initjlp2(iob,io)
  
 	!write(6,*'<556> p_nrow',p_nrow
 	!if(allocated(p_ix))deallocate(p_ix)
-	p_ivix=j_deflistobject(j_ivout,'%ix',list0=p_nrowtot,ilist=.true.)
+	p_ivix=j_deflist(j_ivout,'%ix',list0=p_nrowtot,ilist=.true.)
 	p_ix(0:)=>j_o(p_ivix)%i2(1:p_nrowtot)
  
 	!write(6,*)'pix ',p_ix
 	!	allocate(p_ix(0:p_nrow));p_ix=0
- 
-	!is(p_p)write(6,*)'4388 end initjlp '
- 
  
 	call j_getoption(iob,io,j_mnotareavars,-1,999999,j_ipreal,.true.,p_nnotareavars,p_notareavars)
 	if(j_err)return
@@ -7679,13 +7749,8 @@ subroutine initjlp2(iob,io)
 			write(6,*)'**cannot have notareavars-> without area->'
 			j_err=.true.
 			return
-		endif !if(p_ivarea.lt.0)   6576
-	endif !if(p_nnotareavars.gt.0)   6574
-	! outputobject, not used now
- 
-	!	write(6,*)'isunit',p_isunit
- 
- 
+		endif !if(p_ivarea.lt.0)   6712
+	endif !if(p_nnotareavars.gt.0)   6710
  
 	p_tried=.false.
 	p_fastusedsame=0
@@ -7710,9 +7775,6 @@ subroutine initjlp2(iob,io)
 	if(j_err)return
 	!	call j_getoption(iob,j_mslow,-1,1,j_ipreal,.true.,nslow,slowopt)
 	p_intapp=noptarg.ge.0
- 
- 
- 
 	! fast-optiot
 	p_fastusesame = 10
 	i = j_igetopt(iob,io,j_mfastrounds)
@@ -7721,15 +7783,11 @@ subroutine initjlp2(iob,io)
  
 	p_fastpros = 85
 	j_v(j_ivfastp)=p_fastpros
-	! i = j_igetopt(iob,io,j_mfastpercent)
-	! if(i > 0) p_fastpros = j_v(i)
  
 	iterxkf = 3
 	i = j_igetopt(iob,io,j_mfinterval)
 	if(i>0) iterxkf = j_v(i)
  
-	!p_tabu=p_fastpros.lt.0
-	!p_fastpros=abs(p_fastpros)
 	p_fastpros2=p_fastpros/100.
 	p_fast=p_fastusesame.ne.1
 	!write(6,*)'<2345kukuu'
@@ -7746,18 +7804,11 @@ subroutine initjlp2(iob,io)
 		p_warm=j_v(i).ne.0.
 	elseif(i.eq.0)then !if(i.gt.0)then
 		p_warm=.true.
-	endif !if(i.gt.0)   6643
+	endif !if(i.gt.0)   6767
 	!keys key schedules for each unit
 	p_warm=.false.
  
-	! if(.not.allocated(p_keys).and.p_warm)then
-	! write(6,*)'*jlp: old keys not available, warm-> ignored'
-	! p_warm=.false.
-	! endif !if(.not.allocated(p_keys).and.p_warm)   5740
 	p_warmf=p_warm
- 
- 
- 
  
  
 end subroutine initjlp2
@@ -7770,33 +7821,33 @@ subroutine initxdatawx()
 	use jmod, only: p_nxval
 	use jmod, only: j_o
 	use jmod, only: p_xcoef
-	use jmod, only: j_deflistobject
-	use jmod, only: p_ivxtermvars
-	use jmod, only: p_xtermvars
+	use jmod, only: j_deflist
+	use jmod, only: p_ivxtermvar
+	use jmod, only: p_xtermvar
 	use jmod, only: p_nterm
-	use jmod, only: p_isxval
+	use jmod, only: p_istermx
 	use jmod, only: p_coef
-	use jmod, only: p_termvars
-	use jmod, only: p_ivxrowcur
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_termvar
+	use jmod, only: p_ivrowcurx
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: p_rowofterm
 	use jmod, only: p_ntemp0
 	use jmod, only: p_md
 	use jmod, only: p_ibatemp
-	use jmod, only: p_nxrowtemp
+	use jmod, only: p_nrowxtemp
 	use jmod, only: p_nrowtot
 	use jmod, only: p_nrow
-	use jmod, only: p_nxinrow
+	use jmod, only: p_ninrowx
 	use jmod, only: p_ix
 	use jmod, only: p_row0
-	use jmod, only: p_xvars1
-	use jmod, only: p_xvars2
+	use jmod, only: p_varx1
+	use jmod, only: p_varx2
 	use jmod, only: p_nxvar
-	use jmod, only: p_ivirowxvars
-	use jmod, only: p_irowxvars
-	use jmod, only: p_ivnxrow2
-	use jmod, only: p_nxrow2
+	use jmod, only: p_ivirowvarx
+	use jmod, only: p_irowvarx
+	use jmod, only: p_ivnrowx2
+	use jmod, only: p_nrowx2
 	use jmod, only: p_ivxmat
 	use jmod, only: p_lopp
 	use jmod, only: p_xmat
@@ -7804,11 +7855,11 @@ subroutine initxdatawx()
 	use jmod, only: p_vxpack
 	use jmod, only: p_ivixpack
 	use jmod, only: p_ixpack
-	use jmod, only: p_ivxvars
-	use jmod, only: p_xvars
+	use jmod, only: p_ivvarx
+	use jmod, only: p_varx
 	use jmod, only: p_vars
 	use jmod, only: p_npvar
-	use jmod, only: p_isxvar
+	use jmod, only: p_isvarx
 	use jmod, only: p_ivibaunit
 	use jmod, only: p_nunits
 	use jmod, only: p_ibaunit
@@ -7817,49 +7868,80 @@ subroutine initxdatawx()
 	use jmod, only: p_nnotareavars
 	use jmod, only: j_ndiffer
 	use jmod, only: p_notareavars
-	use jmod, only: p_ivxvarsarea
-	use jmod, only: p_xvarsarea
+	use jmod, only: p_ivvarxarea
+	use jmod, only: p_varxarea
 	use jmod, only: j_differ
- 
- 
-	!initilizes also some fact issues
 	write(6,*)'initxdataw'  !,'ixxx',p_ix
+	! inits something of x-data used also with factories and without ordinary x-variables
+	!initilizes also some fact issues
+	! uses p_ninrowx (0p_nrow)
+	! p_ivxcoef
+	! p_xcoef  (1:p_nxval)
+	! p_ivxtermvar
+	! p_xtermvar x-term variables
+	! p_ivrowcurx  !current rowxs if there are now domaisn these are not updated
+	! p_rowcurx
+	! p_ibatemp  (1:p_nrowtot)
+	! p_nrowxtemp (1:p_nrowtot)
+	! p_ntemp0
+	! p_nrowxtemp (1:p_ntemp0) number of x- for each temp
+	! p_ivirowvarx= (j_ivout,'%irowvarx',list0=p_nxval)
+	!	p_irowvarx=>
+	!	p_ivnrowx2=j_deflist(j_ivout,'%nrowx2',list0=p_nrowcurx,ilist=.true.)
+	!	p_nrowx2=>j_o(p_ivnrowx2)%i2(1:p_nrowcurx)
+	!	p_irowvarx=pack(p_termvar,p_istermx)
+	! p_nrowx2=pack(p_ninrowx,p_ninrowx.gt.0) !numbers of x-variables in each
+	! p_ivxmat=j_defmatrix(j_ivout,'%xmat',p_lopp,p_ntemp0,j_matreg,single=.true.)
+	! p_xmat=>j_o(p_ivxmat)%r(1:p_ntemp0*p_lopp)
+	!	allocate(p_xmat(1:p_ntemp0*p_lopp))
+	! p_ivvxpack=  (j_ivout,'%vxpack',p_ntemp0,1,j_matreg,single=.true.)
+	! p_vxpack=>
+	! p_ivixpack=j_deflist(j_ivout,'%ixpack',list0=p_ntemp0,ilist=.true.)
+	! p_ixpack=>j_o(p_ivixpack)%i2(1:p_ntemp0)
+	! p_ivvarx=j_deflist(j_ivout,'%varx',list0=p_nxvar)
+	! p_varx=>j_o(p_ivvarx)%i2(1:p_nxvar)
+	! p_varx= pack(p_vars(1:p_npvar),p_isvarx)   ! c-variables are here included as x -variables
+	! p_ivibaunit= j_deflist(j_ivout,'%ibaunit',list0=p_nunits+1,ilist=.true.)
+	! p_ibaunit=>j_o(p_ivibaunit)%i2(1:p_nunits+1)
+ 
+ 
+ 
  
  
 	p_ivxcoef=j_defmatrix(j_ivout,'%xcoef',p_nxval,1,j_matreg)
 	p_xcoef=>j_o(p_ivxcoef)%d(1:p_nxval)
-	p_ivxtermvars=j_deflistobject(j_ivout,'%xtermvars',list0=p_nxval)
-	p_xtermvars=>j_o(p_ivxtermvars)%i2(1:p_nxval)
+	p_ivxtermvar=j_deflist(j_ivout,'%xtermvar',list0=p_nxval)
+	p_xtermvar=>j_o(p_ivxtermvar)%i2(1:p_nxval)
  
 	nxval=0
 	do i=1,p_nterm
-		if(p_isxval(i))then
+		if(p_istermx(i))then
 			nxval=nxval+1
 			p_xcoef(nxval)=p_coef(i)
-			p_xtermvars(nxval)=p_termvars(i)
-		endif !if(p_isxval(i))   6677
-	enddo !i=1,p_nterm   6676
-	!	write(6,*)'nxrowcur',p_nxrowcur
+			p_xtermvar(nxval)=p_termvar(i)
+		endif !if(p_istermx(i))   6825
+	enddo !i=1,p_nterm   6824
+	!	write(6,*)'nrowcurx',p_nrowcurx
  
-	p_ivxrowcur=j_deflistobject(j_ivout,'%xrowcur',list0=p_nxrowcur,ilist=.true.)
-	p_xrowcur=>j_o(p_ivxrowcur)%i2(1:p_nxrowcur)
-	nxrow=0
+	p_ivrowcurx=j_deflist(j_ivout,'%rowcurx',list0=p_nrowcurx,ilist=.true.)
+	p_rowcurx=>j_o(p_ivrowcurx)%i2(1:p_nrowcurx)
+	nrowx=0
 	irov=-1
 	! write(6,*)'p_nterm ',p_nterm
-	! write(6,*)'p_isxva ',p_isxval
+	! write(6,*)'p_isxva ',p_istermx
 	! write(6,*)'row of ter ',p_rowofterm
 	do ival=1,p_nterm
 		iro=p_rowofterm(ival)
 		!	write(6,*)'ival,iro,irov',ival,iro,irov
-		if(p_isxval(ival).and.iro.ne.irov)then
-			nxrow=nxrow+1
-			p_xrowcur(nxrow)=iro
-			!	write(6,*)'iro nxrow ',iro,nxrow
-		endif !if(p_isxval(ival).and.iro.ne.irov)   6695
+		if(p_istermx(ival).and.iro.ne.irov)then
+			nrowx=nrowx+1
+			p_rowcurx(nrowx)=iro
+			!	write(6,*)'iro nrowx ',iro,nrowx
+		endif !if(p_istermx(ival).and.iro.ne.irov)   6843
 		irov=iro
-	enddo !ival=1,p_nterm   6692
+	enddo !ival=1,p_nterm   6840
  
-	!	write(6,*)'xrowcurtas ',p_xrowcur
+	!	write(6,*)'rowcurxtas ',p_rowcurx
  
 	!	stop
 	p_ntemp0=0 !the number of the temp-varaible
@@ -7871,110 +7953,97 @@ subroutine initxdatawx()
 	! xvariables  appears in different rows , make then only one temporary	x variable
  
 	!	p_ix=0
-	!	p_nxrow=0
-	!	!is(p_p8)write(6,*)'<4624,p_nrow',p_nrow,'p_nxrowcur ',p_nxrowcur,'*',p_xrowcur
-	!	p_nxrowcur=0
-	!	!is(p_p8)write(6,*)'<4624,p_nrow',p_nrow,'p_nxrowcur ',p_nxrowcur
-	!is(p_p8)write(6,*)'<termvars',p_termvars(1:p_nterm)
+	!	p_nrowx=0
+	!	!is(p_p8)write(6,*)'<4624,p_nrow',p_nrow,'p_nrowcurx ',p_nrowcurx,'*',p_rowcurx
+	!	p_nrowcurx=0
+	!	!is(p_p8)write(6,*)'<4624,p_nrow',p_nrow,'p_nrowcurx ',p_nrowcurx
+	!is(p_p8)write(6,*)'<termvar',p_termvar(1:p_nterm)
 	!write(6,*)'coeftas',p_xcoef
-	!write(6,*)'nxinrow',p_nxinrow(iro)
+	!write(6,*)'nxinrow',p_ninrowx(iro)
 	if(allocated(p_ibatemp))deallocate(p_ibatemp)
-	if(allocated(p_nxrowtemp))deallocate(p_nxrowtemp)
+	if(allocated(p_nrowxtemp))deallocate(p_nrowxtemp)
  
-	allocate(p_ibatemp(1:p_nrowtot),p_nxrowtemp(1:p_nrowtot))
-	p_ibatemp=0;p_nxrowtemp=0
+	allocate(p_ibatemp(1:p_nrowtot),p_nrowxtemp(1:p_nrowtot))
+	p_ibatemp=0;p_nrowxtemp=0
 	iba=0
  
 rowloop:	do iro=0,p_nrow
-	!	write(6,*)'iro,p_nxinrow(iro)',iro,p_nxinrow(iro)
-		if(p_nxinrow(iro).gt.0)then
-			!		p_nxrowcur=p_nxrowcur+1
-			!		p_xrowcur(p_nxrowcur)=iro
+	!	write(6,*)'iro,p_ninrowx(iro)',iro,p_ninrowx(iro)
+		if(p_ninrowx(iro).gt.0)then
+			!		p_nrowcurx=p_nrowcurx+1
+			!		p_rowcurx(p_nrowcurx)=iro
 			!check previous rows
 			iba2=0
 	row2:		do iro2=0,iro-1
-				if(p_nxinrow(iro).eq.p_nxinrow(iro2))then
+				if(p_ninrowx(iro).eq.p_ninrowx(iro2))then
  
-			outer:	do jj=1,p_nxinrow(iro)
-						do jj2=1,p_nxinrow(iro)
+			outer:	do jj=1,p_ninrowx(iro)
+						do jj2=1,p_ninrowx(iro)
 							! check if coefficient or variable is different
-							if(p_xtermvars(iba+jj).eq.p_xtermvars(iba2+jj2))then
+							if(p_xtermvar(iba+jj).eq.p_xtermvar(iba2+jj2))then
 								if(p_xcoef(iba+jj).eq.p_xcoef(iba2+jj2))then
 									cycle outer
 								else
 									cycle row2
-								endif !if(p_xcoef(iba+jj).eq.p_xcoef(iba2+jj2))   6743
+								endif !if(p_xcoef(iba+jj).eq.p_xcoef(iba2+jj2))   6891
 							else
 								cycle row2
-							endif !if(p_xtermvars(iba+jj).eq.p_xtermvars(iba2+jj2))   6742
+							endif !if(p_xtermvar(iba+jj).eq.p_xtermvar(iba2+jj2))   6890
  
-						enddo !jj2=1,p_nxinrow(iro)   6740
+						enddo !jj2=1,p_ninrowx(iro)   6888
  
-					enddo outer !er:	do jj=1,p_nxinrow(iro)   6739
+					enddo outer !er:	do jj=1,p_ninrowx(iro)   6887
 					!!! now all variables and coefficients are equal
 					p_ix(iro)=p_ix(iro2)
 					cycle rowloop !write(6,*)'samma x',iro,p_irow0,'ix',p_itemp0
-				endif !if(p_nxinrow(iro).eq.p_nxinrow(iro2))   6737
-				iba2=iba2+p_nxinrow(iro2)
-			enddo row2 !2:		do iro2=0,iro-1   6736
+				endif !if(p_ninrowx(iro).eq.p_ninrowx(iro2))   6885
+				iba2=iba2+p_ninrowx(iro2)
+			enddo row2 !2:		do iro2=0,iro-1   6884
 			p_ntemp0=p_ntemp0+1
 			!		p_ixprow(iro)=p_itemp0
 			p_ix(iro)=p_ntemp0 !tells for each row what is teporary
-			!	p_xrowcur(nxrow)=iro
+			!	p_rowcurx(nrowx)=iro
 			!number of rows with x
 			p_ibatemp(p_ntemp0)=iba
-			p_nxrowtemp(p_ntemp0)=p_nxinrow(iro)
+			p_nrowxtemp(p_ntemp0)=p_ninrowx(iro)
 			!	write(6,*)' iro ',iro,' p_ntemp0 ',p_ntemp0
  
-		endif !if(p_nxinrow(iro).gt.0)   6731
+		endif !if(p_ninrowx(iro).gt.0)   6879
  
-		iba=iba+p_nxinrow(iro)
-	enddo rowloop !loop:	do iro=0,p_nrow   6729
+		iba=iba+p_ninrowx(iro)
+	enddo rowloop !loop:	do iro=0,p_nrow   6877
  
-	!xrowcur is row where the x -variable is and ix is the
-	! nxrowcur is the number of rows having x-variables
-	! do jj=1,p_nxrowcur
-	! j=p_xrowcur(jj)
+	!rowcurx is row where the x -variable is and ix is the
+	! nrowcurx is the number of rows having x-variables
+	! do jj=1,p_nrowcurx
+	! j=p_rowcurx(jj)
 	! !j_value=j_value+j_vx(j)*j_xmat(j_ix(j),is) !,is) !v(ix(j))
 	! p_value=p_value+p_vx(j)*p_xmat(ibxmatx+p_ix(j)) !,is) !v(ix(j))
-	! enddo !jj=1,p_nxrowcur   1964
+	! enddo !jj=1,p_nrowcurx   1964
  
  
 	p_row0=1
-	if(p_xrowcur(1).eq.0)p_row0=2
+	if(p_rowcurx(1).eq.0)p_row0=2
  
-	if(allocated(p_xvars1))deallocate(p_xvars1,p_xvars2)  !xvars1 and xvars2 used to chech duplicated sched
-	allocate(p_xvars1(1:p_nxvar),p_xvars2(1:p_nxvar)) !used
- 
- 
+	if(allocated(p_varx1))deallocate(p_varx1,p_varx2)  !varx1 and varx2 used to chech duplicated sched
+	allocate(p_varx1(1:p_nxvar),p_varx2(1:p_nxvar)) !used
  
  
  
-	!write(6,*)'<4446>p_nz,j_fpresent,p_intapp',p_nz,j_fpresent,p_intapp
  
-	!	p_intapp=p_nz.eq.0.and..not.p_fpresent.and.p_intapp
-	!write(6,*)'<4447>p_nz,j_fpresent,p_intapp',p_nz,j_fpresent,p_intapp
-	!tehdasoptimoidaan vain, jos tavoitefunktiossa ykf-mjia
- 
- 
-	!20181116 #zeroc moved here from #z_commented
-	!  zeroc with z-variables needs to be determined before keyfactories
-	!is(p_p8.and.ival.lt.10)write(6,*)'<3336>p_nrowtot,p_nterminrow,row,p_termvars(ival),p_isxval '
-	!is(p_p8)write(6,*)'<55>',p_nrowtot,	p_nrowtot,p_nterminrow(1:p_nrow),'row',p_termvars(1:p_nterm),p_isxval(1:p_nterm)
-	!	write(6,*)'her1 xcoef ',p_xcoef
-	p_ivirowxvars=j_deflistobject(j_ivout,'%irowxvars',list0=p_nxval)
-	p_irowxvars=>j_o(p_ivirowxvars)%i2(1:p_nxval)
-	p_ivnxrow2=j_deflistobject(j_ivout,'%nxrow2',list0=p_nxrowcur,ilist=.true.)
-	p_nxrow2=>j_o(p_ivnxrow2)%i2(1:p_nxrowcur)
+	p_ivirowvarx=j_deflist(j_ivout,'%irowvarx',list0=p_nxval)
+	p_irowvarx=>j_o(p_ivirowvarx)%i2(1:p_nxval)
+	p_ivnrowx2=j_deflist(j_ivout,'%nrowx2',list0=p_nrowcurx,ilist=.true.)
+	p_nrowx2=>j_o(p_ivnrowx2)%i2(1:p_nrowcurx)
 	!take coefficients of x, and the correponding variables
  
  
 	!	write(6,*)'xcoefaft',p_xcoef
-	!is(p_p8)write(6,*)'<999pack'  !,p_termvars,'*',p_isxval
-	p_irowxvars=pack(p_termvars,p_isxval)
+	!is(p_p8)write(6,*)'<999pack'  !,p_termvar,'*',p_istermx
+	p_irowvarx=pack(p_termvar,p_istermx)
 	!take
-	!is(p_p8)write(6,*)'<4779pack'  !,p_nxrow,'*',p_nxrow.gt.0
-	p_nxrow2=pack(p_nxinrow,p_nxinrow.gt.0) !numbers of x-variables in each
+	!is(p_p8)write(6,*)'<4779pack'  !,p_nrowx,'*',p_nrowx.gt.0
+	p_nrowx2=pack(p_ninrowx,p_ninrowx.gt.0) !numbers of x-variables in each
  
 	p_ivxmat=j_defmatrix(j_ivout,'%xmat',p_lopp,p_ntemp0,j_matreg,single=.true.)
 	p_xmat=>j_o(p_ivxmat)%r(1:p_ntemp0*p_lopp)
@@ -7985,21 +8054,21 @@ rowloop:	do iro=0,p_nrow
 	p_ivvxpack=j_defmatrix(j_ivout,'%vxpack',p_ntemp0,1,j_matreg,single=.true.)
 	p_vxpack=>j_o(p_ivvxpack)%r(1:p_ntemp0)
  
-	p_ivixpack=j_deflistobject(j_ivout,'%ixpack',list0=p_ntemp0,ilist=.true.)
+	p_ivixpack=j_deflist(j_ivout,'%ixpack',list0=p_ntemp0,ilist=.true.)
 	p_ixpack=>j_o(p_ivixpack)%i2(1:p_ntemp0)
  
  
-	p_ivxvars=j_deflistobject(j_ivout,'%xvars',list0=p_nxvar)
-	p_xvars=>j_o(p_ivxvars)%i2(1:p_nxvar)
- 
+	p_ivvarx=j_deflist(j_ivout,'%varx',list0=p_nxvar)
+	p_varx=>j_o(p_ivvarx)%i2(1:p_nxvar)
+	write(6,*)'pnxvar',p_nxvar
  
 	!	write(6,*)'<56pack,,p_npvar',p_npvar,p_nxvar
-	p_xvars=pack(p_vars(1:p_npvar),p_isxvar)   ! c-variables are here included as x -variables
-	!write(6,*)'p_xvars************************ ',p_xvars
-	!if(allocated(p_xvarsarea))deallocate(p_xvarsarea)
+	p_varx=pack(p_vars(1:p_npvar),p_isvarx)   ! c-variables are here included as x -variables
+	!write(6,*)'p_varx************************ ',p_varx
+	!if(allocated(p_varxarea))deallocate(p_varxarea)
 	!if(allocated(p_cvar))deallocate(p_cvar)
 	! number of x and c variables which are expressed /area
-	p_ivibaunit=j_deflistobject(j_ivout,'%ibaunit',list0=p_nunits+1,ilist=.true.)
+	p_ivibaunit=j_deflist(j_ivout,'%ibaunit',list0=p_nunits+1,ilist=.true.)
 	p_ibaunit=>j_o(p_ivibaunit)%i2(1:p_nunits+1)
  
 	p_nxvararea=0
@@ -8009,36 +8078,36 @@ rowloop:	do iro=0,p_nrow
 	if(p_ivarea.gt.0)then   ! area-> option present
  
 		if(p_nnotareavars.gt.0)then
-			p_nxvararea=j_ndiffer(p_xvars,p_nxvar,p_notareavars,p_nnotareavars)  ! &
+			p_nxvararea=j_ndiffer(p_varx,p_nxvar,p_notareavars,p_nnotareavars)  ! &
 			!		j_o(iob)%i(linknotareavars+1:linknotareavars+p_notareavars),p_notareavars)
 			if(p_nxvararea.gt.0)then
-				p_ivxvarsarea=j_deflistobject(j_ivout,'%xvarsarea',list0=p_nxvararea)
-				p_xvarsarea=>j_o(p_ivxvarsarea)%i2(1:p_nxvararea)
-				!	allocate(p_xvarsarea(1:p_nxvararea))
+				p_ivvarxarea=j_deflist(j_ivout,'%varxarea',list0=p_nxvararea)
+				p_varxarea=>j_o(p_ivvarxarea)%i2(1:p_nxvararea)
+				!	allocate(p_varxarea(1:p_nxvararea))
 				! x area variables = variables - notareavariables
-				call j_differ(p_xvars,p_nxvar, &
-					p_notareavars,p_nnotareavars,p_xvarsarea,p_nxvararea)
-				!	j_o(iob)%i(linknotareavars+1:linknotareavars+p_notareavars),p_notareavars,p_xvarsarea,p_nxvararea)
+				call j_differ(p_varx,p_nxvar, &
+					p_notareavars,p_nnotareavars,p_varxarea,p_nxvararea)
+				!	j_o(iob)%i(linknotareavars+1:linknotareavars+p_notareavars),p_notareavars,p_varxarea,p_nxvararea)
  
 			else !if(nxvararea.gt.0)then
  
 				write(6,*)'*jlp: no variable remains area-variable'
  
-			endif !if(p_nxvararea.gt.0)   6855
+			endif !if(p_nxvararea.gt.0)   6990
  
 		else
 			! all variables are areavariables
 			nxvararea=p_nxvar
-			allocate(p_xvarsarea(1:p_nxvar))
-			p_xvarsarea(1:p_nxvar)=p_xvars
+			allocate(p_varxarea(1:p_nxvar))
+			p_varxarea(1:p_nxvar)=p_varx
  
-		endif !if(p_nnotareavars.gt.0)   6852
+		endif !if(p_nnotareavars.gt.0)   6987
 		! if(p_ncvar.gt.0)then
 		! allocate(p_cvar(1:p_ncvar))
 		! p_needc=1 !make logical
 		! endif !if(p_ncvar.gt.0)   6253
  
-	endif !if(p_ivarea.gt.0)   6850
+	endif !if(p_ivarea.gt.0)   6985
  
  
  
@@ -8065,110 +8134,21 @@ subroutine initxdata()
 	use jmod, only: p_nunits
 	use jmod, only: p_ivobjdif
 	write(6,*)'initxdata'
+	! p_fastreject
+	! p_rejects
+	! p_xsmin p_xsmax
+	! p_xmin p_xmax
+	! p_ivxps
+	! p_xps
+	! p_ivvaluedif   j_defmatrix(j_ivout,'%valuedif',p_nunits,1,j_matreg)
+	!	p_ivobjdif       j_defmatrix(j_ivout,'%objdif',p_nunits,1,j_matreg)
+ 
 	if(p_fast)then
 		if(allocated(p_fastreject))deallocate(p_fastreject)
 		allocate(p_fastreject(1:p_lopp))
 		p_fastreject=.false.
  
-	endif !if(p_fast)   6890
- 
- 
- 
-	!is(p_p8)	write(6,*)'initxmat, p_nxinrow', p_nxinrow(0:p_nrow)
-	!ntemp=count(p_nxinrow.gt.0) !number of rows with x-variables, # of temporary x-variables
-	!ntemp p_nxrowcur
-	!write(6,*)'<858'
-	! ivdomains =ouput variables for domain transformations
-	! Note: ivdomains is not good name because it looks like the index of a Jlp22 object
-	! if(allocated(p_ivdomains))deallocate(p_ivdomains)
-	! allocate(p_ivdomains(1:p_ndom))
- 
-	! nxrowtemp is the number of x-variables when making each of the temporary x-variables
- 
-	!	if(allocated(p_ixprow))deallocate(p_ixprow)
-	!	allocate(p_ixprow(1:p_nrow));p_ixprow=0  ! for each problem statement row, what is the temporary
- 
-	!if(allocated(p_xcoef))deallocate(p_xcoef) !coefficients of x-variables
- 
- 
-	! if(allocated(p_irowxvars))deallocate(p_irowxvars) !corresponding x-variables
-	! allocate(p_xcoef(1:nxval));allocate(p_irowxvars(1:nxval)) !nxval=count(isxval)
-	! !	p_xcoef=j_0;p_irowxvars=0
- 
-	!generate how to compute xmat
- 
-	!if(allocated(p_nxrow2))deallocate(p_nxrow2)
-	!allocate(p_nxrow2(1:ntemp))
-	!	write(6,*)'her2'
-	! row containg x-variables
-	!	write(6,*)'her5'
-	!ongelma: jos eri riveillä sama temporal variable, niin se lasketaan moneen kertaan
-	! ratkaisu: käydään rivit läpi, ja katsotaan onko samoja,
- 
-	!allocoi a
-	!pistä a:han sarakkeet
-	!generoi rhs
-	!nrow
-	!	p_irow=0  !new numbering of rows
-	!	p_irow0=0 !initial numbering of rows
-	! p_irow0 goes over the rows in the problem definition not taking into account
-	! multiple domains
- 
- 
- 
-	!is(p_p8)write(6,*)'<4651 p_ntemp0',p_ntemp0,'p_nxrowcur',p_nxrowcur,'p_ix',p_ix
- 
-	!is(p_p8)write(6,*)'<4995 p_isdomain,isalloixcur',p_isdomain  !,allocated(p_ixcur)
- 
-	! do iro=0,p_nrow
-	! if(p_ix(iro).ne.0)p_ixcur(iro)=.true.
- 
-	! enddo !iro=0,p_nrow   5177
-	!	p_idomba=0 !basis for domains
- 
-	!	endif !if(p_isdomain)   5150
-	!	p_ixcur=p_ixcur0
-	!write(6,*)'ixcur intitllay ',p_ixcur
- 
-	!	call j_defmatrix(j_ivout,'%xmat',p_ntemp0*p_lopp,1,j_matreg,p_ivxmat) !,single=.true.)
- 
- 
-	! write(6,*)'data used from disk would need additional ',&
-	! ipe, ' million'
-	! endif
- 
-	! if(j_xmatinmemory)write(6,*)'memory used by xdata ',float(j_lopp*keepx)/1.e6, 'millions'
- 
-	! !write(6,*)'<477>j-xmatibas2',j_xmatibas2
-	!	j_xdatfrodisk=idofa.ne.0.and..not.j_xdatinmemory
- 
-	!write(6,*)'<741>xdatfrodisk ',j_xdatfrodisk,ido,j_xdatinmemory
-	!write(6,*)'p_fast ',p_fast,p_nunits
- 
- 
-	! do i=j_lopp-15000,j_lopp
-	! iba=xmatiba(i,1)
-	! write(17,*)j_o(p_ivxdatmat)%r(iba+1:iba+7),j_o(p_ivxdatmat)%r(iba+11:iba+17)
- 
-	! enddo
- 
- 
-	!if(allocated(p_vxpack))deallocate(p_vxpack)
-	!if(allocated(p_ixpack))deallocate(p_ixpack)
- 
-	!	allocate(p_vxpack(1:p_ntemp0),p_ixpack(1:p_ntemp0))
-	!	p_vxpack=0;p_ixpack=0
- 
- 
-	! if(p_ntemp0.gt.j_maxjlpxvars)then
-	! write(6,*)'*j* maximum number of xvariables in jlp problem is ',j_maxjlpxvars
-	! write(6,*)'*j* your problem needs ',p_ntemp0
-	! write(6,*)'ask j-team to increase maxjlpxvars in j_modules.f90'
-	! j_err=.true.
-	! return
- 
-	! endif !if(p_ntemp0.gt.j_maxjlpxvars)   6102
- 
+	endif !if(p_fast)   7034
  
  
 	if(allocated(p_rejects))deallocate(p_rejects)
@@ -8190,18 +8170,7 @@ subroutine initxdata()
  
 	allocate(p_xsmin(0:p_nrow),p_xsmax(0:p_nrow))
 	allocate(p_xmin(0:p_nrow),p_xmax(0:p_nrow))
-	!xvars list of all x variables
-	!	if(allocated(p_xvars))deallocate(p_xvars);allocate(p_xvars(1:p_nxvar))
  
-	!write(6,*)'<388nunits',p_nunits
- 
-	! if(allocated(p_keys))thensenter
-	! if(p_warm)then
-	! if(size(p_keys).ne.p_nunits)then
-	! write(6,*)'*jlp: number of units is not same as in previous problem',&
-	! ' warm-> ignored'
-	! p_warm=.false.
-	! p_warmf=.false.
 	p_ivvaluedif=j_defmatrix(j_ivout,'%valuedif',p_nunits,1,j_matreg)
 	p_ivobjdif=j_defmatrix(j_ivout,'%objdif',p_nunits,1,j_matreg)
 	! endif !if(size(p_keys).ne.p_nunits)   6203
@@ -8244,7 +8213,7 @@ subroutine initdomain()
 	use jmod, only: p_ivdomain
 	use jmod, only: j_itempvector
 	use jmod, only: p_nrowtot
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: j_ivout
 	use jmod, only: p_ivnixcu
 	use jmod, only: p_ivixcubas
@@ -8253,7 +8222,7 @@ subroutine initdomain()
 	use jmod, only: p_ido1
 	use jmod, only: p_idostep
 	use jmod, only: j_ivall
-	use jmod, only: p_nxinrow
+	use jmod, only: p_ninrowx
 	use jmod, only: p_ivixcurow
 	use jmod, only: p_ixcurow
 	use jmod, only: p_ivicurint
@@ -8267,8 +8236,8 @@ subroutine initdomain()
 	use jmod, only: p_ivdomainunits
 	use jmod, only: p_ndom
 	use jmod, only: p_domainunits
-	use jmod, only: p_nxrow0
-	use jmod, only: p_xrowcur
+	use jmod, only: p_nrowx0
+	use jmod, only: p_rowcurx
 	! 	if(p_isdomain)then
 	write(6,*)'initdomain'
 	p_ndomvars=j_o(p_ivdomvars)%i(1)
@@ -8298,8 +8267,8 @@ subroutine initdomain()
 				' is not in c-data and is not the unit variable ',j_oname2(1:j_loname2)
 			j_err=.true.
  
-		enddo !j=1,j_o(ivinl)%i(1)   7060
-	endif !if(p_ivdomaintrans.gt.0)   7053
+		enddo !j=1,j_o(ivinl)%i(1)   7095
+	endif !if(p_ivdomaintrans.gt.0)   7088
 	if(j_err)return
 	! iv=j_o(p_ivproblem)%i(13)
 	! p_ndomvars=j_o(iv)%i(1)
@@ -8333,13 +8302,13 @@ subroutine initdomain()
 	!	if(p_isdomain)then
 	if(allocated(j_itempvector))deallocate(j_itempvector)
 	allocate(j_itempvector(1:p_ndomvars*(p_nrowtot+1)))
-	!is(p_p8)write(6,*)'START DOMAINS p_nxinrow',p_nxinrow
+	!is(p_p8)write(6,*)'START DOMAINS p_ninrowx',p_ninrowx
  
 	ibas=p_ndomvars*p_nrowtot
 	j_itempvector=0
  
-	p_ivnixcu=j_deflistobject(j_ivout,'%nixcu',list0=p_ndomvars,ilist=.true.)
-	p_ivixcubas=j_deflistobject(j_ivout,'%ixcubas',list0=p_ndomvars,ilist=.true.)
+	p_ivnixcu=j_deflist(j_ivout,'%nixcu',list0=p_ndomvars,ilist=.true.)
+	p_ivixcubas=j_deflist(j_ivout,'%ixcubas',list0=p_ndomvars,ilist=.true.)
 	p_nixcu=>j_o(p_ivnixcu)%i2(1:p_ndomvars)
 	p_ixcubas=>j_o(p_ivixcubas)%i2(1:p_ndomvars)
 	! if(allocated(p_nixcu))deallocate(p_nixcu,p_ixcubas)
@@ -8352,7 +8321,7 @@ subroutine initdomain()
 		p_idostep=1
  
  
-	endif !if(p_domvars(1).eq.j_ivall)   7120
+	endif !if(p_domvars(1).eq.j_ivall)   7155
  
  
  
@@ -8362,23 +8331,23 @@ subroutine initdomain()
 	p_ixcubas=0
 	lkm=0
 	do ido=1,p_ndomvars
-		!		write(6,*)'p_nxinrow%%%%%%%%%%%%',p_nxinrow
+		!		write(6,*)'p_ninrowx%%%%%%%%%%%%',p_ninrowx
 		do iro=0,p_nrow
-			if(p_nxinrow(iro).gt.0)then
+			if(p_ninrowx(iro).gt.0)then
 				idomv=p_rowdomvar(iro) !domainvar
 				if(idomv.eq.p_domvars(ido))then
 					p_nixcu(ido)=p_nixcu(ido)+1  !how many
 					j_itempvector((ido-1)*p_nrowtot+p_nixcu(ido))=iro
 					!write(6,*)'ido,iro',ido,iro
-				endif !if(idomv.eq.p_domvars(ido))   7139
-			endif !if(p_nxinrow(iro).gt.0)   7137
+				endif !if(idomv.eq.p_domvars(ido))   7174
+			endif !if(p_ninrowx(iro).gt.0)   7172
  
-		enddo !iro=0,p_nrow   7136
+		enddo !iro=0,p_nrow   7171
 		lkm=lkm+p_nixcu(ido)
-	enddo !ido=1,p_ndomvars   7134
+	enddo !ido=1,p_ndomvars   7169
  
  
-	p_ivixcurow=j_deflistobject(j_ivout,'%ixcurow',list0=lkm,ilist=.true.)
+	p_ivixcurow=j_deflist(j_ivout,'%ixcurow',list0=lkm,ilist=.true.)
 	p_ixcurow=>j_o(p_ivixcurow)%i2(1:lkm)
 	! if(allocated(p_ixcurow))deallocate(p_ixcurow)
 	! allocate(p_ixcurow(1:lkm))
@@ -8392,17 +8361,17 @@ subroutine initdomain()
 			p_ixcurow(lkm)=j_itempvector((ido-1)*p_nrowtot+j)
  
  
-		enddo !j=1,p_nixcu(ido)   7160
+		enddo !j=1,p_nixcu(ido)   7195
 		if(ido.lt.p_ndomvars)p_ixcubas(ido+1)=p_ixcubas(ido)+p_nixcu(ido)
-	enddo !ido=p_ido1,p_ndomvars   7158
+	enddo !ido=p_ido1,p_ndomvars   7193
 	!is(p_p8)write(6,*)'<ixcurow ',p_ixcurow,' p_ixcubas',p_ixcubas
 	deallocate(j_itempvector)
  
  
  
-	p_ivicurint=j_deflistobject(j_ivout,'%icurint',list0=p_ndomvars,ilist=.true.)
+	p_ivicurint=j_deflist(j_ivout,'%icurint',list0=p_ndomvars,ilist=.true.)
 	p_icurint=>j_o(p_ivicurint)%i2(1:p_ndomvars)
-	p_ivicurbit=j_deflistobject(j_ivout,'%icurbit',list0=p_ndomvars,ilist=.true.)
+	p_ivicurbit=j_deflist(j_ivout,'%icurbit',list0=p_ndomvars,ilist=.true.)
 	p_icurbit=>j_o(p_ivicurbit)%i2(1:p_ndomvars)
  
 	! if(allocated(p_icurint))deallocate(p_icurint,p_icurbit)
@@ -8411,7 +8380,7 @@ subroutine initdomain()
 	do ido=p_ido1,p_ndomvars
 		p_icurint(ido)=(ido-p_idostep)/32+1
 		p_icurbit(ido)=ido-(p_icurint(ido)-1)*32-1
-	enddo !ido=p_ido1,p_ndomvars   7181
+	enddo !ido=p_ido1,p_ndomvars   7216
 	!is(p_p8)write(6,*)'<66icurint',p_icurint,'bit',p_icurbit
  
  
@@ -8419,13 +8388,13 @@ subroutine initdomain()
 	!	endif !if(p_isdomain)   4962
 	!if(p_isdomain)then
  
-	!is(p_p8)write(6,*)'<4996 p_xrow',p_xrow
-	!only if there are domains it  must be made difference between xror ans xrowcur
+	!is(p_p8)write(6,*)'<4996 p_rowx',p_rowx
+	!only if there are domains it  must be made difference between xror ans rowcurx
 	! otherwise only cur is needed
 	do iro=0,p_nrow
 		if(p_ix(iro).ne.0.and.p_rowdomvar(iro).eq.j_ivall)p_ixcur0(iro)=.true.
  
-	enddo !iro=0,p_nrow   7195
+	enddo !iro=0,p_nrow   7230
 	! else
 	! do iro=0,p_nrow
 	! if(p_ix(iro).ne.0)p_ixcur(iro)=.true.
@@ -8440,10 +8409,10 @@ subroutine initdomain()
 	!write(6,*)'<55p_ndomv ',p_ndomv
 	! store domain information in bit form into domainbits
 	! one element in domainbits can store 32 bits
-	p_ivdomainbits=j_deflistobject(j_ivout,'%ivdomainbits',list0=p_ndomv*p_nunits,ilist=.true.)
+	p_ivdomainbits=j_deflist(j_ivout,'%ivdomainbits',list0=p_ndomv*p_nunits,ilist=.true.)
 	p_domainbits=>j_o(p_ivdomainbits)%i2(1:p_ndomv*p_nunits)
  
-	p_ivdomainunits=j_deflistobject(j_ivout,'%domainunits',list0=p_ndom,ilist=.true.)
+	p_ivdomainunits=j_deflist(j_ivout,'%domainunits',list0=p_ndom,ilist=.true.)
 	p_domainunits=>j_o(p_ivdomainunits)%i2(1:p_ndom)
 	!	write(6,*)'p_ndom,p_ndomv,',p_ndom,p_ndomv
 	!	write(6,*)'domainunits',p_ndomv,p_nunits,p_ndomv*p_nunits
@@ -8457,30 +8426,30 @@ subroutine initdomain()
 	if(p_domvars(1).eq.j_ivall)p_domainunits(1)=p_nunits
 	!			p_domainbits=0
 	!	endif !if(p_ndom.gt.0)   5239
-	p_nxrow0=0
+	p_nrowx0=0
 	! write(6,*)'p_ix ',p_ix
 	do j=0,p_nrow
 		if(p_domvars(p_rowdomnum(j)).eq.j_ivall.and.p_ix(j).ne.0)then
-			p_nxrow0=p_nxrow0+1
-			p_xrowcur(p_nxrow0)=j
-		endif !if(p_domvars(p_rowdomnum(j)).eq.j_ivall.and.p_ix(j).ne.0)   7233
-	enddo !j=0,p_nrow   7232
+			p_nrowx0=p_nrowx0+1
+			p_rowcurx(p_nrowx0)=j
+		endif !if(p_domvars(p_rowdomnum(j)).eq.j_ivall.and.p_ix(j).ne.0)   7268
+	enddo !j=0,p_nrow   7267
 	!	 p_row0=1
-	!	if(p_xrowcur(1).eq.0)p_row0=2
+	!	if(p_rowcurx(1).eq.0)p_row0=2
 	!updated for domainprob
-	! if(p_xrowcur(1).eq.0) p_row0=2  !there is x-variable in objective thus constraits mus start
-	! ! from xrowcur(2)
+	! if(p_rowcurx(1).eq.0) p_row0=2  !there is x-variable in objective thus constraits mus start
+	! ! from rowcurx(2)
  
 	! if(p_ido1.eq.2)then
  
-	! p_nxrow0=p_nixcu(1)
-	! ! p_xrowcur(1:p_nxrow0)=p_ixcurow(1:p_nxrow0)
-	! ! !is(p_p8)write(6,*)'p_nxrow0 ',p_nxrow0,' *',p_ixcurow(1:p_nxrow0)
+	! p_nrowx0=p_nixcu(1)
+	! ! p_rowcurx(1:p_nrowx0)=p_ixcurow(1:p_nrowx0)
+	! ! !is(p_p8)write(6,*)'p_nrowx0 ',p_nrowx0,' *',p_ixcurow(1:p_nrowx0)
 	! ! !is(p_p8)write(6,*)'p_nixcu ',p_nixcu
 	! else
-	! p_nxrow0=0
+	! p_nrowx0=0
 	! endif !if(p_ido1.eq.2)   5041
-	!write(6,*)'p_nxrow0 ',p_nxrow0,p_xrowcur(1:p_nxrow0)
+	!write(6,*)'p_nrowx0 ',p_nrowx0,p_rowcurx(1:p_nrowx0)
  
  
 end subroutine initdomain
@@ -8491,9 +8460,9 @@ subroutine initopt()
 	use jmod, only: p_nterm
 	use jmod, only: p_nxval
 	use jmod, only: p_nterminrow
-	use jmod, only: p_isxval
+	use jmod, only: p_istermx
 	use jmod, only: j_inlist
-	use jmod, only: p_termvars
+	use jmod, only: p_termvar
 	use jmod, only: p_zvars
 	use jmod, only: p_maxo
 	use jmod, only: p_objr0
@@ -8506,7 +8475,7 @@ subroutine initopt()
 	use jmod, only: p_lr0
 	use jmod, only: p_lz0
 	use jmod, only: p_lx0
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_lunit0
 	use jmod, only: j_o
 	use jmod, only: p_ivrow
@@ -8552,7 +8521,7 @@ subroutine initopt()
 	! z variables in the problem *******************
 	if(p_nz.gt.0)then  !p_nz=number of z-variables
 		!	write(6,*)'number of z-variables ',p_nz,p_zmatrix,'p_npvar',p_npvar
-		!	write(6,*)'p_isxvar',p_isxvar
+		!	write(6,*)'p_isvarx',p_isvarx
 		!if(p_ivoutresu
 		!	p_p2=.true.
 		!	p_p8=.true.
@@ -8572,7 +8541,7 @@ subroutine initopt()
  
 		!	if(p_xpresent)then
 		!if(j_ivout.ne.j_ivresult) then
-		!	call j_deflistobject(j_ivout,'%zvars',ivzvar,nres=p_nz)
+		!	call j_deflist(j_ivout,'%zvars',ivzvar,nres=p_nz)
 		!	p_zvars=>j_o(ivzvar)%i2
 		!		write(6,*)'jlpzv ',p_zvars
 		!else !if(j_ivout.ne.j_ivresult) then
@@ -8583,9 +8552,9 @@ subroutine initopt()
 		! z-variables: not z-variable, not factory´xvariables or factory y-variables
 		! !is(p_p8)then
 		! write(6,*)'3456pack,p_fpresent,p_nz,p_npvar',p_fpresent,p_nz,p_npvar
-		! write(6,*)'<6189 allocated(p_isxvar),allocated(p_isfx),allocated(p_isfy)',&
-		! allocated(p_isxvar),allocated(p_isfx),allocated(p_isfy),allocated(p_zvars)
-		! !		write(6,*)size(p_isxvar),size(p_isfx),size(p_isfy)
+		! write(6,*)'<6189 allocated(p_isvarx),allocated(p_isfx),allocated(p_isfy)',&
+		! allocated(p_isvarx),allocated(p_isfx),allocated(p_isfy),allocated(p_zvars)
+		! !		write(6,*)size(p_isvarx),size(p_isfx),size(p_isfy)
 		! write(6,*)size(p_zvars)
 		! endif !!is(p_p8)   5287
  
@@ -8599,15 +8568,15 @@ subroutine initopt()
 		ival=0
 		do ii=1,p_nterminrow(0)
 			ival=ival+1
-			if(.not.p_isxval(ival))then
-				iz=j_inlist(p_termvars(ival),p_zvars0,p_zvars)
+			if(.not.p_istermx(ival))then
+				iz=j_inlist(p_termvar(ival),p_zvars0,p_zvars)
 				if(p_maxo)then  ! objective maximized
 					p_objr0(p_nrow+iz)=p_coef(ival) !object row
 				else !if(j_maxo)then
 					p_objr0(p_nrow+iz)=-p_coef(ival) ! -objective maximized
-				endif !if(p_maxo)   7345
-			endif !if(.not.p_isxval(ival))   7343
-		enddo !ii=1,p_nterminrow(0)   7341
+				endif !if(p_maxo)   7380
+			endif !if(.not.p_istermx(ival))   7378
+		enddo !ii=1,p_nterminrow(0)   7376
  
  
  
@@ -8618,17 +8587,17 @@ subroutine initopt()
 			!		p_irow=p_irow+1
 			do ii=1,p_nterminrow(irow)
 				ival=ival+1   ! the number of variable with coefficient
-				if(.not.p_isxval(ival))then        !is the variable not x-variable
+				if(.not.p_istermx(ival))then        !is the variable not x-variable
  
-					iz=j_inlist(p_termvars(ival),p_zvars0,p_zvars)  !is it z-variable
-					!	write(6,*)'ival',iz,ival,p_termvars(ival),p_coef(ival),p_zvars0,p_zvars
+					iz=j_inlist(p_termvar(ival),p_zvars0,p_zvars)  !is it z-variable
+					!	write(6,*)'ival',iz,ival,p_termvar(ival),p_coef(ival),p_zvars0,p_zvars
  
 					! put coefficients of z variables into A matrix
 					p_a(p_abas(iz)+irow)=p_coef(ival)  !p_a(irow,iz)=p_coef(ival)
-				endif !if(.not.p_isxval(ival))   7362
-			enddo !ii=1,p_nterminrow(irow)   7360
+				endif !if(.not.p_istermx(ival))   7397
+			enddo !ii=1,p_nterminrow(irow)   7395
  
-		enddo !irow=1,p_nrow   7356
+		enddo !irow=1,p_nrow   7391
 		!	else !P_xpreset
  
  
@@ -8640,14 +8609,14 @@ subroutine initopt()
 		! write(6,*)'amat'
 		! do jj7=1,p_nrow;write(p_n16,'(10f8.2)')(p_a(jj7,nco7),nco7=1,p_ncol) ;enddo
 		! endif !!is(p_p2)   6535
-	endif !if(p_nz.gt.0)   7294
+	endif !if(p_nz.gt.0)   7329
 	!	!is(p_p8)write(6,*)'startup,nrow,p_ncol',p_nrow,p_ncol,' p_ifail :',p_ifail
 	if(p_ifail.gt.0)then
 		write(6,*)'**at startup p_ifail=',p_ifail, 'tell J. Lappi'
 		j_err=.true.
 		return
  
-	endif !if(p_ifail.gt.0)   7386
+	endif !if(p_ifail.gt.0)   7421
  
 	! if(allocated(p_lsi))deallocate(p_lsi)
 	! allocate(p_lsi(1:p_mxnm))
@@ -8708,10 +8677,10 @@ subroutine initopt()
 	! !jatketaanko seuraavasta tehdasmjasta tarkastelu/ienter, ixkenter alustukset
 	! p_ienter= 0
 	! ixkenter = 0
-	! p_iunitrans = 0	! yksikkö, jolle viimeksi laskettu tehdasmja muunnokset
+	! p_unitrans = 0	! yksikkö, jolle viimeksi laskettu tehdasmja muunnokset
 	! endif !if (p_fpresent)   5935
  
-	p_iunit=0  !!!!!current unit
+	p_unit=0  !!!!!current unit
 	p_lunit0=0 ! last unit with improvement
 	p_ivrow=j_o(p_ivproblem)%i(4)  !text for rows
  
@@ -8726,11 +8695,11 @@ subroutine initopt()
 			write(6,*)'nonlinear objective must be maximized'
 			j_err=.true.
 			return
-		endif !if(p_nonlin)   7466
+		endif !if(p_nonlin)   7501
 		p_maxo=.false.
 		p_coefmax=-j_1
  
-	endif !if(iobjtype.gt.0)   7462
+	endif !if(iobjtype.gt.0)   7497
  
  
 	!is(p_p8)write(6,*)'p_ndoms,p_nrowtot,p_nterm,p_ndom',p_ndoms,p_nrowtot,p_nterm,p_ndom
@@ -8761,7 +8730,7 @@ subroutine initoptz()
 	use jmod, only: p_a
 	use jmod, only: p_abas
 	use jmod, only: p_ivzmatrix
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: j_ivout
 	use jmod, only: p_ivzvars
 	use jmod, only: p_zvars
@@ -8772,7 +8741,7 @@ subroutine initoptz()
 	use jmod, only: p_nterminrow
 	use jmod, only: p_coef
 	use jmod, only: j_inlist
-	use jmod, only: p_termvars
+	use jmod, only: p_termvar
 	use jmod, only: p_lower
 	use jmod, only: p_ivlower
 	use jmod, only: p_lowerJ
@@ -8854,7 +8823,7 @@ subroutine initoptz()
  
 	!	if(p_xpresent)then
 	!if(j_ivout.ne.j_ivresult) then
-	!	call j_deflistobject(j_ivout,'%zvars',ivzvar,nres=p_nz)
+	!	call j_deflist(j_ivout,'%zvars',ivzvar,nres=p_nz)
 	!	p_zvars=>j_o(ivzvar)%i2
 	!		write(6,*)'jlpzv ',p_zvars
 	!else !if(j_ivout.ne.j_ivresult) then
@@ -8866,18 +8835,18 @@ subroutine initoptz()
 			p_objr0(p_nrow+1:p_nrow+p_nz)=j_o(p_ivzobj)%d(1:p_nz)
 		else
 			p_objr0(p_nrow+1:p_nrow+p_nz)=-j_o(p_ivzobj)%d(1:p_nz)
-		endif !if(p_maxo)   7570
+		endif !if(p_maxo)   7605
  
 		do i=1,p_nrow
 			do j=1,p_nz
 				iel=iel+1
 				p_a(p_abas(j)+i)=j_o(p_ivzmatrix)%d(iel) !p_a(i,j)=j_o(p_ivzmatrix)%d(iel)
-			enddo !j=1,p_nz   7577
-		enddo !i=1,p_nrow   7576
+			enddo !j=1,p_nz   7612
+		enddo !i=1,p_nrow   7611
 	else
  
  
-		p_ivzvars=j_deflistobject(j_ivout,'%zvars',list0=p_nz)
+		p_ivzvars=j_deflist(j_ivout,'%zvars',list0=p_nz)
 		p_zvars=>j_o(p_ivzvars)%i2(1:p_nz)
  
 		p_zvars=p_vars(1:p_npvar)
@@ -8900,18 +8869,18 @@ subroutine initoptz()
 		do ii=1,p_nterminrow(0)
 			ival=ival+1
 			! if(p_ispullout)then
-			! iz=j_inlist(p_termvars(ival),p_nz,p_zvars)
+			! iz=j_inlist(p_termvar(ival),p_nz,p_zvars)
 			! j_o(ivobj)%d(iz)=p_coef(ival)
 			! endif !if(p_ispullout)   6785
-			!if(.not.p_isxval(ival))then
-			!iz=j_inlist(p_termvars(ival),p_zvars0,p_zvars)
+			!if(.not.p_istermx(ival))then
+			!iz=j_inlist(p_termvar(ival),p_zvars0,p_zvars)
 			if(p_maxo)then  ! objective maximized
 				p_objr0(p_nrow+ii)=p_coef(ival) !object row
 			else !if(j_maxo)then
 				p_objr0(p_nrow+ii)=-p_coef(ival) ! -objective maximized
-			endif !if(p_maxo)   7613
-			!endif !if(.not.p_isxval(ival))   5316
-		enddo !ii=1,p_nterminrow(0)   7605
+			endif !if(p_maxo)   7648
+			!endif !if(.not.p_istermx(ival))   5316
+		enddo !ii=1,p_nterminrow(0)   7640
  
 		iba=0
 		do irow=1,p_nrow
@@ -8921,24 +8890,24 @@ subroutine initoptz()
 			do ii=1,p_nterminrow(irow)
 				ival=ival+1   ! the number of variable with coefficient
  
-				iz=j_inlist(p_termvars(ival),p_zvars0,p_zvars)  !is it z-variable
+				iz=j_inlist(p_termvar(ival),p_zvars0,p_zvars)  !is it z-variable
  
  
 				! put coefficients of z variables into A matrix
 				p_a(p_abas(iz)+irow)=p_coef(ival)  !	p_a(irow,iz)=p_coef(ival)
 				! if(p_ispullout)then
-				! write(6,*)'p_termvars(ival)',p_termvars(ival),iz,iba
+				! write(6,*)'p_termvar(ival)',p_termvar(ival),iz,iba
 				! j_o(ivconstr)%d(iba+iz)=p_coef(ival)
 				! endif !if(p_ispullout)   6812
  
-			enddo !ii=1,p_nterminrow(irow)   7626
+			enddo !ii=1,p_nterminrow(irow)   7661
 			iba=iba+p_nz
-		enddo !irow=1,p_nrow   7622
-	endif !if(p_zmatrix)   7567
+		enddo !irow=1,p_nrow   7657
+	endif !if(p_zmatrix)   7602
  
 	if(allocated(p_lower))deallocate(p_lower)  ! is lower bound active
 	allocate(p_lower(1:p_nrow))
-	p_ivlower=j_deflistobject(j_ivout,'%lower',list0=p_nrow,ilist=.true.)
+	p_ivlower=j_deflist(j_ivout,'%lower',list0=p_nrow,ilist=.true.)
 	p_lowerJ=>j_o(p_ivlower)%i2(1:p_nrow)
 	do i=1,p_nrow
 		if(p_lbou(i))then
@@ -8947,9 +8916,9 @@ subroutine initoptz()
 		else !if(j_lbou(i))then
 			p_rhscur(i)=p_rhs2(i)
 			p_lower(i)=.false.
-		endif !if(p_lbou(i))   7649
+		endif !if(p_lbou(i))   7684
 		!	p_rhsw(i)=p_rhscur(i)
-	enddo !i=1,p_nrow   7648
+	enddo !i=1,p_nrow   7683
 	!		p_rhsw(i)=p_rhscur(i)
 	p_lowerJ=p_lower
  
@@ -8979,14 +8948,14 @@ subroutine preopt()
 	use jmod, only: j_big
 	use jmod, only: p_valueopt
 	use jmod, only: p_ns
-	use jmod, only: p_subfilre
+	use jmod, only: p_filre
 	use jmod, only: p_rejects
 	use jmod, only: p_ibaunit
 	use jmod, only: p_value
-	use jmod, only: p_xrowcur
+	use jmod, only: p_rowcurx
 	use jmod, only: p_i1
 	use jmod, only: p_keys
-	use jmod, only: p_nxrowcur
+	use jmod, only: p_nrowcurx
 	use jmod, only: p_xmat
 	use jmod, only: p_ix
 	use jmod, only: p_xps
@@ -9003,47 +8972,52 @@ subroutine preopt()
 		p_idomba=0
 		do i=1,p_nunits
 			write(6,*)'preop'
-			if(p_isdomain)call jlpcurix() !determines for each row if the unit p_iunit belonggs to the domain of the row
-			! returns nrowp and xrowcur
+			if(p_isdomain)call jlpcurix()
+			! determines for each row if the unit iunit belonggs to the domain of the row
+			! units must be accessed one by one
+			! p_nrowcurx
+			! p_rowcurx
+			! p_idomba
+			! returns nrowp and rowcurx
  
-			!	if(p_p8)write(6,*)'unit',i,'p_nxrowcur',p_nxrowcur,'<xrowcur',p_xrowcur
+			!	if(p_p8)write(6,*)'unit',i,'p_nrowcurx',p_nrowcurx,'<rowcurx',p_rowcurx
 			p_valueopt=j_big
 			do k=1,p_ns(i)
-				if(p_subfilre)then
+				if(p_filre)then
 					if(p_rejects(p_ibaunit(i)+k))cycle
-				endif !if(p_subfilre)   7692
+				endif !if(p_filre)   7732
 				p_value=p_zero  !value is the sum of infeasibility
-				if(p_xrowcur(1).eq.0)then
+				if(p_rowcurx(1).eq.0)then
 					p_i1=2
-				else !if(j_xrowcur(1).eq.0)then
+				else !if(j_rowcurx(1).eq.0)then
 					p_i1=1
-				endif !if(p_xrowcur(1).eq.0)   7696
-				ibxmatx=ibaxmat(p_ibaunit(i)+k) !,1)
-				ibxmatx2=ibaxmat(p_ibaunit(i)+p_keys(i)) !,2)
-				do jj=p_i1,p_nxrowcur
-					j=p_xrowcur(jj)
+				endif !if(p_rowcurx(1).eq.0)   7736
+				ibxmatx=ibamatx(p_ibaunit(i)+k) !,1)
+				ibxmatx2=ibamatx(p_ibaunit(i)+p_keys(i)) !,2)
+				do jj=p_i1,p_nrowcurx
+					j=p_rowcurx(jj)
 					curx=p_xmat(p_ix(j)+ibxmatx)
 					curk=p_xmat(p_ix(j)+ibxmatx2)
 					if(p_xps(j)+curx-curk.gt.p_rhs2(j))then
 						p_value=p_value+p_xps(j)+curx-curk-p_rhs2(j)
 					elseif(p_xps(j)+curx-curk.lt.p_rhs(j))then !if(j_xps(j)+curx-curk.gt.j_rhs2(j))then
 						p_value=p_value+p_rhs(j)-p_xps(j)-curx+curk
-					endif !if(p_xps(j)+curx-curk.gt.p_rhs2(j))   7707
+					endif !if(p_xps(j)+curx-curk.gt.p_rhs2(j))   7747
  
-				enddo !jj=p_i1,p_nxrowcur   7703
+				enddo !jj=p_i1,p_nrowcurx   7743
 				if(p_value.lt.p_valueopt)then
 					p_valueopt=p_value
 					kopt=k
  
-				endif !if(p_value.lt.p_valueopt)   7714
+				endif !if(p_value.lt.p_valueopt)   7754
 				if(k.eq.p_keys(i))p_valuek=p_value
-			enddo !k=1,p_ns(i)   7691
+			enddo !k=1,p_ns(i)   7731
 			if(p_valuek.gt.p_valueopt)then
-				ibxmatx=ibaxmat(p_ibaunit(i)+kopt) !,1)
+				ibxmatx=ibamatx(p_ibaunit(i)+kopt) !,1)
 				! ibxmatx2=j_ibaunit(i)+j_keys(i) put earlier
  
-				do jj=1,p_nxrowcur
-					j=p_xrowcur(jj)
+				do jj=1,p_nrowcurx
+					j=p_rowcurx(jj)
 					curx=p_xmat(p_ix(j)+ibxmatx)
  
  
@@ -9056,24 +9030,24 @@ subroutine preopt()
 					! if(i.le.2.and.j.eq.0)write(6,*)'<47747',curx,ibxmatx2,p_ix(j)+ibxmatx2,&
 					! p_xmat(p_ix(j)+ibxmatx2),p_xps(j)
  
-				enddo !jj=1,p_nxrowcur   7725
+				enddo !jj=1,p_nrowcurx   7765
 				p_keys(i)=kopt
 				p_apusum=p_apusum+p_valuek-p_valueopt
  
-			endif !if(p_valuek.gt.p_valueopt)   7721
-		enddo !i=1,p_nunits   7684
+			endif !if(p_valuek.gt.p_valueopt)   7761
+		enddo !i=1,p_nunits   7719
 		write(6,*)'preoptimization round ',kief,' improved infeasibility sum by ',p_apusum
 		write(6,*)' '
-	enddo !kief=1,1   7681
+	enddo !kief=1,1   7716
  
 	if(p_iprint.ge.0)then
 		write(6,*)'x-sums over keyschedules after preopimization'
-		do jj=1,p_nxrowcur   !nrowp = number of rows with x-variables
-			j=p_xrowcur(jj) !j= number of the row
+		do jj=1,p_nrowcurx   !nrowp = number of rows with x-variables
+			j=p_rowcurx(jj) !j= number of the row
 			write(6,*)j,p_xps(j)
 			!	if(j.eq.2)write(27,*)'<init',p_xps(j)
-		enddo !jj=1,p_nxrowcur   7751
-	endif !if(p_iprint.ge.0)   7749
+		enddo !jj=1,p_nrowcurx   7791
+	endif !if(p_iprint.ge.0)   7789
 	p_objf=p_small
 end subroutine preopt
 
@@ -9082,16 +9056,15 @@ subroutine initxdatjlp()
 	use jmod, only: p_idomba
 	use jmod, only: p_activeunit
 	use jmod, only: p_nunits
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_isunit
 	use jmod, only: j_v
-	use jmod, only: j_o
-	use jmod, only: p_ivkeepx
 	use jmod, only: p_keepx
-	use jmod, only: p_ivxdatmat
-	use jmod, only: p_ivkeepc
+	use jmod, only: p_datamatx
+	use jmod, only: p_nkeepx
 	use jmod, only: p_keepc
-	use jmod, only: p_ivmatc
+	use jmod, only: p_datamatc
+	use jmod, only: p_nkeepc
 	use jmod, only: p_isdomain
 	use jmod, only: p_ivunit
 	use jmod, only: p_ivdomaintrans
@@ -9103,35 +9076,34 @@ subroutine initxdatjlp()
 	use jmod, only: p_domainbits
 	use jmod, only: p_icurint
 	use jmod, only: p_icurbit
-	use jmod, only: j_ivns
 	use jmod, only: p_ns
 	use jmod, only: p_nstot
 	use jmod, only: j_getobs
-	use jmod, only: p_subfilter_
+	use jmod, only: p_filter_
 	use jmod, only: j_codevalue
-	use jmod, only: j_subfilterlink
+	use jmod, only: j_filterlink
 	use jmod, only: p_rejects
 	use jmod, only: p_nrejtot
-	use jmod, only: p_subreject_
-	use jmod, only: j_subrejectlink
+	use jmod, only: p_reject
+	use jmod, only: j_rejectlink
 	use jmod, only: p_xpresent
 	use jmod, only: p_ntemp0
 	use jmod, only: p_nxvararea
-	use jmod, only: p_xvarsarea
+	use jmod, only: p_varxarea
 	use jmod, only: p_ivarea
 	use jmod, only: p_ibatemp
 	use jmod, only: p_xmat
 	use jmod, only: p_xcoef
-	use jmod, only: p_nxrowtemp
-	use jmod, only: p_irowxvars
+	use jmod, only: p_nrowxtemp
+	use jmod, only: p_irowvarx
 	use jmod, only: p_maxo
 	use jmod, only: p_ix
-	use jmod, only: p_subfilre
+	use jmod, only: p_filre
 	use jmod, only: p_nrejdupl
 	use jmod, only: p_fpresent
 	use jmod, only: p_nlog
-	use jmod, only: p_xdatmat
-	use jmod, only: p_ivlogkeep
+	use jmod, only: j_o
+	use jmod, only: p_ivkeeplog
 	use jmod, only: p_fast
 	use jmod, only: p_fastvalues
 	use jmod, only: p_maxns
@@ -9142,38 +9114,34 @@ subroutine initxdatjlp()
 	use jmod, only: p_nrow
 	use jmod, only: p_lopp
 	use jmod, only: p_time00
-	use jmod, only: p_xvars1
-	use jmod, only: p_xvars2
+	use jmod, only: p_varx1
+	use jmod, only: p_varx2
 	use jmod, only: p_ndom
 	use jmod, only: j_gettext
 	use jmod, only: p_ivdomain
 	use jmod, only: j_gottext
 	use jmod, only: j_lgottext
-	use jmod, only: j_inlistobject
-	use jmod, only: p_log
-	use jmod, only: j_getname
-	use jmod, only: j_oname
-	use jmod, only: j_loname
 	use jmod, only: p_xps
-	use jmod, only: p_ibaunit
 	use jmod, only: p_xsmin
 	use jmod, only: p_zero
 	use jmod, only: p_xsmax
-	use jmod, only: p_rejectnow_
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_rejectnow
+	use jmod, only: p_ibaunit
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: j_inf
 	use jmod, only: p_xmin
 	use jmod, only: j_ninf
 	use jmod, only: p_xmax
-	use jmod, only: p_warm
 	use jmod, only: p_keys
+	use jmod, only: j_ivdollar2
+	use jmod, only: p_warm
 	use jmod, only: p_warmf
 	use jmod, only: p_iprint
 	use jmod, only: p_tole
 	use jmod, only: p_tolep
 	use jmod, only: p_mxd
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: j_ivout
 	use jmod, only: p_ivlunit
 	use jmod, only: p_lunit
@@ -9189,62 +9157,43 @@ subroutine initxdatjlp()
 	use jmod, only: p_mxn
 	use jmod, only: p_next
 	use jmod, only: p_iprev
+	write(6,*)'initxdatjlp '
+	! p_domainunits
+	! p_domainbits
+	! p_ns(p_unit)
+	! p_nstot
+	! p_rejects
+	! p_nrejtot
+	! p_fastvalues
+	! p_svalue
+	! p_solx (0:p_nrow)
+	! p_ndom
+	! p_domainunits
+ 
+ 
 	!20181116 #zeroc block moved from #z-commented ends here
  
  
 	!muuttuja-tehdas-taulukko
  
 	!if(j_err)goto 990
-	write(6,*)'initxdatjlp '
+ 
  
  
 	iiro=0
 	ndd=1
 	! now isx tell for all variables in vars%problem if they are x variable
-	! nxrow tell for each row the number of x-variables in the row
-	! isxval tells for each element in coef and p_termvars if it is x-variable
+	! nrowx tell for each row the number of x-variables in the row
+	! isxval tells for each element in coef and p_termvar if it is x-variable
  
 	! starts acces to c-data: !!!!
-	!if(.not.p_isunit)call j_getdat(p_ivdatac,p_nunits,p_ivmatc,p_ivkeepc) !,p_ivtransc,p_ivvarsc)
+	!if(.not.p_isunit)call j_getdat(p_ivdatac,p_nunits,p_ivdatamatc,p_ivkeepc) !,p_ivtransc,p_ivvarsc)
 	if(j_err)return
 	!if(p_nfx.gt.0.or.p_nfy>0) call initkeyfact()
  
-	!subroutine initdata2()
-	!is(p_p8)write(6,*)'initdata2'
-	! start access to x-data:  !!!!
- 
-	! if(j_xdatinmemory)then
-	! j_xdatlast=j_lopp
-	! j_xdatlopp=j_lopp
- 
-	! endif
- 
-	!		write(6,*)'**********p_ivxdatmat,j_ivmatx',j_ivmatx,p_ivxdatmat,j_lopp
- 
- 
- 
-	!!!!???????????  is it really possible that obsw variable is not in cdata
-	!  I think that error ocuurrs in data or linkdta functions if this is not the case
-	!JL 23.1 20121  nxval is now computed above, it was used earlier even if it was not define
-	!nxval=count(j_isxval) !isxval tells if coefficient in problem is a x-variable
- 
- 
  
 	ibasc=0
-	!	write(6,*)'p_nunits',p_nunits,p_ntemp0,p_ibatemp
  
- 
- 
-	!	do iik=1,keepx
-	!write(6,*)'477474',iik,j_o(p_ivxdatmat)%d(iik),j_o(p_ivxdatmat)%d(keepx+iik)
-	!	enddo
-	! if(p_p8)then
-	! write(6,*)'<11469>,making xmat,p_nstot,p_ntemp0,ibatemp'
-	! write(6,*)'<cont >',p_nstot,p_ntemp0,ibatemp
-	! write(6,*)'<xcoef >',p_xcoef
-	! write(6,*)'<nxrowtemp >',p_nxrowtemp
-	! write(6,*)'p_isdomain ',p_isdomain
-	! endif !if(p_p8)   7702
 	iwar=0   ! number of units where all schedules are rejected
  
 	p_idomba=0
@@ -9255,44 +9204,45 @@ subroutine initxdatjlp()
 	allocate(p_activeunit(1:p_nunits))
 	p_activeunit=.true.
  
-	do p_iunit=1,p_nunits
- 
+	do p_unit=1,p_nunits
+		!	write(6,*)'unit5 ',p_unit
 		if(p_isunit)then
  
-			j_v(j_o(p_ivkeepx)%i2(1:p_keepx))=j_o(p_ivxdatmat)%d(ibas+1:ibas+p_keepx)
-			ibas=ibas+p_keepx
+			!		j_v(j_o(p_ivkeepx)%i2(1:p_nkeepx))=j_o(p_ivdatamatx)%d(ibas+1:ibas+p_nkeepx)
+			j_v(p_keepx)=p_datamatx(ibas+1:ibas+p_nkeepx)
+			ibas=ibas+p_nkeepx
 		else
-			!	write(6,*)'sh',p_ivkeepc,keepc,p_ivmatc
-			!	call j_getname(p_ivkeepc,p_ivmatc)
+			!	write(6,*)'sh',p_ivkeepc,keepc,p_ivdatamatc
+			!	call j_getname(p_ivkeepc,p_ivdatamatc)
 			!	write(6,*)'keepc ',j_oname(1:j_loname),' * ',j_oname2(1:j_loname2)
-			!	write(6,*)p_keepc,j_o(p_ivkeepc)%i(1)
-			j_v(j_o(p_ivkeepc)%i2(1:p_keepc))=j_o(p_ivmatc)%d(ibasc+1:ibasc+p_keepc)
-			ibasc=ibasc+p_keepc
-			!		call j_getobsiv(p_iunit,p_ivmatc,p_ivkeepc,p_p_ivunit)
+			!	write(6,*)p_nkeepc,j_o(p_ivkeepc)%i(1)
+			j_v(p_keepc)=p_datamatc(ibasc+1:ibasc+p_nkeepc)
+			ibasc=ibasc+p_nkeepc
+			!		call j_getobsiv(p_unit,p_ivdatamatc,p_ivkeepc,p_p_ivunit)
  
-		endif !if(p_isunit)   7829
+		endif !if(p_isunit)   7850
 		! if(p_ivtrans.gt.0)then
 		! call dotrans(p_ivtrans,1)  ! trans option given
 		! if(j_err)then
-		! write(6,*)'error for unit ',p_iunit
+		! write(6,*)'error for unit ',p_unit
 		! stop 815
 		! endif !if(j_err)   8347
  
 		! endif !if(p_ivtrans.gt.0)   8345
 		if(p_isdomain)then
 			!			write(6,*)'<456doing,p_needc,p_ndom',p_needc,p_ndom
-			j_v(p_ivunit)=p_iunit
+			j_v(p_ivunit)=p_unit
 			call dotrans(p_ivdomaintrans,1)  !there are domain transformations
 			if(j_err)then
-				write(6,*)'error in domain transformations for unit ',p_iunit
+				write(6,*)'error in domain transformations for unit ',p_unit
 				stop 879
-			endif !if(j_err)   7855
+			endif !if(j_err)   7877
  
-		endif !if(p_isdomain)   7851
+		endif !if(p_isdomain)   7873
 		!if(p_needc.gt.0)p_cvar=j_v(p_cvarl(1:p_ncvar))
  
 		if(p_isdomain)then  ! ndom is number of domains
-			!domainbits(1:p_ndomv,p_iunit)=0 done at allocation
+			!domainbits(1:p_ndomv,p_unit)=0 done at allocation
 			! käydään läpi domainmuuttujat
  
 			!		ibit=0
@@ -9313,97 +9263,63 @@ subroutine initxdatjlp()
 					! set not
 					!		if(p_p8)write(6,*)'ido,pidomba,icurint,bit',ido,p_idomba,p_icurint(ido),p_icurbit(ido)
 					p_domainbits(p_idomba+p_icurint(ido))= ibset(p_domainbits(p_idomba+p_icurint(ido)),p_icurbit(ido))
-				endif !if(j_v(p_domvars(ido)).ne.j_0)   7878
+				endif !if(j_v(p_domvars(ido)).ne.j_0)   7900
  
  
-			enddo !ido=p_ido1,p_ndomvars   7875
+			enddo !ido=p_ido1,p_ndomvars   7897
  
 			!	if(p_p8)write(6,*)'<11446 domainbits',p_domainbits
 			p_idomba=p_idomba+1
  
  
-		endif !if(p_isdomain)   7863
-		! if(p_iunit.gt.10)then
+		endif !if(p_isdomain)   7885
+		! if(p_unit.gt.10)then
  
 		! write(6,*)'ddhhd'
 		! j_err=.true.;return
 		! endif
-		if(.not.p_isunit)p_ns(p_iunit)=j_v(j_ivns)   ! number of schedules
+		!	if(.not.p_isunit)p_ns(p_unit)=j_v(j_ivns)   ! number of schedules
 		nrej=0   ! number of rejected schedules in this unit
 		!	inde=1
-		!	if(p_iunit.eq.1)write(6,*)'%%%%¤¤',p_isunit,p_ns(p_iunit)
-		if(p_ns(p_iunit).le.0)then
-			write(6,*)'*unit ',p_iunit,' has no schedules ,remove such units'
+		!	if(p_unit.eq.1)write(6,*)'%%%%¤¤',p_isunit,p_ns(p_unit)
+		if(p_ns(p_unit).le.0)then
+			write(6,*)'*unit ',p_unit,' has no schedules ,remove such units'
 			j_err=.true.;return
-		endif !if(p_ns(p_iunit).le.0)   7904
-		!	write(6,*)'**unit,nobsw ',p_iunit,p_ns(p_iunit)
-		do is=1,p_ns(p_iunit)
+		endif !if(p_ns(p_unit).le.0)   7926
+		!	write(6,*)'**unit,nobsw ',p_unit,p_ns(p_unit)
+		do is=1,p_ns(p_unit)
 			!			write(6,*)'<6565'
 			p_nstot=p_nstot+1
-			!		write(17,*)p_iunit,p_nstot
+			!		write(17,*)p_unit,p_nstot
 			call j_getobs(p_nstot)
-			! ivs index of schedule variable
-			! get observation from x-data
  
-			! if(.not.p_isunit.or.is.gt.1)then
-			! !		write(6,*)p_ivkeepx,j_o(p_ivkeepx)%i2,keepx,p_ivxdatmat,ibas
-			! write(6,*)'p_ivkeepx,p_keepx,p_ivxdatmat ',p_ivkeepx,p_keepx,p_ivxdatmat
-			! j_v(j_o(p_ivkeepx)%i2(1:p_keepx))=j_o(p_ivxdatmat)%d(ibas+1:ibas+p_keepx)
-			! ibas=ibas+p_keepx
-			! !		if(p_iunit.eq.1.and.is.eq.1)write(6,*)'&&&&',j_o(p_ivkeepx)%i2(1:p_keepx),j_o(p_ivxdatmat)%d(ibas+1:ibas+p_keepx)
-			!endif !if(.not.p_isunit.or.is.gt.1)   8412
-			!			call j_getobsiv(p_ibaunitbas+p_nstot,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0) !making			xmat
- 
- 
-			! if(p_ivsubtrans.gt.0)then
-			! j_v(p_ivs)=is
-			! call dotrans(p_ivsubtrans,1)  ! subtrans-> was given
-			! if(j_err)then
-			! write(6,*)'error for schedule ',p_nstot
-			! stop 447
-			! endif !if(j_err)   7925
-			! endif !if(p_ivsubtrans.gt.0)   7922
-			!	test duplicated schdeulse
-			!
-			! p_xvars1=j_v(p_xvars)
-			! if(is.gt.1)then
-			! if(all(p_xvars1.eq.p_xvars2))then
-			! p_rejects(p_nstot)=.true.
-			! nrej=nrej+1
-			! p_nrejtot=p_nrejtot+1
-			! p_nrejdupl=p_nrejdupl+1
-			! !		write(6,*)'is,p_xvars1,p_xvars2',is,p_xvars1,p_xvars2
-			! goto 776
-			! endif !if(all(p_xvars1.eq.p_xvars2))   8361
-			! endif !if(is.gt.1)   8360
-			! p_xvars2=p_xvars1
-			if(p_subfilter_)then         !subfilter->
-				testcode=j_codevalue(iob,j_subfilterlink)
+			if(p_filter_)then         !subfilter->
+				testcode=j_codevalue(iob,j_filterlink)
 				!call dotrans(iob,j_iosubfilter)
 				if(j_err)then
 					write(6,*)'error for observation ',iob
 					stop 337
  
-				endif !if(j_err)   7952
+				endif !if(j_err)   7940
 				if(testcode.eq.0.)then   ! filter->False, reject
 					p_rejects(p_nstot)=.true.
 					nrej=nrej+1
 					p_nrejtot=p_nrejtot+1  !total number of rejected schedules
 					goto 776
-				endif !if(testcode.eq.0.)   7957
-			endif !if(p_subfilter_)   7949
-			if(p_subreject_)then            ! reject->
-				testcode=j_codevalue(iob,j_subrejectlink) !call dotrans(iob,j_iosubreject)
+				endif !if(testcode.eq.0.)   7945
+			endif !if(p_filter_)   7937
+			if(p_reject)then            ! reject->
+				testcode=j_codevalue(iob,j_rejectlink) !call dotrans(iob,j_iosubreject)
 				if(j_err)then
 					write(6,*)'error for obs ',iob
-				endif !if(j_err)   7966
+				endif !if(j_err)   7954
 				if(testcode.ne.0.)then    !reject->True
 					p_rejects(p_nstot)=.true.
 					nrej=nrej+1
 					p_nrejtot=p_nrejtot+1
 					goto 776
-				endif !if(testcode.ne.0.)   7969
-			endif !if(p_subreject_)   7964
+				endif !if(testcode.ne.0.)   7957
+			endif !if(p_reject)   7952
 			776     continue
 			!		write(6,*)'<8767'
 		!	if(j_xmatinmemory)then
@@ -9414,52 +9330,54 @@ subroutine initxdatjlp()
 				ibxmatx=(p_nstot-1)*p_ntemp0
  
 				if(p_nxvararea.gt.0)then
-					! xvarsarea is a vector
-					j_v(p_xvarsarea)=j_v(p_ivarea)*j_v(p_xvarsarea)   ! multiply area-variables by area
-				endif !if(p_nxvararea.gt.0)   7985
+					! varxarea is a vector
+					j_v(p_varxarea)=j_v(p_ivarea)*j_v(p_varxarea)   ! multiply area-variables by area
+				endif !if(p_nxvararea.gt.0)   7973
+ 
+				!		if(p_unit.lt.5)write(6,*)'uni ,p_ntemp0',p_unit,p_ntemp0
 				do i=1,p_ntemp0
 					iba=p_ibatemp(i)
-					!	if(p_iunit.lt.10)write(6,*)iba,p_ntemp0,iba,ibxmatx,p_nxrowtemp(i),iba+p_nxrowtemp(i)
-					!	if(ibxmatx.eq.0)write(6,*)'***',i,p_nxrowtemp(i),p_irowxvars(iba+1),j_v(p_irowxvars(iba+1))
+					!	if(p_unit.lt.10)write(6,*)iba,p_ntemp0,iba,ibxmatx,p_nrowxtemp(i),iba+p_nrowxtemp(i)
+					!	if(ibxmatx.eq.0)write(6,*)'***',i,p_nrowxtemp(i),p_irowvarx(iba+1),j_v(p_irowvarx(iba+1))
 					p_xmat(i+ibxmatx)= &       ! make temporary variables
-						dot_product(p_xcoef(iba+1:iba+p_nxrowtemp(i)), &
-						j_v(p_irowxvars(iba+1:iba+p_nxrowtemp(i))))
- 
-					!		write(i18,*)p_nstot,p_iunit,p_ns(p_iunit),is,i,j_v(p_irowxvars(iba+1:iba+p_nxrowtemp(i)))
-					! if(p_iunit.le.5)then
-					! write(6,*)'j_nxrowtemp(i)',p_nxrowtemp(i),p_xmat(i+ibxmatx),&
-					! p_xcoef(iba+1:iba+p_nxrowtemp(i)),j_v(p_irowxvars(iba+1:iba+p_nxrowtemp(i)))
-					! do jj=1,p_nxrowtemp(i)
-					! call j_getname(p_irowxvars(iba+jj))
-					! write(6,*)jj,p_xcoef(iba+jj),p_irowxvars(iba+jj),j_oname(1:j_loname),j_v(p_irowxvars(iba+jj))
+						dot_product(p_xcoef(iba+1:iba+p_nrowxtemp(i)), &
+						j_v(p_irowvarx(iba+1:iba+p_nrowxtemp(i))))
+					!	if(p_unit.lt.5)write(6,*)'uni xcoefmp0',p_xcoef(iba+1:iba+p_nrowxtemp(i))
+					!		write(i18,*)p_nstot,p_unit,p_ns(p_unit),is,i,j_v(p_irowvarx(iba+1:iba+p_nrowxtemp(i)))
+					! if(p_unit.le.5)then
+					! write(6,*)'j_nrowxtemp(i)',p_nrowxtemp(i),p_xmat(i+ibxmatx),&
+					! p_xcoef(iba+1:iba+p_nrowxtemp(i)),j_v(p_irowvarx(iba+1:iba+p_nrowxtemp(i)))
+					! do jj=1,p_nrowxtemp(i)
+					! call j_getname(p_irowvarx(iba+jj))
+					! write(6,*)jj,p_xcoef(iba+jj),p_irowvarx(iba+jj),j_oname(1:j_loname),j_v(p_irowvarx(iba+jj))
 					! enddo
 					! endif
-					!	if(p_p2.and.p_nstot.eq.1)write(6,*)'p_itemp',i,' iba=',iba,' coef=',j_xcoef(iba+1:iba+j_nxrowtemp(i)),&
-					!		' vars',j_irowxvars(iba+1:iba+j_nxrowtemp(i))
-				enddo !i=1,p_ntemp0   7989
-				!if(p_iunit.gt.1)stop 'per'
-				!	write(17,*)p_iunit,is,p_xmat(ibxmatx+1:ibxmatx+p_ntemp0)
+					!	if(p_p2.and.p_nstot.eq.1)write(6,*)'p_itemp',i,' iba=',iba,' coef=',j_xcoef(iba+1:iba+j_nrowxtemp(i)),&
+					!		' vars',j_irowvarx(iba+1:iba+j_nrowxtemp(i))
+				enddo !i=1,p_ntemp0   7979
+				!if(p_unit.gt.1)stop 'per'
+				!	write(17,*)p_unit,is,p_xmat(ibxmatx+1:ibxmatx+p_ntemp0)
 				!j_ix(0),j_ntemp0
 				if(.not.p_maxo.and.p_ix(0).ne.0) &
 					p_xmat(p_ix(0)+ibxmatx)=-p_xmat(p_ix(0)+ibxmatx)
  
-			endif !if(p_xpresent)   7981
+			endif !if(p_xpresent)   7969
 			! endif !if(istree)then
 			!		if(p_needc.gt.0)j_v(p_cvarl(1:p_ncvar))=p_cvar
-		enddo !is=1,p_ns(p_iunit)   7909
+		enddo !is=1,p_ns(p_unit)   7931
  
  
  
  
-		if(p_subfilre)then
-			if(nrej.ge.p_ns(p_iunit))then
+		if(p_filre)then
+			if(nrej.ge.p_ns(p_unit))then
 				iwar=iwar+1
-				if(iwar.le.10)write(6,*)'*err all schedules were rejected for unit ',p_iunit
-			endif !if(nrej.ge.p_ns(p_iunit))   8024
-		endif !if(p_subfilre)   8023
+				if(iwar.le.10)write(6,*)'*err all schedules were rejected for unit ',p_unit
+			endif !if(nrej.ge.p_ns(p_unit))   8014
+		endif !if(p_filre)   8013
 		if(j_err)return
-		!		write(6,*)'nuni ',p_nunits,p_iunit,ibxmatx
-	enddo !p_iunit=1,p_nunits   7827
+		!		write(6,*)'nuni ',p_nunits,p_unit,ibxmatx
+	enddo !p_unit=1,p_nunits   7848
  
 	p_nrejdupl=0
 	iba=0
@@ -9472,7 +9390,7 @@ subroutine initxdatjlp()
  
 			if(p_rejects(nstot+j2))cycle
 			if(p_xpresent)iba2=iba+(j2-1)*p_ntemp0
-			if(p_fpresent)ibadat2=ibadat+(j2-1)*p_keepx
+			if(p_fpresent)ibadat2=ibadat+(j2-1)*p_nkeepx
 j1loop:	 do j1=1,j2-1
 				if(p_rejects(nstot+j1))cycle
  
@@ -9482,29 +9400,29 @@ j1loop:	 do j1=1,j2-1
  
 						if(abs(p_xmat(iba2+k)-p_xmat(iba1+k)).gt.1.d-12)cycle j1loop
  
-					enddo !k=1,p_ntemp0   8050
-				endif !if(p_xpresent)   8048
+					enddo !k=1,p_ntemp0   8040
+				endif !if(p_xpresent)   8038
 				if(p_fpresent)then
  
-					iba1=ibadat+(j1-1)*p_keepx
+					iba1=ibadat+(j1-1)*p_nkeepx
 					do k=1,p_nlog
-						if(abs(p_xdatmat(ibadat2+j_o(p_ivlogkeep)%i2(k)) -&
-							p_xdatmat(iba1+j_o(p_ivlogkeep)%i2(k))).gt.1.d-12)cycle j1loop
+						if(abs(p_datamatx(ibadat2+j_o(p_ivkeeplog)%i2(k)) -&
+							p_datamatx(iba1+j_o(p_ivkeeplog)%i2(k))).gt.1.d-12)cycle j1loop
  
-					enddo !k=1,p_nlog   8059
+					enddo !k=1,p_nlog   8049
  
-				endif !if(p_fpresent)   8056
+				endif !if(p_fpresent)   8046
  
 				p_rejects(nstot+j2)=.true.
 				p_nrejdupl=p_nrejdupl+1
  
  
-			enddo j1loop !oop:	 do j1=1,j2-1   8045
-		enddo !j2=2,p_ns(i)   8040
+			enddo j1loop !oop:	 do j1=1,j2-1   8035
+		enddo !j2=2,p_ns(i)   8030
 		nstot=nstot+p_ns(i)
 		if(p_xpresent)iba=iba+p_ns(i)*p_ntemp0
 		if(p_fpresent)ibadat=ibadat+p_ns(i)*p_ntemp0
-	enddo !i=1,p_nunits   8038
+	enddo !i=1,p_nunits   8028
  
 	p_nrejtot=p_nrejtot+p_nrejdupl
  
@@ -9519,9 +9437,9 @@ j1loop:	 do j1=1,j2-1
 		do i=1,2
 			write(6,'(i3,(5g18.10))')i,p_xmat(iba+1:iba+p_ntemp0)
 			iba=iba+p_ntemp0
-		enddo !i=1,2   8088
+		enddo !i=1,2   8078
  
-	endif !if(p_xpresent)   8084
+	endif !if(p_xpresent)   8074
  
 	!is(p_p8)write(6,*)'p_fast ',p_fast,' p_maxns',p_maxns
  
@@ -9535,21 +9453,21 @@ j1loop:	 do j1=1,j2-1
 		!	if(allocated(fastclass))deallocate(fastclass)
 		!	allocate(fastclass(1:201))
  
-	endif !if(p_fast)   8098
+	endif !if(p_fast)   8088
 	if(.not.allocated(p_svalue))then
 		allocate(p_svalue(1:p_maxns),p_basreject(1:p_maxns))
  
 	elseif(size(p_svalue).lt.p_maxns)then
 		deallocate(p_svalue,p_basreject)
 		allocate(p_svalue(1:p_maxns),p_basreject(1:p_maxns))
-	endif !if(.not.allocated(p_svalue))   8108
+	endif !if(.not.allocated(p_svalue))   8098
  
  
 	if(iwar.gt.0)then
 		write(6,*)'**all schedules rejected for ',iwar, 'units'
 		j_err=.true.
 		return
-	endif !if(iwar.gt.0)   8117
+	endif !if(iwar.gt.0)   8107
  
  
  
@@ -9560,19 +9478,19 @@ j1loop:	 do j1=1,j2-1
 		write(6,*)'**number of sched in cdat, and xdat do not match',p_nstot,p_lopp
 		j_err=.true.
 		return
-	endif !if(p_ivunit.le.0.and.p_nstot.ne.p_lopp)   8128
+	endif !if(p_ivunit.le.0.and.p_nstot.ne.p_lopp)   8118
 	call cpu_time(p_time00)
 	!	write(6,*)'time00al',p_time00
- 
+	write(*,*)'found ',p_nunits,' units, ',p_lopp,' schedules'
+	write(6,*)'from which ',p_nrejtot,' schedules were rejected'
+	write(6,*)'from which ',p_nrejdupl,' were duplicated schedules'
 	if(p_xpresent)then
-		write(6,*)' '
-		write(*,*)'found ',p_nunits,' units, ',p_lopp,' schedules, filling xmat'
+		write(6,*)' filling xmat'
  
-		write(6,*)'from which ',p_nrejtot,' schedules were rejected'
-		write(6,*)'from which ',p_nrejdupl,' were duplicated schedules'
-		deallocate (p_xvars1,p_xvars2)
  
-	endif !if(p_xpresent)   8136
+		deallocate (p_varx1,p_varx2)
+ 
+	endif !if(p_xpresent)   8128
 	if(p_isdomain)then
 		! empty domains?
 		write(6,*)' '
@@ -9582,76 +9500,48 @@ j1loop:	 do j1=1,j2-1
 		do i=1,min(p_ndom,20)
 			call j_gettext(p_ivdomain,i)
 			write(6,*)i,p_domainunits(i),j_gottext(1:j_lgottext)
-			! if(p_domainunits(i).le.0)then    !empty domain
-			! if(nempt.le.0)write(6,*)'*empty domains:'
-			! if(nempt.le.10)then
-			! call j_printtext(p_ivdomain,i)
-			! elseif(nempt.eq.11)then !if(nempt.le.10)then
-			! write(6,*)'...'
-			! endif !if(nempt.le.10)then
+ 
 			if(p_domainunits(i).le.0) nempt=nempt+1
 			! else
  
  
 			if(i.eq.20.and.p_ndom.gt.20)write(6,*)'etc ..'
-		enddo !i=1,min(p_ndom,20)   8151
+		enddo !i=1,min(p_ndom,20)   8141
 		if(nempt.gt.0)then
 			j_err=.true.;write(6,*)'**empty domains:',nempt; return
-		end if !if(nempt.gt.0)   8167
-	endif !if(p_isdomain)   8145
-	!if(j_o(p_ivxdatmat)%r(10261*keepx).eq.0.)stop 11
-	!tehdas xk-mjien ei-negatiivisuus-tarkistus !!!!
-	if(p_fpresent) then
-		ibxdatobs=0
-		!	write(6,*)'<6662 ',p_ivxdatmat,j_o(p_ivxdatmat)%i(1),p_nlog,p_ivkeepx
-		do iobs=1,j_o(p_ivxdatmat)%i(1)
-			!			ibxdatobs=xmatiba(iobs)  !,1)
+		end if !if(nempt.gt.0)   8151
+	endif !if(p_isdomain)   8135
  
-			! if(iobs.le.2)then
-			! do ixk = 1,p_nlog !tehdas xk-mjat
-			! ivxk = p_log(ixk)
-			! kk = j_inlistobject(ivxk,p_ivkeepx)
-			k_ = j_inlistobject(ivxk_,p_ivkeepx)
-			! call j_getname(ivxk)
-			! write(6,*)iobs,ivxk,kk,j_oname(1:j_loname),j_o(p_ivxdatmat)%d(ibxdatobs+k_)
-			! enddo
-			!	if(pause(68))call j_pause()
-			!endif
+	! write(p_n16,*)'<44starti',i
+	nrej=0
+	!	write(6,*)'idom2',i,p_idomba
+	!	if(p_isdomain)call jlpcurix() !determines for each row if the unit p_unit belonggs to the domain of the row
+	! determines for each row if the unit iunit belonggs to the domain of the row
+	! units must be accessed one by one
+	! p_nrowcurx
+	! p_rowcurx
+	! p_idomba
+	!	write(6,*)'p_nrowcurx ',p_nrowcurx,'*',p_rowcurx(1:p_nrowcurx)
  
-			do ixk_ = 1,p_nlog !tehdas xk-mjat
-				ivxk_ = p_log(ixk_)  !p_log(ixk_)
-				k_ = j_inlistobject(ivxk_,p_ivkeepx)
-				!	iba_=0
-				!		do while(iba_ < (j_o(p_ivxdatmat)%i(1)*j_o(p_ivxdatmat)%i(2)))
-				if (j_o(p_ivxdatmat)%d(ibxdatobs+k_) < 0) then   !xmatiba
-					! datassa negat. tehdas-xk-mja
-					call j_getname(ivxk_)
-					write(6,*)'**Negative fact xk-variable ',j_oname(1:j_loname), ' in observation ',iobs ,j_o(p_ivxdatmat)%d(ibxdatobs+k_)
-					!in data: p_ixk,ivxk,iba,k, xk',&
-					!	ixk_,ivxk_,ibxdatobs,k_,j_o(p_ivxdatmat)%d(ibxdatobs+k_) !xmatiba
-					j_err=.true.
-					return
-				endif !if (j_o(p_ivxdatmat)%d(ibxdatobs+k_) < 0)   8195
-				!		iba_=iba_+j_o(p_ivxdatmat)%i(2)
-				!		enddo !do while(iba_ < (j_o(p_ivxdatmat)%i(1)*j_o(p_ivxdatmat)%i(2)))
-			enddo !ixk_ = 1,p_nlog   8190
-			ibxdatobs=ibxdatobs+p_keepx  !p_ntemp0
-		enddo !iobs=1,j_o(p_ivxdatmat)%i(1)   8176
-		!endif  !xdisk
-	endif !if(p_fpresent)   8173
+	!returns nrowp=number of rows in this domain,
+	! rowcurx= for each row in this domain tells the original (expanded) row
+	!  ixcur for each original expanded row tells the index of temporary x-variable
+	! facory tehtävissä tämä on kait sama
+	!if(p_p8.and.i.lt.10)write(6,*)'i ,p_nrowcurx,p_rowcurx',i ,p_nrowcurx,p_rowcurx(1:p_nrowcurx)
  
-	if(.not.p_xpresent)return
  
 	! calculate sums over key schedules !!!!
-	!if(j_o(p_ivxdatmat)%r(10261*keepx).eq.0.)stop 179
-	p_xps=j_0
-	! initial key schedules, rotate number
-	key=0
+	!if(j_o(p_ivdatamatx)%r(10261*keepx).eq.0.)stop 179
+	if(p_xpresent)then
+		p_xps=j_0
+		p_xsmin=p_zero     !minimum for the sum
+		p_xsmax=p_zero     !maximum for the sum
+		! initial key schedules, rotate number
+		key=0
+	endif !if(p_xpresent)   8176
  
-	p_ibaunit(1)=0 ! ibaunit, basis for schedules for each unit
-	p_xsmin=p_zero     !minimum for the sum
-	p_xsmax=p_zero     !maximum for the sum
-	p_rejectnow_=.false.
+ 
+	p_rejectnow=.false.
 	!	write(p_n16,*)'<44starti',p_nfunits
 	!is(p_p8)write(6,*)'<11773 ,p_nrow,p_ix ',p_nrow,p_ix(1:p_nrow)
 	p_idomba=0
@@ -9659,112 +9549,127 @@ j1loop:	 do j1=1,j2-1
 		! write(p_n16,*)'<44starti',i
 		nrej=0
 		!	write(6,*)'idom2',i,p_idomba
-		if(p_isdomain)call jlpcurix() !determines for each row if the unit p_iunit belonggs to the domain of the row
-		!	write(6,*)'p_nxrowcur ',p_nxrowcur,'*',p_xrowcur(1:p_nxrowcur)
+		if(p_isdomain)call jlpcurix() !determines for each row if the unit p_unit belonggs to the domain of the row
+		! determines for each row if the unit iunit belonggs to the domain of the row
+		! units must be accessed one by one
+		! p_nrowcurx
+		! p_rowcurx
+		! p_idomba
+		!	write(6,*)'p_nrowcurx ',p_nrowcurx,'*',p_rowcurx(1:p_nrowcurx)
+ 
 		!returns nrowp=number of rows in this domain,
-		! xrowcur= for each row in this domain tells the original (expanded) row
+		! rowcurx= for each row in this domain tells the original (expanded) row
 		!  ixcur for each original expanded row tells the index of temporary x-variable
 		! facory tehtävissä tämä on kait sama
-		!if(p_p8.and.i.lt.10)write(6,*)'i ,p_nxrowcur,p_xrowcur',i ,p_nxrowcur,p_xrowcur(1:p_nxrowcur)
-		p_ibaunit(i+1)=p_ibaunit(i)+p_ns(i)
-		if(p_subfilre)then
+		!if(p_p8.and.i.lt.10)write(6,*)'i ,p_nrowcurx,p_rowcurx',i ,p_nrowcurx,p_rowcurx(1:p_nrowcurx)
+		!		p_ibaunit(i+1)=p_ibaunit(i)+p_ns(i)
+		if(p_filre)then
 			if(p_rejects(p_ibaunit(i)+1))then
 				! if first schedule is rejected, then p_xmin=large and p_xmax=-large
 				! if first schedules is not rejcted these are obtained from the first schedule
 				nrej=nrej+1
 				! earlier: allocate(nunitsrow(0:nrow));nunitsrow=0
-				do jj=1,p_nxrowcur
-					j=p_xrowcur(jj)
+ 
+				do jj=1,p_nrowcurx
+					j=p_rowcurx(jj)
 					!		p_nunitsrow(j)=p_nunitsrow(j)+1
 					p_xmin(j)=j_inf
 					p_xmax(j)=j_ninf
-				enddo !jj=1,p_nxrowcur   8245
+				enddo !jj=1,p_nrowcurx   8214
 				goto 745
-			endif !if(p_rejects(p_ibaunit(i)+1))   8240
-		endif !if(p_subfilre)   8239
+			endif !if(p_rejects(p_ibaunit(i)+1))   8208
+		endif !if(p_filre)   8207
  
 		! get p_xmin and p_xmax from the first schedule
-		ibxmatx=ibaxmat(p_ibaunit(i)+1) !,1)
-		!write(6,*)'p_nxrowcur ',p_nxrowcur,'*',p_xrowcur(1:p_nxrowcur)
+		ibxmatx=ibamatx(p_ibaunit(i)+1) !,1)
+		!write(6,*)'p_nrowcurx ',p_nrowcurx,'*',p_rowcurx(1:p_nrowcurx)
 		!write(6,*)'p_ix ',p_ix
-		do jj=1,p_nxrowcur
-			j=p_xrowcur(jj)
+		do jj=1,p_nrowcurx
+			j=p_rowcurx(jj)
 			!write(6,*)'j,p_ix(j),ibmatx',j,p_ix(j),ibxmatx,' unit ',i
 			!	p_nunitsrow(j)=p_nunitsrow(j)+1
 			!	if(p_ix(j).ne.0)then
 			p_xmin(j)=p_xmat(p_ix(j)+ibxmatx) ! v(ix(j))
 			p_xmax(j)=p_xmat(p_ix(j)+ibxmatx)  ! v(ix(j))
 			!	endif !if(p_ix(j).ne.0)   6706
-		enddo !jj=1,p_nxrowcur   8259
+		enddo !jj=1,p_nrowcurx   8228
  
 745   keyopt=1     !works also if first schedule is rejected and we come from  'goto 745'
 		do k=2,p_ns(i)
-			if(p_subfilre)then
+			if(p_filre)then
 				if(p_rejects(p_ibaunit(i)+k))then
 					nrej=nrej+1
 					cycle  !do k=2,nsch(i)
-				endif !if(p_rejects(p_ibaunit(i)+k))   8272
-			endif !if(p_subfilre)   8271
-			!if(j_o(p_ivxdatmat)%r(10261*keepx).eq.0.)stop 149
+				endif !if(p_rejects(p_ibaunit(i)+k))   8241
+			endif !if(p_filre)   8240
+			!if(j_o(p_ivdatamatx)%r(10261*keepx).eq.0.)stop 149
 			! compute for rows containing x-variables the min and max values
-			ibxmatx=ibaxmat(p_ibaunit(i)+k) !,1)
-			do jj=1,p_nxrowcur
-				j=p_xrowcur(jj)
-				curx=p_xmat(p_ix(j)+ibxmatx)
-				if(curx.lt.p_xmin(j))then
-					p_xmin(j)=curx
-				endif !if(curx.lt.p_xmin(j))   8283
-				if(curx.gt.p_xmax(j))then
-					p_xmax(j)=curx
-					keyopt=k   ! for the case where there are no constraints
-				endif !if(curx.gt.p_xmax(j))   8286
-			enddo !jj=1,p_nxrowcur   8280
  
-		enddo !k=2,p_ns(i)   8270
+			if(.not.p_fpresent)then
+				ibxmatx=ibamatx(p_ibaunit(i)+k) !,1)
+				do jj=1,p_nrowcurx
+					j=p_rowcurx(jj)
+					curx=p_xmat(p_ix(j)+ibxmatx)
+					if(curx.lt.p_xmin(j))then
+						p_xmin(j)=curx
+					endif !if(curx.lt.p_xmin(j))   8254
+					if(curx.gt.p_xmax(j))then
+						p_xmax(j)=curx
+						keyopt=k   ! for the case where there are no constraints
+					endif !if(curx.gt.p_xmax(j))   8257
+				enddo !jj=1,p_nrowcurx   8251
+			else
+				keyopt=p_keys(i)
  
-		do jj=1,p_nxrowcur
-			j=p_xrowcur(jj)
+			endif !if(.not.p_fpresent)   8249
+ 
+		enddo !k=2,p_ns(i)   8239
+ 
+		do jj=1,p_nrowcurx
+			j=p_rowcurx(jj)
 			p_xsmin(j)=p_xsmin(j)+p_xmin(j)
 			p_xsmax(j)=p_xsmax(j)+p_xmax(j)
-		enddo !jj=1,p_nxrowcur   8294
+		enddo !jj=1,p_nrowcurx   8269
  
-		if(p_nrow.eq.0)then
+		if(p_nrow.eq.0.or.j_v(j_ivdollar2).eq.237.d0)then
 			key=keyopt   ! no constraints, can be maximized directly
 		else !if(j_nrow.eq.0)then
 4689    key=key+1
 			if(key.gt.p_ns(i)) key=1
-			if(p_subfilre)then
+			if(p_filre)then
 				if(p_rejects(p_ibaunit(i)+key))goto 4689
-			endif !if(p_subfilre)   8305
+			endif !if(p_filre)   8280
  
-		endif !if(p_nrow.eq.0)   8300
+		endif !if(p_nrow.eq.0.or.j_v(j_ivdollar2).eq.237.d0)   8275
+ 
+ 
  
 		if(p_warm.and.p_nrow.gt.0)then
  
-			if(p_subfilre)p_rejectnow_=p_rejects(p_ibaunit(i)+p_keys(i))
-			if(p_keys(i).gt.p_ns(i).or.p_rejectnow_)then
+			if(p_filre)p_rejectnow=p_rejects(p_ibaunit(i)+p_keys(i))
+			if(p_keys(i).gt.p_ns(i).or.p_rejectnow)then
 				p_warm=.false.
 				p_warmf=.false.
 				write(6,*)'*data does not agree, warm-> ignored'
-			else !if(j_keys(i).gt.j_nsch(i).or.p_rejectnow_)then
+			else !if(j_keys(i).gt.j_nsch(i).or.p_rejectnow)then
 				key=p_keys(i)
-			endif !if(p_keys(i).gt.p_ns(i).or.p_rejectnow_)   8314
-		endif !if(p_warm.and.p_nrow.gt.0)   8311
+			endif !if(p_keys(i).gt.p_ns(i).or.p_rejectnow)   8291
+		endif !if(p_warm.and.p_nrow.gt.0)   8288
 		p_keys(i)=key
-		ibxmatx=ibaxmat(p_ibaunit(i)+key) !,1)
+		ibxmatx=ibamatx(p_ibaunit(i)+key) !,1)
  
-		!write(6,*)'p_nxrowcur( ',p_nxrowcur,p_xrowcur
-		do jj=1,p_nxrowcur
-			j=p_xrowcur(jj)
+		!write(6,*)'p_nrowcurx( ',p_nrowcurx,p_rowcurx
+		do jj=1,p_nrowcurx
+			j=p_rowcurx(jj)
 			!xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
 			p_xps(j)=p_xps(j)+p_xmat(p_ix(j)+ibxmatx) !v(ix(j)) !(ix(j)=0 -> no x in row
 			!		if(j.eq.0.and.i.ge.6.and.i.le.10)write(p_n16,*)'<555 ',i,ibxmatx,p_ix(j),p_xmat(p_ix(j)+ibxmatx),p_xps(j)
-		enddo !jj=1,p_nxrowcur   8326
+		enddo !jj=1,p_nrowcurx   8303
  
-		if(p_fpresent)call factxps(i,key)
+		if(p_fpresent)call factxps(i,p_keys(i))
  
  
-	enddo !i=1,p_nunits   8227
+	enddo !i=1,p_nunits   8189
  
 	! if(p_p8.and.p_fpresent)then
 	! do ir=0,10
@@ -9775,10 +9680,10 @@ j1loop:	 do j1=1,j2-1
  
 	! endif !if(p_p8.and.p_fpresent)   8154
  
-	! do jj=1,p_nfxrow
-	! irowj=p_fxrow(jj) !domainissa olevat rivit
+	! do jj=1,p_nfrowx
+	! irowj=p_frowx(jj) !domainissa olevat rivit
 	!irowj =j+1 ! p_irowrow(j)
-	!	write(6,*)'<379>',p_nfxrow,jj,irowj,p_nfxinrow(irowj),p_ibafx(irowj),p_irowfxvars(p_ibafx(irowj)+1:p_ibafx(irowj)+1)
+	!	write(6,*)'<379>',p_nfrowx,jj,irowj,p_nfxinrow(irowj),p_ibafx(irowj),p_irowfvarx(p_ibafx(irowj)+1:p_ibafx(irowj)+1)
 	!	xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
 	!	xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
 	! do k=1,p_nfxinrow(irowj)
@@ -9803,22 +9708,22 @@ j1loop:	 do j1=1,j2-1
 		!write(6,*)' ',j_err
 		write(6,*)' '
 		write(6,*)'***row, min,max,initial value, tolerance'
-	endif !if(p_iprint.gt.1)   8371
+	endif !if(p_iprint.gt.1)   8348
 	!	write(6,*)'<loub',p_lbou
 	!write(6,*)'<u',p_ubou
 	!	write(6,*)'lower',p_lower
 	!	write(6,*)'<5454',p_x(2)
 	! do i=j_lopp-15000,j_lopp
-	! iba=ibaxmat(i,1)
+	! iba=ibamatx(i,1)
 	! write(17,*)j_o(ivxdatmat)%r(iba+1:iba+7),j_o(ivxdatmat)%r(iba+11:iba+17)
-	! iba=ibaxmat(i,1)
+	! iba=ibamatx(i,1)
 	! write(18,*)j_xmat(iba+1:iba+j_ntemp0)
 	! enddo
-	!	write(6,*)'<2492 p_nxrow',p_nxrowcur,p_xrowcur,'p_ntemp0',p_ntemp0
+	!	write(6,*)'<2492 p_nrowx',p_nrowcurx,p_rowcurx,'p_ntemp0',p_ntemp0
  
 	if(p_iprint.gt.0)write(6,*)'min and max sums of x-variable rows, sum in key-schedules and tolerance'
 	do j=0,p_nrow  !nrowp = number of rows with x-variables
-		!	j=p_xrowcur(jj) !j= number of the row
+		!	j=p_rowcurx(jj) !j= number of the row
 		!1.d-5 changed into 1.d-6 21.12.2009
 		! it must be studied if this tolerance is reasonable
 		!	p_tole(j)= max(p_tolep*1.d-6* (p_xsmax(j)-p_xsmin(j))/ &
@@ -9828,8 +9733,8 @@ j1loop:	 do j1=1,j2-1
 				p_nunits,p_tolep*1.d-7)
 			if(p_iprint.gt.0)&
 				write(6,'(i5,1x,4g18.12)')j,p_xsmin(j),p_xsmax(j),p_xps(j),p_tole(j)
-		endif !if(p_ix(j).ne.0)   8395
-	enddo !j=0,p_nrow   8389
+		endif !if(p_ix(j).ne.0)   8372
+	enddo !j=0,p_nrow   8366
  
 	!toleranssi tehdasmja-riveille  !!!!
 	!write(6,*)'<556',p,p_nrow,p_fpresent
@@ -9870,9 +9775,9 @@ j1loop:	 do j1=1,j2-1
 	mxd2_ = p_mxd
 	if (p_fpresent) mxd2_=2*p_mxd
  
-	p_ivlunit=j_deflistobject(j_ivout,'%lunit',list0=mxd2_+1,ilist=.true.)
+	p_ivlunit=j_deflist(j_ivout,'%lunit',list0=mxd2_+1,ilist=.true.)
 	p_lunit(0:)=>j_o(p_ivlunit)%i2(1:mxd2_+1)
-	p_ivisch=j_deflistobject(j_ivout,'%isch',list0=p_mxd,ilist=.true.)
+	p_ivisch=j_deflist(j_ivout,'%isch',list0=p_mxd,ilist=.true.)
 	p_isch=>j_o(p_ivisch)%i2(1:p_mxd)
  
 	!allocate(p_lunit(0:mxd2_),p_isch(1:p_mxd));p_lunit=0;p_isch=0
@@ -9906,9 +9811,9 @@ j1loop:	 do j1=1,j2-1
 end subroutine initxdatjlp
 
 subroutine checkinfeas()
-	use jmod, only: p_xrowcur
+	use jmod, only: p_rowcurx
 	use jmod, only: p_i1
-	use jmod, only: p_nxrowcur
+	use jmod, only: p_nrowcurx
 	use jmod, only: p_nz
 	use jmod, only: j_0
 	use jmod, only: p_a
@@ -9926,27 +9831,27 @@ subroutine checkinfeas()
 	!infeasiblity at start tarkastus siirretty tähän
 	! test if problem is immediately infeasible !!!!
 	iunf=0
-	if(p_xrowcur(1).eq.0)then
+	if(p_rowcurx(1).eq.0)then
 		p_i1=2  ! there is x variable in the objective row
-	else !if(j_xrowcur(1).eq.0)then
+	else !if(j_rowcurx(1).eq.0)then
 		p_i1=1   ! there is no  "
-	endif !if(p_xrowcur(1).eq.0)   8482
+	endif !if(p_rowcurx(1).eq.0)   8459
 	nunf=0 ! number of infeasible rows
 	!write(6,*)'<66p_nz ',p_nz
-		rowloop:			do jj=1,p_nxrowcur
-		j=p_xrowcur(jj)
+		rowloop:			do jj=1,p_nrowcurx
+		j=p_rowcurx(jj)
 		if(j.eq.0)cycle rowloop
 		!	call j_printname(' tas22 ',j,' ')
 		if(p_nz>0) then
 			do inz_=1,p_nz
 				!		write(6,*)'inz_',inz_,p_a(j,inz_)
 				if(p_a(p_abas(inz_)+j).ne.j_0)cycle rowloop !p_a(j,inz_).ne.j_0) cycle rowloop
-			enddo !inz_=1,p_nz   8494
-		endif !if(p_nz>0)   8493
+			enddo !inz_=1,p_nz   8471
+		endif !if(p_nz>0)   8470
 		if(p_fpresent) then
 			if(p_nfxinrow(j)>0.or.p_nfyinrow(j)>0) &
 				cycle rowloop
-		endif !if(p_fpresent)   8499
+		endif !if(p_fpresent)   8476
 		if(p_xsmin(j).gt.p_rhs2(j).or.p_xsmax(j).lt.p_rhs(j))then
 			nunf=nunf+1
 			iunf=j
@@ -9955,22 +9860,22 @@ subroutine checkinfeas()
 				!		write(6,*)'<xsmin',p_xsmin
 				if(p_nureport.ne.6)&
 					write(p_nureport,*)'***the problem is infeasible at start, nonfeasible rows: '
-			endif !if(nunf.eq.1)   8506
+			endif !if(nunf.eq.1)   8483
 			call printrowinfo(iunf)
 			if(p_xsmin(iunf).gt.p_rhs2(iunf))then
 				write(6,*) &
 					'*smallest possible value ',p_xsmin(iunf),' rhs2=',p_rhs2(iunf)
 				if(p_nureport.ne.6)write(p_nureport,*)'row ',iunf,'*smallest possible value ',&
 					p_xsmin(iunf),' rhs2=',p_rhs2(iunf)
-			endif !if(p_xsmin(iunf).gt.p_rhs2(iunf))   8513
+			endif !if(p_xsmin(iunf).gt.p_rhs2(iunf))   8490
 			if(p_xsmax(iunf).lt.p_rhs(iunf))then
 				write(6,*)'*greatest possible value ', &
 					p_xsmax(iunf),' rhs=',p_rhs(iunf)
 				if(p_nureport.ne.6)write(p_nureport,*)'row ',iunf,&
 					'*greatest possible value ',p_xsmax(iunf),' rhs=',p_rhs(iunf)
-			endif !if(p_xsmax(iunf).lt.p_rhs(iunf))   8519
-		endif !if(p_xsmin(j).gt.p_rhs2(j).or.p_xsmax(j).lt.p_rhs(j))   8503
-	enddo rowloop !loop:			do jj=1,p_nxrowcur   8489
+			endif !if(p_xsmax(iunf).lt.p_rhs(iunf))   8496
+		endif !if(p_xsmin(j).gt.p_rhs2(j).or.p_xsmax(j).lt.p_rhs(j))   8480
+	enddo rowloop !loop:			do jj=1,p_nrowcurx   8466
 	if(iunf.ne.0)j_err=.true.
 	!	write(6,*)'jerHER',j_err
  
@@ -9980,133 +9885,37 @@ subroutine printz()
 	use jmod, only: p_npvar
 	use jmod, only: j_printname
 	use jmod, only: p_vars
-	use jmod, only: p_isxvar
-	use jmod, only: p_isfvar
+	use jmod, only: p_isvarx
+	use jmod, only: p_isvarf
 	use jmod, only: p_nz
 	nnz=0
 	! printing z-variables
 	if(.not.p_xpresent)then
 		do i=1,p_npvar
 			call j_printname(' ',p_vars(i),' ')
-		enddo !i=1,p_npvar   8535
+		enddo !i=1,p_npvar   8512
 		return
-	endif !if(.not.p_xpresent)   8534
+	endif !if(.not.p_xpresent)   8511
 	do i=1,p_npvar
 		!fact
 		!isfx ja isfy tarkistetaan vain, jos on tehdastehtävä
  
  
-		if(.not.p_isxvar(i).and..not.p_isfvar(i))then
+		if(.not.p_isvarx(i).and..not.p_isvarf(i))then
 			nnz=nnz+1
 			call j_printname(' ',p_vars(i),' ')
 			if(nnz.ge.10.and.nnz.lt.p_nz)then
 				write(6,*)' ...etc...'
 				exit
-			endif !if(nnz.ge.10.and.nnz.lt.p_nz)   8548
-		endif !if(.not.p_isxvar(i).and..not.p_isfvar(i))   8545
+			endif !if(nnz.ge.10.and.nnz.lt.p_nz)   8525
+		endif !if(.not.p_isvarx(i).and..not.p_isvarf(i))   8522
  
-	enddo !i=1,p_npvar   8540
+	enddo !i=1,p_npvar   8517
  
 	return
  
  
 end subroutine printz
-
-! subroutine initkeyfact()
-! !Avaintehtaiden alustus !!!!
-! if(allocated(p_keyfact))then
-! if(p_warmf)then
-! if(size(p_keyfact,dim=1).ne.p_nunits.or. &
-! size(p_keyfact,dim=2).ne.p_nlog)then
-! write(6,*)'*jlp: dimensions of problem do not agree with the previous problem',&
-! ' warm-> ignored for factories'
-! p_warmf=.false.
-! endif !if(size(p_keyfact,dim=1).ne.p_nunits.o   8379
-! endif !if(p_warmf)   8378
-! if(.not.p_warmf)deallocate(p_keyfact)
-! endif !if(allocated(p_keyfact))   8377
-! if(.not.allocated(p_keyfact))allocate(p_keyfact(1:p_nunits,1:p_nlog))
-! write(6,*)'<838383aloolkey',p_nunits,p_nlog
-! if(p_p9)write(16,*)p_zeroc
-! if(p_warmf)then
-! ! do i=1,p_nunits
-! ! do j=1,p_nlog
-! ! do keyf_=1,p_nloginfact(j)
-! ! if(p_logfact(j,keyf_)%ifact.eq.p_keyfact(i,j))then
-! ! ! if(zeroc(j,j_keyfact(i,j)))then
-! ! ! do keyf2_=1,j_nloginfact(j)
-! ! ! jf2_=j_logfact(j,keyf2_)%ifact
-! ! ! if(.not.zeroc(j,jf2_))then
-! ! ! j_keyfact(i,j)=jf2_
-! ! ! if(p_p)write(16,*)'uusi',i,j,jf2
-! ! ! goto 171
-! ! ! endif
-! ! ! enddo
-! ! ! !write(6,*)'zeroc jäi',i,j,j_keyfact(i,j)
-! ! ! endif !if(zeroc(j,j_keyfact(i,j)))then
-! ! goto 171
-! ! endif !if(p_logfact(j,keyf_)%ifact.eq.p_keyfact(i,j))   8308
-! ! enddo !keyf_=1,p_nloginfact(j)   8307
-! ! p_warmf=.false.
-! ! write(6,*)'*factories do not agree warm-> ignored for factories'
-! ! goto 172
-! ! 171			continue
-! ! enddo !j=1,p_nlog   8306
-! ! enddo !i=1,p_nunits   8305
-! endif !if(p_warmf)   8391
-
-! 172			if(.not.p_warmf)then
-! do j=1,p_nlog
-! keyf_ = 1
-! 179				jf_=p_loginfact(j,keyf_)%ifact
-! ! if(zeroc(j,jf_))then
-! ! keyf_=keyf_+1
-! ! if(keyf_.gt.j_nloginfact(j))then
-! ! keyf_ = 1
-! ! cycle
-! ! endif
-! ! goto 179
-! ! endif
-! p_keyfact(1,j) =keyf_
-! enddo !j=1,p_nlog   8419
-
-! ! do i=2,p_nunits
-! ! do j=1,p_nlog
-! ! if(p_keyfact(i-1,j).lt.p_nloginfact(j)) then
-
-! ! keyf_=p_keyfact(i-1,j)+1
-
-! ! else !if(j_keyfact(i-1,j).lt.j_nloginfact(j)) then
-! ! keyf_ = 1
-! ! endif !if(p_keyfact(i-1,j).lt.p_nloginfact(j))   8348
-! ! init_=keyf_
-! ! 180					jf_=p_loginfact(j,keyf_)%ifact
-! ! ! if(zeroc(j,jf_))then
-! ! ! keyf_=keyf_+1
-! ! ! if(keyf_.gt.j_nloginfact(j))then
-! ! ! keyf_ = 1
-! ! ! endif
-! ! ! if(keyf_.eq.init_)cycle
-! ! ! goto 180
-! ! ! endif
-! ! p_keyfact(i,j) =keyf_
-! ! enddo !j=1,p_nlog   8347
-! ! enddo !i=2,p_nunits   8346
-
-! !muutetaan keyfactin alkiot suoraan factories-listan indekseiksi
-! do i=1,p_nunits
-! do j=1,p_nlog
-! p_keyfact(i,j) = p_loginfact(j,p_keyfact(i,j))%ifact
-! enddo !j=1,p_nlog   8458
-! if(i.le.2)write(6,*)'keyf ',i,p_keyfact(i,1:p_nlog)
-! enddo !i=1,p_nunits   8457
-! !	stop
-! endif !172			if(.not.p_warmf)   8418
-
-! !	endif !if(nfx.gt.0.or.nfy>0)  14259
-
-
-! end subroutine initkeyfact
 
 
 
@@ -10162,8 +9971,8 @@ subroutine isfeasible()
 	use jmod, only: p_goto900
 	use jmod, only: p_kierv
 	use jmod, only: p_kier
-	use jmod, only: p_iunitv
-	use jmod, only: p_iunit
+	use jmod, only: p_unitv
+	use jmod, only: p_unit
 	use jmod, only: p_goto1234
 	use jmod, only: j_v
 	use jmod, only: j_1
@@ -10192,7 +10001,7 @@ subroutine isfeasible()
 	p_objr2=p_zero
 	p_value=j_0
 	p_tolecur=p_zero
-	if(.true.)then !.not.j_feasible.or.p_iunit.eq.1)then !
+	if(.true.)then !.not.j_feasible.or.p_unit.eq.1)then !
 		do i=1,p_lr0 !p_lr0 = number of basic residuals
 			!rhscur =rhs or rhs2
 			irow=p_lr(i)
@@ -10228,13 +10037,13 @@ subroutine isfeasible()
 						!		if(irow.eq.2)write(6,*)'irow',irow,'vaihdetaan ylärajaan',p_x(irow)
 						if(p_xpresent)then
 							if((p_ix(irow).ne.0).or.p_fpresent)p_rhsw(irow)=p_rhscur(irow)-p_xps(irow)
-						endif !if(p_xpresent)   8712
-					endif !if(p_lower(irow))   8706
+						endif !if(p_xpresent)   8593
+					endif !if(p_lower(irow))   8587
 					p_value=p_value+p_x(irow)
 					if(p_p)write(6,*)'infer',irow,p_x(irow)
 					p_tolecur=p_tolecur+p_tole(irow)
-				endif !if(p_x(irow)+p_tole(irow).lt.p_rhscur(irow)-p_rhs2(irow))   8699
-			endif !if(p_ubou(irow))   8698
+				endif !if(p_x(irow)+p_tole(irow).lt.p_rhscur(irow)-p_rhs2(irow))   8580
+			endif !if(p_ubou(irow))   8579
 			if(p_lbou(irow)) then
 				if(p_x(irow)-p_tole(irow).gt.p_rhscur(irow)-p_rhs(irow))then
 					! illegal surplus, decrease it
@@ -10253,21 +10062,21 @@ subroutine isfeasible()
 							if((p_ix(irow).ne.0).or.p_fpresent) &
 								p_rhsw(irow)=p_rhscur(irow)-p_xps(irow)  !jos xps =00 for nonzero ix
 							! could be done without condition
-						endif !if(p_xpresent)   8735
-					endif !if(.not.p_lower(irow))   8729
+						endif !if(p_xpresent)   8616
+					endif !if(.not.p_lower(irow))   8610
 					!is(p_p.and.p_nnf.le.50)write(p_n16,*)'infer',irow,p_x(irow)
 					if(p_p)write(6,*)'pvalunow',p_value,irow,p_x(irow)
 					p_value=p_value-p_x(irow)
 					if(p_p)write(6,*)'pvaluetas',p_value
 					p_tolecur=p_tolecur+p_tole(irow)
-				endif !if(p_x(irow)-p_tole(irow).gt.p_rhscur(irow)-p_rhs(irow))   8722
-			endif !if(p_lbou(irow))   8721
+				endif !if(p_x(irow)-p_tole(irow).gt.p_rhscur(irow)-p_rhs(irow))   8603
+			endif !if(p_lbou(irow))   8602
  
 			! common part of the nonfeasible
 			! compute prices of basic variables
 			! irow<=nrow -> objr:tä ei käytetä
 			! test decreasing
-		enddo !i=1,p_lr0   8679
+		enddo !i=1,p_lr0   8560
  
 		p_objfv=p_objf
 		if(p_p)write(6,*)'pnnf',p_nnf,p_feasible,p_objf
@@ -10290,31 +10099,31 @@ subroutine isfeasible()
 					!		'p_ienter=' ,p_ienter,' p_leavec ',p_leavec, 'p_newc ', &
 					!		p_newc,'emptmax,j_tmax', p_x(max(p_newc,1)),p_tmax
  
-				endif !if(p_nnf.gt.1)   8760
+				endif !if(p_nnf.gt.1)   8641
 				!	p_again=.true.
 				j_err=.true.;return
 				!p_nagain=p_nagain+1
-			endif !if(p_feasible)   8759
+			endif !if(p_feasible)   8640
 			p_feasible=.false.
 			if(.not.p_isobj2)then
 				p_objr=>p_objr2
 				p_isobj2=.true.
 				p_isobj0=.false.
-			endif !if(.not.p_isobj2)   8782
+			endif !if(.not.p_isobj2)   8663
 			if(p_p)write(6,*)'objr',p_objr(1:min(p_nrow,40)),'+++0,p_value',p_value
 			p_objf=p_value
 			p_xirowold2=p_small
 			if(p_nnf.ne.p_nnfold)then
 				p_objfv=p_small
 				p_justkey=.false.
-			endif !if(p_nnf.ne.p_nnfold)   8790
+			endif !if(p_nnf.ne.p_nnfold)   8671
 			p_ix0=0
 		else !if(p_nnf.gt.0)then
 			if(.not.p_isobj0)then
 				p_objr=>p_objr0
 				p_isobj0=.true.
 				p_isobj2=.false.
-			endif !if(.not.p_isobj0)   8796
+			endif !if(.not.p_isobj0)   8677
 			!is(p_p)write(p_n16,*)'***tole(0)',p_tole(0)
 			p_tolecur=p_tole(0)
  
@@ -10333,7 +10142,7 @@ subroutine isfeasible()
  
 				if(p_ix0.ne.0.or.p_isxk0)p_objf=p_objf+p_xps(0)
 				if(p_p)write(6,*)'xps ',p_xps(0),'objfin',p_objf
-			endif !if(p_xpresent)   8815
+			endif !if(p_xpresent)   8696
 			!is(p_p.and.p_xpresent)write(p_n16,*)'+xp0',p_xps(0)
  
 			!is(p_p)write(p_n16,*)'FEASIBLE,objf,objfv,objf-objfv,p_pivot', &
@@ -10373,21 +10182,21 @@ subroutine isfeasible()
 									write(6,*)'*jlp* is mixed up (7), try different tole (e.g.10,100,1000)(or consult J. Lappi)'
 									j_err=.true.
 									p_goto900=.true.;return
-								endif !if(p_nrecover.ge.20)   8855
+								endif !if(p_nrecover.ge.20)   8736
  
 								write(6,*)'***cycling (2), trying to recover'
 								p_kierv=p_kier
-								p_iunitv=p_iunit
+								p_unitv=p_unit
 								p_goto1234=.true.;return
  
-							endif !if(p_nagain.gt.7)   8850
+							endif !if(p_nagain.gt.7)   8731
  
-						endif !if(p_objf.gt.p_againsol+p_tolecur)   8846
+						endif !if(p_objf.gt.p_againsol+p_tolecur)   8727
  
-					endif !if(p_nagain.le.1)   8843
+					endif !if(p_nagain.le.1)   8724
  
-				endif !if(p_again)   8842
-			endif !if(.not.p_feasible)   8829
+				endif !if(p_again)   8723
+			endif !if(.not.p_feasible)   8710
  
 			p_feasible=.true.
 			j_v(p_ivfeasible)=j_1
@@ -10398,8 +10207,8 @@ subroutine isfeasible()
 					p_objfv=p_objf
 					!	write(6,*)'tasa FEASIBLE',p_objf
 					return
-				endif !if(p_lx0.eq.0.and.p_lz0.eq.0)   8878
-			endif !if(p_xpresent)   8877
+				endif !if(p_lx0.eq.0.and.p_lz0.eq.0)   8759
+			endif !if(p_xpresent)   8758
 			! write(6,*)'FEASIBLe justkey p_lx0',p_pivot,p_justkey,p_lx0
 			! write(6,*)'LS ',p_ls(1:p_nrow),p_maxo
 			! write(6,*)'p_vc ',p_vc
@@ -10408,7 +10217,7 @@ subroutine isfeasible()
 			! write(6,*)'rhscur',p_rhscur
 			! write(6,*)'xps',p_xps
 			! write(6,*)'p_maxo ',p_maxo
-		endif !if(p_nnf.gt.0)   8757
+		endif !if(p_nnf.gt.0)   8638
  
  
 		! if(p_justkey)then   !only key schedule has been changed
@@ -10485,7 +10294,7 @@ subroutine isfeasible()
  
  
 		!	endif !if(sparse)  17275
-	endif !if(.true.)   8678
+	endif !if(.true.)   8559
  
 	! !is(p_p)write(p_n16,*)'vc:',p_vc(1:min(p_nrow,50))
 	! !is(p_p)write(p_n16,*)'objf,objfv,tolecur:',p_objf,p_objfv,p_tolecur
@@ -10500,7 +10309,7 @@ subroutine isfeasible()
 		j_err=.true.
  
 		return
-	endif !if(p_objf.le.p_objfv-100*p_tolecur.and.p_tmax.gt.j_0)   8975
+	endif !if(p_objf.le.p_objfv-100*p_tolecur.and.p_tmax.gt.j_0)   8856
 	! write(6,*)'round, p_pivot,objf,oldobjf: ', &
 	! p_kier,p_pivot,p_objf,p_objfv,' tolecur=',p_tolecur
  
@@ -10514,7 +10323,7 @@ subroutine isfeasible()
 	! j_err=.true.
 	! return
 	! p_kierv=p_kier
-	! p_iunitv=p_iunit
+	! p_unitv=p_unit
 	! p_feasible=.false.
 	! p_nrecover=p_nrecover+1
 	! if(p_nrecover.ge.20)then !10 changed into 20 by J.L 21.2.2019
@@ -10537,8 +10346,8 @@ subroutine updatejlp()
 	use jmod, only: p_goto8888
 	use jmod, only: p_goto8889
 	use jmod, only: p_route67
-	use jmod, only: p_iunit
-	use jmod, only: p_iunit55
+	use jmod, only: p_unit
+	use jmod, only: p_unit55
 	use jmod, only: p_niter
 	use jmod, only: p_valiter
 	use jmod, only: p_objf
@@ -10604,16 +10413,16 @@ subroutine updatejlp()
  
 	p_route67=.false.
  
-	if(p_iunit.eq.p_iunit55)then
+	if(p_unit.eq.p_unit55)then
 		p_niter=p_niter+1
-		!is(p_p)write(p_n16,*)'Niter,p_iunit',p_niter,p_iunit
-	else !if(p_iunit.eq.p_iunit55)then
-		p_iunit55=p_iunit
+		!is(p_p)write(p_n16,*)'Niter,p_unit',p_niter,p_unit
+	else !if(p_unit.eq.p_unit55)then
+		p_unit55=p_unit
 		p_niter=0
 		p_valiter=p_objf
 		p_nnfiter=p_nnf
  
-	endif !if(p_iunit.eq.p_iunit55)   9033
+	endif !if(p_unit.eq.p_unit55)   8914
  
 	!!!! compute values of basic variables *********************************
 	!	if(sparse)then
@@ -10653,14 +10462,14 @@ subroutine updatejlp()
 			!write(p_n16,*) ii_,j_lf(ii_),j_lunit(j_lf(ii_)) ,j_ixkf(j_lf(ii_)),j_ixkffact(j_lf(ii_)),j_x(j_lf(ii_)+j_nrowz)
 			if(p_x(p_lf(ii_)+p_nrowz).le.-0.0001)&
 				write(6,*)'**negative amount ,pivot',p_pivot, &
-				' unit ',p_iunit, ' ixk ',p_ixkf(p_lf(ii_)),&
+				' unit ',p_unit, ' ixk ',p_ixkf(p_lf(ii_)),&
 				' ifact ',p_ixkffact(p_lf(ii_)),' amount ',p_x(p_lf(ii_)+p_nrowz)
-			!	write(16,*)'**negative amount ,pivot',p_pivot,' unit ',p_iunit, ' ixk ',j_ixkf(j_lf(ii_)),&
+			!	write(16,*)'**negative amount ,pivot',p_pivot,' unit ',p_unit, ' ixk ',j_ixkf(j_lf(ii_)),&
 			!	' ifact ',j_ixkffact(j_lf(ii_)),' amount ',j_x(j_lf(ii_)+j_nrowz)
-		enddo !ii_=p_mxd+1,p_lf0   9078
+		enddo !ii_=p_mxd+1,p_lf0   8959
  
  
-	endif !if(p_fpresent)   9077
+	endif !if(p_fpresent)   8958
 	!end new
  
  
@@ -10678,12 +10487,12 @@ subroutine updatejlp()
 			! negative value for weight 'noticeably' negative
 			if(p_x(p_lcur+p_nrowz).lt.p_wminerr)then  ! jl 201606033 j_zeroneg)then    !negative weight, zeroneg=-0.000000001d0
 				!***********
-				write(6,*)'**illegal weight** ',p_x(p_lcur+p_nrowz),' unit ',p_iunit
+				write(6,*)'**illegal weight** ',p_x(p_lcur+p_nrowz),' unit ',p_unit
 				close(17)
 				j_err=.true. ;return
  
  
-			endif !if(p_x(p_lcur+p_nrowz).lt.p_wminerr)   9105
+			endif !if(p_x(p_lcur+p_nrowz).lt.p_wminerr)   8986
  
  
 			!***********
@@ -10763,12 +10572,12 @@ subroutine updatejlp()
 						! write(6,*)'***trying to recover'
 						! if(p_p)write(p_n16,*)'***trying to recover'
 						! p_kierv=p_kier
-						! p_iunitv=p_iunit
+						! p_unitv=p_unit
 						! p_feasible=.false.
 						! p_goto1234=.true.;return
 						! endif !if(p_wsu.gt.p_wmaxwrn)   8935
 						!		endif !if(sparse)  17558
-					endif !if(p_wsu.gt.p_wmaxerr)   9169
+					endif !if(p_wsu.gt.p_wmaxerr)   9050
 					p_listapu(1)=p_lcur0+p_nrowz
 					p_vcmax=p_zero
 					do ilr=p_lr0+1,p_nrow
@@ -10791,10 +10600,10 @@ subroutine updatejlp()
 								p_cycling=.false.
 							else !if(j_lr(ilr).ne.p_icolold)then
 								p_cycling=.true.
-							endif !if(p_lr(ilr).ne.p_icolold)   9214
-						endif !if(abs(r(p_lcur0+p_nrowz)).gt.p_vcmax)   9213
+							endif !if(p_lr(ilr).ne.p_icolold)   9095
+						endif !if(abs(r(p_lcur0+p_nrowz)).gt.p_vcmax)   9094
  
-					enddo !ilr=p_lr0+1,p_nrow   9200
+					enddo !ilr=p_lr0+1,p_nrow   9081
 					if(p_vcmax.gt.p_tole(p_lr(p_ilrmax)))then
 						p_newc=p_lr(p_ilrmax)
 						p_leavec=p_lcur0+p_nrowz
@@ -10809,20 +10618,20 @@ subroutine updatejlp()
 						p_goto8889=.true.;return
 					else !if(j_vcmax.gt.j_tole(j_lr(p_ilrmax)))then
 						write(6,*)'did not remove w, was this due to p_cycling: ',p_cycling
-					endif !if(p_vcmax.gt.p_tole(p_lr(p_ilrmax)))   9224
+					endif !if(p_vcmax.gt.p_tole(p_lr(p_ilrmax)))   9105
  
-				endif !if(p_wsu.gt.p_oneps)   9168
+				endif !if(p_wsu.gt.p_oneps)   9049
  
 				p_wsu=p_zero
  
 				p_lcur0=p_next(p_lcur)
  
-			endif !if(p_lunit(nex).ne.p_lunit(p_lcur))   9167
+			endif !if(p_lunit(nex).ne.p_lunit(p_lcur))   9048
  
 			p_lcur=nex
-		enddo !j=1,p_lx0   9100
+		enddo !j=1,p_lx0   8981
  
-	endif !if(p_xpresent)   9095
+	endif !if(p_xpresent)   8976
  
 	!!!!! check feasiblity , i.e. if residuals get legal values
 	! note as opposite in old JLp, we concider here if residual should be maximized or minimized
@@ -10876,7 +10685,7 @@ subroutine updatejlp()
 		!	p_nextxkf = ((p_ienter==4).and.(ixkenter<p_nlog)) !<A>  <a>
 		! pakotetaan käymään läpi yksikön tehdasmjat sen jälkeen kun kantaan on tullut vaihtoehto tai avainvaihtoehto vaihtunut
 		p_nextxkf = p_nextxkf.or.(p_ienter==3)
-	endif !if (p_fpresent)   9301
+	endif !if (p_fpresent)   9182
  
 end subroutine updatejlp !subroutine updatejlp()
 
@@ -10917,8 +10726,8 @@ subroutine repo(nureport)
 	use jmod, only: p_intapp
 	use jmod, only: j_chr10
 	use jmod, only: p_solx
+	use jmod, only: p_ivvarx
 	use jmod, only: p_nxvar
-	use jmod, only: p_ivxvars
 	use jmod, only: j_inlistobject
 	use jmod, only: p_ivkeepx
 	use jmod, only: j_oname
@@ -10926,8 +10735,8 @@ subroutine repo(nureport)
 	use jmod, only: j_yes
 	use jmod, only: p_ix
 	use jmod, only: p_ibatemp
-	use jmod, only: p_nxrow2
-	use jmod, only: p_irowxvars
+	use jmod, only: p_nrowx2
+	use jmod, only: p_irowvarx
 	use jmod, only: p_xcoef
 	use jmod, only: p_sumx
 	use jmod, only: p_dots
@@ -10966,14 +10775,14 @@ subroutine repo(nureport)
 		do i=p_nrow+1,p_ncol+p_nrow
 			p_x(p_ls(i))=j_0
 			!	if(p_ls(i).eq.2)write(6,*)'<4774putzero'
-		end do !i=p_nrow+1,p_ncol+p_nrow   9328
+		end do !i=p_nrow+1,p_ncol+p_nrow   9209
 		if(.not.p_maxo)then  ! poistettu bugia metsästettäessä
 			p_vc=-p_vc                        !;objf=-objf done earlier
 			p_vx=-p_vx
  
-		end if !if(.not.p_maxo)   9332
+		end if !if(.not.p_maxo)   9213
  
-	endif !if(p_nrow.gt.0)   9327
+	endif !if(p_nrow.gt.0)   9208
 	if(.not.p_maxo)p_objr0=-p_objr0
  
  
@@ -11018,7 +10827,7 @@ subroutine repo(nureport)
  
 		ivout=j_defmatrix(j_ivout,'%shprice',p_nrow,1,j_matreg)
 		j_o(ivout)%d(1:p_nrow)=p_vc(1:p_nrow)
-	endif !if(p_nrow>0.and.p_nz.eq.0)   9376
+	endif !if(p_nrow>0.and.p_nz.eq.0)   9257
 	!	endif !if(j_ivout.ne.j_ivresult)   9200
 	!write(6,*)'<47p_zmatrix',p_zmatrix
 	! if (p_zmatrix)then
@@ -11055,7 +10864,7 @@ subroutine repo(nureport)
  
  
  
-		endif !if(p_xpresent.and.p_isdomain)   9414
+		endif !if(p_xpresent.and.p_isdomain)   9295
 		if(idom.ne.idomv)then
 			!unpublished
 			!	p_buf='DOMAIN:      All'
@@ -11073,11 +10882,11 @@ subroutine repo(nureport)
 				p_buf(74:78)='units'
 				p_buf(68:72)=j_chi5(p_nunits,0)
  
-			endif !if(p_isdomain)   9424
+			endif !if(p_isdomain)   9305
 			write(nureport,*)' ',('_',kk=1,78)
 			write(nureport,'(a)')p_buf(1:79)
  
-		endif !if(idom.ne.idomv)   9421
+		endif !if(idom.ne.idomv)   9302
 		!	end if !if(p_xpresent.and.p_isdomain)   6551
 		if(idom.ne.idomv)then
 			write(nureport,*)' ',('_',kk=1,78)
@@ -11089,7 +10898,7 @@ subroutine repo(nureport)
 			if(p_intapp)p_buf(35:44)='int. app.'
 			write(nureport,'(a)')p_buf(1:79)
 			write(nureport,*)' ',('_',kk=1,78)
-		endif !if(idom.ne.idomv)   9444
+		endif !if(idom.ne.idomv)   9325
 		!	do k=1,p_nsetr(i)
 		!write(6,*)'<458 k,nsetr(i) ',k,j_nsetr(i)
 		!		if((k==1).and.(j>1)) irow0 = irow0 - p_nsetr(i)
@@ -11101,7 +10910,7 @@ subroutine repo(nureport)
  
 			p_buf(36:)=j_chr10(p_solx(irow))
 			write(nureport,'(a)')p_buf(1:79)
-		endif !if(p_intapp)   9461
+		endif !if(p_intapp)   9342
 		!	end do !k=1,p_nsetr(i)   5561
 		idom2=idom
 		if(p_isdomain)idom2=p_rowdomnum(min(irow+1,p_nrow))
@@ -11124,13 +10933,14 @@ subroutine repo(nureport)
  
 				!		write(6,*)'ibatemp',p_ibatemp
 				!		write(6,*)'xcoef',p_xcoef
-				!		write(6,*)'termvars',termvars
+				!		write(6,*)'termvar',termvar
+				call j_getname(p_ivvarx)
  
 				do jx=1,p_nxvar  !p_nxvartot !+p_noutsubtrans !p_ncvar,available variables
 					!			write(6,*)'jx ',jx,p_nxvartot+p_ncvar+p_noutsubtrans
-					!	jx=j_inlistobject(j_o(p_ivxvars)%i2(jx0),p_ivkeepx)
+					!	jx=j_inlistobject(j_o(p_ivvarx)%i2(jx0),p_ivkeepx)
  
-					ivxvar=j_o(p_ivxvars)%i2(jx)
+					ivxvar=j_o(p_ivvarx)%i2(jx)
  
 					ixkeep=j_inlistobject(ivxvar,p_ivkeepx)
  
@@ -11153,27 +10963,27 @@ subroutine repo(nureport)
 							item=p_ix(iro)
 							iba=p_ibatemp(item)
  
-							!				write(6,*)'iro,item,iba,nxrow',iro,item,iba,p_nxrow2(item)
-							do ii=1,p_nxrow2(item)
+							!				write(6,*)'iro,item,iba,nrowx',iro,item,iba,p_nrowx2(item)
+							do ii=1,p_nrowx2(item)
  
 								! if(jx.le.p_nxvartot)then
-								! p_yes=p_irowxvars(iba+ii).eq.j_o(p_ivkeepx)%i2(jx)
+								! p_yes=p_irowvarx(iba+ii).eq.j_o(p_ivkeepx)%i2(jx)
 								! !x-variable
 								! ! elseif(jx.le.p_nxvartot+p_ncvar) then !if(jx.le.j_nxvartot)then
 								! ! !c-variable
-								! ! p_yes=p_irowxvars(iba+ii).eq.p_cvarl(jx-p_nxvartot)
+								! ! p_yes=p_irowvarx(iba+ii).eq.p_cvarl(jx-p_nxvartot)
 								! else !if(jx.le.j_nxvartot)then
-								! p_yes=p_irowxvars(iba+ii).eq. &
+								! p_yes=p_irowvarx(iba+ii).eq. &
 								! j_o(p_ivoutsubtrans)%i2(jx-p_nxvartot)  !-p_ncvar)
 								! !output from transformation
 								! endif !if(jx.le.p_nxvartot)   9408
 								!	if(p_yes)then   !häär
-								!			write(6,*)'ivxvar p_irowxvars(iba+ii)',ivxvar,p_irowxvars(iba+ii)
-								if(ivxvar.eq.p_irowxvars(iba+ii))then
+								!			write(6,*)'ivxvar p_irowvarx(iba+ii)',ivxvar,p_irowvarx(iba+ii)
+								if(ivxvar.eq.p_irowvarx(iba+ii))then
 									if(iro.eq.0)then
 										!		p_xmat(i+ibxmatx)= &       ! make temporary variables
-										!	dot_product(p_xcoef(iba+1:iba+p_nxrowtemp(i)), &
-										!	j_v(p_irowxvars(iba+1:iba+p_nxrowtemp(i))))
+										!	dot_product(p_xcoef(iba+1:iba+p_nrowxtemp(i)), &
+										!	j_v(p_irowvarx(iba+1:iba+p_nrowxtemp(i))))
  
  
  
@@ -11186,14 +10996,14 @@ subroutine repo(nureport)
  
 										shp=shp-p_xcoef(iba+ii)*p_vc(iro)
 										indi=1
-									endif !if(iro.eq.0)   9535
-								endif !if(ivxvar.eq.p_irowxvars(iba+ii))   9534
+									endif !if(iro.eq.0)   9417
+								endif !if(ivxvar.eq.p_irowvarx(iba+ii))   9416
 								!endif !if(p_yes)   9419
-							enddo !ii=1,p_nxrow2(item)   9519
+							enddo !ii=1,p_nrowx2(item)   9401
  
-						endif !if(j_yes.and.p_ix(iro).ne.0)   9513
+						endif !if(j_yes.and.p_ix(iro).ne.0)   9395
  
-					enddo !iro=0,p_nrow   9506
+					enddo !iro=0,p_nrow   9388
 					!	if(jx.le.p_nxvartot)then
  
 					!	le=j_lename(j_o(p_ivkeepx)%i2(jx))
@@ -11223,16 +11033,16 @@ subroutine repo(nureport)
 						p_shpx((idom-1)*p_nsumx+ixkeep)=shp
 						if(p_intapp)	p_buf(67:76)=j_chr10(p_sumxi((idom-1)*p_nsumx+ixkeep)-p_sumx((idom-1)* &
 							p_nsumx+ixkeep))
-					endif !if(p_nrow.gt.0)   9583
+					endif !if(p_nrow.gt.0)   9465
 					write(nureport,'(a)')p_buf(1:79)
  
-				end do !jx=1,p_nxvar   9491
+				end do !jx=1,p_nxvar   9373
 				write(nureport,*)' '
 				do jx=1,p_nxvartot
 					jxv=j_o(p_ivkeepx)%i2(jx)
 					call j_getname(jxv)
  
-					ipe=j_inlistobject(jxv,p_ivxvars)
+					ipe=j_inlistobject(jxv,p_ivvarx)
 					!	write(6,*)'jx',jx,jxv,ipe,j_oname(1:j_loname)
 					if(p_domainname(1:p_ldomainname).eq.'All')then
  
@@ -11246,7 +11056,7 @@ subroutine repo(nureport)
 						!	j_v(ivoo)=p_sumx((idom-1)*p_nsumx+jx)
 						!	call j_getname(ivoo)
 						!	write(6,*)j_oname(1:j_loname),' =',j_v(ivoo)
-					endif !if(p_domainname(1:p_ldomainname).eq.'All')   9599
+					endif !if(p_domainname(1:p_ldomainname).eq.'All')   9481
 					j_v(ivoo)=p_sumx((idom-1)*p_nsumx+jx)
  
 					if(ipe.gt.0)cycle
@@ -11258,16 +11068,16 @@ subroutine repo(nureport)
 					p_buf(36:46)=j_chr10(j_v(ivoo))  ! p_sumx((idom-1)*p_nsumx+jx))
 					write(nureport,'(a)')p_buf(1:79)
  
-				enddo !jx=1,p_nxvartot   9593
+				enddo !jx=1,p_nxvartot   9475
  
  
-			endif !if(p_iprint.ge.1)   9472
-		end if !if(idom2.ne.idom.or.irow.eq.p_nrow)   9470
+			endif !if(p_iprint.ge.1)   9353
+		end if !if(idom2.ne.idom.or.irow.eq.p_nrow)   9351
  
  
 		!		end do domloop !domloop: do j=1,j_nsetd(i)
 		idomv=idom
-	end do !irow=0,p_nrow   9410
+	end do !irow=0,p_nrow   9291
 	if(p_nshow.gt.0)then
 		write(6,*)' '
 		write(6,*)'showdomains'
@@ -11284,7 +11094,7 @@ subroutine repo(nureport)
 			write(nureport,*)' ',('_',kk=1,78)
 			do jx=1,p_nxvartot
 				jxv=j_o(p_ivkeepx)%i2(jx)
-				ipe=j_inlistobject(jxv,p_ivxvars)
+				ipe=j_inlistobject(jxv,p_ivvarx)
 				call j_getname(jxv)
 				if(p_domainname(1:p_ldomainname).eq.'All')then
 					ivoo=j_getobject(0,j_oname3(1:j_loname3)//'%'//j_oname(1:j_loname),j_ipreal)
@@ -11296,7 +11106,7 @@ subroutine repo(nureport)
 					j_v(ivoo)=p_sumx((idom-1)*p_nsumx+jx)
 					!	call j_getname(ivoo)
 					!	write(6,*)j_oname(1:j_loname),' =',j_v(ivoo)
-				endif !if(p_domainname(1:p_ldomainname).eq.'All')   9651
+				endif !if(p_domainname(1:p_ldomainname).eq.'All')   9533
 				!	if(ipe.gt.0)cycle
 				j_v(ivoo)=p_sumx((idom-1)*p_nsumx+jx)
  
@@ -11307,32 +11117,32 @@ subroutine repo(nureport)
 				p_buf(36:46)=j_chr10(j_v(ivoo))  !p_sumx((idom-1)*p_nsumx+jx))
 				write(nureport,'(a)')p_buf(1:79)
  
-			enddo !jx=1,p_nxvartot   9647
+			enddo !jx=1,p_nxvartot   9529
  
  
  
  
-		enddo !j=1,p_nshow   9638
-	endif !if(p_nshow.gt.0)   9633
+		enddo !j=1,p_nshow   9520
+	endif !if(p_nshow.gt.0)   9515
 	!	p_nxvartot=j_o(p_ivkeepx)%i(1)
 	!p_nsumx=p_nxvartot+p_ncvar+p_noutsubtrans
-	!xvars%, xsum%, xprice%,xvarsproblem%
+	!varx%, xsum%, xprice%,varxproblem%
 	!if(p_xpresent.and.j_ivout.ne.j_ivresult) then
-	!	call j_deflistobject(j_ivout,'%xvars',ivxvarstot,nres=p_nsumx)
-	! call j_deflistobject(j_ivout,'%xvars',ivxvarstot,list0=p_nxvartot, &
+	!	call j_deflist(j_ivout,'%varx',ivvarxtot,nres=p_nsumx)
+	! call j_deflist(j_ivout,'%varx',ivvarxtot,list0=p_nxvartot, &
 	! list=j_o(p_ivkeepx)%i2(1:p_nxvartot),nres=p_noutsubtrans)  !p_ncvar+p_noutsubtrans)
  
-	!j_o(ivxvarstot)%i(1:p_nxvartot)=j_o(p_ivkeepx)%i(1:p_nxvartot)
-	!	if (p_ncvar > 0) j_o(ivxvarstot)%i2(p_nxvartot+1:p_nxvartot+p_ncvar) =  &
+	!j_o(ivvarxtot)%i(1:p_nxvartot)=j_o(p_ivkeepx)%i(1:p_nxvartot)
+	!	if (p_ncvar > 0) j_o(ivvarxtot)%i2(p_nxvartot+1:p_nxvartot+p_ncvar) =  &
 	!		p_cvarl(1:p_ncvar)
 	! if (p_noutsubtrans > 0) &
-	! !	j_o(ivxvarstot)%i2(p_nxvartot+p_ncvar+1:p_nxvartot+p_ncvar+p_noutsubtrans) =  &
-	! j_o(ivxvarstot)%i2(p_nxvartot+1:p_nxvartot+p_noutsubtrans) =  &
+	! !	j_o(ivvarxtot)%i2(p_nxvartot+p_ncvar+1:p_nxvartot+p_ncvar+p_noutsubtrans) =  &
+	! j_o(ivvarxtot)%i2(p_nxvartot+1:p_nxvartot+p_noutsubtrans) =  &
 	! j_o(p_ivoutsubtrans)%i2(1:p_noutsubtrans)
-	! j_o(ivxvarstot)%i(1) = 	p_nsumx
-	! call j_deflistobject(j_ivout,'%xvarsproblem',ivout,list0=p_nxvar,list=p_xvars)
+	! j_o(ivvarxtot)%i(1) = 	p_nsumx
+	! call j_deflist(j_ivout,'%varxproblem',ivout,list0=p_nxvar,list=p_varx)
  
-	! j_o(ivout)%i(1:nxvar)=p_xvars
+	! j_o(ivout)%i(1:nxvar)=p_varx
 	! j_o(ivout)%i(1)=nxvar
 	ndom_=max(p_ndom,1)
 	!write(6,*)'j_nsumx',j_nsumx
@@ -11342,20 +11152,20 @@ subroutine repo(nureport)
 	if(p_intapp)then
 		ivout=j_defmatrix(j_ivout,'%xsumint',ndom_,p_nsumx,j_matreg)
 		j_o(ivout)%d(1:ndom_*p_nsumx)=p_sumxi(1:ndom_*p_nsumx)
-	endif !if(p_intapp)   9704
+	endif !if(p_intapp)   9586
  
 	if(p_nrow.gt.0)then
 		ivout=j_defmatrix(j_ivout,'%xprice',ndom_,p_nsumx,j_matreg)
  
 		j_o(ivout)%d(1:ndom_*p_nsumx)=p_shpx(1:ndom_*p_nsumx)
-	endif !if(p_nrow.gt.0)   9709
+	endif !if(p_nrow.gt.0)   9591
  
 	if(p_nrow.gt.0.and.p_isdomain)then
 		ivout=j_defmatrix(j_ivout,'%domains',p_nrow,1,j_matreg)
  
 		!			j_o(ivout)%d = p_irowdomain(1:p_nrow)
  
-	endif !if(p_nrow.gt.0.and.p_isdomain)   9715
+	endif !if(p_nrow.gt.0.and.p_isdomain)   9597
 	!	endif !if(p_xpresent.and.j_ivout.ne.j_ivresult)   9402
 	!	if(j_ivout.ne.j_ivresult)then
 	!call j_defmatrix(j_ivout,'%problemrows',p_nrow,1,j_matreg,ivout)
@@ -11425,7 +11235,7 @@ subroutine repoepilog(nureport,isx)
 	if(j_v(p_ivunbounded)>0) then
 		p_buf='Unbounded problem'
 		write(nureport,'(a)')p_buf(1:79)
-	endif !if(j_v(p_ivunbounded)>0)   9776
+	endif !if(j_v(p_ivunbounded)>0)   9658
  
 	write(nureport,"('Pivots: ',I10,' refactorizations ',i5,' rounds ',i5)")&
 		p_pivot,max(0,p_refac-1),p_kier
@@ -11434,7 +11244,7 @@ subroutine repoepilog(nureport,isx)
 			p_buf='Value of the objective function:  '
 	else !if(j_v(p_ivfeasible)>0) then
 			p_buf='Value of the temporary objective: '
-	endif !if(j_v(p_ivfeasible)>0)   9784
+	endif !if(j_v(p_ivfeasible)>0)   9666
 	write(p_buf(35:),*)p_coefmax*p_objf
 	!	p_buf(35:)=j_chr10(p_coefmax*p_objf)
 	write(nureport,'(a)')p_buf(1:79)
@@ -11443,7 +11253,7 @@ subroutine repoepilog(nureport,isx)
 		p_buf='Solution is feasible'
 	else !if(j_v(p_ivfeasible)>0) then
 		p_buf='Solution is infeasible'
-	endif !if(j_v(p_ivfeasible)>0)   9793
+	endif !if(j_v(p_ivfeasible)>0)   9675
 	write(nureport,'(a)')p_buf(1:79)
 	!write(6,*)'OBJECTIVE&&&&& ',p_objf,j_v(p_ivobjective2)
 	!	call j_getname(p_ivobjective2)
@@ -11455,10 +11265,10 @@ subroutine repoepilog(nureport,isx)
 			! j_buf='Solution is close to optimal (slow improvement)'
 		else !if(kier.ge.p_mxiter)then
 			p_buf='Solution is optimal'
-		endif !if(p_kier.ge.p_maxrounds.and.isx)   9803
+		endif !if(p_kier.ge.p_maxrounds.and.isx)   9685
 	else !if(j_v(p_ivoptimal)>0) then
 		p_buf='Solution is not optimal'
-	endif !if(j_v(p_ivoptimal)>0)   9802
+	endif !if(j_v(p_ivoptimal)>0)   9684
 	write(nureport,'(a)')p_buf(1:79)
 	if(nureport.ne.6)write(6,*)'** report-> file remains open'
 	return
@@ -11523,7 +11333,7 @@ subroutine repoz(nureport)
 	do i=p_nrow+1,p_ncol+p_nrow
 		p_x(p_ls(i))=j_0
 		!	if(p_ls(i).eq.2)write(6,*)'<4774putzero'
-	end do !i=p_nrow+1,p_ncol+p_nrow   9840
+	end do !i=p_nrow+1,p_ncol+p_nrow   9722
 	!endif !if(p_nrow.gt.0)   9538
  
 	!	p_vx=-p_vx
@@ -11544,17 +11354,17 @@ subroutine repoz(nureport)
 			p_val_=p_objr0(p_newa+p_nrow)  ! in objr all cols are counted
 		else !if(j_feasible)then
 			p_val_=j_0
-		endif !if(p_feasible)   9860
+		endif !if(p_feasible)   9742
 		!	write(6,*)'val ',p_val
  
 		do  j=1,p_nrow
 			!		write(6,*)'row ',j,p_vc(j),p_a(j+p_abas(p_newa))
 			p_val_=p_val_-p_vc(j)*p_a(j+p_abas(p_newa))  !p_a(j,p_newa)
  
-		enddo ! j=1,p_nrow   9867
+		enddo ! j=1,p_nrow   9749
  
 		p_redcost(p_newa)=abs(p_val_)
-	enddo !i=p_lz0+1,p_nz   9854
+	enddo !i=p_lz0+1,p_nz   9736
 	!endif !if(p_nz.gt.0)   7864
 	!if(j_err)return
  
@@ -11584,7 +11394,7 @@ subroutine repoz(nureport)
 		write(6,*)'***because there was zmatrix->, results are given in matrices***'
 		write(6,*)' '
 		goto 8000
-	endif !if (p_zmatrix)   9899
+	endif !if (p_zmatrix)   9781
  
 	!	irow0=0
 	irow=0
@@ -11625,7 +11435,7 @@ subroutine repoz(nureport)
  
 		!		end do domloop !domloop: do j=1,j_nsetd(i)
 		!	idomv=idom
-	end do !irow=0,p_nrow   9925
+	end do !irow=0,p_nrow   9807
  
 	!	if(j_ivout.ne.j_ivresult)then
 	!call j_defmatrix(j_ivout,'%problemrows',p_nrow,1,j_matreg,ivout)
@@ -11665,7 +11475,7 @@ subroutine repoz(nureport)
 		j_v(p_zvars(i))=p_x(p_nrow+i)
 		p_buf(36:46)=j_chr10(p_redcost(i))
 		write(nureport,'(a)')'     '//p_buf(1:46)
-66778 continue !66778 I=1,p_nz   9977
+66778 continue !66778 I=1,p_nz   9859
 	!endif !if(p_nz.gt.0.and.p_iprint.ge.1)   9674
 	write(nureport,*)' '
 8000 continue  !end printing
@@ -11773,9 +11583,9 @@ subroutine writerow(nureport,irow)
 			p_buf(6:33)='Infeasible, temporary objective'
 			le=33
 			!	le=
-		endif !if(j_v(p_ivfeasible)>0)  10056
+		endif !if(j_v(p_ivfeasible)>0)   9938
  
-	endif !if(irow.gt.0)  10047
+	endif !if(irow.gt.0)   9929
 	!lyhennetään ylipitkät rivit etteivät sotkeennu
 	iplusv=0
 	!	write(6,*)'le ',le
@@ -11786,7 +11596,7 @@ subroutine writerow(nureport,irow)
 		do while(iplus.le.34.and.iplus.le.le)
 			iplusv=iplus
 			iplus=j_nextlim(p_buf,iplus+1,le,'+-')
-		enddo !while(iplus.le.34.and.iplus.le.le)  10082
+		enddo !while(iplus.le.34.and.iplus.le.le)   9964
 		if(iplus.gt.le)then
  
 			exit
@@ -11795,8 +11605,8 @@ subroutine writerow(nureport,irow)
 			p_buf=p_buf(iplusv+1:le)
 			le=le-iplusv
  
-		endif !if(iplus.gt.le)  10086
-	enddo !while(le.gt.34)  10078
+		endif !if(iplus.gt.le)   9968
+	enddo !while(le.gt.34)   9960
 	p_buf(le+1:34)=p_dots
  
 	if(irow.ge.1)then
@@ -11812,7 +11622,7 @@ subroutine writerow(nureport,irow)
 		if(p_vc(irow).ne.0.)then
 			if(p_maxo.eqv.p_vc(irow).gt.0.)p_buf(78:78)='U'
 			if(p_maxo.eqv.p_vc(irow).lt.0.)p_buf(78:78)='L'
-		end if !if(p_vc(irow).ne.0.)  10108
+		end if !if(p_vc(irow).ne.0.)   9990
  
 		if(p_rhs(irow).eq.p_rhs2(irow))then
 			p_buf(65:72)= j_chr10(dble(p_rhs(irow)))
@@ -11820,7 +11630,7 @@ subroutine writerow(nureport,irow)
 			if(p_lbou(irow))p_buf(60:67)= j_chr10(dble(p_rhs(irow)))
 			if(p_ubou(irow))p_buf(69:76)= j_chr10(dble(p_rhs2(irow)))
  
-		end if !if(p_rhs(irow).eq.p_rhs2(irow))  10113
+		end if !if(p_rhs(irow).eq.p_rhs2(irow))   9995
  
 	else
 		! for maximization rhs1 =huge  rhs2=0
@@ -11840,7 +11650,7 @@ subroutine writerow(nureport,irow)
 		! j_buf(1:5)=' '
 		! j_buf(6:33)='Infeasible, temporary object'
 		! endif !if(j_v(p_ivfeasible)>0)then
-	end if !if(irow.ge.1)  10098
+	end if !if(irow.ge.1)   9980
 	if(le.lt.35)p_buf(le+1:34)=p_dots
 	write(nureport,'(a)')p_buf(1:79)
 	if(irow.eq.0)	write(nureport,'(a)')' '
@@ -11865,7 +11675,7 @@ subroutine renter()
 	use jmod, only: p_nsame
 	use jmod, only: p_oldsol
 	use jmod, only: p_iprint
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_pivot
 	use jmod, only: p_lr0
 	use jmod, only: p_nrow
@@ -11896,15 +11706,15 @@ subroutine renter()
 		!after addrees 55:p_niter=0
  
 		if(p_nnf.eq.p_nnfiter.and.p_objf-p_valiter.le.p_tolecur)then
-			!is(p_p.or.p_p9)write(p_n16,*)'Niter,p_iunit,p_pivot,objf,old', &
-			!p_niter,p_iunit,p_pivot,p_objf,p_valiter
+			!is(p_p.or.p_p9)write(p_n16,*)'Niter,p_unit,p_pivot,objf,old', &
+			!p_niter,p_unit,p_pivot,p_objf,p_valiter
 			p_goto36=.true.;return   !!!! bypassresidual enters and z enters beacause there is no improvement
 		else !if(p_nnf.eq.p_nnfiter.and.j_objf-j_valiter.le.j_tolecur)then
 			!is(p_p)write(p_n16,*)'*niter with improvement,objf,old',p_objf,p_valiter
 			p_niter=0
 			p_valiter=p_objf
-		endif !if(p_nnf.eq.p_nnfiter.and.p_objf-p_valiter.le.p_tolecur)  10159
-	endif !if(p_niter.ge.10)  10156
+		endif !if(p_nnf.eq.p_nnfiter.and.p_objf-p_valiter.le.p_tolecur)  10041
+	endif !if(p_niter.ge.10)  10038
  
 	! new objective is larger if t>0 and d0-vc'*d >0 or t<0 and d0-vc'*d <0
 	! can residual enter
@@ -11928,16 +11738,16 @@ subroutine renter()
  
 	!cycle
 	if(p_ienterv.eq.1.and.p_nsame.gt.5.and.p_objf.lt.p_oldsol+p_tolecur)then
-		if(p_iprint.gt.1)write(6,*)'cycling, Unit',p_iunit,'Pivot ',p_pivot, 'Objective ',p_objf
+		if(p_iprint.gt.1)write(6,*)'cycling, Unit',p_unit,'Pivot ',p_pivot, 'Objective ',p_objf
 		return    ! we check if z can enter z
-	endif !if(p_ienterv.eq.1.and.p_nsame.gt.5.and.p_objf.lt.p_oldsol+  10191
+	endif !if(p_ienterv.eq.1.and.p_nsame.gt.5.and.p_objf.lt.p_oldsol+  10073
  
 	do ilr=p_lr0+1,p_nrow   !!!!! nonbasic residuals <B1>
 		ico=p_lr(ilr)  !lri(lr(ilr))  ! row=col for residual varaibles, note lr
 		if(ico.eq.p_ilres)then
 			if(p_objf.lt.p_objilres+p_tolecur)cycle
 			p_ilres=0
-		endif !if(ico.eq.p_ilres)  10198
+		endif !if(ico.eq.p_ilres)  10080
 		if(p_rhs2(ico).gt.p_rhs(ico))then
 			! lowerilla ei merkitystä jos rhs=rhs2,
 			! voidaan tehdä lista jossa mukana vain
@@ -11955,7 +11765,7 @@ subroutine renter()
 					p_tmax=p_rhs2(ico)-p_rhs(ico) ;p_rcur=p_tmax
 				else !if(j_ubou(ico).and.j_lbou(ico)) then
 					p_tmax=j_inf  ;p_rcur=p_tmax
-				endif !if(p_ubou(ico).and.p_lbou(ico))  10215
+				endif !if(p_ubou(ico).and.p_lbou(ico))  10097
 				p_post=.false.  !post=positive residual could enter
 				! xma ei käy koska voidaan ???
 				! tmin=xmi(p_newc) !min value for the entering
@@ -11976,14 +11786,14 @@ subroutine renter()
 					p_tmax=p_rhs2(ico)-p_rhs(ico);p_rcur=p_tmax
 				else !if(j_ubou(ico).and.j_lbou(ico)) then
 					p_tmax=j_inf ;p_rcur=p_tmax
-				endif !if(p_ubou(ico).and.p_lbou(ico))  10236
+				endif !if(p_ubou(ico).and.p_lbou(ico))  10118
 				p_vcmax=-p_vc(ico)
 				p_post=.true.
 				!is(p_p) write(p_n16,*)'posit resid could enter',ico  !!!!
 				!is(p_p.and.p_fpresent) write(p_n16,*)'**fact** KANTAAN >> residual, p_ienter = 1'
-			end if !if(p_vc(ico).gt.p_vcmax.and.p_lower(ico).and.ico.ne.p_icol  10207
-		end if !if(p_rhs2(ico).gt.p_rhs(ico))  10202
-	end do !ilr=p_lr0+1,p_nrow  10196
+			end if !if(p_vc(ico).gt.p_vcmax.and.p_lower(ico).and.ico.ne.p_icol  10089
+		end if !if(p_rhs2(ico).gt.p_rhs(ico))  10084
+	end do !ilr=p_lr0+1,p_nrow  10078
  
  
 end subroutine renter !subroutine renter()
@@ -12026,7 +11836,7 @@ subroutine zenter()
 			p_val_=p_objr0(newc0)  ! in objr all cols are counted
 		else !if(j_feasible)then
 			p_val_=0.
-		endif !if(p_feasible)  10266
+		endif !if(p_feasible)  10148
 		!could take maximum
 		! place to refer zcoef
 		!if(p_p)write(p_n16,*)'pa',p_a(1:p_nrow,newa0)
@@ -12039,7 +11849,7 @@ subroutine zenter()
 		! else !if(sparse)then
 		do  j=1,p_nrow
 			p_val_=p_val_-p_vc(j)*p_a(p_abas(newa0)+j)  !p_a(j,newa0)
-		enddo ! j=1,p_nrow  10281
+		enddo ! j=1,p_nrow  10163
 		!	endif !if(sparse)  18218
 		! ei ny otettu huomioon mahdollisuutta, että z voisi olla nyt ylärajalla
 		! ja jos se tulee kantaan negatiivisena, niin tavoite voiis kasvaa
@@ -12051,8 +11861,8 @@ subroutine zenter()
 			p_tmax=j_inf ;p_rcur=p_tmax
 			p_ilzmax=ilz  !	do ilz=p_lz0+1,p_nz
 			p_vcmax=p_val
-		endif !if(p_val_.gt.p_vcmax)  10288
-	enddo !ilz=p_lz0+1,p_nz  10261
+		endif !if(p_val_.gt.p_vcmax)  10170
+	enddo !ilz=p_lz0+1,p_nz  10143
 	! if(p_p)then
 	! if(p_ienter.eq.2)then
 	! write(p_n16,*)'z could enter',p_newa,'tmax',j_inf,'p_newc',p_newc
@@ -12079,13 +11889,13 @@ subroutine senter()
 	use jmod, only: p_iopt
 	use jmod, only: p_isdomain
 	use jmod, only: p_nxbas
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: p_ixpack
 	use jmod, only: p_vxpack
 	use jmod, only: p_fpresent
 	use jmod, only: p_ibaunit
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_keys
 	use jmod, only: p_fastvaluemin
 	use jmod, only: p_basreject
@@ -12102,7 +11912,7 @@ subroutine senter()
 	use jmod, only: j_ninf
 	use jmod, only: p_svalue
 	use jmod, only: p_fastreject
-	use jmod, only: p_subfilre
+	use jmod, only: p_filre
 	use jmod, only: p_rejects
 	use jmod, only: p_xpresent
 	use jmod, only: p_xmat
@@ -12130,13 +11940,13 @@ subroutine senter()
 		p_vx(0)=j_1
 	else !if(p_ix0.ne.0)then
 		p_vx(0)=j_0
-	endif !if(p_ix0.ne.0)  10318
+	endif !if(p_ix0.ne.0)  10200
 	do i=1,p_nrow
 		if(p_ix(i).ne.0)then
 			p_vx(i)=-p_vc(i)   ! formula 6.41, voitasiko kenties tästä merkinkäännöstä
 			! luopua ja pelata suoraan vc:n avulla
-		endif !if(p_ix(i).ne.0)  10324
-	enddo !i=1,p_nrow  10323
+		endif !if(p_ix(i).ne.0)  10206
+	enddo !i=1,p_nrow  10205
 	!if(p_p)  write(p_n16,'(a,(1x,5g19.7))')'vx',(p_vx(i),i=0,min(p_nrow,50))
 	!	endif !if(p_xpresent)   8374
  
@@ -12146,43 +11956,49 @@ subroutine senter()
 	p_iopt=0        ! the optimal schedule
  
 	! start computing shadow pricees of schedules <B333>
-	!	write(6,*)'idom4',p_iunit,p_idomba
-	if(p_isdomain)call jlpcurix()  !(p_iunit)
+	!	write(6,*)'idom4',p_unit,p_idomba
+	if(p_isdomain)call jlpcurix()  !(p_unit)
+	! determines for each row if the unit iunit belonggs to the domain of the row
+	! units must be accessed one by one
+	! p_nrowcurx
+	! p_rowcurx
+	! p_idomba
+ 
 	! if (p_fpresent) then
-	! call jlpfcurix(p_iunit)
-	! call jlpfcurixy(p_iunit)
-	! call jlpfirow2curix(p_iunit)
+	! call jlpfcurix(p_unit)
+	! call jlpfcurixy(p_unit)
+	! call jlpfirow2curix(p_unit)
 	! endif !if (p_fpresent)   6047
-	!determines for each row if the unit p_iunit belonggs to the domain of the row
+	!determines for each row if the unit p_unit belonggs to the domain of the row
 	!matrix  domainbits(number,mxunit) contains bits for telling if unit belongs to certain domain
 	! returns nrowp
-	! xrowcur  the x-variable of the
+	! rowcurx  the x-variable of the
 	!	p_vxpack=0.
 	!	p_ixpack=0
 	p_nxbas=0
-doloop:	do j=1,p_nxrowcur
-		iro=p_xrowcur(j)
+doloop:	do j=1,p_nrowcurx
+		iro=p_rowcurx(j)
 		if(p_vx(iro).ne.j_0)then
 			do ip=1,p_nxbas-1
 				if( p_ix(iro).eq.p_ixpack(ip))then
 					p_vxpack(ip)=p_vxpack(ip)+p_vx(iro)
 					cycle doloop
-				endif !if( p_ix(iro).eq.p_ixpack(ip))  10356
-			enddo !ip=1,p_nxbas-1  10355
+				endif !if( p_ix(iro).eq.p_ixpack(ip))  10244
+			enddo !ip=1,p_nxbas-1  10243
 			p_nxbas=p_nxbas+1
 			p_vxpack(p_nxbas)=p_vx(iro)
 			p_ixpack(p_nxbas)=p_ix(iro)   ! result (1*ind1,2*ind2,....)
  
-		endif !if(p_vx(iro).ne.j_0)  10354
-	enddo doloop !oop:	do j=1,p_nxrowcur  10352
+		endif !if(p_vx(iro).ne.j_0)  10242
+	enddo doloop !oop:	do j=1,p_nrowcurx  10240
 	!	nxbas=count(p_ixpack.ne.0)
  
 	! Jos tehtaita, ei ohiteta
 	if(p_nxbas.le.0.and..not.p_fpresent)then
 		p_goto400=.true.;return   !!!! next unit subroutine
-	endif !if(p_nxbas.le.0.and..not.p_fpresent)  10370
+	endif !if(p_nxbas.le.0.and..not.p_fpresent)  10258
  
-	ikey_ = p_ibaunit(p_iunit)+p_keys(p_iunit)
+	ikey_ = p_ibaunit(p_unit)+p_keys(p_unit)
  
 	! kaksi strategiaa, 1: nykyinen, jossa yksiköstä otetaan aina vain paras vaihtoehto
 	! uusi strategia: käydään yksikköä läpi ja otetaan vaihtoehto heti kantaan jos sen varjohinta on suurempi kuin avain-
@@ -12195,15 +12011,15 @@ doloop:	do j=1,p_nxrowcur
 	! toiseen strategiaan
  
 	! secondt=.true. jos käytetään toista strategiaa
-	!is(p_p)write(p_n16,*)'unit,key,ld0,ns',p_iunit,p_keys(p_iunit),p_lx0,p_ns(p_iunit)
+	!is(p_p)write(p_n16,*)'unit,key,ld0,ns',p_unit,p_keys(p_unit),p_lx0,p_ns(p_unit)
  
 	p_fastvaluemin=1.7d37
-	!is(p_p.and.p_fpresent)write(p_n16,*)'**fact** <5586> unit,key',p_iunit,p_keys(p_iunit),p_xpresent2
+	!is(p_p.and.p_fpresent)write(p_n16,*)'**fact** <5586> unit,key',p_unit,p_keys(p_unit),p_xpresent2
 	p_fastvaluemin=1.7d37
 	!!!!kannassa olevat vaihtoehdot ohitetaan
-	p_basreject(1:p_ns(p_iunit))=.false.
+	p_basreject(1:p_ns(p_unit))=.false.
 	do k_=1,p_lx0
-		if(p_lunit(p_lx(k_)).ne.p_iunit) cycle
+		if(p_lunit(p_lx(k_)).ne.p_unit) cycle
 		i=p_isch(p_lx(k_))
 		p_basreject(i)=.true. !if(p_isch(p_lx(k_)).ne.i) cycle
 		! if(istree)then add if tree added
@@ -12215,26 +12031,26 @@ doloop:	do j=1,p_nxrowcur
 		! endif !if(istree)then
 		if(p_fast.and..not.p_fastnow)p_fastvalues(i)=j_inf
 		!	p_basreject(cycle nschloop
-	enddo !k_=1,p_lx0  10394
-	ibxmatx=(p_ibaunit(p_iunit)-1)*p_ntemp0
+	enddo !k_=1,p_lx0  10282
+	ibxmatx=(p_ibaunit(p_unit)-1)*p_ntemp0
 	!write(17,*)'nytpå',kier
 	!  -fopenmp
 	!$OMP PARALLEL DO
-		nschloop:	do i=1,p_ns(p_iunit)
+		nschloop:	do i=1,p_ns(p_unit)   !mainloop
 		ibxmatx=ibxmatx+p_ntemp0
 		if(p_basreject(i))then
 			p_svalue(i)=j_ninf
 			cycle
-		endif !if(p_basreject(i))  10414
-		!write(17,*)'nytpot',p_kier,p_iunit,i
-		iobs=p_ibaunit(p_iunit)+i
+		endif !if(p_basreject(i))  10302
+		!write(17,*)'nytpot',p_kier,p_unit,i
+		iobs=p_ibaunit(p_unit)+i
 		if(p_fastnow)then
-			if(p_fastreject(iobs).and.i.ne.p_keys(p_iunit))then
+			if(p_fastreject(iobs).and.i.ne.p_keys(p_unit))then
 				p_svalue(i)=j_ninf
-				cycle  !i.ne.j_keys(p_iunit) added 20.8.2018 JL
-			endif !if(p_fastreject(iobs).and.i.ne.p_keys(p_iunit))  10421
-		endif !if(p_fastnow)  10420
-		if(p_subfilre)then
+				cycle  !i.ne.j_keys(p_unit) added 20.8.2018 JL
+			endif !if(p_fastreject(iobs).and.i.ne.p_keys(p_unit))  10309
+		endif !if(p_fastnow)  10308
+		if(p_filre)then
 			if(p_rejects(iobs))then
 				! if(istree)then
 				! ibxmatx=xmatiba(iobs) !,1)
@@ -12244,8 +12060,8 @@ doloop:	do j=1,p_nxrowcur
 				! endif !if(istree)then
 				p_svalue(i)=j_ninf
 				cycle
-			endif !if(p_rejects(iobs))  10427
-		endif !if(p_subfilre)  10426
+			endif !if(p_rejects(iobs))  10315
+		endif !if(p_filre)  10314
  
  
  
@@ -12272,13 +12088,13 @@ doloop:	do j=1,p_nxrowcur
  
 		else !if (j_xpresent2) then
 			p_svalue(i)=j_0   !p_value = j_0
-		endif !if (p_xpresent)  10441
-		!is(p_p)write(p_n16,*)'<6712>,nxbas,p_iunit,i,initval',p_nxbas,p_iunit,i,p_value
+		endif !if (p_xpresent)  10329
+		!is(p_p)write(p_n16,*)'<6712>,nxbas,p_unit,i,initval',p_nxbas,p_unit,i,p_value
 		!!!jos tehtaita, valuen arvoa kasvatetaan
 		if (p_fpresent) then !!!!
 			!		p_value = p_value + value_f(iobs)
 			p_svalue(i) = p_svalue(i)+ value_f(iobs)
-		endif !if (p_fpresent)  10467
+		endif !if (p_fpresent)  10355
  
 		! if(p_value.gt.p_valueopt)then  !!!!
 		! secondb=p_valueopt
@@ -12294,40 +12110,40 @@ doloop:	do j=1,p_nxrowcur
 		! p_isecond=i
 		! endif !if(j_value.gt.secondb.and.abs(j_value-j_valueopt).gt.0.d-6)then
  
-		!		if(i.eq.p_keys(p_iunit)) p_valuek=p_value !
+		!		if(i.eq.p_keys(p_unit)) p_valuek=p_value !
  
 		if(p_fastmake)then
 			p_fastvalues(i)=p_svalue(i)  !p_value
 			if(p_svalue(i).lt.p_fastvaluemin)p_fastvaluemin=p_svalue(i) !p_value
-		endif !if(p_fastmake)  10488
+		endif !if(p_fastmake)  10376
  
-	enddo nschloop !hloop:	do i=1,p_ns(p_iunit)  10412
+	enddo nschloop !hloop:	do i=1,p_ns(p_unit)  10300
 	!$OMP END PARALLEL DO
-	p_valuek=p_svalue(p_keys(p_iunit))
-	p_loco=maxloc(p_svalue(1:p_ns(p_iunit))) !output must be array
+	p_valuek=p_svalue(p_keys(p_unit))
+	p_loco=maxloc(p_svalue(1:p_ns(p_unit))) !output must be array
 	p_iopt=p_loco(1)
 	p_valueopt=p_svalue(p_iopt)
-	j_o(p_ivvaluedif)%d(p_iunit)=p_valueopt-p_valuek
+	j_o(p_ivvaluedif)%d(p_unit)=p_valueopt-p_valuek
  
-	!is(p_p)write(p_n16,*)'p_iunitetc',p_iunit,p_valuek,p_iopt,p_valueopt
+	!is(p_p)write(p_n16,*)'p_unitetc',p_unit,p_valuek,p_iopt,p_valueopt
  
 	if(p_fastmake)then
-		if(p_fastreject(p_ibaunit(p_iunit)+p_iopt))p_nimp=p_nimp+1
+		if(p_fastreject(p_ibaunit(p_unit)+p_iopt))p_nimp=p_nimp+1
 		!		p_fastcut=min(p_fastvaluemin+p_fastpros2*(p_valueopt-p_fastvaluemin),p_valuek)-p_tiny78
 		p_fastcut=p_fastpros2*p_valuek
-		p_fastreject(p_ibaunit(p_iunit)+1:p_ibaunit(p_iunit)+p_ns(p_iunit))=.false.
+		p_fastreject(p_ibaunit(p_unit)+1:p_ibaunit(p_unit)+p_ns(p_unit))=.false.
 		nac=0
-		do i=1,p_ns(p_iunit)
-			if(p_fastvalues(i).lt.p_fastcut.and.i.ne.p_keys(p_iunit))p_fastreject(p_ibaunit(p_iunit)+i)=.true.
-			if(.not.p_fastreject(p_ibaunit(p_iunit)+i))nac=nac+1
-			!	if(fastvalues(i).lt.fastcut)write(16,*)'reject',p_iunit,i
-		enddo !i=1,p_ns(p_iunit)  10509
-		p_activeunit(p_iunit)=nac.gt.1
-		!	write(17,*)p_iunit,p_ns(p_iunit),nac,p_fastcut,p_valuek
+		do i=1,p_ns(p_unit)
+			if(p_fastvalues(i).lt.p_fastcut.and.i.ne.p_keys(p_unit))p_fastreject(p_ibaunit(p_unit)+i)=.true.
+			if(.not.p_fastreject(p_ibaunit(p_unit)+i))nac=nac+1
+			!	if(fastvalues(i).lt.fastcut)write(16,*)'reject',p_unit,i
+		enddo !i=1,p_ns(p_unit)  10397
+		p_activeunit(p_unit)=nac.gt.1
+		!	write(17,*)p_unit,p_ns(p_unit),nac,p_fastcut,p_valuek
  
  
-	endif !if(p_fastmake)  10503
-	if(p_iopt.eq.p_keys(p_iunit))return
+	endif !if(p_fastmake)  10391
+	if(p_iopt.eq.p_keys(p_unit))return
 	if(p_valueopt.gt.p_valuek+p_tolecur)call entercol
  
  
@@ -12362,7 +12178,7 @@ subroutine tulostele()
 		write(6,*) 'SOLUTION IS INFEASIBLE' !!!!
 		!	write(6,*)'nofeasible rows ',p_nnf
 		if(p_iprint.lt.2)p_iprint=2
-	endif !if(p_feasible)  10531
+	endif !if(p_feasible)  10419
  
 	!write(6,*)'pivots ',p_pivot,' rounds ',p_kier  !!!!
 	if(p_nresw.gt.7)write(6,*)'total number of residual cannot enter conditions ',p_nresw
@@ -12372,34 +12188,18 @@ subroutine tulostele()
 	if(p_fpresent)write(6,*)'key factory  changed ',p_nkeyf, ' times'  !!!!
 	write(6,*)'basic variables computed ',p_ntote,' times' !!!!
 	if(p_zerob.gt.0)write(6,*)'zero objective vector encountered ',p_zerob,' times'
-	! if(p_p9)then
-	! write(16,*)'xps'
-	! call testxpssub(1)
-	! !write(16,*)'**fact9* Testxps',(j_xps(j),j=0,j_nrow)
-	! endif
-	! if(p_printlf.or.p9)then
-	! write(6,*)'xkf variables in the basis'
-	! write(6,*)'unit,index in xk%-list, factory index in factories%-list,keyfactory, amount'
-	! do lfj_=p_mxd+1,p_lf0
-	! write(6,*) p_lunit(p_lf(lfj_)),p_ixkf(p_lf(lfj_)), &
-	! p_ixkffact(p_lf(lfj_)),p_keyfact(p_lunit(p_lf(lfj_)),&
-	! p_ixkf(p_lf(lfj_))),p_x(p_nrowz+p_lf(lfj_))
-	! enddo !do lfj_=j_mxd+1,j_lf0
-	! endif !if(p_printlf.or.p9)then
- 
-	!close(16)
  
 	if(p_feasible)then
 		j_v(p_ivfeasible)=j_1
 		j_v(p_ivoptimal)=j_1
  
-	endif !if(p_feasible)  10565
+	endif !if(p_feasible)  10437
  
 	call defsolu()
 	if(p_xpresent)then
  
 		call getsolx() !p_nunits,ibaunit,keys,lunit,nsch,isch,
-	endif !if(p_xpresent)  10572
+	endif !if(p_xpresent)  10444
 	! get the solution ready to be accesed by the inquiry routines
  
 	if(p_p9)then
@@ -12410,7 +12210,7 @@ subroutine tulostele()
 		! p_ixkffact(p_lf(lfj_)),p_keyfact(p_lunit(p_lf(lfj_)),&
 		! p_ixkf(p_lf(lfj_))),p_x(p_nrowz+p_lf(lfj_))
 		! enddo !lfj_=p_mxd+1,p_lf0  10394
-	endif !if(p_p9)  10578
+	endif !if(p_p9)  10450
  
 	if (p_fpresent) call defsoluf()
  
@@ -12526,7 +12326,7 @@ subroutine tulostele2(iob) !prints and checkes if finished
 					p_kier,p_pivot,p_coefmax*p_objf,p_as,p_lr0,p_lz0,p_lx0, &
 					p_lf0,p_nnf,iminc,':',secd,imint,':',sect,p_nimp2,fastpros
  
-			endif !if(p_objfprev.ne.p_small)  10637
+			endif !if(p_objfprev.ne.p_small)  10509
  
 			!	write(6,*)'epsilon ',fraction(p_coefmax*p_objf),exponent(p_coefmax*p_objf),epsilon(p_coefmax*p_objf)
  
@@ -12541,8 +12341,8 @@ subroutine tulostele2(iob) !prints and checkes if finished
 					j_dapu=j_dapu+j_o(p_ivvaluedif)%d(i)
 					j_dapu2=j_dapu2+j_o(p_ivobjdif)%d(i)
 					!	ndi=ndi+1
-				endif !if(j_o(p_ivvaluedif)%d(i).gt.j_0)  10658
-			enddo !i=1,p_nunits  10657
+				endif !if(j_o(p_ivvaluedif)%d(i).gt.j_0)  10530
+			enddo !i=1,p_nunits  10529
  
 			!		write(6,*)'optdif',j_o(p_ivvaluedif)%d(p_iopt),j_o(p_ivvaluedif)%d(p_iopt)/p_objf,j_o(p_ivvaluedif)%d(p_iopt)/p_nunits,&
 			!			j_o(p_ivvaluedif)%d(p_iopt)/(p_nunits*p_objf),j_dapu2/j_dapu
@@ -12559,13 +12359,13 @@ subroutine tulostele2(iob) !prints and checkes if finished
 				j_v(j_ivactivep)=p_as
 				! call dotrans(iob,p_iostop)
 				! if(j_v(p_ivstop).ne.0)then
-			endif !if(p_isstop.or.p_isfastp)  10673
+			endif !if(p_isstop.or.p_isfastp)  10545
 			if(p_isstop)then
 				if(j_codevalue(iob,p_stoplink).ne.j_0)then
 					write(6,*)'iteration stops due to stop->'
 					p_goto900=.true.
 					return
-				endif !if(j_codevalue(iob,p_stoplink).ne.j_0)  10682
+				endif !if(j_codevalue(iob,p_stoplink).ne.j_0)  10554
  
  
 			else !if(p_isstop.and.p_kier.gt.10)then
@@ -12576,9 +12376,9 @@ subroutine tulostele2(iob) !prints and checkes if finished
 					j_v(j_ivround)=p_kier
 					p_goto900=.true.
 					return
-				endif !if(pros.lt.0.01.and.p_kier.ge.10)  10690
+				endif !if(pros.lt.0.01.and.p_kier.ge.10)  10562
  
-			endif !if(p_isstop)  10681
+			endif !if(p_isstop)  10553
  
  
 			!	endif !if(p_coefmax*p_objfprev.le.j_0)   9159
@@ -12592,7 +12392,7 @@ subroutine tulostele2(iob) !prints and checkes if finished
  
 			! endif
  
-		endif !if(p_kier.le.10.or.int(p_kier/10)*10.eq.p_kier)  10601
+		endif !if(p_kier.le.10.or.int(p_kier/10)*10.eq.p_kier)  10473
 		if(p_fast.and.p_feasible.and.p_kier.ge.20)then
 			re=count(p_fastreject)
 			!if(pp)write(16,*)'rejpros',re/j_lopp,p_fastusesame,p_fastusedsameFround,non
@@ -12613,7 +12413,7 @@ subroutine tulostele2(iob) !prints and checkes if finished
 					p_fastpros2=p_fastpros/100.d0
 					!	write(6,*)'fastprosaft ',p_fastpros
  
-				endif !if(p_isfastp)  10722
+				endif !if(p_isfastp)  10594
 				p_nimp=0  !fastmake alkaa
 				!	write(6,*)'fastmake,p_kier,nimp,nimpr',p_kier,nimp
 				!	nnnn=0   ! number of
@@ -12644,9 +12444,9 @@ subroutine tulostele2(iob) !prints and checkes if finished
 				p_fastmake=.false.
  
  
-			endif !if(p_fastusedsame.gt.p_fastusesame)  10718
+			endif !if(p_fastusedsame.gt.p_fastusesame)  10590
  
-		endif !if(p_fast.and.p_feasible.and.p_kier.ge.20)  10714
+		endif !if(p_fast.and.p_feasible.and.p_kier.ge.20)  10586
 	else !if(j_feasible)then
 		!!!!! compute the sum of infeasiblity after each round (is this necessary?)
 		numn=0
@@ -12659,8 +12459,8 @@ subroutine tulostele2(iob) !prints and checkes if finished
 			elseif(.not.p_lower(p_lr(i)).and.p_x(p_lr(i)).lt.-p_tole(p_lr(i))) then !if(j_lower(j_lr(i)).and.j_x(j_lr(i)).gt.j_tole(j_lr(i))) then
 				numn=numn+1
 				p_value=p_value+p_x(p_lr(i))
-			endif !if(p_lower(p_lr(i)).and.p_x(p_lr(i)).gt.p_tole(p_lr(i)))  10774
-		enddo !i=1,p_lr0  10772
+			endif !if(p_lower(p_lr(i)).and.p_x(p_lr(i)).gt.p_tole(p_lr(i)))  10646
+		enddo !i=1,p_lr0  10644
 		if(p_kier.le.10.or.int(p_kier/10)*10.eq.p_kier)then
 			p_as=100.
 			if(p_fast)p_as=100.*(1.-1.*count(p_fastreject)/p_lopp) !laske muualla
@@ -12678,142 +12478,14 @@ subroutine tulostele2(iob) !prints and checkes if finished
 			p_iopt=p_loco(1)
 			!		write(6,*)'optdif',j_o(p_ivvaluedif)%d(p_iopt)
  
-		endif !if(p_kier.le.10.or.int(p_kier/10)*10.eq.p_kier)  10782
-	endif !if(p_feasible)  10600
-	! if(p_kier.ge.p_mxiter)then
-	! write(6,*)'**maxiter reached'
-	! p_iunitv=p_iunitprev
-	! goto785=.true.;return
-	! endif !if(p_kier.ge.p_mxiter)then
-	!is(p_p)write(p_n16,*)'p_kier,iunit1,obj**',p_kier,p_objf
-	!!!! slow improvement?
-	! if(((p_objf.le.p_xirowold2+p_tolecur).or.(slow.gt.j_0.and.&
-	! p_objf.le.p_xirowold2+slow).or.(slow.lt.0d0.and. &
-	! 100.*(p_objf/p_xirowold2-1.).le.-slow)) .and. &
-	! p_kier.gt.200)then  !!!!  ???
-	! ! on mahdollista että kanta on vaihtunut mutta ei
-	! ! ole tapahtunut parannusta, toisaalta ei voida katsoa
-	! ! pelkkää parannusta, sillä on mahdollista, että jos vaihtohetoja
-	! ! on vähän ja paljon rajoituksia, niin probleeman käynnistymisvaiheessa
-	! ! ei tapahdu tavoitefunktion parannusta vaikka käydään muutama p_kierros
-	! ! laskentayksiköiden läpi
-	! ! tähän vähän sofistukoidumpi ehto
+		endif !if(p_kier.le.10.or.int(p_kier/10)*10.eq.p_kier)  10654
+	endif !if(p_feasible)  10472
  
-	! !restart
-	! p_restarted = .true.
- 
-	! if((p_fastusesame.ne.1.or.iterxkf.ne.1).and..not.p_tried)then          !fast
-	! write(6,*)'slow improvement, pivots ',p_pivot,' rounds ',p_kier, 'obj ',p_objf
-	! write(6,*)'let us continue without heuristics'
-	! p_fast=.false.
-	! p_fastnow=.false.
-	! iterxkf=1
-	! p_tried=.true.
-	! p_iunitv=p_iunit   ! =1 prev  !???????? 7.2.2017
-	! p_kierv=p_kier
-	! p_goto900=.true.
-	! return
- 
-	! endif !if((p_fastusesame.ne.1.or.iterxkf.ne.1).and..not.p_tried)  11326
- 
-	! write(6,*)' return because of slow improvement '  !!!!
-	! !isslow=.true.
-	! if (p_feasible) then
-	! If(.not.p_maxo)p_objf=-p_objf
-	! write(6,*) 'solution is feasible, objective',p_objf
-	! else !if (j_feasible) then
-	! write(6,*) 'SOLUTION IS INFEASIBLE, temporary objective',p_objf
-	! write(6,*)'nofeasible rows ',p_nnf
-	! endif !if (p_feasible)  11342
-	! write(6,*)'pivots ',p_pivot,' rounds ',p_kier
-	! if(p_nresw.gt.7)write(6,*)'total number of residual cannot enter conditions ',p_nresw
-	! if(p_npivotw.gt.7)write(6,*)'total number of pivot ccannot be made conditions ',p_npivotw
-	! if(p_nkeyfactw.gt.7)write(6,*)'total number of key factory cannot be changed conditions ', &
-	! p_nkeyfactw
-	! if(p_nkeys.gt.0)write(6,*)'key schedule changed ',p_nkeys, ' times'
-	! if(p_fpresent)write(6,*)'key factory  changed ',p_nkeyf, ' times'
-	! write(6,*)'values of basic variables computed ',p_ntote,' times'
- 
-	! if(p_p9)then
-	! !write(16,*)'xps'
-	! call testxpssub(1)
-	! !write(16,*)'**fact2* Testxps',(j_xps(j),j=0,j_nrow)
-	! endif !if(p_p9)  11358
-	! ! if(p_printlf.or.p9)then
-	! ! write(6,*)'xkf variables in the basis'
-	! ! write(6,*)'unit,index in xk%-list, factory index in factories%-list,keyfactory, amount'
-	! ! do lfj_=p_mxd+1,p_lf0
-	! ! write(6,*) p_lunit(p_lf(lfj_)),p_ixkf(p_lf(lfj_)), &
-	! ! p_ixkffact(p_lf(lfj_)),p_keyfact(p_lunit(p_lf(lfj_)),&
-	! ! p_ixkf(p_lf(lfj_))),p_x(p_nrowz+p_lf(lfj_))
-	! ! enddo !do lfj_=j_mxd+1,j_lf0
-	! ! endif !if(p_printlf.or.p9)then
-	! !	close(16)
-	! call defsolu() !!!!
- 
-	! ! get sums of x-variables
-	! if(p_xpresent)then
-	! call getsolx() !p_nunits,ibaunit,keys,lunit,nsch,isch,& !!!!
- 
-	! ! get the solution ready to be accesed by the inquiry routines
-	! endif !if(p_xpresent)  11376
- 
-	! if (p_fpresent) call defsoluf()  !!!!
- 
-	! if(p_feasible)then
-	! j_v(p_ivfeasible)=1.
-	! j_v(p_ivoptimal)=1.
-	! endif !if(p_feasible)  11384
- 
-	! p_goto900=.true.;return   ! <b332>
-	! endif !if(((p_objf.le.p_xirowold2+p_tolecur).or.(slow.gt.j_0.a  11311
  
  
 end subroutine tulostele2 !subroutine tulostele2()
 
 
-
-!subroutine fenter0()
-!computes j_valueopt_af     which is the difference between value of keyfactory and optimal
-!globaaliksi p_iopt
-! p_valueopt_af = p_zero
-! iobs=p_ibaunit(p_iunit)+p_iopt
-! ikey_ = p_ibaunit(p_iunit)+p_keys(p_iunit)  !secondb needs this
-! ibxdatobs=ibaxdat(iobs)  !,1)
-! ibxdatkey_=ibaxdat(ikey_)  !,2)
-! if(p_p)write(16,*)'valueopt_af0',p_valueopt_af
-! ! do jj = 1,p_nrowxkfkey
-! ! irowfkeep_ = p_irowfkeep(p_rowxkfkey(jj)%irowfx)
-! ! if(p_p)write(16,*)'tat ', p_rowxkfkey(jj)%jcurix,irowfkeep_,&
-! ! p_rowxkfkey(jj)%irowfx,	p_coeffx(p_rowxkfkey(jj)%irowfx),irowfkeep_	,iobs,ikey_
-
-! ! !if(p_p.and.j_rowxkfkey(jj)%jcurix.eq.2)then
-
-
-! ! p_valueopt_af(p_rowxkfkey(jj)%jcurix) = p_valueopt_af(p_rowxkfkey(jj)%jcurix) +&
-! ! p_coeffx(p_rowxkfkey(jj)%irowfx)*&
-! ! (j_o(p_ivxdatmat)%d(ibxdatobs+irowfkeep_) -&   !xmatiba
-! ! j_o(p_ivxdatmat)%d(ibxdatkey_+irowfkeep_))      !xmatiba
-! ! !	if(p_p.and.j_rowxkfkey(jj)%jcurix.eq.2)write(	16,*)j_valueopt_af(j_rowxkfkey(jj)%jcurix)
-! ! enddo !jj = 1,p_nrowxkfkey   8361
-! ! if(p_p)write(16,*)'valueopt_af1',p_valueopt_af
-! ! if(p_p)write(16,*)'iobs,ikey_',iobs,ikey_
-! ! do jj=1,p_nrowykfkey
-! ! iv2elpos_ = p_rowykfkey(jj)%iv2elpos
-! ! !	if(j_rowykfkey(jj)%jcurix.eq.3)write(16,*)'tas2 ',jj, &
-! ! !		j_valueopt_af(j_rowykfkey(j_)%jcurix),j_v(j_rowykfkey(j_)%ivfout),&
-! ! !		j_o(p_ivxdatmat)%r(ibxdatobs+iv2elpos_),j_o(p_ivxdatmat)%r(ibxdatkey_+iv2elpos_)  !xmatiba
-! ! p_valueopt_af(p_rowykfkey(jj)%jcurix) = p_valueopt_af(p_rowykfkey(jj)%jcurix) + &
-! ! j_v(p_rowykfkey(jj)%ivfout)*&
-! ! (j_o(p_ivxdatmat)%d(ibxdatobs+iv2elpos_) -&
-! ! j_o(p_ivxdatmat)%d(ibxdatkey_+iv2elpos_))
-! ! enddo !jj=1,p_nrowykfkey   8377
-! ! if(p_p)write(16,*)'valueopt_af',p_valueopt_af
-
-
-
-
-!end subroutine fenter0 !subroutine fenter0()
 
 
 
@@ -12829,7 +12501,7 @@ subroutine fenter()
 	use jmod, only: j_dapu
 	use jmod, only: p_rowofterm
 	use jmod, only: j_o
-	use jmod, only: p_ivtpart
+	use jmod, only: p_ivtable
 	use jmod, only: p_coef
 	use jmod, only: p_neigu
 	use jmod, only: p_vc
@@ -12856,17 +12528,16 @@ neigloop:	do while(ine.gt.0)
 termloop:		do while(iterm.gt.0)
  
 				irow=p_rowofterm(iterm)
-				itable=j_o(p_ivtpart)%i2(iterm)
+				itable=j_o(p_ivtable)%i2(iterm)
 				! is term table or not
 				if(itable.gt.0)then
- 
  
 					if(irow.eq.0)then
 						!			j_dapu=j_dapu+ j_o(p_ivtablecoef)%i2(itable)*p_neigu(p_inebas+jne)
 						j_dapu=j_dapu+p_coef(iterm)* p_neigu(p_inebas+jne)
 					else
 						j_dapu=j_dapu+ p_coef(iterm)*p_vc(irow)*p_neigu(p_inebas+jne)
-					endif !if(irow.eq.0)  10960
+					endif !if(irow.eq.0)  10703
  
 				else
  
@@ -12874,226 +12545,33 @@ termloop:		do while(iterm.gt.0)
 						j_dapu=j_dapu+ p_coef(iterm)
 					else
 						j_dapu=j_dapu+ p_vc(irow)*p_coef(iterm)
-					endif !if(irow.eq.0)  10969
+					endif !if(irow.eq.0)  10712
  
-				endif !if(itable.gt.0)  10957
+				endif !if(itable.gt.0)  10701
 				jterm=jterm+1
 				iterm=p_logfactterm(ilogfactbas+jterm)
-			enddo termloop !mloop:		do while(iterm.gt.0)  10952
+			enddo termloop !mloop:		do while(iterm.gt.0)  10696
 			if(ifact.eq.p_keyfact(p_keyfactbas+ifact))then
 				p_keyfval=j_dapu
 			elseif(j_dapu.gt.p_fopt)then
 				p_optfact=ifact
 				p_fopt=j_dapu
-			endif !if(ifact.eq.p_keyfact(p_keyfactbas+ifact))  10979
+			endif !if(ifact.eq.p_keyfact(p_keyfactbas+ifact))  10722
  
 			jne=jne+1
 			ine=p_neig(p_inebas+jne)
-		enddo neigloop !gloop:	do while(ine.gt.0)  10945
+		enddo neigloop !gloop:	do while(ine.gt.0)  10689
 		if(p_fopt.gt.p_keyfval)then
 			p_ienter=4
 			return
-		endif !if(p_fopt.gt.p_keyfval)  10989
+		endif !if(p_fopt.gt.p_keyfval)  10732
  
  
 		p_ilog=p_ilog+1
 		p_logfactbas=p_logfactbas+p_nlogfact
-	enddo logloop !loop: do while(p_ilog.le.p_nlog)  10941
+	enddo logloop !loop: do while(p_ilog.le.p_nlog)  10685
 	return
-	! logical isxkzero
  
-	! p_goto100=.false.;p_goto400=.false.;p_goto5316=.false.
- 
-	! p_ienter=0
-	! p_post=.true.
- 
-	! !if (j_fpresent) then
- 
- 
- 
-	! !!!!2jatketaan saman yksikön seuraavasta tehdasmjasta
-	! !!!! ixkenter != 0, jos edellisellä kierroksella saman yksikön xkf tuli kantaan
-	! p_ixk1_ = ixkenter + 1
-	! ixkenter = 0
- 
-	! do p_ixk_=p_ixk1_,p_nlog	!!!!	xk-lista
-	! p_valueopt = p_small
-	! !tavoitefunktion ja a-matriisin päivitystä varten
-	! p_valueopt_af = p_zero
-	! p_valuek_af = p_zero
- 
-	! !käydään läpi vain ptl-muuttujaan liittyvät tehtaat  TAHAN KIINNI
-	! do inf_=1, p_nloginfact(p_ixk_)
-	! if_ = p_loginfact(p_ixk_,inf_)%ifact
- 
-	! !zerocapacity
-	! !if(zeroc(p_ixk_,if_))cycle  !!!!
-	! p_value = j_0
-	! !tavoitefunktion ja a-matriisin päivitystä varten
-	! p_value_af = p_zero
- 
-	! !Testaus (estetään kantaan tulo  kun value==0 > valueopt)
-	! !	junk_ = 0
-	! !	if(j_v(j_xkrv(j)%ind).lt.0.)cycle
-	! !käydään läpi vain plt-tehdas -yhdistelmään liittyvät tehtävärivien mjat
-	! do j=p_loginfact(p_ixk_,inf_)%i1xkrv,p_loginfact(p_ixk_,inf_)%inxkrv
- 
-	! !write(16,*)'<fenter11>',j_irow2curix(0,j_xkrv(j)%irow)
-	! ! if(p_irow2curix(0,p_logrv(j)%irow).ne.1)then
-	! ! write(6,*)'<fe33>,j',j
-	! ! stop 987
-	! ! endif !if(p_irow2curix(0,p_logrv(j)%irow).ne.1)   8361
-	! !do jc_ = 1,j_irow2curix(0,j_xkrv(j)%irow)	! alkup. riviä vastaavat lavennetut rivit
- 
-	! jc_=1
-	! !		junk_ = 1 !tarvitaanko tätä enää?
-	! p_jcurix = jc_  !p_irow2curix(jc_,p_logrv(j)%irow)  !jc=1 onko joskus 0
-	! !	jcurix2=p_logrv(j)%irow-1
-	! ! if(p_jcurix.ne.jcurix2)then
-	! ! write(6,*)'jc',p_jcurix,jcurix2
-	! ! stop 871
- 
-	! ! endif !if(p_jcurix.ne.jcurix2)   8371
-	! !if(j_feasible)write(16,*)'<fenter13>p_jcurix,', p_jcurix ,j_xkrv(j)%irow,j_irow2curix(jc_,j_xkrv(j)%irow)
- 
-	! if (p_jcurix == 0) then
-	! ! onko tavoiterivi
-	! if (p_feasible) then
-	! if (p_logrv(j)%isxk) then
-	! p_value = p_value + p_coeffx(p_logrv(j)%ind)
-	! !	 write(p_n16,*)'<6659> coeffx(xkrv(j)%ind)', j_coeffx(j_xkrv(j)%ind)
-	! else !if (j_xkrv(j)%isxk) then
-	! if(p_p) call j_printname('<6655> yk mja ', &
-	! p_logrv(j)%ind,' jlpdebugging?')
-	! !	if(j_feasible)write(p_n16,*)'v(xkrv(j)%ind)',j_v(j_xkrv(j)%ind)
-	! p_value = p_value +  j_v(p_logrv(j)%ind)
-	! endif !if (p_logrv(j)%isxk)   8459
-	! else !if (j_feasible) then
-	! !meidän pitää laskea miten temporary tavoitefunktio riippuu xkf-muuttujan arvosta. On käytävä läpi kaikki rajoiterivit
-	! ! ja katsottava onko rajoite infeasible ja jos on on poimitava xkf-muuttujan kerroint
- 
-	! endif !if (p_feasible)   8458
-	! else !if (p_jcurix == 0) then
-	! if (p_logrv(j)%isxk) then
-	! !if(j_feasible)write(16,*)'<fent22>',j_value,j_vc(p_jcurix),j_coeffx(j_xkrv(j)%ind)
-	! p_value = p_value - p_vc(p_jcurix)*p_coeffx(p_logrv(j)%ind)
- 
- 
-	! else !if (j_xkrv(j)%isxk) then
-	! !	if(j_feasible)	write(16,*)'<fent33>',j_value,j_vc(p_jcurix),j_v(j_xkrv(j)%ind)
-	! p_value = p_value - p_vc(p_jcurix)*j_v(p_logrv(j)%ind)
-	! endif !if (p_logrv(j)%isxk)   8474
- 
-	! ! if(.not.j_feasible)then   !this section was commented by JL 9.9.2018
-	! ! if(j_objr2( p_jcurix).ne.j_0)then
-	! ! if (j_xkrv(j)%isxk) then
-	! ! j_value=j_value-j_objr2( p_jcurix)*j_coeffx(j_xkrv(j)%ind)
-	! ! else
-	! ! j_value = j_value - j_objr2( p_jcurix)*j_v(j_xkrv(j)%ind)
-	! ! endif
-	! ! endif
-	! ! endif !if(.not.feasible)then
- 
-	! endif !if (p_jcurix == 0)   8456
- 
-	! !enddo !do jc_ = 1,j_irow2curix(0,j_xkrv(j)%irow)
-	! enddo !j=p_loginfact(p_ixk_,inf_)%i1xkrv,p_loginfact(p_ixk_,inf_)%inxkr   8436
- 
-	! if(p_value>p_valueopt.and.junk_>0) then  !!!!
-	! p_valueopt=p_value
-	! p_ifopt = if_
-	! infopt=inf_
-	! endif !if(p_value>p_valueopt.and.junk_>0)   8499
- 
-	! if (if_.eq.p_keyfact(p_iunit,p_ixk_)) then
-	! p_valuek = p_value
-	! infkey=inf_
-	! endif !if (if_.eq.p_keyfact(p_iunit,p_ixk_))   8505
- 
-	! enddo !inf_=1, p_nloginfact(p_ixk_)   8423
-	!	- jos p_ifopt == avaintehdas => seuraava xk-alkio
-	! - jos valueopt.le.valuek+tolecur => seuraava xk-alkio
-	! if(p_p) write(p_n16,*)'<6682> p_ifopt,keyfact(p_iunit,p_ixk_),valueopt,valuek,tolecur',&
-	! p_ifopt,p_keyfact(p_iunit,p_ixk_),p_valueopt,p_valuek,p_tolecur
-	!	if((p_ifopt/=p_keyfact(p_iunit,p_ixk_)).and.(p_valueopt>(p_valuek+0.01*p_tolecur))) then
-	! xk-muuttuja voi tulla kantaan
-	!		p_ienter=4 !!!!! xk-muuttuja kantaan
- 
-	! ixkenter=p_ixk_
- 
-	! if(isxkzero(ixkenter))then !entering variable is zero in all schedules of the solution
-	! p_keyfact(p_iunit,ixkenter) = p_ifopt
-	! p_nkeyf=p_nkeyf+1
-	! p_goto5316=.true.;return ! changed by JL 11.9.2018 was goto 55
-	! endif !if(isxkzero(ixkenter))  10848
- 
-	! p_tmax=j_inf ;p_rcur=p_tmax
- 
-	! p_valueopt_af=j_0
-	! do j=p_loginfact(p_ixk_,infopt)%i1xkrv,p_loginfact(p_ixk_,infopt)%inxkrv
-	! !			do jc_ = 1,p_irow2curix(0,p_logrv(j)%irow)	! alkup. riviä vastaavat lavennetut rivit
-	! ! tavoitefunktion ja a-matriisin päivitystä varten
-	! p_jcurix = 0  ! p_irow2curix(jc_,p_logrv(j)%irow)
-	! if (p_logrv(j)%isxk) then
-	! !	if(p_jcurix.eq.3)write(16,*)'hier',j_valueopt_af(p_jcurix),j_coeffx(j_xkrv(j)%ind)
-	! p_valueopt_af(p_jcurix) = p_valueopt_af(p_jcurix) + p_coeffx(p_logrv(j)%ind)
- 
-	! else !if (j_xkrv(j)%isxk) then
-	! !	if(p_jcurix.eq.3)write(16,*)'hier2',j_valueopt_af(p_jcurix), j_v(j_xkrv(j)%ind)
-	! p_valueopt_af(p_jcurix) = p_valueopt_af(p_jcurix) + j_v(p_logrv(j)%ind)
-	! endif !if (p_logrv(j)%isxk)  10861
-	! !			end do !jc_ = 1,p_irow2curix(0,p_logrv(j)%irow)   8453
-	! enddo !j=p_loginfact(p_ixk_,infopt)%i1xkrv,p_loginfact(p_ixk_,inf  10857
- 
-	! p_valuek_af=j_0
- 
-	! do j=p_loginfact(p_ixk_,infkey)%i1xkrv,p_loginfact(p_ixk_,infkey)%inxkrv
-	! !		do jc_ = 1,p_irow2curix(0,p_logrv(j)%irow)	! alkup. riviä vastaavat lavennetut rivit
-	! ! tavoitefunktion ja a-matriisin päivitystä varten
-	! p_jcurix = 0  !p_irow2curix(jc_,p_logrv(j)%irow)
-	! if (p_logrv(j)%isxk) then
-	! p_valuek_af(p_jcurix) = p_valuek_af(p_jcurix) + p_coeffx(p_logrv(j)%ind)
-	! else !if (j_xkrv(j)%isxk) then
-	! p_valuek_af(p_jcurix) = p_valuek_af(p_jcurix) + j_v(p_logrv(j)%ind)
-	! endif !if (p_logrv(j)%isxk)  10878
-	! !		end do !jc_ = 1,p_irow2curix(0,p_logrv(j)%irow)   8470
-	! enddo !j=p_loginfact(p_ixk_,infkey)%i1xkrv,p_loginfact(p_ixk_,inf  10874
- 
-	! p_ikeepxk_ = p_ixkkeep(p_ixk_)
- 
-	! ! a-matriisin täydennys
-	! p_lf01 = p_lf0+1
-	! p_newf=p_lf(p_lf01)
-	! p_newa=p_newf+p_nz   ! after p_nz
-	! p_newc=p_newa+p_nrow  !in Fletecher cols, I part (residuals) are counted also
-	! !tavoiterivin päivitys
-	! p_objr0(p_newc) = p_valueopt_af(0) - p_valuek_af(0)
-	! !a-matriisin päivitys
-	! !	p_a(1:p_nrow,p_newa) = p_valueopt_af(1:p_nrow) - p_valuek_af(1:p_nrow)
-	! p_a(p_abas(p_newa)+1:p_abas(p_newa)+p_nrow)= p_valueopt_af(1:p_nrow) - p_valuek_af(1:p_nrow)
-	! !otetaan talteen kantaan tulevan xk-muuttujan indeksi xk-listassa
-	! !ja tehtaan indeksi facroties-listassa
-	! p_ixkf(p_newf) = p_ixk_
-	! p_ixkffact(p_newf) = p_ifopt
- 
-	! ! if(p_p) then
-	! ! write(p_n16,*)'**fact** KANTAAN tulossa>>  xkf, p_ienter = 4 : p_iunit, p_ixk, ifact ', &
-	! ! p_iunit, ixkenter,p_ifopt
-	! ! write(p_n16,*) '**fact** kantaan tulossa xkf : valueopt, valuek, valueopt-valuek: ',  &
-	! ! p_valueopt, p_valuek, p_valueopt-p_valuek
-	! ! write(p_n16,*) '**fact** kantaan tulossa xkf : xk ,fact: ',&
-	! ! j_vname(p_log(ixkenter)), j_vname(p_fact(p_ifopt))
-	! ! write(p_n16,*) '**fact** kantaan tulossa xkf : p_lf01 ,p_newf,p_newa,p_newc: ', p_lf01 ,p_newf,p_newa,p_newc !!!!
-	! ! write(p_n16,*) '**fact** kantaan tulossa xkf : objr0(p_newc) ', p_objr0(p_newc)
-	! ! write(p_n16,*) '**fact** kantaan tulossa xkf : a(1:nrow,p_newa) ', (p_a(jj,p_newa),jj=1,p_nrow)
-	! ! endif !if(p_p)  10823
- 
-	! p_goto100=.true.;return !!!! poistutaan xk-silmukasta & siirrytään tutkimaan leaving variablea
-	! endif !if((p_ifopt/=p_keyfact(p_iunit,p_ixk_)).and.(p_valueopt>(p  10842
- 
-	! enddo !p_ixk_=p_ixk1_,p_nlog  10743
-	! p_goto400=.true. !!!!siirrytään seuraavaan laskentayksikköön
-	! !endif !if (j_fpresent) then
  
 end subroutine fenter !subroutine fenter()
 
@@ -13106,7 +12584,7 @@ subroutine entercol()
 	use jmod, only: p_newc
 	use jmod, only: p_nrow
 	use jmod, only: p_ibaunit
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_keys
 	use jmod, only: p_iopt
 	use jmod, only: p_lunit
@@ -13116,8 +12594,8 @@ subroutine entercol()
 	use jmod, only: p_xmat
 	use jmod, only: p_i1
 	use jmod, only: p_fpresent
-	use jmod, only: p_nfxrow
-	use jmod, only: p_fxrow
+	use jmod, only: p_nfrowx
+	use jmod, only: p_frowx
 	use jmod, only: p_nfyrow
 	use jmod, only: p_fyrow
 	use jmod, only: p_valueopt_af
@@ -13125,8 +12603,8 @@ subroutine entercol()
 	use jmod, only: p_a
 	use jmod, only: p_abas
 	use jmod, only: p_row0
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: p_tmax
 	use jmod, only: p_one
 	use jmod, only: p_rcur
@@ -13145,11 +12623,11 @@ subroutine entercol()
 	p_newc=p_newa+p_nrow  !in Fletecher cols, I part (residuals) are counted also
 	!	if(p_p) write(p_n16,*)'ent sched: p_newd',p_newd,'p_newc',p_newc, 'tol=',p_tolecur
 	! get key schdeule
-	iobs= p_ibaunit(p_iunit)+p_keys(p_iunit)
-	iobsopt=p_ibaunit(p_iunit)+p_iopt
-	ibxmatx=ibaxmat(iobs) !,1)
-	ibxmatx2=ibaxmat(iobsopt) !,2)
-	p_lunit(p_newd)=p_iunit
+	iobs= p_ibaunit(p_unit)+p_keys(p_unit)
+	iobsopt=p_ibaunit(p_unit)+p_iopt
+	ibxmatx=ibamatx(iobs) !,1)
+	ibxmatx2=ibamatx(iobsopt) !,2)
+	p_lunit(p_newd)=p_unit
 	p_isch(p_newd)=p_iopt
 	! 6.42  a0'D , here we are prepared that the same x can be in differen rows
 	! how does the object variable change
@@ -13160,16 +12638,16 @@ subroutine entercol()
 	else !if(j_ixcur(0).ne.0)then
 		p_i1=1
 		p_objr0(p_newc)=0.
-	endif !if(p_ix(0).ne.0)  11220
+	endif !if(p_ix(0).ne.0)  10770
  
 	!objr:n päivitys
 	if(p_fpresent) then
 		! nykyisessä domainissa 0-rivillä xk-muuttujia
-		if((p_nfxrow.gt.0.and.p_fxrow(1).eq.0).or.(p_nfyrow.gt.0.and. p_fyrow(1).eq.0)) then
+		if((p_nfrowx.gt.0.and.p_frowx(1).eq.0).or.(p_nfyrow.gt.0.and. p_fyrow(1).eq.0)) then
 			!objr0:n päivitys
 			p_objr0(p_newc)=p_objr0(p_newc)+p_valueopt_af(0)
-		endif !if((p_nfxrow.gt.0.and.p_fxrow(1).eq.0).or.(p_nfyrow.gt.0.a  11231
-	endif !if(p_fpresent)  11229
+		endif !if((p_nfrowx.gt.0.and.p_frowx(1).eq.0).or.(p_nfyrow.gt.0.a  10781
+	endif !if(p_fpresent)  10779
  
 	! if(sparse)then
 	! ! kannattaa varmaan tehdä vektori johon kerätään rivit joilla x-muuttujia
@@ -13177,8 +12655,8 @@ subroutine entercol()
 	! iel=0
 	! istart1=p_lavecsp(p_lavecsp(0)+p_newa)-1
  
-	! do jj=p_i1,p_nxrow
-	! j=p_xrowcur(jj)
+	! do jj=p_i1,p_nrowx
+	! j=p_rowcurx(jj)
 	! p_apu=p_xmat(p_ix(j)+ibxmatx2)-p_xmat(p_ix(j)+ibxmatx)  !a( ,p_newa ilamn pakkausta
  
 	! if(abs(p_apu).gt.p_tiny78)then
@@ -13188,7 +12666,7 @@ subroutine entercol()
 	! endif !if(abs(p_apu).gt.p_tiny78)  19229
  
 	! !robleema, jos pitää vaihtaa
-	! enddo !jj=p_i1,p_nxrow  19225
+	! enddo !jj=p_i1,p_nrowx  19225
  
 	! last(p_newa)=istart1+iel
 	! call jlpgetcol(p_newa)
@@ -13196,20 +12674,20 @@ subroutine entercol()
 	! else !if(sparse)then
 	!TASSA
 	p_a(p_abas(p_newa)+1:p_abas(p_newa)+p_nrow)=j_0 !p_a(1:p_nrow,p_newa)=j_0
-	!if(p_p)write(p_n16,*)p_row0,p_nxrowcur,p_xrowcur(p_row0:p_nxrowcur),'pix',p_ix
-	!if(p_p)write(p_n16,*)'p_ntemp0',p_ntemp0,'iba',ibxmatx2,'iobsop',iobsopt,'iopt',p_iopt,'iunit',p_iunit
+	!if(p_p)write(p_n16,*)p_row0,p_nrowcurx,p_rowcurx(p_row0:p_nrowcurx),'pix',p_ix
+	!if(p_p)write(p_n16,*)'p_ntemp0',p_ntemp0,'iba',ibxmatx2,'iobsop',iobsopt,'iopt',p_iopt,'iunit',p_unit
 	!if(p_p)write(p_n16,*)p_xmat(ibxmatx2+1:ibxmatx2+p_ntemp0),p_xmat(ibxmatx2+1:ibxmatx2+p_ntemp0)
-	do iro=p_row0,p_nxrowcur
-		!	if(p_p)write(p_n16,*)iro,p_xrowcur(iro),p_ix(p_xrowcur(iro)),p_xmat(ibxmatx2+p_ix(p_xrowcur(iro)))
-		!	p_a(p_xrowcur(iro),p_newa)=p_xmat(ibxmatx2+p_ix(p_xrowcur(iro)))-p_xmat(ibxmatx+p_ix(p_xrowcur(iro)))
-		p_a(p_abas(p_newa)+p_xrowcur(iro))=p_xmat(ibxmatx2+p_ix(p_xrowcur(iro)))-p_xmat(ibxmatx+p_ix(p_xrowcur(iro)))
-	enddo !iro=p_row0,p_nxrowcur  11265
+	do iro=p_row0,p_nrowcurx
+		!	if(p_p)write(p_n16,*)iro,p_rowcurx(iro),p_ix(p_rowcurx(iro)),p_xmat(ibxmatx2+p_ix(p_rowcurx(iro)))
+		!	p_a(p_rowcurx(iro),p_newa)=p_xmat(ibxmatx2+p_ix(p_rowcurx(iro)))-p_xmat(ibxmatx+p_ix(p_rowcurx(iro)))
+		p_a(p_abas(p_newa)+p_rowcurx(iro))=p_xmat(ibxmatx2+p_ix(p_rowcurx(iro)))-p_xmat(ibxmatx+p_ix(p_rowcurx(iro)))
+	enddo !iro=p_row0,p_nrowcurx  10815
 	!do iro=1,p_nrow
-	!	if(p_ixcur(iro))p_a(iro,p_newa)=p_xmat(ibxmatx2+p_ix(p_xrowcur(iro)))
+	!	if(p_ixcur(iro))p_a(iro,p_newa)=p_xmat(ibxmatx2+p_ix(p_rowcurx(iro)))
 	!enddo !iro=1,p_nrow   7976
 	!	if(p_p8)write(17,*)'p_ixcur',p_ixcur
  
-	!p_a(p_xrowcur(p_row0:p_nxrowcur),p_newa)=p_xmat(ibxmatx2+p_xrowcur(p_row0:p_nxrowcur))
+	!p_a(p_rowcurx(p_row0:p_nrowcurx),p_newa)=p_xmat(ibxmatx2+p_rowcurx(p_row0:p_nrowcurx))
 	! do j=1,p_nrow
 	! if(p_ixcur(j))then
 	! p_a(j,p_newa)=p_xmat(p_ix(j)+ibxmatx2)-p_xmat(p_ix(j)+ibxmatx)  !v(ix(j))
@@ -13227,7 +12705,7 @@ subroutine entercol()
 		!	p_a(iba+1:iba+p_nrow) = p_a(iba+1:iba+p_nrow)+ p_valueopt_af(1:p_nrow)
  
 		p_a(iba+1:iba+p_nrow) = p_a(iba+1:iba+p_nrow)+ p_valueopt_af(1:p_nrow)
-	endif !if(p_fpresent)  11287
+	endif !if(p_fpresent)  10837
  
 	!		endif !if(sparse)  19219
 	! get optimal schedule, put differences into objr and a
@@ -13236,7 +12714,7 @@ subroutine entercol()
 	p_ienter=3	!!!! scedule enters
  
 	!is(p_p.and.p_fpresent) write(p_n16,*)'**fact** KANTAAN tulossa >> vaihtoehto, p_ienter = 3; unit, sch' , &
-	!p_iunit,p_iopt
+	!p_unit,p_iopt
  
  
  
@@ -13258,8 +12736,8 @@ subroutine leaving()
 	use jmod, only: p_oldsol
 	use jmod, only: p_tolecur
 	use jmod, only: p_nsame
-	use jmod, only: p_iunitv
-	use jmod, only: p_iunit
+	use jmod, only: p_unitv
+	use jmod, only: p_unit
 	use jmod, only: p_kierv
 	use jmod, only: p_kier
 	use jmod, only: p_justkey
@@ -13283,9 +12761,6 @@ subroutine leaving()
 	use jmod, only: j_err
 	use jmod, only: p_xpresent
 	use jmod, only: p_pivot
-	use jmod, only: p_leavkwf
-	use jmod, only: p_leavkf
-	use jmod, only: p_mxd
 	use jmod, only: p_idebug
 	use jmod, only: p_debug
 	use jmod, only: p_nrowz
@@ -13322,20 +12797,12 @@ subroutine leaving()
 	use jmod, only: p_lunits0
 	use jmod, only: p_lunw
 	use jmod, only: p_iopt
-	use jmod, only: p_lunit
-	use jmod, only: p_lunxkf
 	use jmod, only: p_lx0
+	use jmod, only: p_lunit
 	use jmod, only: p_isch
+	use jmod, only: p_mxd
 	use jmod, only: p_lx
 	use jmod, only: p_lxi
-	use jmod, only: p_testl
-	use jmod, only: p_n16
-	use jmod, only: p_lf
-	use jmod, only: p_lf0
-	use jmod, only: p_lfi
-	use jmod, only: p_nextf
-	use jmod, only: p_iprevf
-	use jmod, only: p_ixkf
  
 	use fletdmod
 	use fletdmod2
@@ -13362,10 +12829,10 @@ subroutine leaving()
 		p_ienterv=p_ienter
 		p_oldsol=p_objf
 		p_nsame=0
-	endif !if(p_ienter.eq.p_ienterv.and.	p_objf.lt.p_oldsol+p_tolecur  11331
+	endif !if(p_ienter.eq.p_ienterv.and.	p_objf.lt.p_oldsol+p_tolecur  10881
  
 	!is(p_p)write(p_n16,*)'p_inleaving  ',p_ienter,p_ls,' * ',p_lsi
-	p_iunitv=p_iunit !!!!
+	p_unitv=p_unit !!!!
 	p_kierv=p_kier  !!!!
 	p_justkey=.false.  !!!!
 	! determine leaving variable
@@ -13407,7 +12874,7 @@ subroutine leaving()
 		!call fbsub(p_nrow,1,p_nrow,p_a,p_lavec,p_newc,p_a(1:,p_newa),r, & !!!!
 		call fbsub(p_nrow,1,p_nrow,p_a,p_lavec,p_newc,p_a(p_abas(p_newa)+1:),r, & !!!!
 			p_ls,wslu1,lwsll1,.false.)   !!!!
-	endif !if(p_ienter.gt.1)  11370
+	endif !if(p_ienter.gt.1)  10920
 	!	endif !if(sparse)  19316
  
 	p_leave=0  !!!!position in ls
@@ -13417,9 +12884,9 @@ subroutine leaving()
 	if(.not.p_post)then
 		do jj=1,p_nrow
 			r(p_ls(jj))=-r(p_ls(jj))
-		enddo !jj=1,p_nrow  11390
+		enddo !jj=1,p_nrow  10940
 		p_post=.true.   !!!!
-	endif !if(.not.p_post)  11389
+	endif !if(.not.p_post)  10939
  
 	! if(p_p)then
 	! write(p_n16,*)'start leaving*, ls,lsi:'
@@ -13472,7 +12939,7 @@ subroutine leaving()
 		if(p_p)write(6,*)'bef zleavtmax'
 		call zleavtmax()
 		if(p_p)write(6,*)'aft zleavtmax'
-	endif !if(p_nz.gt.0)  11443
+	endif !if(p_nz.gt.0)  10993
  
 	!if(p_xpresent2)then
 	if(p_p)write(6,*)'bef sleavtmax'
@@ -13497,7 +12964,7 @@ subroutine leaving()
 		!endif !if(p_p.or.p_p9.or.p_tmax.eq.-1.d0)  11253
 		! if(p_ienter.eq.3.and.p_secondb.gt.p_valuek+p_tolecur)then
 		! !if(p_p.or.p_tmax.eq.-1.d0)write(16,*)'secondb0 ', &
-		! !	p_secondb,p_valueopt,p_valuek,p_pivot,p_iunit
+		! !	p_secondb,p_valueopt,p_valuek,p_pivot,p_unit
 		! p_iopt=p_isecond
 		! p_valueopt=p_secondb
 		! p_secondb=p_small
@@ -13507,7 +12974,7 @@ subroutine leaving()
 		write(6,*)'jump8883 ',j_err,'ienter, p_tmax,p_tmaxmin p_leave ',p_ienter,p_tmax,p_tmaxmin, p_leave
 		!	j_err=.true. ;return
 		!		goto 8883 !!!!! jump88 if j_tmax.le.j_tmaxmin before checking f residual can p_leave
-	endif !2244	if(p_tmax.lt.p_tmaxmin)  11465
+	endif !2244	if(p_tmax.lt.p_tmaxmin)  11015
 	!	if(p_p)write(6,*)'bef rleavtmax'
 	call rleavtmax()
 	if(p_p)write(6,*)'aft rleavtmax tmax, p_leavec ',p_tmax,  p_leavec
@@ -13542,7 +13009,7 @@ subroutine leaving()
  
 	else !if(p_leavec.gt.0)then
 		!if(p_)write(p_n16,*)'*no basic variable leaving'  !!!!
-	endif !if(p_leavec.gt.0)  11497
+	endif !if(p_leavec.gt.0)  11047
 	!if(p_pp)write(16,*)'kkkoi'
 	! 8883	if(.not.p_xpresent)goto 8888  !!!!! check if key schedule is leaving
  
@@ -13552,39 +13019,39 @@ subroutine leaving()
 		call skeyleav()
  
 		if(p_p)write(6,*)'aft skeyleav p_leavk ',p_leavk
-	endif !if(p_xpresent)  11522
+	endif !if(p_xpresent)  11072
  
 	! ! end checking if key-schedule is leaving , if key is leving p_leavk.gt.
 	8889 continue   !!!!! we come here if w.gt.1
  
 	!!!!!Avaintehdas vaihtuu, versio 2 (tarkastellaan vaihtuuko avaintehdas)
-	if(p_fpresent)call fkeyleav()
+	!if(p_fpresent)call fkeyleav()
  
 	if(p_leavk.gt.0)then
 		if(p_p)write(6,*)'leaveskeys ',p_leavk,p_p
 		call leaveskeys()
-	endif !if(p_leavk.gt.0)  11535
+	endif !if(p_leavk.gt.0)  11085
  
  
-	!Avaintehdas vaihtuu
-	if (p_fpresent) then
+	! !Avaintehdas vaihtuu
+	! if (p_fpresent) then
  
-		!avainvaihtoehtovaihtuu, kannassa yksikön ve
-		!versio 2, a lasketaan suoraan s.9 kaavalla
-		!p_leavkwf= yksikön 1. vaihtoehtosarake kannassa
-		if(p_leavkwf>0) then
+	! !avainvaihtoehtovaihtuu, kannassa yksikön ve
+	! !versio 2, a lasketaan suoraan s.9 kaavalla
+	! !p_leavkwf= yksikön 1. vaihtoehtosarake kannassa
+	! if(p_leavkwf>0) then
  
-			call leaveskeyf()
+	! call leaveskeyf()
  
-		endif !if(p_leavkwf>0)  11547
+	! endif !if(p_leavkwf>0)  11383
  
-		if (p_leavkf.gt.p_mxd) then
+	! if (p_leavkf.gt.p_mxd) then
  
-			call leafa()
+	! call leafa()
  
-		endif !if (p_leavkf.gt.p_mxd)  11553
+	! endif !if (p_leavkf.gt.p_mxd)  11389
  
-	endif !if (p_fpresent)  11542
+	! endif !if (p_fpresent)  11378
  
 	! testi
 8888 continue !we come here direrectly (through checking keys) if tmax is sufficiently small
@@ -13600,7 +13067,7 @@ subroutine leaving()
 		! p_p=.false.
 		! write(6,*)'*debugOFF*',p_pivot
 		!			close(p_n16)
-	endif !if(p_pivot.eq.p_idebug)  11565
+	endif !if(p_pivot.eq.p_idebug)  11115
 	if(p_p)write(6,*)'entleav ',p_ienter,p_leave,' P_newc ',p_newc,' p_leavk ',p_leavk,' p_tmax ',p_tmax
  
 	if(p_leave.eq.0)then
@@ -13616,7 +13083,7 @@ subroutine leaving()
 		else
 			call leave0else()
 			if(p_goto8888)goto 8888
-		endif !if(p_ienter.eq.3)  11579
+		endif !if(p_ienter.eq.3)  11129
  
 	else !if(p_leave.eq.0)then
 		! lbres(p_leaveres) p_leaves
@@ -13641,14 +13108,14 @@ subroutine leaving()
  
 			p_refac=p_refac+1
 			!	if(p_p)write(p_n16,*)'*refact'
-		endif !if(nup.ge.nfreq)  11612
+		endif !if(nup.ge.nfreq)  11162
  
 		if(p_xpresent.and.abs(p_rcur).le.1.d-9)then
 			!!write(19,*)'uus,p_pivot,p_ienter,p_leave,j_tmax',p_pivot,p_ienter,p_leave,j_tmax,p_rcur
 			p_goto112233=.true.
 			return
  
-		endif !if(p_xpresent.and.abs(p_rcur).le.1.d-9)  11618
+		endif !if(p_xpresent.and.abs(p_rcur).le.1.d-9)  11168
 		!if(p_route67.and.p_p)write(6,*)
 		if(p_route67)then
 			if(p_p)write(6,*)'route67'
@@ -13656,7 +13123,7 @@ subroutine leaving()
 			j_v(p_ivroute67)=j_v(p_ivroute67)+1
 			if(j_err)return
  
-		endif !if(p_route67)  11625
+		endif !if(p_route67)  11175
  
 		!	if(p_p8)write(6,*)'<7575pivot',wslu1
 		if(p_p)write(6,*)'#pivot10 ',p_ls(p_leave),p_newc,p_nrow,p_nm
@@ -13687,7 +13154,7 @@ subroutine leaving()
 			!	p_ifail, p_tmax,p_x(p_ls(p_leave)),p_pivot,'*trying to recover'
  
 			! p_kierv=p_kier
-			! p_iunitv=p_iunit
+			! p_unitv=p_unit
 			! p_feasible=.false.
 			! p_nrecover=p_nrecover+1
 			! if(p_nrecover.ge.20)then
@@ -13697,7 +13164,7 @@ subroutine leaving()
 			! endif !if(p_nrecover.ge.20)  12979
 			! p_goto1234=.true.;return
  
-		endif !if(p_ifail.ne.0)  11653
+		endif !if(p_ifail.ne.0)  11203
  
 		! if(p_tabu)then
 		! if(p_fast)then
@@ -13714,7 +13181,7 @@ subroutine leaving()
 		!	endif !if(sparse)  21155
  
 		!	if(p_p7)write(77,*)4,p_pivot,p_objf
-		!	if(p_p.or.p_p9.or.p_p8)write(p_n16,*)p_p,'<75>',p_pivot,p_objf,p_ienter,p_iunit,p_ienterv,p_nsame,p_tmax,&
+		!	if(p_p.or.p_p9.or.p_p8)write(p_n16,*)p_p,'<75>',p_pivot,p_objf,p_ienter,p_unit,p_ienterv,p_nsame,p_tmax,&
 		!		p_x(p_ls(p_leave)),r(p_ls(p_leave))
  
 		!	if(p_p)write(p_n16,*)'e:',e
@@ -13726,7 +13193,7 @@ subroutine leaving()
 		!	if(ls(p_leave).gt.nrowz) mpjj=-1
 		!	endif !if(sparse)  21272
  
-		iunitp=p_iunit
+		iunitp=p_unit
  
 		p_muutosb=p_muutosb+1
 		! update ls
@@ -13739,7 +13206,7 @@ subroutine leaving()
  
 		call jlplex(p_ls,p_leave,p_lsi(p_newc),p_lsi)
  
-	endif !if(p_leave.eq.0)  11578
+	endif !if(p_leave.eq.0)  11128
  
 	if(p_p)write(6,*)'ientertas ',p_ienter,' p_lcursame ',p_lcursame, 'p_leavec ',p_leavec
  
@@ -13780,9 +13247,9 @@ subroutine leaving()
 					! Päivitetään laskentayksikön vaihtoehtojen alkamissarake lunw:hen
 					if (p_lunw(ilu_)==p_lcursame) then
 						p_lunw(ilu_)=p_id
-					endif !if (p_lunw(ilu_)==p_lcursame)  11753
-				enddo !ilu_ = 1,p_lunits0  11751
-			endif !if(p_fpresent)  11750
+					endif !if (p_lunw(ilu_)==p_lcursame)  11303
+				enddo !ilu_ = 1,p_lunits0  11301
+			endif !if(p_fpresent)  11300
  
 			! if(p_p) then
 			! write(p_n16,*)'aftl,next',p_next(0),p_next(p_next(0)), &
@@ -13796,32 +13263,33 @@ subroutine leaving()
 			p_next(p_id)=0
 			p_iprev(p_id)=p_iprev(0)
 			p_iprev(0)=p_id
-			if(p_p)write(6,*)'next p_id iopt iunit',p_id,p_iopt,p_iunit
-			if(p_fpresent)then
-				! Jos lunit(p_id):tä ei löydy lunxkf:ää vastaavista laskentayksiköistä
-				! --> lunw(lunits0++) = id
-				! --> lunxkf(lunits0) = 0
+			if(p_p)write(6,*)'next p_id iopt iunit',p_id,p_iopt,p_unit
  
-				ilu_=1
-				!löytyykö kannan saraketta id vastaavan laskentaksikön xkf-muuttujaa kannasta
-				do while(p_lunit(p_lunxkf(ilu_)) /= p_iunit)
-					ilu_=ilu_+1
-					if (ilu_>p_lunits0) exit
-				enddo !while(p_lunit(p_lunxkf(ilu_)) /= p_iunit)  11779
-				if (ilu_<=p_lunits0) then
-					p_lunw(ilu_)=p_id
-				else !if (ilu_<=j_lunits0) then
-					!laskentayksikköön ei liittynyt aiemmin kannan kannan vaihtoehto- tai tehdasmuuttujasarakkeita
-					p_lunits0 = p_lunits0+1
-					p_lunw(p_lunits0) = p_id
-					p_lunxkf(p_lunits0) = p_mxd
-				endif !if (ilu_<=p_lunits0)  11783
-			endif !if(p_fpresent)  11772
+			! if(p_fpresent)then
+			! ! Jos lunit(p_id):tä ei löydy lunxkf:ää vastaavista laskentayksiköistä
+			! ! --> lunw(lunits0++) = id
+			! ! --> lunxkf(lunits0) = 0
  
-		endif !if(p_lcursame.gt.0)  11737
+			! ilu_=1
+			! !löytyykö kannan saraketta id vastaavan laskentaksikön xkf-muuttujaa kannasta
+			! do while(p_lunit(p_lunxkf(ilu_)) /= p_unit)
+			! ilu_=ilu_+1
+			! if (ilu_>p_lunits0) exit
+			! enddo !while(p_lunit(p_lunxkf(ilu_)) /= p_unit)  11615
+			! if (ilu_<=p_lunits0) then
+			! p_lunw(ilu_)=p_id
+			! else !if (ilu_<=j_lunits0) then
+			! !laskentayksikköön ei liittynyt aiemmin kannan kannan vaihtoehto- tai tehdasmuuttujasarakkeita
+			! p_lunits0 = p_lunits0+1
+			! p_lunw(p_lunits0) = p_id
+			! p_lunxkf(p_lunits0) = p_mxd
+			! endif !if (ilu_<=p_lunits0)  11619
+			! endif !if(p_fpresent)  11608
+ 
+		endif !if(p_lcursame.gt.0)  11287
 		! edelleed d-enters
 		p_lx0=p_lx0+1
-		p_lunit(p_id)=p_iunit
+		p_lunit(p_id)=p_unit
 		p_isch(p_id)=p_iopt
  
 		! update leavelists
@@ -13872,10 +13340,10 @@ subroutine leaving()
 		! ilu_=1
 		! !löytyykö kannan saraketta id vastaavan laskentayksikön vaihtoehtoa kannasta
  
-		! do while(p_lunit(p_lunw(ilu_))/=p_iunit)
+		! do while(p_lunit(p_lunw(ilu_))/=p_unit)
 		! ilu_=ilu_+1
 		! if (ilu_>p_lunits0) exit
-		! enddo !while(p_lunit(p_lunw(ilu_))/=p_iunit)  11575
+		! enddo !while(p_lunit(p_lunw(ilu_))/=p_unit)  11575
 		! if (ilu_<=p_lunits0) then
 		! p_lunxkf(ilu_)=p_id
 		! else !if (ilu_<=j_lunits0) then
@@ -13889,7 +13357,7 @@ subroutine leaving()
 		! ! edelleed d-enters
 		! ! indeksointi muutettu alkamaan mxd+1:stä (vastaa suoraan kannan saraketta)
 		! p_lf0=p_lf0+1
-		! p_lunit(p_id)=p_iunit
+		! p_lunit(p_id)=p_unit
 		! ! tallennetaan ixkenter
 		! ! tallennetaan tehdas f´
  
@@ -13897,7 +13365,7 @@ subroutine leaving()
 		! ! ei toimi jos joku muu enters
 		!********************************
  
-	endif !if(p_ienter.eq.1)  11718
+	endif !if(p_ienter.eq.1)  11268
  
 	if(p_p)write(6,*)'p_leavec,nrow',p_leavec,p_nrow
  
@@ -13928,78 +13396,78 @@ subroutine leaving()
 		! p_iprev(p_iprev(p_iprev(0))),p_iprev(p_iprev(p_iprev(p_iprev(0))))
 		! endif !if(p_p)  12138
  
-		!lunw:n päivitys
-		if(p_fpresent)then
-			do ilu_ = 1,p_lunits0
-				if (p_lunw(ilu_)==p_leaved) then
-					if (p_lunit(p_leaved) == p_lunit(p_next(p_leaved))) then
-						p_lunw(ilu_)= p_next(p_leaved)
-					else !if (j_lunit(p_leaved) == j_lunit(j_next(p_leaved))) then
-						if (p_lunxkf(ilu_)==p_mxd) then
-							do i_ = ilu_+1,p_lunits0
-								p_lunw(i_-1) = p_lunw(i_)
-								p_lunxkf(i_-1) = p_lunxkf(i_)
-							enddo !i_ = ilu_+1,p_lunits0  11911
-							p_lunw(p_lunits0) = 0
-							p_lunxkf(p_lunits0) = p_mxd
-							p_lunits0 = p_lunits0-1
-						else !if (j_lunxkf(ilu_)==j_mxd) then
-							p_lunw(ilu_)=0
-						endif !if (p_lunxkf(ilu_)==p_mxd)  11910
-					endif !if (p_lunit(p_leaved) == p_lunit(p_next(p_leaved)))  11907
-				endif !if (p_lunw(ilu_)==p_leaved)  11906
-			enddo !ilu_ = 1,p_lunits0  11905
-		endif !if(p_fpresent)  11904
+		! !lunw:n päivitys
+		! if(p_fpresent)then
+		! do ilu_ = 1,p_lunits0
+		! if (p_lunw(ilu_)==p_leaved) then
+		! if (p_lunit(p_leaved) == p_lunit(p_next(p_leaved))) then
+		! p_lunw(ilu_)= p_next(p_leaved)
+		! else !if (j_lunit(p_leaved) == j_lunit(j_next(p_leaved))) then
+		! if (p_lunxkf(ilu_)==p_mxd) then
+		! do i_ = ilu_+1,p_lunits0
+		! p_lunw(i_-1) = p_lunw(i_)
+		! p_lunxkf(i_-1) = p_lunxkf(i_)
+		! enddo !i_ = ilu_+1,p_lunits0  11747
+		! p_lunw(p_lunits0) = 0
+		! p_lunxkf(p_lunits0) = p_mxd
+		! p_lunits0 = p_lunits0-1
+		! else !if (j_lunxkf(ilu_)==j_mxd) then
+		! p_lunw(ilu_)=0
+		! endif !if (p_lunxkf(ilu_)==p_mxd)  11746
+		! endif !if (p_lunit(p_leaved) == p_lunit(p_next(p_leaved)))  11743
+		! endif !if (p_lunw(ilu_)==p_leaved)  11742
+		! enddo !ilu_ = 1,p_lunits0  11741
+		! endif !if(p_fpresent)  11740
  
-		!!!test
-		if(p_testl)then
-			do i=1,p_nrow
-				if(p_ls(i).gt.p_nrowz)then
-					do j=1,p_lx0
-						if(p_ls(i)-p_nrowz.eq.p_lx(j))goto 7188
-					enddo !j=1,p_lx0  11930
-					write(p_n16,*)'*colnot*',p_ls(i),'not in',	  (p_lx(j),j=1,p_lx0)
-					!		close(16)
-					write(6,*)'*colnot* return'
-					return
-		7188 	    continue
-				endif !if(p_ls(i).gt.p_nrowz)  11929
-			enddo !i=1,p_nrow  11928
-		endif !if(p_testl)  11927
+		! ! !!!test
+		! if(p_testl)then
+		! do i=1,p_nrow
+		! if(p_ls(i).gt.p_nrowz)then
+		! do j=1,p_lx0
+		! if(p_ls(i)-p_nrowz.eq.p_lx(j))goto 7188
+		! enddo !j=1,p_lx0  11766
+		! write(p_n16,*)'*colnot*',p_ls(i),'not in',	  (p_lx(j),j=1,p_lx0)
+		! !		close(16)
+		! write(6,*)'*colnot* return'
+		! return
+		! 7188 	    continue
+		! endif !if(p_ls(i).gt.p_nrowz)  11765
+		! enddo !i=1,p_nrow  11764
+		! endif !if(p_testl)  11763
 		! lista uniteista
  
 		!p_leavec tehdassrk??
 	else !if(p_leavec.le.j_nrow)then
-		call lexf(p_lf,p_lf0,p_lfi(p_leaved),p_lfi,p_mxd+1,2*p_mxd)
-		!!ld0=ld0-1
-		p_lf0=p_lf0-1
-		! drop
-		p_nextf(p_iprevf(p_leaved,p_ixkf(p_leaved)),p_ixkf(p_leaved))=p_nextf(p_leaved,p_ixkf(p_leaved))
-		p_iprevf(p_nextf(p_leaved,p_ixkf(p_leaved)),p_ixkf(p_leaved))=p_iprevf(p_leaved,p_ixkf(p_leaved))
+		! call lexf(p_lf,p_lf0,p_lfi(p_leaved),p_lfi,p_mxd+1,2*p_mxd)
+		! !!ld0=ld0-1
+		! p_lf0=p_lf0-1
+		! ! drop
+		! p_nextf(p_iprevf(p_leaved,p_ixkf(p_leaved)),p_ixkf(p_leaved))=p_nextf(p_leaved,p_ixkf(p_leaved))
+		! p_iprevf(p_nextf(p_leaved,p_ixkf(p_leaved)),p_ixkf(p_leaved))=p_iprevf(p_leaved,p_ixkf(p_leaved))
  
-		!lunxkf päivitys
-		do ilu_ = 1,p_lunits0
-			if (p_lunxkf(ilu_)==p_leaved) then
-				if (p_lunit(p_leaved) == p_lunit(p_nextf(p_leaved,p_ixkf(p_leaved)))) then
-					p_lunxkf(ilu_)= p_nextf(p_leaved,p_ixkf(p_leaved))
-				else !if (j_lunit(p_leaved) == j_lunit(j_nextf(p_leaved,j_ixkf(p_leaved)))) then
-					if (p_lunw(ilu_)==0) then
-						do i_ = ilu_+1,p_lunits0
-							p_lunw(i_-1) = p_lunw(i_)
-							p_lunxkf(i_-1) = p_lunxkf(i_)
-						enddo !i_ = ilu_+1,p_lunits0  11959
-						p_lunw(p_lunits0) = 0
-						p_lunxkf(p_lunits0) = p_mxd
-						p_lunits0 = p_lunits0-1
-					else !if (j_lunw(ilu_)==0) then
-						p_lunxkf(ilu_)=p_mxd
-					endif !if (p_lunw(ilu_)==0)  11958
-				endif !if (p_lunit(p_leaved) == p_lunit(p_nextf(p_leaved,p_ixkf(p  11955
-			endif !if (p_lunxkf(ilu_)==p_leaved)  11954
-		enddo !ilu_ = 1,p_lunits0  11953
-		!	if (pp) write(p_n16,*)"**fact** lunxkf päivitetty <8088>",(p_lunw(jj7),jj7=1,p_lunits0)
+		! !lunxkf päivitys
+		! do ilu_ = 1,p_lunits0
+		! if (p_lunxkf(ilu_)==p_leaved) then
+		! if (p_lunit(p_leaved) == p_lunit(p_nextf(p_leaved,p_ixkf(p_leaved)))) then
+		! p_lunxkf(ilu_)= p_nextf(p_leaved,p_ixkf(p_leaved))
+		! else !if (j_lunit(p_leaved) == j_lunit(j_nextf(p_leaved,j_ixkf(p_leaved)))) then
+		! if (p_lunw(ilu_)==0) then
+		! do i_ = ilu_+1,p_lunits0
+		! p_lunw(i_-1) = p_lunw(i_)
+		! p_lunxkf(i_-1) = p_lunxkf(i_)
+		! enddo !i_ = ilu_+1,p_lunits0  11795
+		! p_lunw(p_lunits0) = 0
+		! p_lunxkf(p_lunits0) = p_mxd
+		! p_lunits0 = p_lunits0-1
+		! else !if (j_lunw(ilu_)==0) then
+		! p_lunxkf(ilu_)=p_mxd
+		! endif !if (p_lunw(ilu_)==0)  11794
+		! endif !if (p_lunit(p_leaved) == p_lunit(p_nextf(p_leaved,p_ixkf(p  11791
+		! endif !if (p_lunxkf(ilu_)==p_leaved)  11790
+		! enddo !ilu_ = 1,p_lunits0  11789
+		! !	if (pp) write(p_n16,*)"**fact** lunxkf päivitetty <8088>",(p_lunw(jj7),jj7=1,p_lunits0)
  
-	endif !if(p_leavec.le.p_nrow)  11876
+	endif !if(p_leavec.le.p_nrow)  11427
  
 	if(p_p)write(6,*)'retrun from leaving'
  
@@ -14024,9 +13492,9 @@ subroutine zleavtmax()
 			if(p_x(p_leaz).lt.p_tmax*r(p_leaz))then
 				p_tmax=p_x(p_leaz)/r(p_leaz) ;p_rcur=r(p_leaz)
 				p_leavec=p_leaz
-			endif !if(p_x(p_leaz).lt.p_tmax*r(p_leaz))  11987
-		endif !if(r(p_leaz).gt.p_tiny78)  11986
-	enddo !j=1,p_lz0  11983
+			endif !if(p_x(p_leaz).lt.p_tmax*r(p_leaz))  11538
+		endif !if(r(p_leaz).gt.p_tiny78)  11537
+	enddo !j=1,p_lz0  11534
 end subroutine zleavtmax
 
 subroutine sleavtmax()
@@ -14050,11 +13518,11 @@ subroutine sleavtmax()
 			if(p_x(p_lead).lt.p_tmax*r(p_lead))then
 				p_tmax=p_x(p_lead)/r(p_lead)  ;p_rcur=r(p_lead)
 				p_leavec=p_lead  !!!!
-				!			if(p_pivot.gt.76652)write(6,*)'tmax ',p_tmax,p_rcur,p_leavec,'piunit',p_iunit
-			endif !if(p_x(p_lead).lt.p_tmax*r(p_lead))  12004
+				!			if(p_pivot.gt.76652)write(6,*)'tmax ',p_tmax,p_rcur,p_leavec,'piunit',p_unit
+			endif !if(p_x(p_lead).lt.p_tmax*r(p_lead))  11555
  
-		endif !if(r(p_lead).gt.p_tiny78)  12002
-	enddo !j=1,p_lx0  11997
+		endif !if(r(p_lead).gt.p_tiny78)  11553
+	enddo !j=1,p_lx0  11548
 end subroutine sleavtmax
 
 subroutine fleavtmax()
@@ -14076,10 +13544,10 @@ subroutine fleavtmax()
 				p_tmax=p_x(leaf)/r(leaf) ;p_rcur=r(leaf)
 				p_leavec=leaf
 				!if(p_) write(p_n16,*)'**fact** <6151> tmax päivitetty', p_tmax
-			endif !if(p_x(leaf).lt.p_tmax*r(leaf))  12020
+			endif !if(p_x(leaf).lt.p_tmax*r(leaf))  11571
  
-		endif !if(r(leaf).gt.p_tiny78)  12019
-	enddo !j=p_mxd+1,p_lf0  12016
+		endif !if(r(leaf).gt.p_tiny78)  11570
+	enddo !j=p_mxd+1,p_lf0  11567
  
 end subroutine fleavtmax
 subroutine rleavtmax()
@@ -14194,7 +13662,7 @@ subroutine rleavtmax()
 						p_tmax=p_x(p_lr(j))/r(p_lr(j)) ;p_rcur=r(p_lr(j))
 						!if(p_)write(p_n16,*)'post,posr,ubou,NOTlower,lr(j),tmax',p_lr(j),p_tmax
 						p_leavec=p_lr(j)
-					end if !if(p_x(p_lr(j)).lt.p_tmax*r(p_lr(j)) )  12116
+					end if !if(p_x(p_lr(j)).lt.p_tmax*r(p_lr(j)) )  11667
 				elseif(p_x(p_lr(j)).lt.j_0.and..not.p_lower(p_lr(j)).and.p_feasible)then !if(j_lower(j_lr(j)).and.j_x(j_lr(j))+j_rhs2(j_lr(j))-j_rhscur(j_lr(j)).
  
 					!there is no lower bound thus if residual is in basis it should be postitive
@@ -14219,8 +13687,8 @@ subroutine rleavtmax()
 					return
 					!goto 2244
  
-				end if !if(p_lower(p_lr(j)).and.p_x(p_lr(j)  12100
-			end if !if(p_ubou(p_lr(j)))  12088
+				end if !if(p_lower(p_lr(j)).and.p_x(p_lr(j)  11651
+			end if !if(p_ubou(p_lr(j)))  11639
  
 		elseif(r(p_lr(j)).lt.p_tiny78n) then !if(r(j_lr(j)).gt.j_tiny78)then
 			!will lower become active
@@ -14268,7 +13736,7 @@ subroutine rleavtmax()
 						p_tmax=p_x(p_lr(j))/r(p_lr(j)) ;p_rcur=r(p_lr(j))
 						!if(p_pp)write(p_n16,*)'post,negr,ubou,lower,lr(j),tmax',j_lr(j),j_tmax
 						p_leavec=p_lr(j)
-					end if !if(p_x(p_lr(j)).gt.p_tmax*r(p_lr(j)) )  12190
+					end if !if(p_x(p_lr(j)).gt.p_tmax*r(p_lr(j)) )  11741
  
 				elseif(p_x(p_lr(j)).gt.j_0.and.p_lower(p_lr(j)).and.p_feasible)then !if(.not.j_lower(j_lr(j)).and.j_x(j_lr(j))+j_rhs(j_lr(j))-j_rhscur(j_lr(j)).g
  
@@ -14288,13 +13756,13 @@ subroutine rleavtmax()
 					p_goto112233=.true.
 					return
 					!	goto 2244
-				endif !if(.not.p_lower(p_lr(j)).an  12175
+				endif !if(.not.p_lower(p_lr(j)).an  11726
  
-			end if !if(p_lbou(p_lr(j)))  12173
+			end if !if(p_lbou(p_lr(j)))  11724
  
-		end if !if(r(p_lr(j)).gt.p_tiny78)  12047
+		end if !if(r(p_lr(j)).gt.p_tiny78)  11598
  
-	end do !j=1,p_lr0  12032
+	end do !j=1,p_lr0  11583
  
 end subroutine rleavtmax
 
@@ -14311,7 +13779,7 @@ subroutine skeyleav()
 	use jmod, only: p_nrowz
 	use jmod, only: p_x
 	use jmod, only: p_lunit
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_ienter
 	use jmod, only: p_one
 	use jmod, only: p_tiny78n
@@ -14352,17 +13820,17 @@ subroutine skeyleav()
 		p_rs=p_rs+r(p_lcur+p_nrowz)  ! has opposite sign than in old JLP
 		p_wsu=p_wsu+p_x(p_lcur+p_nrowz)
  
-		if(p_lunit(p_lcur).eq.p_iunit.and.p_lcursame.eq.0)p_lcursame=p_lcur
+		if(p_lunit(p_lcur).eq.p_unit.and.p_lcursame.eq.0)p_lcursame=p_lcur
 		if(p_lunit(nex).ne.p_lunit(p_lcur))then
 			! the next col has different unit, do final checking
 			! formulas  6.59  6.60
-			if(p_lunit(p_lcur).eq.p_iunit.and.p_ienter.eq.3)then
+			if(p_lunit(p_lcur).eq.p_unit.and.p_ienter.eq.3)then
 				! the unit is the same as the unit of the enetering schedule
 				!if(p_pp)	write(p_n16,*)'rs-1',j_rs,j_rs-1.
 				p_rs=p_rs-p_one
 				! store link to be used so that we can put the entering
 				! column together with other columns isn the next-sequence
-			endif !if(p_lunit(p_lcur).eq.p_iunit.and.p_ienter.eq.3)  12263
+			endif !if(p_lunit(p_lcur).eq.p_unit.and.p_ienter.eq.3)  11814
  
 			if(p_rs.lt.p_tiny78n.and.p_wsu.gt.p_tmax*p_rs)then !!!!
 				! wsu negat  wsu/rs<tmax  rs<0 =>wsu>tmax*rs
@@ -14372,15 +13840,15 @@ subroutine skeyleav()
 				!if(p_pp)write(p_n16,*)'**tmax/key,wsu,rs',j_tmax,j_wsu,j_rs,' unit, p_lcur',j_lunit(p_lcur),p_lcur
 				! p_leavk is the first D-column in unit for whcik key is leaving
 				!					end if
-			endif !if(p_rs.lt.p_tiny78n.and.p_wsu.gt.p_tmax*p_rs)  12271
+			endif !if(p_rs.lt.p_tiny78n.and.p_wsu.gt.p_tmax*p_rs)  11822
  
 			p_wsu=p_onen   !opposite sign of ws as in old JLP
 			p_rs=p_zero
 			p_lcur0=p_next(p_lcur)   ! p_lcur0 is again the first col in the next new unit
 			! last
-		endif !if(p_lunit(nex).ne.p_lunit(p_lcur))  12260
+		endif !if(p_lunit(nex).ne.p_lunit(p_lcur))  11811
 		p_lcur=nex
-	enddo !i=1,p_lx0  12253
+	enddo !i=1,p_lx0  11804
  
  
 end subroutine skeyleav
@@ -14389,7 +13857,7 @@ subroutine fkeyleav()
 	use jmod, only: p_leavkf
 	use jmod, only: p_leavkwf
 	use jmod, only: p_lcursamef
-	use jmod, only: p_iunit_lkf
+	use jmod, only: p_unit_lkf
 	use jmod, only: p_ixk_lkf
 	use jmod, only: p_ixk_
 	use jmod, only: p_nlog
@@ -14404,11 +13872,11 @@ subroutine fkeyleav()
 	use jmod, only: p_keys
 	use jmod, only: j_o
 	use jmod, only: p_wsu
-	use jmod, only: p_ivxdatmat
+	use jmod, only: p_ivdatamatx
 	use jmod, only: p_rs
 	use jmod, only: p_zero
 	use jmod, only: p_ienter
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_one
 	use jmod, only: p_lcur_
 	use jmod, only: p_nrowz
@@ -14430,7 +13898,7 @@ subroutine fkeyleav()
 	p_leavkwf = 0
 	p_lcursamef = 0
  
-	p_iunit_lkf = 0
+	p_unit_lkf = 0
 	p_ixk_lkf = 0
  
 	!käydään läpi vain kannassa olevat xkf-mjat
@@ -14448,17 +13916,17 @@ subroutine fkeyleav()
 			!if(p_pp)write(16,*)'ioo',p_lunit_,j_ibaunit(p_lunit_)+ j_keys(p_lunit_)
 			iba1=ibaxdat(p_ibaunit(p_lunit_)+ p_keys(p_lunit_)) !,1)
  
-			p_wsu=j_o(p_ivxdatmat)%d(iba1+p_ikeepxk_) !ibaxmat
+			p_wsu=j_o(p_ivdatamatx)%d(iba1+p_ikeepxk_) !ibamatx
 			!if(p_)write(16,*)'h1',p_wsu
 			p_rs=p_zero
  
-			if ((p_ienter==4).and.(p_iunit==p_lunit_).and.(ixk_==ixkenter)) then
+			if ((p_ienter==4).and.(p_unit==p_lunit_).and.(ixk_==ixkenter)) then
 				p_rs=p_rs+p_one
 				p_lcursamef = p_lcur0_unit
  
-				!if(p_p) write(p_n16,*)'**fact** <6623> kantasrk:een xkf tulossa kantaan: p_iunit,ixk,p_lcursamef',&
+				!if(p_p) write(p_n16,*)'**fact** <6623> kantasrk:een xkf tulossa kantaan: p_unit,ixk,p_lcursamef',&
 				!	p_lunit_,ixk_,p_lcursamef
-			endif !if ((p_ienter==4).and.(p_iunit==p_lunit_).and.(ixk_==ixken  12322
+			endif !if ((p_ienter==4).and.(p_unit==p_lunit_).and.(ixk_==ixkent  11873
  
 			p_lcur_=p_lcur0_unit
  
@@ -14467,32 +13935,32 @@ subroutine fkeyleav()
 				p_wsu = p_wsu - p_x(p_lcur_+p_nrowz)
 				!if(p_)write(16,*)'h12',p_wsu
 				p_lcur_ = p_nextf(p_lcur_,ixk_)
-			enddo !while (p_lunit(p_lcur_) == p_lunit(p_lcur0_unit))  12332
+			enddo !while (p_lunit(p_lcur_) == p_lunit(p_lcur0_unit))  11883
  
 			! s.12 kaava (wij enters)
-			if ((p_ienter==3).and.(p_iunit==p_lunit_)) then
+			if ((p_ienter==3).and.(p_unit==p_lunit_)) then
 				ikey_ = p_ibaunit(p_lunit_) + p_keys(p_lunit_)
 				iopt_ = p_ibaunit(p_lunit_) + p_iopt
  
 				ibxdatkey_=ibaxdat(ikey_) !,2)
 				ibxdatopt_=ibaxdat(iopt_) !,1)
-				!	if(p_p.or.p_tmax.eq.-1.d0) write(p_n16,*)'**fact** <6741> wij tulossa kantaan: p_iunit,p_iopt,ikey',&
-				!		p_iunit,p_iopt,ikey_
+				!	if(p_p.or.p_tmax.eq.-1.d0) write(p_n16,*)'**fact** <6741> wij tulossa kantaan: p_unit,p_iopt,ikey',&
+				!		p_unit,p_iopt,ikey_
 				!
-				!		j_o(p_ivxdatmat)%r(ibaxmat(ikey_)+p_ikeepxk_)
+				!		j_o(p_ivdatamatx)%r(ibamatx(ikey_)+p_ikeepxk_)
  
 				p_rs=p_rs - &
-					(j_o(p_ivxdatmat)%d(ibxdatopt_+p_ikeepxk_) -  & !ibaxmat
-					j_o(p_ivxdatmat)%d(ibxdatkey_+p_ikeepxk_))          !!ibaxmat
+					(j_o(p_ivdatamatx)%d(ibxdatopt_+p_ikeepxk_) -  & !ibamatx
+					j_o(p_ivdatamatx)%d(ibxdatkey_+p_ikeepxk_))          !!ibamatx
  
-			endif !if ((p_ienter==3).and.(p_iunit==p_lunit_))  12340
+			endif !if ((p_ienter==3).and.(p_unit==p_lunit_))  11891
  
 			! tehdaskantasarakketta vastaavan yksikön 1. ve-kantasrk
 			lcur_w= 0
 			lun_= 1
 			do while((p_lunit(p_lunw(lun_))/=p_lunit_).and.(lun_<=p_lunits0))
 				lun_=lun_+1
-			enddo !while((p_lunit(p_lunw(lun_))/=p_lunit_).and.(lun_<=p_lunit  12360
+			enddo !while((p_lunit(p_lunw(lun_))/=p_lunit_).and.(lun_<=p_lunit  11911
 			!kannassa yksikön ve-srkeita
 			lcur0_w = 0
 			if(lun_ <= p_lunits0) then
@@ -14508,22 +13976,22 @@ subroutine fkeyleav()
  
 					ibxdatobs_=ibaxdat(iobs_) !,1)
 					! if(p_p.or.p_tmax.eq.-1.d0)write(16,*)'tas',ikey_, &
-					! j_o(p_ivxdatmat)%d(ibxdatkey_+1:ibxdatkey_+p_keepx)
-					! if(p_p)write(16,*)'ta2',iobs_,j_o(p_ivxdatmat)%d(ibxdatobs_+1:ibxdatobs_+p_keepx)
-					xkij_=j_o(p_ivxdatmat)%d(ibxdatobs_+p_ikeepxk_)   !ibaxmat
+					! j_o(p_ivdatamatx)%d(ibxdatkey_+1:ibxdatkey_+p_nkeepx)
+					! if(p_p)write(16,*)'ta2',iobs_,j_o(p_ivdatamatx)%d(ibxdatobs_+1:ibxdatobs_+p_nkeepx)
+					xkij_=j_o(p_ivdatamatx)%d(ibxdatobs_+p_ikeepxk_)   !ibamatx
  
  
 					p_rs=p_rs+r(lcur_w+p_nrowz)*&
-						(xkij_ - j_o(p_ivxdatmat)%d(ibxdatkey_+p_ikeepxk_))
+						(xkij_ - j_o(p_ivdatamatx)%d(ibxdatkey_+p_ikeepxk_))
 					p_wsu=p_wsu+p_x(lcur_w+p_nrowz)*&
-						(xkij_ - j_o(p_ivxdatmat)%d(ibxdatkey_+p_ikeepxk_))
+						(xkij_ - j_o(p_ivdatamatx)%d(ibxdatkey_+p_ikeepxk_))
 					!if(p_)write(16,*)'h3',p_wsu
-					!write(nu20,*)'hep2',j_o(p_ivxdatmat)%r(ibxdatkey_+1:ibxdatkey_+10)
-					!write(nu20,*)j_o(p_ivxdatmat)%r(ibxdatkey_+p_ikeepxk_)
+					!write(nu20,*)'hep2',j_o(p_ivdatamatx)%r(ibxdatkey_+1:ibxdatkey_+10)
+					!write(nu20,*)j_o(p_ivdatamatx)%r(ibxdatkey_+p_ikeepxk_)
 					lcur_w = p_next(lcur_w)
-				enddo !while (p_lunit(lcur_w) == p_lunit(lcur0_w))  12373
+				enddo !while (p_lunit(lcur_w) == p_lunit(lcur0_w))  11924
  
-			endif !if(lun_ <= p_lunits0)  12365
+			endif !if(lun_ <= p_lunits0)  11916
  
 			! if (p_p) then
 			! if(p_wsu<j_0)write(p_n16,*)'**fact** <6738> negat. wsu'
@@ -14544,7 +14012,7 @@ subroutine fkeyleav()
 				write(6,*)'<7681> wsu,rs,wsu/rs,tmax,p_lcur0_unit,lcur0_w,lunit(p_lcur0_unit),ixk_',&
 					p_wsu,p_rs,p_wsu/p_rs,p_tmax,p_lcur0_unit, &
 					lcur0_w,p_lunit(p_lcur0_unit),ixk_
-			endif !if(p_tmax.eq.-1.d0)  12410
+			endif !if(p_tmax.eq.-1.d0)  11961
 			!	if((Abs(j_rs)>j_tiny78).and.(((j_rs*j_wsu)>j_zero).or.(j_wsu.eq.j_zero.and.j_rs>j_zero)).and.&
 			!		Abs(j_wsu).lt.j_tmax*Abs(j_rs))then
 			if(p_rs>p_tiny78.and.p_wsu.lt.p_tmax*p_rs)then !changed 27.8.2018 JL
@@ -14555,17 +14023,17 @@ subroutine fkeyleav()
 				!	write(nu20,*)'<22>',p_leavkwf
 				p_leave=0
 				p_leavk=0
-				p_iunit_lkf = p_lunit(p_lcur0_unit)
+				p_unit_lkf = p_lunit(p_lcur0_unit)
 				ixk_lkf = ixk_
 				ikeepx_lkf = p_ikeepxk_
 				! if(p_p.or.p_tmax.eq.-1.d0) write(p_n16,*)'**fact** <6678> **tmax/key,wsu,rs',&
 				! p_tmax,p_wsu,p_rs,'p_leavkf, unit, ixk',p_leavkf, &
 				! p_lunit(p_leavkf), ixk_
-			endif !if(p_rs>p_tiny78.and.p_wsu.lt.p_tmax*p_rs)  12417
+			endif !if(p_rs>p_tiny78.and.p_wsu.lt.p_tmax*p_rs)  11968
  
 			p_lcur0_unit = p_lcur_
-		enddo !while (p_lcur0_unit > p_mxd)  12309
-	enddo !p_ixk_=1,p_nlog  12306
+		enddo !while (p_lcur0_unit > p_mxd)  11860
+	enddo !p_ixk_=1,p_nlog  11857
  
 end subroutine fkeyleav
 
@@ -14574,11 +14042,11 @@ subroutine jotainf()
 	use jmod, only: p_lcursamef
 	use jmod, only: p_ixkkeep
 	use jmod, only: p_ibaunit
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_keys
 	use jmod, only: j_o
 	use jmod, only: p_wsu
-	use jmod, only: p_ivxdatmat
+	use jmod, only: p_ivdatamatx
 	use jmod, only: p_tmax
 	use jmod, only: p_rs
 	use jmod, only: p_one
@@ -14604,7 +14072,7 @@ subroutine jotainf()
 	! if(p_tmax.le.p_tmaxmin)then ! eq.j_0)then
 	! ! if(p_ienter.eq.3.and.p_secondb.gt.p_valuek+p_tolecur)then
 	! ! if(p_pp.or.p_tmax.eq.-1.d0)write(16,*)'secondb2 ',secondb,p_valueopt, &
-	! ! p_valuek,p_pivot,p_iunit
+	! ! p_valuek,p_pivot,p_unit
 	! ! p_iopt=p_isecond
 	! ! p_valueopt=secondb
 	! ! secondb=p_small
@@ -14615,17 +14083,17 @@ subroutine jotainf()
 	if ((p_ienter==4).and.(p_lcursamef==0)) then
 		ikeepxkenter_ = p_ixkkeep(ixkenter)
  
-		ibas1=ibaxdat(p_ibaunit(p_iunit)+ p_keys(p_iunit)) !,1)
-		p_wsu=j_o(p_ivxdatmat)%d(ibas1+ikeepxkenter_)  !ibaxmat
+		ibas1=ibaxdat(p_ibaunit(p_unit)+ p_keys(p_unit)) !,1)
+		p_wsu=j_o(p_ivdatamatx)%d(ibas1+ikeepxkenter_)  !ibamatx
 		if(p_tmax.eq.-1.d0)write(6,*)'h4*',p_wsu
 		p_rs=p_one
  
 		! kantaan tulevan yksikön 1. ve-srk
 		p_lcur_= 0
 		lun_= 1
-		do while((p_lunit(p_lunw(lun_))/=p_iunit).and.(lun_<=p_lunits0))
+		do while((p_lunit(p_lunw(lun_))/=p_unit).and.(lun_<=p_lunits0))
 			lun_=lun_+1
-		enddo !while((p_lunit(p_lunw(lun_))/=p_iunit).and.(lun_<=p_lunits  12463
+		enddo !while((p_lunit(p_lunw(lun_))/=p_unit).and.(lun_<=p_lunits0  12014
  
 		lcur0_w = 0
 		!kannassa yksikön ve-srkeita
@@ -14633,23 +14101,23 @@ subroutine jotainf()
  
 			lcur0_w = p_lunw(lun_)
 			ikey_	= p_ibaunit(p_lunit(lcur0_w)) + p_keys(p_lunit(lcur0_w))
-			ibxmatkey_=ibaxmat(ikey_) !,1)
+			ibxmatkey_=ibamatx(ikey_) !,1)
  
 			ibxdatkey_=ibaxdat(ikey_) !,2)
 			p_lcur_ = lcur0_w
 			do while (p_lunit(p_lcur_) == p_lunit(lcur0_w))
 				iobs_ = p_ibaunit(p_lunit(lcur0_w)) + p_isch(p_lcur_)
 				ibxdatobs_=ibaxdat(iobs_) !,1)
-				xkij_=j_o(p_ivxdatmat)%d(ibxdatobs_+ikeepxkenter_) !ibaxmat
+				xkij_=j_o(p_ivdatamatx)%d(ibxdatobs_+ikeepxkenter_) !ibamatx
 				p_rs=p_rs+r(p_lcur_+p_nrowz)*&
-					(xkij_ - j_o(p_ivxdatmat)%d(ibxdatkey_+ikeepxkenter_))  !ibaxmat
+					(xkij_ - j_o(p_ivdatamatx)%d(ibxdatkey_+ikeepxkenter_))  !ibamatx
 				p_wsu=p_wsu+p_x(p_lcur_+p_nrowz)*&
-					(xkij_ - j_o(p_ivxdatmat)%d(ibxdatkey_+ikeepxkenter_))  !ibaxmat
+					(xkij_ - j_o(p_ivdatamatx)%d(ibxdatkey_+ikeepxkenter_))  !ibamatx
 				!if(p_)write(16,*)'h5',p_wsu
 				p_lcur_ = p_next(p_lcur_)
-			enddo !while (p_lunit(p_lcur_) == p_lunit(lcur0_w))  12477
+			enddo !while (p_lunit(p_lcur_) == p_lunit(lcur0_w))  12028
  
-		endif !if(lun_ <= p_lunits0)  12469
+		endif !if(lun_ <= p_lunits0)  12020
  
 		!if(p_)write(p_n16,*)'**fact** <6695> (p_lcursamef==0) wsu,rs', p_wsu,p_rs
 		p_degeneratef=(p_wsu==p_zero)
@@ -14662,19 +14130,19 @@ subroutine jotainf()
 			p_leave=0
 			p_leavk=0
 			if(p_tmax.eq.-1.d0) write(6,*)'**fact** <6743> **tmax/ei_xkf,wsu,rs',&
-				p_tmax,p_wsu,p_rs,'p_leavkf, unit, ixk',p_leavkf, p_iunit, ixkenter
-		endif !if((p_rs>p_tiny78).and.(p_wsu.lt.p_tmax*p_rs))  12495
+				p_tmax,p_wsu,p_rs,'p_leavkf, unit, ixk',p_leavkf, p_unit, ixkenter
+		endif !if((p_rs>p_tiny78).and.(p_wsu.lt.p_tmax*p_rs))  12046
  
-	endif !if ((p_ienter==4).and.(p_lcursamef==0))  12452
+	endif !if ((p_ienter==4).and.(p_lcursamef==0))  12003
  
 	if ((p_ienter==4).and.(p_leavkf==0).and.(p_leave==0).and.(p_leavk==0)) then
 		! lun_= 1
-		! do while((p_lunit(p_lunw(lun_))/=p_iunit).and.(lun_<=p_lunits0))
+		! do while((p_lunit(p_lunw(lun_))/=p_unit).and.(lun_<=p_lunits0))
 		! lun_=lun_+1
-		! enddo !while((p_lunit(p_lunw(lun_))/=p_iunit).and.(lun_<=p_lunits  12237
+		! enddo !while((p_lunit(p_lunw(lun_))/=p_unit).and.(lun_<=p_lunits  12237
 		! if (lun_<=p_lunits0) then
 		! p_leavkwf = p_lunw(lun_)
-		! p_iunit_lkf=p_iunit
+		! p_unit_lkf=p_unit
 		! ixk_lkf = ixkenter
  
 		! ikeepx_lkf = p_ixkkeep(ixkenter)
@@ -14683,7 +14151,7 @@ subroutine jotainf()
 		! if (p_leavk >0) write(p_n16,*) '<7325> ....paitsi että  myös avainve vaihtuu...'
 		! endif !if(p_p)  11778
 		!endif !if (lun_<=p_lunits0)  12240
-	endif !if ((p_ienter==4).and.(p_leavkf==0).and.(p_leave==0).and.(  12507
+	endif !if ((p_ienter==4).and.(p_leavkf==0).and.(p_leave==0).and.(  12058
 	!endif !if(p_fpresent)  12006
 end subroutine
 
@@ -14702,7 +14170,7 @@ subroutine leaveskeys()
 	use jmod, only: p_nz
 	use jmod, only: p_rhsw
 	use jmod, only: p_rhscur
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_lunit
 	use jmod, only: p_ienter
 	use jmod, only: p_newc
@@ -14748,7 +14216,7 @@ subroutine leaveskeys()
 	p_nkeys=p_nkeys+1
 	!if(p_.and.p_fpresent) write(p_n16,*)'**fact** AVAINVE VAIHTUU>> '
 	!if(p_pp)write(p_n16,*)&
-	!'**leaving key,d-column,unit,neun',p_leavk,j_lunit(p_leavk),p_iunit
+	!'**leaving key,d-column,unit,neun',p_leavk,j_lunit(p_leavk),p_unit
  
 	! put to next free column
 	! old d= x-xkey, x=d+xkey
@@ -14784,14 +14252,14 @@ subroutine leaveskeys()
  
 		if((p_ix(j).ne.0).or.p_fpresent)p_xps(j)=p_xps(j)+p_a(p_abas(p_leavk+p_nz)+j)
 		p_rhsw(j)=p_rhscur(j)-p_xps(j)
-	enddo !j=1,p_nrow  12567
+	enddo !j=1,p_nrow  12118
  
 	!	endif !if(sparse)  20005
  
 	!	if(p_p2)write(p_n16,*)'xpsher',(p_xps(j),j=0,p_nrow)
  
 	! if the entering schedule is in the same unit then also the entering
-	if(p_iunit.eq.p_lunit(p_leavk).and.p_ienter.eq.3)then
+	if(p_unit.eq.p_lunit(p_leavk).and.p_ienter.eq.3)then
 		! in objr also the residual section and z section are included
 		p_objr0(p_newc)=p_objr0(p_newc)-p_objr0(p_leavk+p_nrowz)
 		! if(sparse)then
@@ -14805,9 +14273,9 @@ subroutine leaveskeys()
 			!p_a(j,p_newa)=p_a(j,p_newa)-p_a(j,p_leavk+p_nz)
 			iba=p_abas(p_newa)
 			p_a(iba+j)=p_a(iba+j)-p_a(p_abas(p_leavk+p_nz)+j)
-		enddo !j=1,p_nrow  12592
+		enddo !j=1,p_nrow  12143
 		!		endif !if(sparse)  20028
-	endif !if(p_iunit.eq.p_lunit(p_leavk).and.p_ienter.eq.3)  12582
+	endif !if(p_unit.eq.p_lunit(p_leavk).and.p_ienter.eq.3)  12133
  
 	! check
  
@@ -14874,7 +14342,7 @@ subroutine leaveskeys()
 			!	enddo !i=1,p_nrow  10213
 			!		p_a(i,p_ia)=p_a(i,nex+p_nz)-p_a(i,p_leavk+p_nz)
 			p_a(p_abas(p_ia)+i)=p_a(i+p_abas(nex+p_nz))-p_a(i+p_abas(p_leavk+p_nz))
-		enddo !i=1,p_nrow  12660
+		enddo !i=1,p_nrow  12211
 		!if(p_p)write(p_n16,*)'iacol',p_a(1:min(p_nrow,50),p_ia)
 		!		endif !if(sparse)  20088
 		!if(p_p)write(p_n16,*)'pivot7',p_icolold,p_icolnew, 'in d',nex,p_id
@@ -14902,7 +14370,7 @@ subroutine leaveskeys()
 		if(nup.ge.nfreq)then
 			p_refac=p_refac+1
 			!if(p_)write(p_n16,*)'*refact',p_refac,nup,nfreq
-		endif !if(nup.ge.nfreq)  12690
+		endif !if(nup.ge.nfreq)  12241
 		!if(p_8)write(6,*)'<464pivot',wslu1
 		!if(p_)write(p_n16,*)'#pivot7 ',p_icolold,p_icolnew,p_nrow,p_nm
 		call pivot(p_icolold,p_icolnew,p_nrow, &
@@ -14927,11 +14395,11 @@ subroutine leaveskeys()
 			! write(6,*)'***trying to recover'
 			! if(p_p)write(p_n16,*)'***trying to recover'
 			! p_kierv=p_kier
-			! p_iunitv=p_iunit
+			! p_unitv=p_unit
 			! p_feasible=.false.
 			!p_goto1234=.true.;return
  
-		endif !if(p_ifail.ne.0)  12704
+		endif !if(p_ifail.ne.0)  12255
 		!	if(sparse)then
 		!	mpjjsp=-1
 		!	else !if(sparse)then
@@ -14947,7 +14415,7 @@ subroutine leaveskeys()
 			p_debug=.true.
 			write(6,*)'<1>changing debuggging at pivot=',p_pivot,' into ',p
  
-		endif !if(p_pivot.eq.p_idebug)  12734
+		endif !if(p_pivot.eq.p_idebug)  12285
  
 		! if(p_p)then
 		! write(p_n16,*)'**pivot=',p_pivot
@@ -14991,9 +14459,9 @@ subroutine leaveskeys()
 			do ilu_ = 1,p_lunits0
 				if (p_lunw(ilu_)==nex) then
 					p_lunw(ilu_)=p_id
-				endif !if (p_lunw(ilu_)==nex)  12780
-			enddo !ilu_ = 1,p_lunits0  12779
-		endif !if(p_fpresent)  12777
+				endif !if (p_lunw(ilu_)==nex)  12331
+			enddo !ilu_ = 1,p_lunits0  12330
+		endif !if(p_fpresent)  12328
  
 		! if(p_p)then
 		! write(p_n16,*)'aft next',p_next(0),p_next(p_next(0)), &
@@ -15003,7 +14471,7 @@ subroutine leaveskeys()
 		! endif !if(p_p)  12470
 		p_lcur=p_id
 		goto 17
-	endif !if(p_lunit(p_lcur).eq.p_lunit(nex))  12633
+	endif !if(p_lunit(p_lcur).eq.p_lunit(nex))  12184
  
 	! now just proceed as if leaving a-col p_leavk
 	! p_leave is index for ls
@@ -15017,202 +14485,7 @@ end subroutine leaveskeys
 subroutine leaveskeyf()
 	write(6,*)'leaveskeyf'
 end subroutine
-! use fletdmod
-! use fletdmod2
-! use fletcherdmod
-! if(p_leavkwf>0) then
-! !if(p_) write(p_n16,*)'**fact** AVAINTEHDAS VAIHTUU, p_leavkwf > 0 >> '
-! p_nkeyf=p_nkeyf+1
 
-! nex=p_leavkwf ! yksikön ensimmäinen ve-kantasarake
-! ikey_ = p_ibaunit(p_lunit(p_leavkwf))+p_keys(p_lunit(p_leavkwf))
-! ibxdatkey_=ibaxdat(ikey_) !,2)
-! ibxmatkey_=ibaxmat(ikey_) !,1)
-! ! muunnokset vain tarvittaessa
-! if ((p_nfy.gt.0).and.(p_lunit(p_leavkwf)/=p_iunitrans)) then
-! do j=1,j_o(p_ivkeepc)%i(1)
-! j_v(j_o(p_ivkeepc)%i2(j))=j_o(p_ivmatc)%d((p_lunit(p_leavkwf)-1)*j_o(p_ivkeepc)%i(1)+j)
-! enddo !j=1,j_o(p_ivkeepc)%i(1)  12838
-! !	do j=1,p_nutiltrans
-! call dotrans(p_ivutiltrans,1)
-! if(j_err)then
-! write(6,*)'err for trans ',j
-! stop 761
-! endif !if(j_err)  12843
-! !	enddo !j=1,p_nutiltrans  10055
-! !			p_iunitrans=p_lunit(p_leavkwf)
-! endif !if ((p_nfy.gt.0).and.(p_lunit(p_leavkwf)/=p_iunitrans))  12837
-
-! ! uusi avaintehdas
-! !p_leavkf=yksikön xkf sarkkeiden alku, =0 jos ei ole xkf muuttjia
-! if (p_leavkf>p_mxd) then
-! !kannasta lähtevästä
-! ifnew_ = p_ixkffact(p_leavkf)
-! else !if (p_leavkf>j_mxd) then
-! ifnew_ = p_ifopt   !ifnew= uusi avaintehdas
-! endif !if (p_leavkf>p_mxd)  12853
-
-
-! !yksikön ve-kantasarakkeet    ks kaava 12
-! ! do while(p_lunit(nex)==p_lunit(p_leavkwf))
-! ! p_id=p_lx(p_lx0+2) !take new D-column for this
-! ! p_ia=p_id+p_nz  ! ld0 nrow+1 already reserved for entering, p_ia=col in A
-! ! p_icolnew=p_ia+p_nrow  !p_icolnew col number in (I A)
-! ! !if(p_)write(p_n16,*)'**fact** p_leavkwf <6966> p_icolnew',p_icolnew,'newid,p_newa',p_id,p_ia
-
-! ! iobs_ = p_ibaunit(p_lunit(p_leavkwf))+p_isch(nex) !saraketta vastaavan ve
-! ! ibxmatx=ibaxmat(iobs_) !,2)
-! ! ibxdatobs_=ibaxdat(iobs_) !,1)
-! ! !!x_ij_t = xmat(ix(j_),iobs_)
-! ! !!x_iJ(i)_t = xmat(ix(j_),ikey_)
-! ! !!alfa = coeffx(ibafx(irowj)+k)
-! ! !!gamma = v(fyfactout(iv2xykypos_,iv3factpos_))
-
-! ! !objr0:n päivitys
-! ! if(p_ix(0).ne.0)then  !p_ixcur(0))then
-! ! p_objr0(p_icolnew)=p_xmat(p_ix(0)+ibxmatx)-p_xmat(p_ix(0)+ibxmatkey_)
-! ! else !if(j_ixcur(0).ne.0)then
-! ! p_objr0(p_icolnew)=0.
-! ! endif !if(p_ix(0).ne.0)  12897
-
-! ! !j_ : lavennetut tehtävärivit
-! ! do jj=1,p_nrow
-! ! iel=p_abas(p_ia)+jj
-! ! if(p_ixcur(jj))then
-! ! !	p_a(jj,p_ia)=p_xmat(p_ix(jj)+ibxmatx)-p_xmat(p_ix(jj)+ibxmatkey_)
-! ! p_a(iel)=p_xmat(p_ix(jj)+ibxmatx)-p_xmat(p_ix(jj)+ibxmatkey_)
-! ! else !if(j_ixcur(j_).ne.0)then
-! ! p_a(iel)=j_0
-! ! endif !if(p_ixcur(jj))  12906
-! ! enddo !jj=1,p_nrow  12904
-
-
-
-
-! ! enddo !jj=1,p_nfyrow   9819
-
-! p_lunit(p_id)=p_lunit(p_leavkwf)
-! p_isch(p_id)=p_isch(nex)
-! p_icolold=nex+p_nrowz
-
-! ! if(p_p)then
-! ! write(p_n16,*)'**fact** p_leavkwf <7063> **ennen pivot=',p_pivot
-! ! write(p_n16,*)'lea col',(p_a(jj7,nex+p_nz),jj7=1,p_nrow)
-! ! write(p_n16,*)'ent col',(p_a(jj7,p_ia),jj7=1,p_nrow)
-! ! write(p_n16,*)'ld',(p_lx(jj7),jj7=1,p_lx0)
-! ! write(p_n16,*)'lf',(p_lf(jj7),jj7=p_mxd+1,p_lf0)
-! ! write(p_n16,*)'lr',(p_lr(jj7),jj7=1,p_lr0)
-! ! write(p_n16,*)'nex',nex
-! ! write(p_n16,*)'p_icolnew',p_icolnew  !p_icolnew=colnum in (I A)
-! ! endif !if(p_p)  12122
-
-! mqjj=-1   !new not  something known
-
-! ! if(p_p) then
-! ! write(p_n16,*) '**Pivot <7778> nex,ia, nex+nrowz,p_icolnew,nrow', &
-! ! nex,p_ia,p_icolold,p_icolnew,p_nrow
-! ! endif !if(p_p)  12135
-! if(nup.ge.nfreq)then
-! p_refac=p_refac+1
-! !if(p_p)write(p_n16,*)'*refact'
-! endif !if(nup.ge.nfreq)  13025
-! ! tarkistetaan onko tuleva vektori riippuvainen jäävistä, jottei tulee lin riippuva systeemi !!!!!
-
-! p_listapu(1)=p_icolold
-! !call fbsub(p_nrow,1,1,p_a,p_lavec,0,p_a(1:,p_ia),p_x,p_listapu,wslu1,lwsll1,.false.)
-! call fbsub(p_nrow,1,1,p_a,p_lavec,0,p_a(p_abas(p_ia)+1:),p_x,p_listapu,wslu1,lwsll1,.false.)
-! !		write(6,*)'<4646',p_x(2)
-! if(abs(p_x(p_icolold)).lt.p_tiny78)then
-! p_nkeyfactw=p_nkeyfactw+1
-! if(p_nkeyfactw.le.7)write(6,*)'key factory cannot be changed, pivot=',p_pivot
-
-! ! if(p_p9)then
-! ! write(16,*)'key factory cannot be changed',p_iunit,ixkenter,p_leavkf,p_ifopt,p_justkey,p_valueopt,&
-! ! p_valuek
-! ! call fbsub(p_nrow,1,p_nrow,p_a,p_lavec,0,p_a(1:,p_ia),p_x,p_ls,wslu1,lwsll1,.false.)
-! ! write(p_n16,*)(p_ls(jj),p_x(p_ls(jj)),jj=1,p_nrow)
-! ! endif !if(p_p9)  12153
-! j_err=.true.;return
-! !	p_goto55=.true.;return
-! endif !if(abs(p_x(p_icolold)).lt.p_tiny78)  13035
-! ! if(p_p)write(p_n16,*)'<7575pivot',wslu1
-! ! if(p_p)write(p_n16,*)'#pivot8 ',p_icolold,p_icolnew,p_nrow,p_nm
-! call pivot(p_icolold,p_icolnew,p_nrow, &
-! p_nm,p_a,p_lavec,e,wslu1,lwsll1,p_ifail,p_info)
-! p_pivotcase=2
-! j_o(p_ivpivotcases)%i2(2)=j_o(p_ivpivotcases)%i2(2)+1
-! p_pivot=p_pivot+1
-! p_nkeyf=p_nkeyf+1
-! p_route67=.true.
-! !	if(p_p7)write(77,*)2,p_pivot,p_objf
-! ! if(p_p.or.p_p9.or.p_p8)write(p_n16,*)'<67>',p_pivot,p_objf,p_ienter,p_iunit,p_tmax,&
-! ! p_valueopt,p_valuek,p_x(p_icolold),r(p_icolold),ixkenter,p_leavkf,p_ifopt,p_icolnew-p_nrow
-! ! if(p_p9)write(16,*)p_keyfact(p_iunit,max(ixkenter,1))
-
-! if(p_pivot.eq.p_idebug)then
-
-! write(6,*)'*debugON* pivot ',p_pivot
-! p_debug=.true.
-! endif !if(p_pivot.eq.p_idebug)  13062
-
-! if(p_ifail.ne.0)then
-! write(6,*)'**failure in pivot (fact) ,p_ifail=',p_ifail,' info=',p_info
-! write(6,*)'pivots',p_pivot,' r '
-! j_err=.true. ;return
-
-
-! endif !if(p_ifail.ne.0)  13068
-
-! ! mpjj=-1   ! old not something to remember
-
-! ! update ls and ld lists
-! call jlplex(p_ls,p_lsi(p_icolold),p_lsi(p_icolnew),p_lsi)
-! call jlplex(p_lx,p_lx0+2,p_lxi(nex),p_lxi)
-! ! if(p_p2)then
-! ! write(p_n16,*)'ldaf ',(p_lx(jj7),jj7=1,p_lx0)
-! ! write(p_n16,*)'lsaf ',(p_ls(jj7),jj7=1,5)
-! ! endif !if(p_p2)  12250
-! ! ! nex leaving id entering
-! ! ! nex           3           4           0           4           2           0
-! ! ! lunit           0          22          22          20          22           0
-
-! ! ! p_leavk
-! ! ! nex           3           4           0           4           2           0
-! ! ! lunit           0          22          22          20          22           0
-! ! if(p_p)then
-! ! !					write(p_n16,*)'**fact** p_leavkwf <7082> before inserting ', id ,'next',next(0),next(next(0)),next(next(next(0))),  next(next(next(next(0))))
-! ! write(p_n16,*)'**fact** units',p_lunit(p_next(0)),p_lunit(p_next(p_next(0))),&
-! ! p_lunit(p_next(p_next(p_next(0)))), p_lunit( p_next(p_next(p_next(p_next(0)))))
-! ! write(p_n16,*)'**fact** iprev',p_iprev(0),p_iprev(p_iprev(0)),p_iprev(p_iprev(p_iprev(0))),&
-! ! p_iprev(p_iprev(p_iprev(p_iprev(0))))
-! ! endif !if(p_p)  12261
-
-! p_next(p_iprev(nex))=p_id ! insert the new col in next-
-! p_next(p_id)=p_next(nex)
-! p_iprev(p_id)=p_iprev(nex)
-! p_iprev(p_next(p_id))=p_id
-
-! ! Päivitetään laskentayksikön vaihtoehtojen alkamissarake lunw:hen
-! do ilu_ = 1,p_lunits0
-! if (p_lunw(ilu_)==nex) then
-! p_lunw(ilu_)=p_id
-! endif !if (p_lunw(ilu_)==nex)  13162
-! enddo !ilu_ = 1,p_lunits0  13161
-
-! ! if(p_p)then
-! ! write(p_n16,*)'aft next',p_next(0),p_next(p_next(0)), &
-! ! p_next(p_next(p_next(0))),  p_next(p_next(p_next(p_next(0))))
-! ! write(p_n16,*)'iprev',p_iprev(0),p_iprev(p_iprev(0)), &
-! ! p_iprev(p_iprev(p_iprev(0))),p_iprev(p_iprev(p_iprev(p_iprev(0))))
-! ! endif !if(p_p)  12281
-
-! nex=p_next(nex)
-! enddo !while(p_lunit(nex)==p_lunit(p_leavkwf))  12882
-
-! endif !if(p_leavkwf>0)  12828
-
-
-!end subroutine leaveskeyf
 
 subroutine leafa()
 	! use fletdmod
@@ -15245,7 +14518,7 @@ subroutine leafa()
 	! ! p_leavkf, iunit_, p_ixkf(p_leavkf), p_ixkffact(p_leavkf)
 	! ! endif !if(p_p.or.p_p9)  12315
 	! ibas1=ibaxdat(p_ibaunit(iunit_)+p_keys(iunit_)) !,1)
-	! valtas=j_o(p_ivxdatmat)%d(ibas1+ikeepx_lkf)   !ibaxmat
+	! valtas=j_o(p_ivdatamatx)%d(ibas1+ikeepx_lkf)   !ibamatx
 	! p_xps(0)=p_xps(0)+p_objr0(p_leavkf+p_nz+p_nrow)*valtas  !&
  
 	! do j=1,p_nrow
@@ -15258,268 +14531,13 @@ subroutine leafa()
  
 	! !objr0, a päivitys kun xk-muuttuja tulee kantaan
 	! ! if the entering schedule is in the same unit then also the entering
-	! if(p_iunit.eq.p_lunit(p_leavkf).and.p_ienter.eq.4.and.(ixkenter==ixk_lkf)) then
+	! if(p_unit.eq.p_lunit(p_leavkf).and.p_ienter.eq.4.and.(ixkenter==ixk_lkf)) then
 	! ! in objr also the residual section and z section are included
 	! !	if(p_p)write(p_n16,*)'**fact** <7429> objr0(p_newc),objr0(p_leavkf+nrowz),objr0(p_newc)-objr0(p_leavkf+nrowz)',&
 	! !		p_objr0(p_newc),p_objr0(p_leavkf+p_nrowz),p_objr0(p_newc)-p_objr0(p_leavkf+p_nrowz)
 	! p_objr0(p_newc)=p_objr0(p_newc)-p_objr0(p_leavkf+p_nrowz)
  
-	! do j=1,p_nrow
-	! ! newcol= x-oldkey  p_leavk:  newkey-oldkey  x-newkey= x-oldkey-(newkey-oldkey)
-	! !	p_a(j,p_newa)=p_a(j,p_newa)-p_a(j,p_leavkf+p_nz)
-	! p_a(j+p_abas(p_newa))=p_a(j+p_abas(p_newa))-p_a(j+p_abas(p_leavkf+p_nz))
-	! enddo !j=1,p_nrow  12868
  
-	! endif !if(p_iunit.eq.p_lunit(p_leavkf).and.p_ienter.eq.4.and.(ixk  12862
- 
-	! !objr0, a päivitys kun vaihtoehto tulee kantaan
-	! ! if the entering schedule is in the same unit then also the entering
-	! if(p_iunit.eq.p_lunit(p_leavkf).and.p_ienter.eq.3)then
-	! ! in objr also the residual section and z section are included
-	! !	if(p_p)write(p_n16,*)'**fact** <7497> <wij> objr0(p_newc) alussa :', p_objr0(p_newc)
- 
-	! ikey_ = p_ibaunit(p_iunit) + p_keys(p_iunit)
-	! iopt_ = p_ibaunit(p_iunit) + p_iopt
-	! ibxdatopt_=ibaxdat(iopt_)! ,1)
-	! ibxdatkey_=ibaxdat(ikey_)! ,2)
-	! ibxmatxopt_=ibaxmat(iopt_)! ,1)
-	! ibxmatkey_=ibaxmat(ikey_) !,2)
-	! !p_newc, newa asetettu aiemmin (p_ienter = 3 paikkeilla)
-	! if(p_ix(0).ne.0)then ! p_ixcur(0))then
-	! p_objr0(p_newc)=p_xmat(p_ix(0)+ibxmatxopt_)-p_xmat(p_ix(0)+ibxmatkey_)
-	! else !if(j_ixcur(0).ne.0)then
-	! p_objr0(p_newc)=j_0
-	! endif !if(p_ix(0).ne.0)  12889
- 
-	! do jj=1,p_nrow
-	! if(p_ixcur(jj)) then
-	! !	p_a(jj,p_newa) = p_xmat(p_ix(jj)+ibxmatxopt_)- p_xmat(p_ix(jj)+ibxmatkey_)
-	! p_a(jj+p_abas(p_newa)) = p_xmat(p_ix(jj)+ibxmatxopt_)- p_xmat(p_ix(jj)+ibxmatkey_)
-	! else !if(j_ixcur(jj).ne.0) then
-	! p_a(jj+p_abas(p_newa)) = j_0
-	! endif !if(p_ixcur(jj))  12896
-	! enddo !jj=1,p_nrow  12895
- 
-	! do jj=1,p_nfxrow ! #tehdasmjarivit
-	! !jcurix=p_fxrow(jj)
-	! irowj_=p_fxrow(jj)  !jcurix+1 !p_irowrow(jcurix)
- 
-	! ! tehtävärivin xk-mjat
-	! do k_=1,p_nfxinrow(irowj_)
-	! ixk_=p_irowfxvars(p_ibafx(irowj_)+k_)
- 
-	! if (ixk_==ixk_lkf) then
-	! ! xk-mja, jonka avaintehdas vaihtumassa yksikössä
-	! keyf_ = p_ixkffact(p_leavkf)
-	! else !if (ixk_==ixk_lkf) then
-	! ! muut xk-mjat (avaintehdas ei vaihdu)
-	! keyf_ = p_keyfact(p_iunit,ixk_)
-	! endif !if (ixk_==ixk_lkf)  12912
- 
-	! ! lisätään  avaintehtaan (alfa*(x_ij_k - x_iJ(i)_k))
-	! if(keyf_==p_irowffact(p_ibafx(irowj_)+k_)) then
-	! ! jcurix 0 / muut rivit
-	! if (jcurix==0) then
-	! p_objr0(p_newc)=p_objr0(p_newc) + p_coeffx(p_ibafx(irowj_)+k_)* &
-	! (j_o(p_ivxdatmat)%d(ibxdatopt_+p_irowfkeep(p_ibafx(irowj_)+k_)) - & !ibaxmat
-	! j_o(p_ivxdatmat)%d(ibxdatkey_+p_irowfkeep(p_ibafx(irowj_)+k_)))   !ibaxmat
-	! else !if (jcurix==0) then
-	! p_a(jcurix+p_abas(p_newa))=p_a(jcurix+p_abas(p_newa)) + p_coeffx(p_ibafx(irowj_)+k_)* &
-	! (j_o(p_ivxdatmat)%d(ibxdatopt_+p_irowfkeep(p_ibafx(irowj_)+k_)) - & !ibaxmat
-	! j_o(p_ivxdatmat)%d(ibxdatkey_+p_irowfkeep(p_ibafx(irowj_)+k_)))    !ibaxmat
-	! endif !if (jcurix==0)  12923
-	! endif !if(keyf_==p_irowffact(p_ibafx(irowj_)+k_))  12921
- 
-	! enddo !k_=1,p_nfxinrow(irowj_)  12909
-	! enddo !jj=1,p_nfxrow  12904
- 
-	! ! do jj=1,p_nfyrow	!tehdas-yk-mjia sisältävät tehtävärivit
-	! ! jcurix=p_fyrow(jj)
-	! ! irowj_ = jcurix+1 ! p_irowrow(jcurix)
-	! ! do k_=1,p_nfyinrow(irowj_)
-	! ! listy=p_irowfyvars(p_ibafy(irowj_)+k_) !yk-mjaa vastaava ptl-lista
-	! ! listf=p_irowfyfact(p_ibafy(irowj_)+k_) !yk-mjaa vastaava tehdas-lista
-	! ! do pvars_=1,j_o(listy)%i(1) ! yk-mjan puutavaralistan muuttujat
-	! ! iv2elpos_ = p_ifyvarskeep(p_ibafykeep(p_ibafy(irowj_)+k_)+pvars_-1) !mjan xmat-sarake
-	! ! iv2xkpos_ = p_ifyvarsxk(p_ibafykeep(p_ibafy(irowj_)+k_)+pvars_-1) !mjan paikka xk-listassa
- 
-	! ! if (iv2xkpos_==ixk_lkf) then
-	! ! ! xk-mja, jonka avaintehdas vaihtumassa yksikössä
-	! ! keyf_ = p_ixkffact(p_leavkf)
-	! ! else !if (iv2xkpos_==ixk_lkf) then
-	! ! keyf_ = p_keyfact(p_iunit,iv2xkpos_)
-	! ! endif !if (iv2xkpos_==ixk_lkf)  10181
-	! ! valuetas=j_o(p_ivxdatmat)%d(ibxdatopt_+iv2elpos_)-j_o(p_ivxdatmat)%d(ibxdatkey_+iv2elpos_)
-	! ! do ifact_=1,j_o(listf)%i(1) ! yk-mjan tehdaslistan tehtaat
-	! ! iv3factpos_ = p_ifyfactfact(p_ibafyfact(p_ibafy(irowj_)+k_)+ifact_-1) !tehtaan paikka factories-listassa
-	! ! ! lisätään  avaintehtaan (gamma*(x_ij_k - x_iJ(i)_k))
-	! ! if(keyf_.eq.iv3factpos_) then
-	! ! !jcurix 0 / muut rivit
-	! ! if (jcurix==0) then
-	! ! p_objr0(p_newc)=p_objr0(p_newc) + j_v(p_fyfactout(iv2xkpos_,iv3factpos_)) *  &
-	! ! valuetas
- 
-	! ! else !if (jcurix==0) then
-	! ! p_a(jcurix,ia)=p_a(jcurix,ia) + j_v(p_fyfactout(iv2xkpos_,iv3factpos_)) *  &
-	! ! valuetas
- 
-	! ! endif !if (jcurix==0)  10193
-	! ! endif !if(keyf_.eq.iv3factpos_)  10191
- 
-	! ! enddo !ifact_=1,j_o(listf)%i(1)  10188
-	! ! enddo !pvars_=1,j_o(listy)%i(1)  10177
-	! ! enddo !k_=1,p_nfyinrow(irowj_)  10174
-	! ! enddo !jj=1,p_nfyrow  10171
- 
-	! !	if(p_p)write(p_n16,*)'**fact**  objr0(p_newc) päivitetty :', p_objr0(p_newc)
-	! endif !if(p_iunit.eq.p_lunit(p_leavkf).and.p_ienter.eq.3)  12878
- 
-	! ! check
- 
-	! ! if there are more columns in the same unit these must be changed with
-	! ! columns expressed in the new key
- 
-	! ! old d= x-key, x=d+key
-	! ! new d= x-newkey=d+key-newkey
-	! ! column leave is actually : newkey-key, thus new d is:
-	! ! d- column leave
-	! p_leavec=p_leavkf+p_nrowz  ! in col numbering
-	! p_lcur=p_leavkf
- 
-	! ! if(p_p) then
-	! ! write(p_n16,*)'**fact** unit, old keyfact,new ', p_lunit(p_lcur), &
-	! ! p_keyfact(p_lunit(p_lcur),p_ixkf(p_leavkf)),&
-	! ! p_ixkffact(p_leavkf)
-	! ! endif !if(p_p)  12459
-	! p_keyfact(p_lunit(p_lcur),p_ixkf(p_leavkf))=p_ixkffact(p_leavkf)
- 
-	! ! if (p_p) then
-	! ! write(p_n16,*)'**fact** p_leavkf > 0, avaintehdas päivitetty/ p_leavkf, unit, ixk, ifact:',&
-	! ! p_leavkf, p_lunit(p_leavkf),p_ixkf(p_leavkf),p_ixkffact(p_leavkf)
-	! ! write(p_n16,*)'**fact** xk, tehdas;', j_vname(p_log(p_ixkf(p_leavkf))),&
-	! ! j_vname(p_fact(p_ixkffact(p_leavkf)))
-	! ! endif !if (p_p)  12466
- 
-	! ! intitially p_leavk is first column (in nex-order) in the unit
-	! 19 		nex=p_nextf(p_lcur,p_ixkf(p_leavkf))    ! in d columns
-	! ! we jump here from below to go through all columns in the same unit
-	! ! first free column is reserved for p_newc
- 
-	! if(p_lunit(p_lcur).eq.p_lunit(nex))then
-	! ! if(p_p) then
-	! ! write(p_n16,*)'samma ,nex,',nex,p_lunit(p_lcur)
-	! ! endif !if(p_p)  12479
-	! ! change the old additional  columns to correspond
-	! ! to the new key
-	! if_=p_lf(p_lf0+2) !take new D-column for this
-	! ! note ld0+1 may be used already if schedule is entering
-	! p_ia=if_+p_nz  ! ld0 nrow+1 already reserved for entering, p_ia=col in A
-	! p_icolnew=p_ia+p_nrow  !p_icolnew col number in (I A)
-	! if(p_p)write(p_n16,*)'p_newc,p_icolnew',p_newc,p_icolnew,'newid,p_newa',if_,p_ia
- 
-	! p_objr0(p_icolnew)=p_objr0(p_icolold)-p_objr0(p_leavec)
- 
-	! do i=1,p_nrow
-	! !		p_a(i,p_ia)=p_a(i,nex+p_nz)-p_a(i,p_leavkf+p_nz)
-	! p_a(i+p_abas(p_ia))=p_a(i+p_abas(nex+p_nz))-p_a(i+p_abas(p_leavkf+p_nz))
-	! enddo !i=1,p_nrow  13023
-	! ! if(p_p)write(p_n16,*)'iacol',p_a(1:min(p_nrow,50),p_ia)
-	! ! if(p_p)write(p_n16,*)'pivot7',p_icolold,p_icolnew, 'in d',nex,if_
-	! p_lunit(if_)=p_lunit(p_leavkf)
-	! p_ixkf(if_)=p_ixkf(nex)
-	! p_ixkffact(if_)=p_ixkffact(nex)
-	! p_icolold=nex+p_nrowz
-	! !!!Fletcher ??????????
- 
-	! ! if leaving colums is the same as mp it is utilizing old computation
-	! ! leaving column is stored into  mp
-	! ! if entering column is mq, pivot is also utilizing old computations
-	! ! entering column is getting the new value
- 
-	! mqjj=-1   !new not  something known
-	! ! if(p_p) then
-	! ! write(p_n16,*) '**Pivot <8086> nex,nex+nrowz,p_icolnew,nrow', p_icolold,p_icolnew,p_nrow
-	! ! endif !if(p_p)  12509
-	! if(nup.ge.nfreq)then
-	! p_refac=p_refac+1
-	! !if(p_p)write(p_n16,*)'*refact'
-	! endif !if(nup.ge.nfreq)  13044
-	! !	if(p_p8)write(6,*)'pivo757575',wslu1
-	! !if(p_p)write(p_n16,*)'#pivot9 ',p_icolold,p_icolnew,p_nrow,p_nm
-	! call pivot(p_icolold,p_icolnew,p_nrow, &
-	! p_nm,p_a,p_lavec,e,wslu1,lwsll1,p_ifail,p_info) !! nex+nrowz :: onko nex:issä
-	! p_pivotcase=3
-	! j_o(p_ivpivotcases)%i2(3)=j_o(p_ivpivotcases)%i2(3)+1
-	! p_pivot=p_pivot+1
-	! !	if(p_p7)write(77,*)3,p_pivot,p_objf
-	! !	if(p_p.or.p_p9.or.p_p8)write(p_n16,*)'pivot<84>',p_pivot,3,p_objf,p_tmax
-	! if(p_ifail.ne.0)then
-	! write(6,*)'****pivot failure (6) ,p_ifail=',p_ifail,' info=',p_info,'pivot ',p_pivot
-	! j_err=.true.
-	! return
-	! ! p_nrecover=p_nrecover+1
-	! ! if(p_nrecover.ge.20)then
-	! ! write(6,*)'*jlp* is mixed up, try different tole (e.g.10,100,1000)(or consult J. Lappi))'
-	! ! j_err=.true.
-	! ! p_goto900=.true.;return
- 
-	! ! endif !if(p_nrecover.ge.20)  12528
-	! ! write(6,*)'***trying to recover'
-	! ! if(p_p)write(p_n16,*)'***trying to recover'
-	! ! p_kierv=p_kier
-	! ! p_iunitv=p_iunit
-	! ! p_feasible=.false.
-	! ! p_goto1234=.true.;return
- 
-	! endif !if(p_ifail.ne.0)  13057
- 
-	! if(p_pivot.eq.p_idebug)then
-	! write(6,*)'debug on ',p_pivot
-	! p_debug=.true.
-	! ! elseif(p_pivot.eq.p_jdebug)then
-	! ! p_p=.false.
-	! ! close(p_n16)
-	! ! write(6,*)'<1>changing debuggging at pivot=',p_pivot,' into ',p
-	! endif !if(p_pivot.eq.p_idebug)  13077
- 
-	! ! if(p_p)then
-	! ! write(p_n16,*)'**pivot=',p_pivot
-	! ! write(p_n16,*)'leaving col',(p_a(jj7,nex+p_nz),jj7=1,p_nrow)
-	! ! write(p_n16,*)'ent col',(p_a(jj7,p_ia),jj7=1,p_nrow)
-	! ! endif !if(p_p)  12555
-	! ! update ls and ld lists
-	! call jlplex(p_ls,p_lsi(p_icolold),p_lsi(p_icolnew),p_lsi)
-	! call lexf(p_lf,p_lf0+2,p_lfi(nex),p_lfi,p_mxd+1,2*p_mxd)
-	! ! if(p_p2)then
-	! ! write(p_n16,*)'lfaf ',(p_lf(jj7),jj7= p_mxd+1,p_lf0)
-	! ! write(p_n16,*)'lsaf ',(p_ls(jj7),jj7=1,5)
-	! ! endif !if(p_p2)  12563
-	! ! nex leaving id entering
-	! ! nex           3           4           0           4           2           0
-	! ! lunit           0          22          22          20          22           0
- 
-	! ! p_leavk
-	! ! nex           3           4           0           4           2           0
-	! ! lunit           0          22          22          20          22           0
-	! ! if(p_p)then
-	! ! endif !if(p_p)  12574
- 
-	! p_nextf(p_iprevf(nex, p_ixkf(p_leavkf)),p_ixkf(p_leavkf))=if_ ! insert the new col in nextf
-	! p_nextf(if_, p_ixkf(p_leavkf))=p_nextf(nex, p_ixkf(p_leavkf))
-	! p_iprevf(if_, p_ixkf(p_leavkf))=p_iprevf(nex, p_ixkf(p_leavkf))
-	! p_iprevf(p_nextf(if_,p_ixkf(p_leavkf)),p_ixkf(p_leavkf))=if_
- 
-	! p_lcur=if_
-	! goto 19
-	! endif !if(p_lunit(p_lcur).eq.p_lunit(nex))  13009
- 
-	! ! now just proceed as if leaving a-col p_leavk
-	! ! p_leave is index for ls
-	! p_leave=p_lsi(p_leavkf+p_nrowz)
-	! !	if(p_p)write(p_n16,*)'siis leaving, ind, inc ',p_leavkf,p_leave
-	! p_leaved=p_leavkf  !!p_leavkf,mahdollisesti+mxd (jos alkaa tehdasosuudesta indeksointi ykkösestä)
- 
-	! endif !if (p_leavkf.gt.p_mxd)  12822
  
  
 end subroutine leafa
@@ -15529,10 +14547,10 @@ subroutine leave0ienter3()
 	use jmod, only: p_fpresent
 	use jmod, only: p_n16
 	use jmod, only: p_ibaunit
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_keys
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: p_xps
 	use jmod, only: p_xmat
 	use jmod, only: p_ix
@@ -15548,82 +14566,31 @@ subroutine leave0ienter3()
 	integer pvars_
 	if(p_debug.and.p_fpresent)	write(p_n16,*)'**fact** VAIN AVAINVE VAIHTUU>> '
 	! change just key
-	iobs=p_ibaunit(p_iunit)+p_keys(p_iunit)
-	ibxmatx=ibaxmat(iobs) !,1)
+	iobs=p_ibaunit(p_unit)+p_keys(p_unit)
+	ibxmatx=ibamatx(iobs) !,1)
  
-	do jj=1,p_nxrowcur
-		j=p_xrowcur(jj)
+	do jj=1,p_nrowcurx
+		j=p_rowcurx(jj)
 		p_xps(j)=p_xps(j)-p_xmat(p_ix(j)+ibxmatx) ! v(ix(j))
-	enddo !jj=1,p_nxrowcur  13323
+	enddo !jj=1,p_nrowcurx  12424
  
-	!xps:n päivitys, p_ienter = 3 (vain avainvaihtoehto vaihtuu)
-	if (p_fpresent) then
-		! ibxdatobs=ibaxdat(iobs) !,1)
-		! iobsopt=p_ibaunit(p_iunit)+p_iopt	!uuden avainvaihtoehdon indeksi
-		! ibxdatopt=ibaxdat(iobsopt) !,2)
-		! do jj=1,p_nfxrow ! xk-muuttujat
-		! !	j=p_fxrow(jj)
-		! ! silmukka: rivin xk-muuttujat
-		! irowj = p_fxrow(jj)  !j+1 !p_irowrow(j)
-		! do k=1,p_nfxinrow(irowj)
-		! ! onko kerrointa vastaava tehdas sama kuin laskentayksikön avaintehdas kerrointa vastaavalla muuttujalla
-		! if(p_keyfact(p_iunit,p_irowfxvars(p_ibafx(irowj)+k)).eq.p_irowffact(p_ibafx(irowj)+k))then
-		! p_xps(j)=p_xps(j) &
-		! - p_coeffx(p_ibafx(irowj)+k)*&
-		! j_o(p_ivxdatmat)%d(ibxdatobs+p_irowfkeep(p_ibafx(irowj)+k))& !ibaxmat
-		! + p_coeffx(p_ibafx(irowj)+k)*&
-		! j_o(p_ivxdatmat)%d(ibxdatopt+p_irowfkeep(p_ibafx(irowj)+k))  !ibaxmat
-		! endif !if(p_keyfact(p_iunit,p_irowfxvars(p_ibafx(irowj)+k)).eq.p_  13152
-		! enddo !k=1,p_nfxinrow(irowj)  13150
-		! enddo !jj=1,p_nfxrow  13146
  
-		! do jj=1,p_nfyrow ! yk-muuttujat
-		! j=p_fyrow(jj)
-		! ! silmukka: rivin yk-muuttujat
-		! !		silmukka: puultavaralajilista
-		! irowj = j+1  !p_irowrow(j)
-		! do k=1,p_nfyinrow(irowj)
-		! listy=p_irowfyvars(p_ibafy(irowj)+k)
-		! listf=p_irowfyfact(p_ibafy(irowj)+k)
-		! do pvars_=1,j_o(listy)%i(1)
-		! !listy-listan pvars_:innen ptl-mjan paikka (järjestysnumero) xk-listassa
-		! iv2xykypos_ = p_ifyvarsxk(p_ibafykeep(p_ibafy(irowj)+k)+pvars_-1)
-		! iv2elpos_ = p_ifyvarskeep(p_ibafykeep(p_ibafy(irowj)+k)+pvars_-1)
-		! valuetas=j_o(p_ivxdatmat)%d(ibxdatobs+iv2elpos_)
-		! valuetas2=j_o(p_ivxdatmat)%d(ibxdatopt+iv2elpos_)
-		! do ifact_=1,j_o(listf)%i(1)
-		! ! iv3factpos_ : tehdaslistan list ifact_:innen tehtaan paikka (järjestysnumero) factories-listassa
-		! iv3factpos_ = p_ifyfactfact(p_ibafyfact(p_ibafy(irowj)+k)+ifact_-1)
-		! if(p_keyfact(p_iunit,iv2xykypos_).eq.iv3factpos_) then
-		! p_xps(j)=p_xps(j) &
-		! - j_v(p_fyfactout(iv2xykypos_,iv3factpos_))*&
-		! valuetas & !j_o(p_ivxdatmat)%d(ibaxmat(iobs)+iv2elpos_)
-		! + j_v(p_fyfactout(iv2xykypos_,iv3factpos_))*&
-		! valuetas2
-		! !	j_o(p_ivxdatmat)%d(ibaxmat(iobsopt)+iv2elpos_)
-		! endif !if(p_keyfact(p_iunit,iv2xykypos_).eq.iv3factpos_)  13543
-		! enddo !ifact_=1,j_o(listf)%i(1)  13540
-		! enddo !pvars_=1,j_o(listy)%i(1)  13534
-		! enddo !k=1,p_nfyinrow(irowj)  13531
-		! enddo !jj=1,p_nfyrow  13526
  
-	endif !if (p_fpresent)  13329
- 
-	iobs=p_ibaunit(p_iunit)+p_iopt
-	ibxmatx=ibaxmat(iobs) !,1)
-	do jj=1,p_nxrowcur
-		j=p_xrowcur(jj)
+	iobs=p_ibaunit(p_unit)+p_iopt
+	ibxmatx=ibamatx(iobs) !,1)
+	do jj=1,p_nrowcurx
+		j=p_rowcurx(jj)
 		p_xps(j)=p_xps(j)+p_xmat(p_ix(j)+ibxmatx) ! v(ix(j))
  
-	enddo !jj=1,p_nxrowcur  13383
+	enddo !jj=1,p_nrowcurx  12433
  
 	do jj=1,p_nrow
 		p_rhsw(jj)=p_rhscur(jj)-p_xps(jj)
-	enddo !jj=1,p_nrow  13389
+	enddo !jj=1,p_nrow  12439
  
 	if(p_p)write(p_n16,*)'change just key,ne xps', p_xps(0:min(p_nrow,20))
-	if(p_p)write(p_n16,*)'*yks old key, new ', p_iunit,p_keys(p_iunit),p_iopt
-	p_keys(p_iunit)=p_iopt
+	if(p_p)write(p_n16,*)'*yks old key, new ', p_unit,p_keys(p_unit),p_iopt
+	p_keys(p_unit)=p_iopt
 	p_nkeys=p_nkeys+1
 	p_justkey=.true.
 	p_goto55=.true.;return    !!!! just key scedule changed
@@ -15668,24 +14635,24 @@ subroutine leave0ienter1()
 			j_v(p_ivobjective)=j_inf
 		else !if(j_maxo)then
 			j_v(p_ivobjective)=j_ninf
-		endif !if(p_maxo)  13414
+		endif !if(p_maxo)  12464
 		j_err=.true.
  
 		return
-	endif !if((p_lower(p_newc).and..not.p_ubou(p_newc)).or.(.not.p_lo  13408
+	endif !if((p_lower(p_newc).and..not.p_ubou(p_newc)).or.(.not.p_lo  12458
 	if(p_lower(p_newc))then
 		p_lower(p_newc)=.false.
 		p_rhscur(p_newc)=p_rhs2(p_newc)
 	else !if(j_lower(p_newc))then
 		p_lower(p_newc)=.true.
 		p_rhscur(p_newc)=p_rhs(p_newc)
-	endif !if(p_lower(p_newc))  13423
+	endif !if(p_lower(p_newc))  12473
 	if((p_ix(p_newc).ne.0).or.p_fpresent)then
 		p_rhsw(p_newc)=p_rhscur(p_newc)-p_xps(p_newc)
 	else !if((j_ix(p_newc).ne.0).or.j_fpresent)then
 		p_rhsw(p_newc)=p_rhscur(p_newc)
  
-	endif !if((p_ix(p_newc).ne.0).or.p_fpresent)  13430
+	endif !if((p_ix(p_newc).ne.0).or.p_fpresent)  12480
  
 	if(p_debug) write(6,*)'goto 55/täältä'
 	p_goto55=.true.;return  !!!!active rhs changed goto main loop
@@ -15703,78 +14670,7 @@ subroutine leave0ienter4()
  
 	! ! if(p_p)	then
 	! ! write(p_n16,*)'**fact** VAIN AVAINTEHDAS VAIHTUU>> unit, ixk, vanha, uusi',&
-	! ! p_iunit, ixkenter,p_keyfact(p_iunit,ixkenter), p_ifopt
-	! ! write(p_n16,*)'**fact** keyfact xk, vanha, uusi', j_vname(p_log(ixkenter)),&
-	! ! j_vname(p_fact(p_keyfact(p_iunit,ixkenter))), &
-	! ! j_vname(p_fact(p_ifopt))
-	! ! endif !if(p_p)  12719
-	! p_iunit_lkf = p_iunit
-	! iobs=p_ibaunit(p_iunit_lkf)+p_keys(p_iunit_lkf)
-	! ibxdatobs=ibaxdat(iobs)! ,1)
-	! do jj=1,p_nfxrow ! xk-muuttujarivit
-	! !	j=p_fxrow(jj)
-	! irowj = p_fxrow(jj)  !j+1 !p_irowrow(j)
-	! ! silmukka: rivin xk-muuttujat
-	! !s 12 korjatun kaavan mukainen
  
-	! do k=1,p_nfxinrow(irowj)
-	! if((p_irowfxvars(p_ibafx(irowj)+k)==ixkenter).and.&
-	! (p_keyfact(p_iunit_lkf,p_irowfxvars(p_ibafx(irowj)+k)).eq.p_irowffact(p_ibafx(irowj)+k))) then
-	! p_xps(j)=p_xps(j) &
-	! - p_coeffx(p_ibafx(irowj)+k)*&
-	! j_o(p_ivxdatmat)%d(ibxdatobs+p_irowfkeep(p_ibafx(irowj)+k))  !ibaxmat
-	! endif !if((p_irowfxvars(p_ibafx(irowj)+k)==ixkenter).a  13281
-	! if ((p_irowfxvars(p_ibafx(irowj)+k)==ixkenter).and.(p_ifopt.eq.p_irowffact(p_ibafx(irowj)+k))) then
-	! p_xps(j)=p_xps(j) &
-	! + p_coeffx(p_ibafx(irowj)+k)*&
-	! j_o(p_ivxdatmat)%d(ibxdatobs+p_irowfkeep(p_ibafx(irowj)+k))  !ibaxmat
-	! endif !if ((p_irowfxvars(p_ibafx(irowj)+k)==ixkenter).and.(p_ifop  13287
-	! enddo !k=1,p_nfxinrow(irowj)  13280
- 
-	! if(j>0) p_rhsw(j)=p_rhscur(j)-p_xps(j)
-	! enddo !jj=1,p_nfxrow  13274
-	! ! do jj=1,p_nfyrow ! yk-muuttujarivit
-	! ! j=p_fyrow(jj)
-	! ! ! silmukka: rivin yk-muuttujat
-	! ! !		silmukka: puultavaralajilista
-	! ! irowj =j+1 ! p_irowrow(j)
-	! ! do k=1,p_nfyinrow(irowj)
-	! ! listy=p_irowfyvars(p_ibafy(irowj)+k)
-	! ! listf=p_irowfyfact(p_ibafy(irowj)+k)
-	! ! do pvars_=1,j_o(listy)%i(1)
-	! ! !listy-listan pvars_:innen ptl-mjan paikka (järjestysnumero) xk-listassa
-	! ! iv2xykypos_ = p_ifyvarsxk(p_ibafykeep(p_ibafy(irowj)+k)+pvars_-1)
-	! ! iv2elpos_ = p_ifyvarskeep(p_ibafykeep(p_ibafy(irowj)+k)+pvars_-1)
- 
-	! ! do ifact_=1,j_o(listf)%i(1)
-	! ! ! iv3factpos_ : tehdaslistan list ifact_:innen tehtaan paikka (järjestysnumero) factories-listassa
-	! ! iv3factpos_ = p_ifyfactfact(p_ibafyfact(p_ibafy(irowj)+k)+ifact_-1)
- 
-	! ! if((iv2xykypos_==ixkenter).and.(p_keyfact(p_iunit_lkf,iv2xykypos_).eq.iv3factpos_)) then
-	! ! p_xps(j)=p_xps(j) &
-	! ! - j_v(p_fyfactout(iv2xykypos_,iv3factpos_))*&
-	! ! j_o(p_ivxdatmat)%d(ibxdatobs+iv2elpos_)  !ibaxmat
-	! ! endif !if((iv2xykypos_==ixkenter).and.(p_keyfact(p_iunit_lkf,iv  13677
-	! ! if((iv2xykypos_==ixkenter).and.(iv3factpos_==p_ifopt)) then
-	! ! p_xps(j)=p_xps(j) &
-	! ! + j_v(p_fyfactout(iv2xykypos_,iv3factpos_))*&
-	! ! j_o(p_ivxdatmat)%d(ibxdatobs+iv2elpos_)  !ibaxmat
-	! ! endif !if((iv2xykypos_==ixkenter).and.(iv3factpos_==p_ifopt))  13682
- 
-	! ! enddo !ifact_=1,j_o(listf)%i(1)  13673
-	! ! enddo !pvars_=1,j_o(listy)%i(1)  13668
-	! ! enddo !k=1,p_nfyinrow(irowj)  13665
-	! ! if(j.gt.0) p_rhsw(j)=p_rhscur(j)-p_xps(j)
-	! ! enddo !jj=1,p_nfyrow  13660
-	! ! avaintehdas taulukon  (keyfact) päivitys
-	! p_keyfact(p_iunit_lkf,ixkenter) = p_ifopt
-	! ! if(p_p9)write(16,*)'vain at',p_iunit_lkf,ixkenter, p_ifopt
-	! ! if(p_p) then
-	! ! write(p_n16,*) '**fact** vain avaintehdas vaihtuu, avaintehtaat päivitetty'
-	! ! write(p_n16,*)'**fact** xps',p_xps
-	! ! write(p_n16,*)'**fact** rhsw',p_rhsw
-	! ! endif !if(p_p)  12787
-	! p_nkeyf=p_nkeyf+1
 	! p_goto55=.true.;return    !!!!only key factory changed
  
  
@@ -15811,24 +14707,24 @@ subroutine leave0else()
 			if(r(p_lr(jj)).gt.p_tiny78)then
 				if(.not.p_lbou(p_lr(jj)).or..not.p_lower(p_lr(jj))) then
 					!virheilmoitus ja häivytään
-				endif !if(.not.p_lbou(p_lr(jj)).or..not.p_lower(p_lr(jj)))  13536
+				endif !if(.not.p_lbou(p_lr(jj)).or..not.p_lower(p_lr(jj)))  12515
 				p_tmax=p_x(p_lr(jj))/r(p_lr(jj))
 				p_rcur=r(p_lr(jj))
 				p_leavec=p_lr(jj)
 				p_leave=p_lsi(p_leavec)
 				p_goto8888=.true.
-			endif !if(r(p_lr(jj)).gt.p_tiny78)  13535
+			endif !if(r(p_lr(jj)).gt.p_tiny78)  12514
 			if(r(p_lr(jj)).lt.p_tiny78n)then
 				if(.not.p_ubou(p_lr(jj)).or.p_lower(p_lr(jj))) then
 					!virheilmoitus ja häivytään
-				endif !if(.not.p_ubou(p_lr(jj)).or.p_lower(p_lr(jj)))  13546
+				endif !if(.not.p_ubou(p_lr(jj)).or.p_lower(p_lr(jj)))  12525
 				p_tmax=p_x(p_lr(jj))/r(p_lr(jj)) ;p_rcur=r(p_lr(jj))
 				p_leavec=p_lr(jj)
 				p_leave=p_lsi(p_leavec)
 				p_goto8888=.true.
-			endif !if(r(p_lr(jj)).lt.p_tiny78n)  13545
-		enddo !jj=1,p_lr0  13534
-	endif !if(.not.p_feasible)  13533
+			endif !if(r(p_lr(jj)).lt.p_tiny78n)  12524
+		enddo !jj=1,p_lr0  12513
+	endif !if(.not.p_feasible)  12512
  
 	write(6,*)'jlp() unbounded problem (2)'
  
@@ -15840,7 +14736,7 @@ subroutine leave0else()
 		j_v(p_ivobjective)=j_inf
 	else !if(j_maxo)then
 		j_v(p_ivobjective)=j_ninf
-	endif !if(p_maxo)  13563
+	endif !if(p_maxo)  12542
 	j_err = .true.
 	return
 	!	endif !if(p_ienter.eq.3)  12601
@@ -15861,7 +14757,7 @@ subroutine route67()
 	use jmod, only: p_pivot
 	use jmod, only: p_objf
 	use jmod, only: p_ienter
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_tmax
 	use jmod, only: j_err
 	use fletdmod
@@ -15882,15 +14778,15 @@ subroutine route67()
  
 				!	if(p_p9)then
 				!if(p_pp)write(16,*)'p_ienter,p_leavec',p_ienter,p_leavec,store,j_tmax,p_newa
-				write(6,*)'<12>pivot_cannot',p_pivot,p_objf,p_ienter,p_iunit,p_tmax
-				! p_valueopt,p_valuek,ixkenter,p_leavkf,p_ifopt,p_justkey,p_keyfact(p_iunit,max(ixkenter,1))
+				write(6,*)'<12>pivot_cannot',p_pivot,p_objf,p_ienter,p_unit,p_tmax
+				! p_valueopt,p_valuek,ixkenter,p_leavkf,p_ifopt,p_justkey,p_keyfact(p_unit,max(ixkenter,1))
 				! call fbsub(p_nrow,1,p_nrow,p_a,p_lavec,0,p_a(1+p_abas(p_newc-p_nrow)),p_x,p_ls,wslu1,lwsll1,.false.)
 				! write(6,*)'<6788',p_x(2)
 				! write(p_n16,*)(p_ls(jjj),p_x(p_ls(jjj)),jjj=1,p_nrow)
 				! !endif !if(p_p9)  12901
 				!	p_goto55=.true.;return
 				j_err=.true. ;return
-			endif !if(abs(p_x(p_ls(p_leave))).lt.p_tiny6)  13587
+			endif !if(abs(p_x(p_ls(p_leave))).lt.p_tiny6)  12566
 		else !if(p_newc.gt.j_nrow)then
 			! residual enters
 			call fbsub(p_nrow,p_leave,p_leave,p_a,p_lavec,p_newc,p_a(1+p_abas(1):),p_x,p_ls,wslu1,lwsll1,.false.)
@@ -15917,10 +14813,10 @@ subroutine route67()
 				! p_objilres=p_objf
  
 				! j_err=.true.;return
-			endif !if(abs(p_x(p_ls(p_leave))).lt.p_tiny6)  13606
+			endif !if(abs(p_x(p_ls(p_leave))).lt.p_tiny6)  12585
  
-		endif !if(p_newc.gt.p_nrow)  13579
-	endif !if(p_route67)  13578
+		endif !if(p_newc.gt.p_nrow)  12558
+	endif !if(p_route67)  12557
  
 endsubroutine route67
 
@@ -15957,7 +14853,7 @@ subroutine printproblem()
 			j_tempchar(le+1:le+6)=j_chi5(p_domainunits(idom),0)
 			!	write(6,*)' ',('_',kk=1,78)
 			write(nureport,'(a)')j_tempchar(1:le+12)
-		end if !if(p_xpresent.and.p_isdomain)  13642
+		end if !if(p_xpresent.and.p_isdomain)  12621
 		!write(nureport,*)' ',('_',kk=1,78)
 		!		write(j_buf,66061)
 		!66061 format('row',t38,'value',t50,'shadow',t61,  'lower',t70,'upper')
@@ -15997,7 +14893,7 @@ subroutine printproblem()
 				if(p_lbou(irow))j_tempchar(le+7:le+17)= j_chr10(dble(p_rhs(irow)))
 				if(p_ubou(irow))j_tempchar(le+18:le+28)= j_chr10(dble(p_rhs2(irow)))
  
-			end if !if(p_rhs(irow).eq.p_rhs2(irow))  13685
+			end if !if(p_rhs(irow).eq.p_rhs2(irow))  12664
  
 		else ! if(j.eq.1) then !if(irow0.ne.irowobj)then
 			! for maximization rhs1 =huge  rhs2=0
@@ -16009,12 +14905,12 @@ subroutine printproblem()
 				j_tempchar(1:5)=' max'
 			else !if(j_maxo)then
 				j_tempchar(1:5)=' min'
-			end if !if(p_maxo)  13699
+			end if !if(p_maxo)  12678
 			!else !if(j_v(p_ivfeasible)>0)then
 			!	j_buf(1:5)=' '
 			!	j_buf(6:33)='Infeasible, temporary object'
 			!endif !if(j_v(p_ivfeasible)>0)then
-		end if !if(irow.gt.1)  13672
+		end if !if(irow.gt.1)  12651
 		write(nureport,'(a)')j_tempchar(1:le+28)
 		!	if(p_intapp)then
 		!		j_buf=' '
@@ -16023,7 +14919,7 @@ subroutine printproblem()
 		!	endif !if(p_intapp)then
 		!	end do !k=1,p_nsetr(i)   9299
 		!			enddo domloopp !domloopp: do j=1,j_nsetd(i)
-	enddo !irow=1,p_nrow  13639
+	enddo !irow=1,p_nrow  12618
  
 end subroutine !subroutine printproblem()
 
@@ -16035,10 +14931,10 @@ end subroutine !subroutine printcur()
 logical function isxkzero(ixk)
 	use jmod, only: p_ixkkeep
 	use jmod, only: p_ibaunit
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
 	use jmod, only: p_keys
 	use jmod, only: j_o
-	use jmod, only: p_ivxdatmat
+	use jmod, only: p_ivdatamatx
 	use jmod, only: p_lx0
 	use jmod, only: p_lunit
 	use jmod, only: p_lx
@@ -16046,21 +14942,21 @@ logical function isxkzero(ixk)
 	integer ikey_,ikeepxk_,k_
 	isxkzero=.true.
 	ikeepxk_ = p_ixkkeep(ixk)
-	ikey_=p_ibaunit(p_iunit) + p_keys(p_iunit)
+	ikey_=p_ibaunit(p_unit) + p_keys(p_unit)
 	ibxdatkey_=ibaxdat(ikey_) !,2)
-	if(j_o(p_ivxdatmat)%d(ibxdatkey_+ikeepxk_).ne.0.)then
+	if(j_o(p_ivdatamatx)%d(ibxdatkey_+ikeepxk_).ne.0.)then
 		isxkzero=.false.
 		return
-	endif !if(j_o(p_ivxdatmat)%d(ibxdatkey_+ikeepxk_).ne.0.)  13732
+	endif !if(j_o(p_ivdatamatx)%d(ibxdatkey_+ikeepxk_).ne.0.)  12711
 	do k_=1,p_lx0
-		if(p_lunit(p_lx(k_)).ne.p_iunit) cycle
-		ikey_=p_ibaunit(p_iunit) + p_isch(p_lx(k_))
+		if(p_lunit(p_lx(k_)).ne.p_unit) cycle
+		ikey_=p_ibaunit(p_unit) + p_isch(p_lx(k_))
 		ibxdatkey_=ibaxdat(ikey_) !,2)
-		if(j_o(p_ivxdatmat)%d(ibxdatkey_+ikeepxk_).ne.0.)then
+		if(j_o(p_ivdatamatx)%d(ibxdatkey_+ikeepxk_).ne.0.)then
 			isxkzero=.false.
 			return
-		endif !if(j_o(p_ivxdatmat)%d(ibxdatkey_+ikeepxk_).ne.0.)  13740
-	enddo !k_=1,p_lx0  13736
+		endif !if(j_o(p_ivdatamatx)%d(ibxdatkey_+ikeepxk_).ne.0.)  12719
+	enddo !k_=1,p_lx0  12715
 end function !logical function isxkzero(ixk)
 
 !funktio palauttaa vaihtoehdon arvon tehdasosuuden
@@ -16075,7 +14971,7 @@ function value_f(iobs)
 	use jmod, only: p_feasible
 	use jmod, only: p_coeffx
 	use jmod, only: j_o
-	use jmod, only: p_ivxdatmat
+	use jmod, only: p_ivdatamatx
 	use jmod, only: p_p
 	use jmod, only: p_n16
 	use jmod, only: p_vc
@@ -16094,35 +14990,35 @@ function value_f(iobs)
 		if (p_rowxkfkey(jjj)%jcurix == 0) then
 			if(p_feasible) then
 				value_f = value_f + p_coeffx(p_rowxkfkey(jjj)%irowfx)*&
-					j_o(p_ivxdatmat)%d(ibxdatobs+irowfkeep_)
+					j_o(p_ivdatamatx)%d(ibxdatobs+irowfkeep_)
 				if(p_p)write(p_n16,*)'value_f, coeff, xkf ',&
-					value_f, p_coeffx(p_rowxkfkey(jjj)%irowfx),j_o(p_ivxdatmat)%d(ibxdatobs+irowfkeep_)
-			endif !if(p_feasible)  13763
+					value_f, p_coeffx(p_rowxkfkey(jjj)%irowfx),j_o(p_ivdatamatx)%d(ibxdatobs+irowfkeep_)
+			endif !if(p_feasible)  12742
 		else !if (j_rowxkfkey(j_)%jcurix == 0) then
 			value_f = value_f - p_vc(p_rowxkfkey(jjj)%jcurix)*p_coeffx(p_rowxkfkey(jjj)%irowfx)*&
-				j_o(p_ivxdatmat)%d(ibxdatobs+irowfkeep_)
+				j_o(p_ivdatamatx)%d(ibxdatobs+irowfkeep_)
 			!     if(p_p)write(p_n16,*)'value_f,vc,coeff,xkf',&
 			!        value_f,j_vc(j_rowxkfkey(j_)%jcurix),j_coeffx(j_rowxkfkey(j_)%irowfx),&
-			!          j_o(p_ivxdatmat)%d(ibaxdat(iobs)+irowfkeep_)
-		endif !if (p_rowxkfkey(jjj)%jcurix == 0)  13762
-	enddo !jjj = 1,p_nrowxkfkey  13760
+			!          j_o(p_ivdatamatx)%d(ibaxdat(iobs)+irowfkeep_)
+		endif !if (p_rowxkfkey(jjj)%jcurix == 0)  12741
+	enddo !jjj = 1,p_nrowxkfkey  12739
  
 	do jj=1,p_nrowykfkey
 		iv2elpos_ = p_rowykfkey(jj)%iv2elpos
 		if (p_rowykfkey(jj)%jcurix.eq.0) then ! 0-rivi, ei v-kerrointa
 			if(p_feasible) then
 				value_f = value_f + j_v(p_rowykfkey(jj)%ivfout)*&
-					j_o(p_ivxdatmat)%d(ibxdatobs+iv2elpos_)
+					j_o(p_ivdatamatx)%d(ibxdatobs+iv2elpos_)
 				if(p_p)write(p_n16,*)'value_f, gamma, ykf',value_f, j_v(p_rowykfkey(jj)%ivfout),&
-					j_o(p_ivxdatmat)%d(ibxdatobs+iv2elpos_)
-			endif !if(p_feasible)  13781
+					j_o(p_ivdatamatx)%d(ibxdatobs+iv2elpos_)
+			endif !if(p_feasible)  12760
 		else !if (j_rowykfkey(j_)%jcurix.eq.0) then
 			value_f = value_f - p_vc(p_rowykfkey(jj)%jcurix)* j_v(p_rowykfkey(jj)%ivfout)*&
-				j_o(p_ivxdatmat)%d(ibxdatobs+iv2elpos_)
+				j_o(p_ivdatamatx)%d(ibxdatobs+iv2elpos_)
 			if(p_p)write(p_n16,*)'value_f,vc,gamma,ykf',value_f,p_vc(p_rowykfkey(jj)%jcurix),&
-				j_v(p_rowykfkey(jj)%ivfout),j_o(p_ivxdatmat)%d(ibxdatobs+iv2elpos_)
-		endif !if (p_rowykfkey(jj)%jcurix.eq.0)  13780
-	enddo !jj=1,p_nrowykfkey  13778
+				j_v(p_rowykfkey(jj)%ivfout),j_o(p_ivdatamatx)%d(ibxdatobs+iv2elpos_)
+		endif !if (p_rowykfkey(jj)%jcurix.eq.0)  12759
+	enddo !jj=1,p_nrowykfkey  12757
  
 end function value_f !function value_f(iobs)
 
@@ -16134,18 +15030,18 @@ subroutine lcursam()
 	use jmod, only: p_lcur0
 	use jmod, only: p_lx0
 	use jmod, only: p_lunit
-	use jmod, only: p_iunit
+	use jmod, only: p_unit
  
 	p_lcursame=0
 	p_lcur=p_next(0)
 	p_lcur0=p_lcur
 	do i=1,p_lx0
 		nex=p_next(p_lcur)
-		if(p_lunit(p_lcur).eq.p_iunit)then
+		if(p_lunit(p_lcur).eq.p_unit)then
 			p_lcursame=p_lcur
 			return
-		end if !if(p_lunit(p_lcur).eq.p_iunit)  13805
-	end do !i=1,p_lx0  13803
+		end if !if(p_lunit(p_lcur).eq.p_unit)  12784
+	end do !i=1,p_lx0  12782
 	return
 end subroutine !subroutine p_lcursam()
 
@@ -16174,11 +15070,11 @@ subroutine testld()
 			!		close(16)
 			j_err=.true.
 			return
-		end if !if(jj.gt.p_lx0.or.nex.eq.0)  13821
+		end if !if(jj.gt.p_lx0.or.nex.eq.0)  12800
 		jj=jj+1
 		goto 766
 767		continue
-	end do !i=1,p_lx0  13815
+	end do !i=1,p_lx0  12794
 	! end logical testing
 end subroutine !subroutine testld()
 
@@ -16217,28 +15113,33 @@ subroutine testcol()
 				! ollaan D-osassa
 				do j=1,p_lx0
 					if(p_ls(i)-p_nrowz.eq.p_lx(j))goto 788 !col löytyi ld:stä
-				end do !j=1,p_lx0  13848
+				end do !j=1,p_lx0  12827
 				write(p_n16,*)'*col*',p_ls(i),'not in',(p_lx(j),j=1,p_lx0)
 				!				close(16)
 				j_err=.true.
 				write(6,*)'*col* -return'
 				!        return
 	788		  continue
-			endif !if(p_ls(i).gt.p_nrowz)  13846
-		end if !if(i.gt.0)  13845
-	end do !i=0,p_nrow  13843
+			endif !if(p_ls(i).gt.p_nrowz)  12825
+		end if !if(i.gt.0)  12824
+	end do !i=0,p_nrow  12822
 	p_idomba=0
 	do i=1,p_nunits
 		!	write(6,*)'idom9',i,p_idomba
 		if(p_isdomain)call jlpcurix()
+		! determines for each row if the unit iunit belonggs to the domain of the row
+		! units must be accessed one by one
+		! p_nrowcurx
+		! p_rowcurx
+		! p_idomba
 		iobs=p_ibaunit(i)+p_keys(i)
-		ibxmatx=ibaxmat(iobs) !,1)
+		ibxmatx=ibamatx(iobs) !,1)
 		if(p_keys(i).gt.p_ns(i))write(6,*)'***perk',i,p_keys(i),p_ns(i) !laiton key
 		j_err=.true.
 		do j=0,p_nrow
 			if(p_ixcur(j))p_testxps(j)=p_testxps(j)+p_xmat(p_ix(j)+ibxmatx) !v(ix(j)) !lasketaan keysumma
-		end do !j=0,p_nrow  13868
-	end do !i=1,p_nunits  13861
+		end do !j=0,p_nrow  12852
+	end do !i=1,p_nunits  12840
 	!	write(p_n16,*)'   ***xps',(p_xps(j),j=0,p_nrow)
 	!	write(p_n16,*)'   ***test',(p_testxps(j),j=0,p_nrow) !pitäs olla sama
  
@@ -16248,27 +15149,31 @@ subroutine testcol()
 		!	write(p_n16,*)'  val',p_objr(p_lx(i)+p_nrowz),(p_a(j,p_lx(i)+p_nz),j=1,p_nrow)
  
 		iobs=p_ibaunit(p_lunit(p_lx(i)))+p_keys(p_lunit(p_lx(i)))
-		ibxmatx=ibaxmat(iobs) !,1)
+		ibxmatx=ibamatx(iobs) !,1)
  
 		if(p_isdomain)call jlpcurix2(p_lunit(p_lx(i)))
+		! determines for each row if the unit iunit belonggs to the domain of the row
+		! units can be in random order
+		! p_nrowcurx
+		! p_rowcurx
 		do j=0,p_nrow
  
 			if(p_ixcur(j)) p_test(j)=&
 				p_xmat(p_ix(j)+ibxmatx ) !v(ix(j))
-		end do !j=0,p_nrow  13884
+		end do !j=0,p_nrow  12872
 		iobs=p_ibaunit(p_lunit(p_lx(i)))+p_isch(p_lx(i))
-		ibxmatx=ibaxmat(iobs) !,1)
+		ibxmatx=ibamatx(iobs) !,1)
 		do j=0,p_nrow
 			if(p_ixcur(j)) p_test(j)=p_xmat(p_ix(j)+ibxmatx) -p_test(j) !v(ix(j))-test(j)
 			p_testxps(j)=p_testxps(j)+p_x(p_lx(i)+p_nrowz)*p_test(j)
-		end do !j=0,p_nrow  13891
+		end do !j=0,p_nrow  12879
 		!	write(p_n16,*)'  dcoltest',(p_test(j),j=0,p_nrow)
 		if(p_x(p_lx(i)+p_nrowz).LT.0.OR.p_x(p_lx(i)+p_nrowz).GT.1.)then
 			write(6,*)'illgal w:',p_x(p_lx(i)+p_nrowz)
 			write(6,*)'*dcoltest* return'
 			j_err=.true.
-		end if !if(p_x(p_lx(i)+p_nrowz).LT.0.OR.p_x(p_lx(i)+p_nrowz).GT.1.  13896
-	end do !i=1,p_lx0  13875
+		end if !if(p_x(p_lx(i)+p_nrowz).LT.0.OR.p_x(p_lx(i)+p_nrowz).GT.1.  12884
+	end do !i=1,p_lx0  12859
 	!write(p_n16,*)'*first nonbasic column*:',p_icolold,'*in a matrix',p_icolold.gt.p_nrow
 	!write(p_n16,*)'  col',(p_a(j,p_icolold-p_nrowz),j=1,p_nrow)
  
@@ -16297,15 +15202,15 @@ subroutine testcol()
 			!		close(16)
 			write(6,*)'*nex* return'
 			j_err=.true. ;return
-		end if !if(wss.gt.1.)  13925
-	end if !if(p_lunit(nex).ne.lunv)  13920
+		end if !if(wss.gt.1.)  12913
+	end if !if(p_lunit(nex).ne.lunv)  12908
 	goto 555  !next column in the ordering
 556 write(6,*)'p_muutosb',p_muutosb
 ! testaus lopui
 end subroutine !subroutine testcol()
 
 !
-!p_iunit_: yksikkö, joka käsittelyssä kutsuhetkellä -> palautetaan curixit oikeaan yksikköön
+!p_unit_: yksikkö, joka käsittelyssä kutsuhetkellä -> palautetaan curixit oikeaan yksikköön
 subroutine testxpssub(iunit_)
 	use jmod, only: j_0
 	use jmod, only: p_testxps
@@ -16313,8 +15218,8 @@ subroutine testxpssub(iunit_)
 	use jmod, only: p_isdomain
 	use jmod, only: p_ibaunit
 	use jmod, only: p_keys
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: p_xmat
 	use jmod, only: p_ix
 	use jmod, only: p_fpresent
@@ -16322,7 +15227,7 @@ subroutine testxpssub(iunit_)
 	use jmod, only: j_o
 	use jmod, only: p_ivkeepc
 	use jmod, only: j_v
-	use jmod, only: p_ivmatc
+	use jmod, only: p_ivdatamatc
 	use jmod, only: p_ivutiltrans
 	use jmod, only: j_err
 	use jmod, only: p_nrow
@@ -16333,110 +15238,57 @@ subroutine testxpssub(iunit_)
 	iunitrans=0
 	!p_idomba=0
 	do i_=1,p_nunits  !***********************
-		if(p_isdomain)call jlpcurix2(i_) !determines for each row if the unit iunit belonggs to the domain of the row
+		if(p_isdomain)call jlpcurix2(i_)
+		! determines for each row if the unit iunit belonggs to the domain of the row
+		! units can be in random order
+		! p_nrowcurx
+		! p_rowcurx
 		iobs_=p_ibaunit(i_)+p_keys(i_)
-		ibxmatx=ibaxmat(iobs_) !,1)
+		ibxmatx=ibamatx(iobs_) !,1)
 		ibxdatobs_=ibaxdat(iobs_) !,1)
-		do jj_=1,p_nxrowcur
-			jj=p_xrowcur(jj_)
+		do jj_=1,p_nrowcurx
+			jj=p_rowcurx(jj_)
 			!xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
 			p_testxps(jj)=p_testxps(jj)+p_xmat(p_ix(jj)+ibxmatx) !(ix(j)=0 -> no x in row
 			!                if(ixcur(j).ne.0)xps(j)=xps(j)+xmat(ibxdatkey+ix(j))
-		enddo !jj_=1,p_nxrowcur  13949
+		enddo !jj_=1,p_nrowcurx  12941
  
 		!tehdasmuuttujien xps-laskenta
 		if(p_fpresent) then
-			!	call jlpfcurix(i_)
-			!	call jlpfcurixy(i_)
  
  
-			! !xk-tehdasmuuttujat
-			! do jj_=1,p_nfxrow
-			! !	jjj=p_fxrow(jj_) !domainissa olevat rivit
- 
-			! irowj_ = p_fxrow(jj_)  !jjj+1 !p_irowrow(jjj)
-			! !xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
-			! do k_=1,p_nfxinrow(irowj_)
-			! if(p_keyfact(i_,p_irowfxvars(p_ibafx(irowj_)+k_)).eq.p_irowffact(p_ibafx(irowj_)+k_))then
-			! p_testxps(jjj)=p_testxps(jjj)+ p_coeffx(p_ibafx(irowj_)+k_)*&
-			! j_o(p_ivxdatmat)%d(ibxdatobs_+p_irowfkeep(p_ibafx(irowj_)+k_))
-			! endif !if(p_keyfact(i_,p_irowfxvars(p_ibafx(irowj_)+k_)).eq.p_iro  13782
-			! enddo !k_=1,p_nfxinrow(irowj_)  13781
- 
-			! enddo !jj_=1,p_nfxrow  13776
- 
-			! if (p_nfy.gt.0) then
-			! do jjj=1,j_o(p_ivkeepc)%i(1)
-			! j_v(j_o(p_ivkeepc)%i2(jjj))=j_o(p_ivmatc)%d((i_-1)*j_o(p_ivkeepc)%i(1)+jjj)
-			! enddo !jjj=1,j_o(p_ivkeepc)%i(1)  13791
-			! !		do jjj=1,p_nutiltrans
-			! call dotrans(p_ivutiltrans,1)
-			! if(j_err)then
-			! write(6,*)'err for trans ',j
-			! stop 741
-			! endif !if(j_err)  13796
-			! !		enddo !jjj=1,p_nutiltrans  11702
-			! endif !if (p_nfy.gt.0)  13790
+		endif !if(p_fpresent)  12949
  
  
-			! do jj_=1,p_nfyrow
-			! !ivn-laskurin käsittely ei toimi, jos mukana on domaineja
-			! jjj=p_fyrow(jj_) !domainissa olevat rivit
- 
-			! irowj_ = jjj+1 !p_irowrow(jjj)
-			! !xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
-			! do k_=1,p_nfyinrow(irowj_)
-			! listy_=p_irowfyvars(p_ibafy(irowj_)+k_)
-			! listf_=p_irowfyfact(p_ibafy(irowj_)+k_)
- 
-			! do pvars_=1,j_o(listy_)%i(1)
-			! !mjan xmat-sarake
-			! iv2elpos_ = p_ifyvarskeep(p_ibafykeep(p_ibafy(irowj_)+k_)+pvars_-1)
-			! !listy-listan pvars_:innen ptl-mjan paikka (järjestysnumero) xk-listassa
-			! iv2xykypos_ = p_ifyvarsxk(p_ibafykeep(p_ibafy(irowj_)+k_)+pvars_-1)
- 
-			! do ifact_=1,j_o(listf_)%i(1)
-			! iv3factpos_ = p_ifyfactfact(p_ibafyfact(p_ibafy(irowj_)+k_)+ifact_-1)
- 
-			! if(p_keyfact(i_,iv2xykypos_).eq.iv3factpos_) then
-			! p_testxps(jjj)=p_testxps(jjj)+ j_v(p_fyfactout(iv2xykypos_,iv3factpos_))*&
-			! j_o(p_ivxdatmat)%d(ibxdatobs_+iv2elpos_) !ibaxdat
-			! endif !if(p_keyfact(i_,iv2xykypos_).eq.iv3factpos_)  11731
- 
-			! enddo !ifact_=1,j_o(listf_)%i(1)  11728
-			! enddo !pvars_=1,j_o(listy_)%i(1)  11722
- 
-			! enddo !k_=1,p_nfyinrow(irowj_)  11718
- 
-			! enddo !jj_=1,p_nfyrow  11712
- 
-		endif !if(p_fpresent)  13957
- 
- 
-	enddo !i_=1,p_nunits  13944
+	enddo !i_=1,p_nunits  12932
  
 	!palautetaan käsiteltävänä olevan yksikön curixit ja tehdasmuunnokset
 	if(iunit_>0) then
 		iunitrans = iunit_
 		if(p_isdomain)call jlpcurix2(iunit_)
+		! determines for each row if the unit iunit belonggs to the domain of the row
+		! units can be in random order
+		! p_nrowcurx
+		! p_rowcurx
+ 
 		if(p_fpresent) then
 			!	call jlpfcurix(iunit_)
 			!	call jlpfcurixy(iunit_)
  
 			if (p_nfy.gt.0) then
 				do jjj=1,j_o(p_ivkeepc)%i(1)
-					j_v(j_o(p_ivkeepc)%i2(jjj))=j_o(p_ivmatc)%d((iunit_-1)*j_o(p_ivkeepc)%i(1)+jjj)
-				enddo !jjj=1,j_o(p_ivkeepc)%i(1)  14036
+					j_v(j_o(p_ivkeepc)%i2(jjj))=j_o(p_ivdatamatc)%d((iunit_-1)*j_o(p_ivkeepc)%i(1)+jjj)
+				enddo !jjj=1,j_o(p_ivkeepc)%i(1)  12971
 				!	do jjj=1,p_nutiltrans
 				call dotrans(p_ivutiltrans,1)
 				if(j_err)then
 					write(6,*)'error for trans ',j
 					stop 741
-				endif !if(j_err)  14041
+				endif !if(j_err)  12976
 				!	enddo !jjj=1,p_nutiltrans  11758
-			endif !if (p_nfy.gt.0)  14035
-		endif !if(p_fpresent)  14031
-	endif !if(iunit_>0)  14028
+			endif !if (p_nfy.gt.0)  12970
+		endif !if(p_fpresent)  12966
+	endif !if(iunit_>0)  12958
  
 	!write(p_n16,*)'**fact** testxps',(j_testxps(j),j=0,j_nrow)
 	nero=0
@@ -16444,8 +15296,8 @@ subroutine testxpssub(iunit_)
 		if(abs(p_testxps(iii)-p_xps(iii)).gt.0.001)then
 			nero=nero+1
 			if(nero.lt.10)write(p_n16,*)'row,test,xps', iii,p_testxps(iii),p_xps(iii)
-		endif !if(abs(p_testxps(iii)-p_xps(iii)).gt.0.001)  14053
-	enddo !iii=1,p_nrow  14052
+		endif !if(abs(p_testxps(iii)-p_xps(iii)).gt.0.001)  12988
+	enddo !iii=1,p_nrow  12987
 	write(p_n16,*)'testxps', nero
  
 end subroutine !subroutine testxpssub(iunit_)
@@ -16476,8 +15328,8 @@ subroutine testobjr0()
 		iunit_=p_lunit(p_lx(ldj_))
 		ikey_=p_ibaunit(p_lunit(p_lx(ldj_)))+ p_keys(p_lunit(p_lx(ldj_)))
 		iobs_=p_ibaunit(p_lunit(p_lx(ldj_)))+ p_isch(p_lx(ldj_))
-		ibxmatx=ibaxmat(iobs_) !,1)
-		ibxmatkey_=ibaxmat(ikey_) !,2)
+		ibxmatx=ibamatx(iobs_) !,1)
+		ibxmatkey_=ibamatx(ikey_) !,2)
 		ibxdatobs_=ibaxdat(iobs_) !,1)
 		ibxdatkey_=ibaxdat(ikey_) !,2)
 		write(p_n16,*)'ld(j),iunit,iobs,ikey',p_lx(ldj_),iunit_,iobs_,ikey_
@@ -16485,137 +15337,20 @@ subroutine testobjr0()
 		do it_=0,p_nrow
 			if(p_ixcur(it_)) then
 				p_test(it_) = p_xmat(p_ix(it_)+ibxmatx)- p_xmat(p_ix(it_)+ibxmatkey_)
-			endif !if(p_ixcur(it_))  14081
-		enddo !it_=0,p_nrow  14080
+			endif !if(p_ixcur(it_))  13016
+		enddo !it_=0,p_nrow  13015
  
 		if (p_fpresent) then
-			!iperk=xdatiba(-4)
-			! do jjj=1,p_nfxrow ! rivit, joilla xk-muuttujia
-			! !p_jcurix=p_fxrow(jjj)
-			! irowj_ = p_fxrow(jjj)  !p_jcurix+1 !p_irowrow(p_jcurix)
-			! do k_=1,p_nfxinrow(irowj_) ! silmukka : rivin xk-muuttujat
-			! !value = value+alfa*_xdata_(keepx,iobs)
-			! if(p_keyfact(iunit_,p_irowfxvars(p_ibafx(irowj_)+k_)).eq.p_irowffact(p_ibafx(irowj_)+k_)) then
-			! p_test(p_jcurix) = p_test(p_jcurix) + p_coeffx(p_ibafx(irowj_)+k_)*&
-			! (j_o(p_ivxdatmat)%d(ibxdatobs_+p_irowfkeep(p_ibafx(irowj_)+k_)) -&
-			! j_o(p_ivxdatmat)%d(ibxdatkey_+p_irowfkeep(p_ibafx(irowj_)+k_)))
-			! endif !if(p_keyfact(iunit_,p_irowfxvars(p_ibafx(irowj_)+k_)).eq.p  13906
-			! enddo !k_=1,p_nfxinrow(irowj_)  13904
-			! enddo !jjj=1,p_nfxrow  13901
  
-			!y-mjien muunnokset
-			! if (p_nfy.gt.0) then
-			! do jjj=1,j_o(p_ivkeepc)%i(1)
-			! j_v(j_o(p_ivkeepc)%i2(jjj))=j_o(p_ivmatc)%d((iunit_-1)*j_o(p_ivkeepc)%i(1)+jjj)
-			! enddo !jjj=1,j_o(p_ivkeepc)%i(1)  14278
-			! !		do jjj=1,p_nutiltrans
-			! call dotrans(p_ivutiltrans,1)
-			! if(j_err)then
-			! write(6,*)' err in tr ',j
-			! stop 614
-			! endif !if(j_err)  14283
-			! !	enddo !jjj=1,p_nutiltrans  11824
-			! endif !if (p_nfy.gt.0)  14277
  
-			! do jjj=1,p_nfyrow ! yk-muuttujat
-			! p_jcurix=p_fyrow(jjj)
-			! irowj_ = jcurix_+1 ! p_irowrow(p_jcurix)
-			! do k_=1,p_nfyinrow(irowj_) ! rivin yk-muuttujat
-			! listy_=p_irowfyvars(p_ibafy(irowj_)+k_) !yk-mjaa vastaava ptl-lista
-			! listf_=p_irowfyfact(p_ibafy(irowj_)+k_) !yk-mjaa vastaava tehdas-lista
-			! do pvars_=1,j_o(listy_)%i(1) ! yk-mjan puutavaralistan muuttujat
-			! iv2elpos_ = p_ifyvarskeep(p_ibafykeep(p_ibafy(irowj_)+k_)+pvars_-1) !mjan xmat-sarake
-			! iv2xykypos_ = p_ifyvarsxk(p_ibafykeep(p_ibafy(irowj_)+k_)+pvars_-1) !mjan paikka xk-listassa
-			! do ifact_=1,j_o(listf_)%i(1) ! yk-mjan tehdaslistan tehtaat
-			! iv3factpos_ = p_ifyfactfact(p_ibafyfact(p_ibafy(irowj_)+k_)+ifact_-1) !tehtaan paikka factories-listassa
-			! !value = value+gamma*_xdata_(keepx,iobs)
-			! if(p_keyfact(iunit_,iv2xykypos_).eq.iv3factpos_) then
-			! p_test(p_jcurix) = p_test(p_jcurix) +j_v(p_fyfactout(iv2xykypos_,iv3factpos_))*&
-			! (j_o(p_ivxdatmat)%d(ibxdatobs_+iv2elpos_) -&
-			! j_o(p_ivxdatmat)%d(ibxdatkey_+iv2elpos_))
-			! endif !if(p_keyfact(iunit_,iv2xykypos_).eq.iv3factpos_)  14302
-			! enddo !ifact_=1,j_o(listf_)%i(1)  14299
-			! enddo !pvars_=1,j_o(listy_)%i(1)  14296
-			! enddo !k_=1,p_nfyinrow(irowj_)  14293
-			! enddo !jjj=1,p_nfyrow  14290
- 
-		endif !if (p_fpresent)  14086
+		endif !if (p_fpresent)  13021
  
 		write(p_n16,*)'ld(j)',p_lx(ldj_),'test(0:nrow)',(p_test(jjj),jjj=0,p_nrow)
  
-	enddo !ldj_=1,p_lx0  14067
+	enddo !ldj_=1,p_lx0  13002
 end subroutine !subroutine testobjr0()
 
 
-! subroutine testobjr0f()
-! integer pvars_
-! write(p_n16,*)'**fact** testobjr0/w'
-! iunitrans=0
-
-! do lfj_=1,p_lf0
-! p_test = j_0
-
-! iunit_=p_lunit(p_lf(lfj_))
-! ixk_=p_ixkf(p_lf(lfj_))
-! ifact_=p_ixkffact(p_lf(lfj_))
-! ikeyf_=p_keyfact(iunit_,ixk_)
-
-! !? c-muunnokset
-! write(p_n16,*)'lf(j),iunit,ixk,ifact,ikeyfact',p_lf(lfj_),iunit_,ixk_,ifact_,ikeyf_
-
-! do jjj=1,p_nfxrow ! rivit, joilla xk-muuttujia
-! !	p_jcurix=p_fxrow(jjj)
-! irowj_ = p_fxrow(jjj)  !p_jcurix+1 !p_irowrow(p_jcurix)
-! do k_=1,p_nfxinrow(irowj_) ! silmukka : rivin xk-muuttujat
-! if((p_irowfxvars(p_ibafx(irowj_)+k_)==ixk_).and.(ifact_.eq.p_irowffact(p_ibafx(irowj_)+k_))) then
-! p_test(p_jcurix)=p_test(p_jcurix) + p_coeffx(p_ibafx(irowj_)+k_)
-! endif !if((p_irowfxvars(p_ibafx(irowj_)+k_)==ixk_).and.(ifact_.eq  14340
-! if((p_irowfxvars(p_ibafx(irowj_)+k_)==ixk_).and.(ifact_.eq.p_keyfact(iunit_,ixk_))) then
-! p_test(p_jcurix)=p_test(p_jcurix) - p_coeffx(p_ibafx(irowj_)+k_)
-! endif !if((p_irowfxvars(p_ibafx(irowj_)+k_)==ixk_).and.(ifact_.eq  14343
-! enddo !k_=1,p_nfxinrow(irowj_)  14339
-! enddo !jjj=1,p_nfxrow  14336
-
-! ! if (p_nfy.gt.0) then
-! ! do jjj=1,j_o(p_ivkeepc)%i(1)
-! ! j_v(j_o(p_ivkeepc)%i2(jjj))=j_o(p_ivmatc)%d((iunit_-1)*j_o(p_ivkeepc)%i(1)+jjj)
-! ! enddo !jjj=1,j_o(p_ivkeepc)%i(1)  14350
-! ! !	do jjj=1,p_nutiltrans
-! ! call dotrans(p_ivutiltrans,1)
-! ! if(j_err)then
-! ! write(6,*)'err in tr ',j
-! ! stop 711
-
-! ! endif !if(j_err)  14355
-! ! !	enddo !jjj=1,p_nutiltrans  11895
-! ! endif !if (p_nfy.gt.0)  14349
-
-! ! do jjj=1,p_nfyrow ! yk-muuttujarivit
-! ! p_jcurix=p_fyrow(jjj)
-! ! irowj_ =p_jcurix+1 !p_irowrow(p_jcurix)
-! ! do k_=1,p_nfyinrow(irowj_)
-! ! listy_=p_irowfyvars(p_ibafy(irowj_)+k_)
-! ! listf_=p_irowfyfact(p_ibafy(irowj_)+k_)
-
-! ! do pvars_=1,j_o(listy_)%i(1)
-! ! iv2xykypos_ = p_ifyvarsxk(p_ibafykeep(p_ibafy(irowj_)+k_)+pvars_-1)
-! ! do ifact_=1,j_o(listf_)%i(1)
-! ! iv3factpos_ = p_ifyfactfact(p_ibafyfact(p_ibafy(irowj_)+k_)+ifact_-1)
-! ! if((iv2xykypos_==ixk_).and.(ifact_.eq.iv3factpos_)) then
-! ! p_test(p_jcurix)=p_test(p_jcurix) + j_v(p_fyfactout(iv2xykypos_,iv3factpos_))
-! ! endif !if((iv2xykypos_==ixk_).and.(ifact_.eq.iv3factpos_))  14374
-! ! if((iv2xykypos_==ixk_).and.(ifact_.eq.p_keyfact(iunit_,ixk_))) then
-! ! p_test(p_jcurix)=p_test(p_jcurix) - j_v(p_fyfactout(iv2xykypos_,iv3factpos_))
-! ! endif !if((iv2xykypos_==ixk_).and.(ifact_.eq.p_keyfact(iunit_,ixk  14377
-! ! enddo !ifact_=1,j_o(listf_)%i(1)  14372
-! ! enddo !pvars_=1,j_o(listy_)%i(1)  14370
-
-! ! enddo !k_=1,p_nfyinrow(irowj_)  14366
-! ! enddo !jjj=1,p_nfyrow  14363
-
-! ! write(p_n16,*)'lf(j)',p_lf(lfj_),'test(0:nrow)',(p_test(jjj),jjj=0,p_nrow)
-
-! !enddo !lfj_=1,p_lf0  14325
 
 ! end subroutine !subroutine testobjr0f()
 
@@ -16627,7 +15362,7 @@ subroutine getsumxkey()
 	use jmod, only: p_nunits
 	use jmod, only: p_isunit
 	use jmod, only: j_getobsiv
-	use jmod, only: p_ivmatc
+	use jmod, only: p_ivdatamatc
 	use jmod, only: p_ivkeepc
 	use jmod, only: p_ivunit
 	use jmod, only: j_err
@@ -16636,7 +15371,7 @@ subroutine getsumxkey()
 	use jmod, only: p_ivtrans
 	use jmod, only: p_ibaunit
 	use jmod, only: p_keys
-	use jmod, only: p_ivxdatmat
+	use jmod, only: p_ivdatamatx
 	use jmod, only: p_ivkeepx
 	use jmod, only: p_isdomain
 	use jmod, only: p_ndom
@@ -16652,34 +15387,34 @@ subroutine getsumxkey()
  
 	do iuni=1,p_nunits
 		if(.not.p_isunit)then
-			call j_getobsiv(iuni,p_ivmatc,p_ivkeepc,p_ivunit) !,p_ivtransc,j_ivunit)
+			call j_getobsiv(iuni,p_ivdatamatc,p_ivkeepc,p_ivunit) !,p_ivtransc,j_ivunit)
  
 			if(j_err)then
 				write(6,*)'error (66) for unit ',iuni
 				return
-			endif !if(j_err)  14228
+			endif !if(j_err)  13046
 			if(p_nshow.gt.0)then
 				call dotrans(p_ivshowtrans,1)
 				if(j_err)return
-			endif !if(p_nshow.gt.0)  14232
+			endif !if(p_nshow.gt.0)  13050
 			if(p_ivtrans.gt.0)then
 				call dotrans(p_ivtrans,1)
 				if(j_err)stop 770
-			endif !if(p_ivtrans.gt.0)  14236
-		endif !if(.not.p_isunit)  14225
+			endif !if(p_ivtrans.gt.0)  13054
+		endif !if(.not.p_isunit)  13043
 		iobs=p_ibaunit(iuni)+p_keys(iuni)
-		call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0)! ,p_ivtransx,0)  !getsolx
+		call j_getobsiv(iobs,p_ivdatamatx,p_ivkeepx,0)! ,p_ivtransx,0)  !getsolx
 		if(j_err)then
 			write(6,*)'error for observation ',iobs
 			return
-		endif !if(j_err)  14243
+		endif !if(j_err)  13061
 		!if(p_ivsubtrans.gt.0)call dotrans(p_ivsubtrans,1)
 		! if(p_ivarea.gt.0)then
 		! if(ipart.eq.0)then
 		! j_v(j_o(p_ivkeepx)%i2(1:p_nxvartot))=j_v(p_ivarea)*j_v(j_o(p_ivkeepx)%i2(1:p_nxvartot))
 		! !if(p_ncvar.gt.0)j_v(p_cvarl(1:p_ncvar))=j_v(p_ivarea)*j_v(p_cvarl(1:p_ncvar))
 		! else !if(ipart.eq.0)then
-		! j_v(p_xvarsareatot)=j_v(p_ivarea)*j_v(p_xvarsareatot)
+		! j_v(p_varxareatot)=j_v(p_ivarea)*j_v(p_varxareatot)
 		! endif !if(ipart.eq.0)  15088
 		! endif !if(p_ivarea.gt.0)  15087
  
@@ -16695,7 +15430,7 @@ subroutine getsumxkey()
  
 					do jx=1,p_nxvartot
 						p_sumx(iba+jx)=p_sumx(iba+jx)+ j_v(j_o(p_ivkeepx)%i2(jx))
-					end do !jx=1,p_nxvartot  14267
+					end do !jx=1,p_nxvartot  13085
  
 					!	if(p_ncvar.gt.0)p_sumx(iba+p_nxvartot+1:iba+p_nxvartot+p_ncvar)= &
 					!		p_sumx(iba+p_nxvartot+1:iba+p_nxvartot+p_ncvar)+j_v(p_cvarl(1:p_ncvar))
@@ -16708,9 +15443,9 @@ subroutine getsumxkey()
 					! j_v(j_o(p_ivoutsubtrans)%i2(1:p_noutsubtrans))
  
  
-				end if !if(indomain2(id,iuni))  14264
+				end if !if(indomain2(id,iuni))  13082
 				iba=iba+p_nxvartot !+p_noutsubtrans !+p_ncvar
-			enddo !id=1,p_ndom  14261
+			enddo !id=1,p_ndom  13079
  
  
  
@@ -16727,7 +15462,7 @@ subroutine getsumxkey()
 			! p_sumx(p_nxvartot+1:p_nxvartot+p_noutsubtrans) + &
 			! j_v(j_o(p_ivoutsubtrans)%i2(1:p_noutsubtrans))
  
-		end if !if(p_isdomain)  14257
+		end if !if(p_isdomain)  13075
  
 		if(p_nshow.gt.0)then
 			if(.not.p_isdomain)iba=p_nxvartot
@@ -16736,13 +15471,13 @@ subroutine getsumxkey()
 					j_o(p_ivshowunits)%i2(id)=j_o(p_ivshowunits)%i2(id)+1
 					do jx=1,p_nxvartot
 						p_sumx(iba+jx)=p_sumx(iba+jx)+ j_v(j_o(p_ivkeepx)%i2(jx))
-					end do !jx=1,p_nxvartot  14308
-				endif !if(j_o(p_ivshowmatrix)%d(id).ne.j_0)  14306
+					end do !jx=1,p_nxvartot  13126
+				endif !if(j_o(p_ivshowmatrix)%d(id).ne.j_0)  13124
 				iba=iba+p_nxvartot
-			enddo !id=1,p_nshow  14305
-		endif !if(p_nshow.gt.0)  14303
+			enddo !id=1,p_nshow  13123
+		endif !if(p_nshow.gt.0)  13121
  
-	end do !iuni=1,p_nunits  14224
+	end do !iuni=1,p_nunits  13042
  
 end subroutine getsumxkey
 
@@ -16756,8 +15491,8 @@ subroutine getsolx() !
 	use jmod, only: p_nunits
 	use jmod, only: p_isdomain
 	use jmod, only: p_ibaunit
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_xrowcur
+	use jmod, only: p_nrowcurx
+	use jmod, only: p_rowcurx
 	use jmod, only: p_xmat
 	use jmod, only: p_ix
 	use jmod, only: p_nxvarareatot
@@ -16766,7 +15501,7 @@ subroutine getsolx() !
 	use jmod, only: p_shpx
 	use jmod, only: p_nsumx
 	use jmod, only: p_intapp
-	use jmod, only: p_xvarsareatot
+	use jmod, only: p_varxareatot
 	use jmod, only: p_ivarea
 	use jmod, only: p_nnotareavars
 	use jmod, only: j_ndiffer
@@ -16776,12 +15511,12 @@ subroutine getsolx() !
 	use jmod, only: p_notareavars
 	use jmod, only: p_isunit
 	use jmod, only: j_getobsiv
-	use jmod, only: p_ivmatc
+	use jmod, only: p_ivdatamatc
 	use jmod, only: p_ivkeepc
 	use jmod, only: p_ivunit
 	use jmod, only: j_err
 	use jmod, only: p_ivtrans
-	use jmod, only: p_ivxdatmat
+	use jmod, only: p_ivdatamatx
 	use jmod, only: j_v
 	use jmod, only: p_lx0
 	use jmod, only: p_x
@@ -16806,17 +15541,22 @@ subroutine getsolx() !
  
 		do i=1,p_nunits  !***********************
 			!write(6,*)'idom9'
-			if(p_isdomain)call jlpcurix()  !!determines for each row if the unit iunit belonggs to the domain of the row
+			if(p_isdomain)call jlpcurix()
+			! determines for each row if the unit iunit belonggs to the domain of the row
+			! units must be accessed one by one
+			! p_nrowcurx
+			! p_rowcurx
+			! p_idomba
 			!returns nrowp=number of rows in this domain,
-			! xrowcur= for each row in this domain tells the original (expanded) row
+			! rowcurx= for each row in this domain tells the original (expanded) row
 			!  ixcur for each original expanded row tells the index of temporary x-variable
-			ibxmatx=ibaxmat(p_ibaunit(i)+integerschedw(i))  !,1)
-			do jj=1,p_nxrowcur
-				j=p_xrowcur(jj)
+			ibxmatx=ibamatx(p_ibaunit(i)+integerschedw(i))  !,1)
+			do jj=1,p_nrowcurx
+				j=p_rowcurx(jj)
 				p_solx(j)=p_solx(j)+p_xmat(p_ix(j)+ibxmatx)
-			enddo !jj=1,p_nxrowcur  14339
-		enddo !i=1,p_nunits  14332
-	endif !if(p_nz.eq.0)  14327
+			enddo !jj=1,p_nrowcurx  13162
+		enddo !i=1,p_nunits  13150
+	endif !if(p_nz.eq.0)  13145
  
  
 	! if(p_ivsubtrans>0) then
@@ -16840,25 +15580,25 @@ subroutine getsolx() !
 	!	p_sumx=j_0
 	p_shpx=j_0
 	if(p_intapp)allocate(p_sumxi(1:p_nsumx*ndom2))
-	if(allocated(p_xvarsareatot))deallocate(p_xvarsareatot)
+	if(allocated(p_varxareatot))deallocate(p_varxareatot)
 	if(p_ivarea.gt.0.and.p_nnotareavars.gt.0)then
 		p_nxvarareatot=j_ndiffer(j_o(p_ivkeepx)%i2,p_nxvartot,p_notareavars,p_nnotareavars)
  
 		!	notc=j_ndiffer(p_cvarl,p_ncvar,p_notareavars,p_nnotareavars) !j_o(iob)%i(linknotareavars+1:linknotareavars+p_notareavars),p_notareavars)
 		if(p_nxvarareatot.lt.p_nxvartot)then !  .or.notc.gt.0)then
-			allocate(p_xvarsareatot(1:p_nxvarareatot)) !+notc))
+			allocate(p_varxareatot(1:p_nxvarareatot)) !+notc))
 			!	call j_uniondif(j_o(p_ivkeepx)%i2,p_nxvartot,p_cvarl,p_ncvar,&
 			!	p_notareavars,p_nnotareavars,&
 			!		j_o(iob)%i(linknotareavars+1:linknotareavars+p_notareavars),p_notareavars,&
-			!p_xvarsareatot,p_nxvarareatot)
+			!p_varxareatot,p_nxvarareatot)
 			ipart=1
-		endif !if(p_nxvarareatot.lt.p_nxvartot)  14373
+		endif !if(p_nxvarareatot.lt.p_nxvartot)  13196
 	elseif(p_ivarea.gt.0)then !if(p_ivarea.gt.0.and.p_notareavars.gt.0)then
 		p_nxvarareatot = p_nxvartot !+ p_noutsubtrans
-		allocate(p_xvarsareatot(1:p_nxvarareatot))
-		p_xvarsareatot(1:p_nxvartot)= j_o(p_ivkeepx)%i2(1:p_nxvartot)
-		!	if(p_noutsubtrans>0) p_xvarsareatot(p_nxvartot+1:p_nxvarareatot)=j_o(p_ivoutsubtrans)%i2(1:p_noutsubtrans)
-	endif !if(p_ivarea.gt.0.and.p_nnotareavars.gt.0)  14369
+		allocate(p_varxareatot(1:p_nxvarareatot))
+		p_varxareatot(1:p_nxvartot)= j_o(p_ivkeepx)%i2(1:p_nxvartot)
+		!	if(p_noutsubtrans>0) p_varxareatot(p_nxvartot+1:p_nxvarareatot)=j_o(p_ivoutsubtrans)%i2(1:p_noutsubtrans)
+	endif !if(p_ivarea.gt.0.and.p_nnotareavars.gt.0)  13192
  
 	call getsumxkey()
  
@@ -16867,22 +15607,22 @@ subroutine getsolx() !
 	p_idomba=0
 	do iuni=1,p_nunits
 		if(.not.p_isunit)then
-			call j_getobsiv(iuni,p_ivmatc,p_ivkeepc,p_ivunit)! ,p_ivtransc,j_ivunit)
+			call j_getobsiv(iuni,p_ivdatamatc,p_ivkeepc,p_ivunit)! ,p_ivtransc,j_ivunit)
 			if(j_err)then
 				write(6,*)'error for unit ',iuni
 				stop 512
-			endif !if(j_err)  14396
+			endif !if(j_err)  13219
 			if(p_ivtrans.gt.0)then
 				call dotrans(p_ivtrans,1)
 				if(j_err)stop 651
  
-			endif !if(p_ivtrans.gt.0)  14400
-		endif !if(.not.p_isunit)  14394
+			endif !if(p_ivtrans.gt.0)  13223
+		endif !if(.not.p_isunit)  13217
 		iobs=p_ibaunit(iuni)+integerschedw(iuni)   !+j_ibaunitbas
-		call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0)! ,p_ivtransx,0)  !getsolx
+		call j_getobsiv(iobs,p_ivdatamatx,p_ivkeepx,0)! ,p_ivtransx,0)  !getsolx
 		if(j_err)then
 			write(6,*)'error for observation ',iobs
-		endif !if(j_err)  14408
+		endif !if(j_err)  13231
 		! if(p_ivsubtrans.gt.0)then
 		! call dotrans(p_ivsubtrans,1)
 		! if(j_err)stop 719
@@ -16893,9 +15633,9 @@ subroutine getsolx() !
 				j_v(j_o(p_ivkeepx)%i2(1:p_nxvartot))=j_v(p_ivarea)*j_v(j_o(p_ivkeepx)%i2(1:p_nxvartot))
 				!if(p_ncvar.gt.0)j_v(p_cvarl(1:p_ncvar))=j_v(p_ivarea)*j_v(p_cvarl(1:p_ncvar))
 			else !if(ipart.eq.0)then
-				j_v(p_xvarsareatot)=j_v(p_ivarea)*j_v(p_xvarsareatot)
-			endif !if(ipart.eq.0)  14416
-		endif !if(p_ivarea.gt.0)  14415
+				j_v(p_varxareatot)=j_v(p_ivarea)*j_v(p_varxareatot)
+			endif !if(ipart.eq.0)  13239
+		endif !if(p_ivarea.gt.0)  13238
 		if(p_intapp)then
 			if(p_isdomain)then
 				iba=0
@@ -16908,7 +15648,7 @@ subroutine getsolx() !
  
 						do jx=1,p_nxvartot
 							p_sumxi(iba+jx)=p_sumxi(iba+jx)+ j_v(j_o(p_ivkeepx)%i2(jx))
-						end do !jx=1,p_nxvartot  14434
+						end do !jx=1,p_nxvartot  13257
  
 						!if(p_ncvar.gt.0)p_sumxi(iba+p_nxvartot+1:iba+p_nxvartot+p_ncvar)= &
 						!	p_sumxi(iba+p_nxvartot+1:iba+p_nxvartot+p_ncvar)+j_v(p_cvarl(1:p_ncvar))
@@ -16921,10 +15661,10 @@ subroutine getsolx() !
 						! p_sumxi(iba+p_nxvartot+1:iba+p_nxvartot+p_noutsubtrans) + &
 						! j_v(j_o(p_ivoutsubtrans)%i2(1:p_noutsubtrans))
  
-					end if !if(indomain2(id,iuni))  14432
+					end if !if(indomain2(id,iuni))  13255
  
 					iba=iba+p_nxvartot !+p_noutsubtrans !+p_ncvar+
-				end do !id=1,p_ndom  14428
+				end do !id=1,p_ndom  13251
 			else !if(j_ndom.gt.0)then
  
 				p_sumxi(1:p_nxvartot)= p_sumxi(1:p_nxvartot)+j_v(j_o(p_ivkeepx)%i2(1:p_nxvartot))
@@ -16940,24 +15680,24 @@ subroutine getsolx() !
 				! p_sumxi(p_nxvartot+1:p_nxvartot+p_noutsubtrans) + &
 				! j_v(j_o(p_ivoutsubtrans)%i2(1:p_noutsubtrans))
  
-			end if !if(p_isdomain)  14425
-		endif !if(p_intapp)  14424
-	end do !iuni=1,p_nunits  14393
+			end if !if(p_isdomain)  13248
+		endif !if(p_intapp)  13247
+	end do !iuni=1,p_nunits  13216
  
 	do i=1,p_lx0
  
 		wei=p_x(p_lx(i)+p_nrowz)
 		iuni=p_lunit(p_lx(i))
 		if(.not.p_isunit)then
-			call j_getobsiv(iuni,p_ivmatc,p_ivkeepc,p_ivunit) !,p_ivtransc,j_ivunit)
+			call j_getobsiv(iuni,p_ivdatamatc,p_ivkeepc,p_ivunit) !,p_ivtransc,j_ivunit)
 			if(p_ivtrans.gt.0)call dotrans(p_ivtrans,1)
-		endif !if(.not.p_isunit)  14476
+		endif !if(.not.p_isunit)  13299
 		if(p_nshow.gt.0)then
 			call dotrans(p_ivshowtrans,1)
 			if(j_err)return
-		endif !if(p_nshow.gt.0)  14480
+		endif !if(p_nshow.gt.0)  13303
 		iobs=p_ibaunit(iuni)+p_keys(iuni)
-		call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0) !getsolx
+		call j_getobsiv(iobs,p_ivdatamatx,p_ivkeepx,0) !,p_ivtransx,0) !getsolx
 		!	if(p_ivsubtrans.gt.0)call dotrans(p_ivsubtrans,1)
 		if(j_err)return
  
@@ -16965,9 +15705,9 @@ subroutine getsolx() !
 			if(ipart.eq.0)then
 				j_v(j_o(p_ivkeepx)%i2(1:p_nxvartot))=j_v(p_ivarea)*j_v(j_o(p_ivkeepx)%i2(1:p_nxvartot))
 			else !if(ipart.eq.0)then
-				j_v(p_xvarsareatot)=j_v(p_ivarea)*j_v(p_xvarsareatot)
-			endif !if(ipart.eq.0)  14490
-		endif !if(p_ivarea.gt.0)  14489
+				j_v(p_varxareatot)=j_v(p_ivarea)*j_v(p_varxareatot)
+			endif !if(ipart.eq.0)  13313
+		endif !if(p_ivarea.gt.0)  13312
 		if(p_isdomain)then
 			iba=0
 			!	p_idomba=(iuni-1)*p_ndomv
@@ -16977,28 +15717,28 @@ subroutine getsolx() !
 				if(indomain2(id,iuni))then
 					do jx=1,p_nxvartot
 						p_sumx(iba+jx)=p_sumx(iba+jx)-wei* j_v(j_o(p_ivkeepx)%i2(jx))
-					end do !jx=1,p_nxvartot  14503
+					end do !jx=1,p_nxvartot  13326
  
 					! do jx=1,p_noutsubtrans
 					! p_sumx(iba+p_nxvartot+p_ncvar+jx)=p_sumx(iba+p_nxvartot+p_ncvar+jx) &
 					! p_sumx(iba+p_nxvartot+jx)=p_sumx(iba+p_nxvartot+jx) &
 					! - wei*j_v(j_o(p_ivoutsubtrans)%i2(jx))
 					! enddo !jx=1,p_noutsubtrans  14388
-				end if !if(indomain2(id,iuni))  14502
+				end if !if(indomain2(id,iuni))  13325
  
 				iba=iba+p_nxvartot  !+p_noutsubtrans
-			end do !id=1,p_ndom  14499
+			end do !id=1,p_ndom  13322
 		else !if(j_ndom.gt.0)then
 			do jx=1,p_nxvartot
 				p_sumx(jx)=p_sumx(jx)-wei* j_v(j_o(p_ivkeepx)%i2(jx))
-			end do !jx=1,p_nxvartot  14517
+			end do !jx=1,p_nxvartot  13340
  
 			! do jx=1,p_noutsubtrans
 			! !	p_sumx(p_nxvartot+p_ncvar+jx)=p_sumx(p_nxvartot+jx) & !p_ncvar+jx) &
 			! p_sumx(p_nxvartot+jx)=p_sumx(p_nxvartot+jx) & !p_ncvar+jx) &
 			! - wei*j_v(j_o(p_ivoutsubtrans)%i2(jx))
 			! enddo !jx=1,p_noutsubtrans  14402
-		end if !if(p_isdomain)  14496
+		end if !if(p_isdomain)  13319
  
 		if(p_nshow.gt.0)then
 			if(.not.p_isdomain)iba=p_nxvartot
@@ -17008,25 +15748,25 @@ subroutine getsolx() !
 					do jx=1,p_nxvartot
 						p_sumx(iba+jx)=p_sumx(iba+jx)-wei* j_v(j_o(p_ivkeepx)%i2(jx))
 						!	p_sumx(iba+jx)=p_sumx(iba+jx)+ j_v(j_o(p_ivkeepx)%i2(jx))
-					end do !jx=1,p_nxvartot  14533
-				endif !if(j_o(p_ivshowmatrix)%d(id).ne.j_0)  14531
+					end do !jx=1,p_nxvartot  13356
+				endif !if(j_o(p_ivshowmatrix)%d(id).ne.j_0)  13354
 				iba=iba+p_nxvartot
-			enddo !id=1,p_nshow  14530
+			enddo !id=1,p_nshow  13353
  
-		endif !if(p_nshow.gt.0)  14528
+		endif !if(p_nshow.gt.0)  13351
  
  
 		iobs=p_ibaunit(iuni)+p_isch(p_lx(i))
-		call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0)  !getsolx
+		call j_getobsiv(iobs,p_ivdatamatx,p_ivkeepx,0) !,p_ivtransx,0)  !getsolx
 		!	if(p_ivsubtrans.gt.0)call dotrans(p_ivsubtrans,1)
  
 		if(p_ivarea.gt.0)then
 			if(ipart.eq.0)then  !if(p_nxvarareatot.eq.nxvartot)then
 				j_v(j_o(p_ivkeepx)%i2(1:p_nxvartot))=j_v(p_ivarea)*j_v(j_o(p_ivkeepx)%i2(1:p_nxvartot))
 			else !if(ipart.eq.0)then
-				j_v(p_xvarsareatot)=j_v(p_ivarea)*j_v(p_xvarsareatot)
-			endif !if(ipart.eq.0)  14549
-		endif !if(p_ivarea.gt.0)  14548
+				j_v(p_varxareatot)=j_v(p_ivarea)*j_v(p_varxareatot)
+			endif !if(ipart.eq.0)  13372
+		endif !if(p_ivarea.gt.0)  13371
  
 		if(p_isdomain)then
 			iba=0
@@ -17037,21 +15777,21 @@ subroutine getsolx() !
 				if(indomain2(id,iuni))then
 					do jx=1,p_nxvartot
 						p_sumx(iba+jx)=p_sumx(iba+jx)+wei* j_v(j_o(p_ivkeepx)%i2(jx))
-					end do !jx=1,p_nxvartot  14563
+					end do !jx=1,p_nxvartot  13386
  
 					! do jx=1,p_noutsubtrans
 					! !			p_sumx(iba+p_nxvartot+p_ncvar+jx)=p_sumx(iba+p_nxvartot+p_ncvar+jx) &
 					! p_sumx(iba+p_nxvartot+jx)=p_sumx(iba+p_nxvartot+jx) &
 					! + wei*j_v(j_o(p_ivoutsubtrans)%i2(jx))
 					! enddo !jx=1,p_noutsubtrans  14432
-				end if !if(indomain2(id,iuni))  14562
+				end if !if(indomain2(id,iuni))  13385
  
 				iba=iba+p_nxvartot+p_noutsubtrans
-			end do !id=1,p_ndom  14559
+			end do !id=1,p_ndom  13382
 		else !if(j_ndom.gt.0)then
 			do jx=1,p_nxvartot
 				p_sumx(jx)=p_sumx(jx)+wei* j_v(j_o(p_ivkeepx)%i2(jx))
-			end do !jx=1,p_nxvartot  14577
+			end do !jx=1,p_nxvartot  13400
  
 			! do jx=1,p_noutsubtrans
 			! !	p_sumx(p_nxvartot+p_ncvar+jx)=p_sumx(p_nxvartot+p_ncvar+jx) &
@@ -17059,7 +15799,7 @@ subroutine getsolx() !
 			! + wei*j_v(j_o(p_ivoutsubtrans)%i2(jx))
 			! enddo !jx=1,p_noutsubtrans  14446
  
-		end if !if(p_isdomain)  14556
+		end if !if(p_isdomain)  13379
 		if(p_nshow.gt.0)then
 			if(.not.p_isdomain)iba=p_nxvartot
 			do id=1,p_nshow
@@ -17068,15 +15808,15 @@ subroutine getsolx() !
 					do jx=1,p_nxvartot
 						p_sumx(iba+jx)=p_sumx(iba+jx)+wei* j_v(j_o(p_ivkeepx)%i2(jx))
 						!			p_sumx(iba+jx)=p_sumx(iba+jx)+ j_v(j_o(p_ivkeepx)%i2(jx))
-					end do !jx=1,p_nxvartot  14593
-				endif !if(j_o(p_ivshowmatrix)%d(id).ne.j_0)  14591
+					end do !jx=1,p_nxvartot  13416
+				endif !if(j_o(p_ivshowmatrix)%d(id).ne.j_0)  13414
 				iba=iba+p_nxvartot
-			enddo !id=1,p_nshow  14590
-		endif !if(p_nshow.gt.0)  14588
+			enddo !id=1,p_nshow  13413
+		endif !if(p_nshow.gt.0)  13411
  
  
  
-	end do !i=1,p_lx0  14472
+	end do !i=1,p_lx0  13295
  
 	return
 end subroutine !subroutine getsolx()
@@ -17102,7 +15842,7 @@ end subroutine
 ! write(6,*)'split units ',nn
 ! !write(6,*)'number of explicit basic schedules ',j_ld0
 ! p_ndiv=p_lx0+nn
-! if(allocated(p_iunitdiv))deallocate(p_iunitdiv);allocate( p_iunitdiv(1:p_ndiv))
+! if(allocated(p_unitdiv))deallocate(p_unitdiv);allocate( p_unitdiv(1:p_ndiv))
 ! if(allocated(p_isdiv))deallocate(p_isdiv);allocate( p_isdiv(1:p_ndiv))
 ! if(allocated(p_wdiv))deallocate(p_wdiv);allocate( p_wdiv(1:p_ndiv))
 ! allocate(iperm(1:p_ndiv),isdiv0(1:p_ndiv),sortkey(1:p_ndiv))
@@ -17128,7 +15868,7 @@ end subroutine
 ! p_wdiv(iplace)=1.-sum     ! area
 
 ! isdiv0(iplace)=p_keys(nunv)
-! p_iunitdiv(iplace)=nunv
+! p_unitdiv(iplace)=nunv
 
 ! sum=0.
 ! iplace=0
@@ -17140,7 +15880,7 @@ end subroutine
 ! end if !if(p_isch(p_id).gt.p_keys(p_lunit(p_id)).and.iplace.eq.0)  14830
 ! idiv=idiv+1
 
-! p_iunitdiv(idiv)=p_lunit(p_id)
+! p_unitdiv(idiv)=p_lunit(p_id)
 ! isdiv0(idiv)=p_isch(p_id)
 ! p_wdiv(idiv)=p_x(p_nrowz+p_id)
 ! sum=sum+p_x(p_nrowz+p_id)
@@ -17151,10 +15891,10 @@ end subroutine
 ! idiv=idiv+1;iplace=idiv
 ! end if !if(iplace.eq.0)  14843
 ! p_wdiv(iplace)=1.-sum
-! p_iunitdiv(iplace)=nunv
+! p_unitdiv(iplace)=nunv
 ! isdiv0(iplace)=p_keys(nunv)
 ! smax=maxval(isdiv0)
-! do i=1,p_ndiv;iperm(i)=i;sortkey(i)=p_iunitdiv(i)+isdiv0(i)/smax;enddo
+! do i=1,p_ndiv;iperm(i)=i;sortkey(i)=p_unitdiv(i)+isdiv0(i)/smax;enddo
 
 ! !jr  from Numerical Recipes
 ! call j_quick_sort(sortkey(1:p_ndiv),iperm)
@@ -17166,9 +15906,9 @@ end subroutine
 ! do i=1,p_ndiv
 ! p_isdiv(i)=isdiv0(iperm(i))
 ! end do !i=1,p_ndiv  14859
-! isdiv0=p_iunitdiv
+! isdiv0=p_unitdiv
 ! do i=1,p_ndiv
-! p_iunitdiv(i)=isdiv0(iperm(i))
+! p_unitdiv(i)=isdiv0(iperm(i))
 ! end do !i=1,p_ndiv  14863
 
 ! deallocate(iperm,isdiv0,sortkey)
@@ -17184,419 +15924,26 @@ subroutine defsoluf()
 	write(6,*)'defsoluf'
  
 end subroutine
-! ! prevcol_(i) = yksikön viimeksi silmukassa vastaantullut tehdaskantasrk
-! integer, dimension(:), allocatable :: prevcol_
-! if (allocated(prevcol_)) deallocate(prevcol_)
-! allocate(prevcol_(1:p_nunits))
-! prevcol_=p_mxd
 
-! if (allocated(p_logfsol)) deallocate(p_logfsol)
-! allocate(p_logfsol(p_mxd+1:p_lf0))
-! p_i0_xkfsol = p_mxd+1
-! p_lf0_xkfsol = p_lf0
-! do i_= p_i0_xkfsol,p_lf0_xkfsol	! kannan tehdasmuuttujat
-! p_logfsol(i_)%xkf= p_x(p_lf(i_)+p_nrowz)
-! p_logfsol(i_)%ixk= p_ixkf(p_lf(i_))
-! p_logfsol(i_)%ifact= p_ixkffact(p_lf(i_))
-! p_logfsol(i_)%iunit= p_lunit(p_lf(i_))
-! !yksikön tehdassrkeisen ketjutus
-! p_logfsol(i_)%next = p_mxd
-! if(prevcol_(p_logfsol(i_)%iunit)>p_mxd) &
-! p_logfsol(prevcol_(p_logfsol(i_)%iunit))%next = i_
-! prevcol_(p_logfsol(i_)%iunit) = i_
-! enddo !i_= p_i0_xkfsol,p_lf0_xkfsol  14887
-
-! deallocate(prevcol_)
-! return
-! end subroutine !subroutine defsoluf()
-
-! ! käyttöpaikkoihin kuljetettavien puutavaralajien (määrien) tulostus ratkaisussa
-! ! Domainien käsittely puuttuu
-! subroutine printxkf()
-
-! double precision, dimension(:,:),allocatable::sumxkf
-! double precision, dimension(:,:),allocatable::sumxkf2
-! allocate(sumxkf(1:p_nlog,1:p_nfact))
-! sumxkf=j_0
-
-! p_nxvartot=j_o(p_ivkeepx)%i(1) ! #vaihtoehdon muuttujat
-! iunitrans=0
-
-! !Avaintehtaisiin avainvaihtoehdoista vietävät määrät
-! do iuni=1,p_nunits	! laskentayksiköt
-! call j_getobsiv(iuni,p_ivmatc,p_ivkeepc,p_ivunit) !,p_ivtransc,j_ivunit) 	! yksikön tiedot v-vektoriin
-! if(p_ivtrans.gt.0)call dotrans(p_ivtrans,1)							 	! muunnokset yksikön tiedoilla
-! iobs=p_ibaunit(iuni)+p_keys(iuni)						! yksikön avainvaihtoehdon indeksi
-
-! call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0)		!printxkf		! avainvaihtoehdon tiedot v-vektoriin ?
-! !	if(p_ivsubtrans.gt.0)call dotrans(p_ivsubtrans,1)
-
-! ! Ptl-mjan summa avaintehtaissa
-! do ixk_=1,p_nlog	! puutavaralaji-muuttujat
-! keyf_ = p_keyfact(iuni,ixk_)
-! sumxkf(ixk_,keyf_) = sumxkf(ixk_,keyf_) + j_v(p_log(ixk_))
-! enddo !ixk_=1,p_nlog  14925
-! enddo !iuni=1,p_nunits  14916
-
-! !Korjataan kantavaihtoehdoista avaintehtaisiin vietävillä määrilla
-! do i=1,p_lx0	!kannan ve-sarakkeet
-! wei=p_x(p_lx(i)+p_nrowz)	! vaihtoehdon paino
-! iuni=p_lunit(p_lx(i))		! vaihtoehdon yksikkö
-! call j_getobsiv(iuni,p_ivmatc,p_ivkeepc,p_ivunit) !,p_ivtransc,j_ivunit)	! yksikön tiedot v-vektoriin
-! !		if(p_ivtrans.gt.0)call dotrans(p_ivtrans,1)								! muunnokset yksikön tiedoilla
-
-! iobs=p_ibaunit(iuni)+p_keys(iuni) 						! yksikön avainvaihtoehdon indeksi
-! call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0)	!printxkf			!	avainvaihtoehto v-vektoriin ?
-! !	if(p_ivsubtrans.gt.0)call dotrans(p_ivsubtrans,1)
-! if(j_err)return
-
-! ! Vähennetään painon osuus yksikön avainvaihtoehdosta avaintehtaalle vietävää määrää
-! do ixk_=1,p_nlog	! puutavaralaji-muuttujat
-! keyf_ = p_keyfact(iuni,ixk_)
-! sumxkf(ixk_,keyf_) = sumxkf(ixk_,keyf_) - wei*j_v(p_log(ixk_))
-! enddo !ixk_=1,p_nlog  14944
-
-! iobs=p_ibaunit(iuni)+p_isch(p_lx(i))					! kantavaihtoehdon indeksi
-! call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0) !printxkf
-! !if(p_ivsubtrans.gt.0)call dotrans(p_ivsubtrans,1)
-
-! ! Lisätään painon osuus yksikön avainvaihtoehdosta avaintehtaalle vietävää määrää
-! do ixk_=1,p_nlog	! puutavaralaji-muuttujat
-! keyf_ = p_keyfact(iuni,ixk_)
-! sumxkf(ixk_,keyf_) = sumxkf(ixk_,keyf_) + wei*j_v(p_log(ixk_))
-! enddo !ixk_=1,p_nlog  14954
-! enddo !i=1,p_lx0  14932
-
-! do i= p_mxd+1,p_lf0	! kannan tehdasmuuttujat
-! iuni=p_lunit(p_lf(i))		! tehdasmuuttujan yksikkö
-! ixk_ = p_ixkf(p_lf(i))	! puutavaramuuttujan indeksi xky-listalla
-! ifact_ = p_ixkffact(p_lf(i))		! tehtaan indeksi factories-listalla
-! keyf_ = p_keyfact(iuni,ixk_)	! avaintehdas
-
-! sumxkf(ixk_,keyf_) = sumxkf(ixk_,keyf_) - p_x(p_lf(i)+p_nrowz)
-! sumxkf(ixk_,ifact_) = sumxkf(ixk_,ifact_) + p_x(p_lf(i)+p_nrowz)
-! enddo !i= p_mxd+1,p_lf0  14960
-
-! do if_= 1,p_nfact
-! do  ixk_= 1,p_nlog
-! do ixkf_=1,p_nloginfact(ixk_)
-! if (if_ == p_loginfact(ixk_,ixkf_)%ifact) then
-! write(p_n16,*) j_vname(p_log(ixk_)),j_vname(p_fact(if_)),sumxkf(ixk_,if_)
-! endif !if (if_ == p_loginfact(ixk_,ixkf_)%ifact)  14973
-! enddo !ixkf_=1,p_nloginfact(ixk_)  14972
-! enddo ! ixk_= 1,p_nlog  14971
-! enddo !if_= 1,p_nfact  14970
-
-! ! tarkempi tulostus (valitettavasti uudelleen laskien) jos jokin arvo negatiivinen
-! if(p_p.and.any(sumxkf<0.0)) then
-
-! write(p_n16,*)'Negat. ptl/tehdas-arvot: '
-! if(allocated(sumxkf2))deallocate(sumxkf2)
-! allocate(sumxkf2(1:p_nlog,1:p_nfact))
-! sumxkf2=j_0
-
-! !Avaintehtaisiin avainvaihtoehdoista vietävät määrät
-! do iuni=1,p_nunits	! laskentayksiköt
-! call j_getobsiv(iuni,p_ivmatc,p_ivkeepc,p_ivunit) !,p_ivtransc,j_ivunit) ! printxkf yksikön tiedot v-vektoriin
-! if(p_ivtrans.gt.0)call dotrans(p_ivtrans,1)							 	! muunnokset yksikön tiedoilla
-! iobs=p_ibaunit(iuni)+p_keys(iuni)						! yksikön avainvaihtoehdon indeksi
-
-! call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0)				! avainvaihtoehdon tiedot v-vektoriin ?
-! !	if(p_ivsubtrans.gt.0)call dotrans(p_ivsubtrans,1)
-
-! ! Ptl-mjan summa avaintehtaissa
-! do ixk_=1,p_nlog	! puutavaralaji-muuttujat
-! keyf_ = p_keyfact(iuni,ixk_)
-! sumxkf2(ixk_,keyf_) = sumxkf2(ixk_,keyf_) + &
-! j_v(p_log(ixk_))
-! if(sumxkf(ixk_,keyf_)<0.0) then
-! write(p_n16,*)'Avainve avaintehtaaseen: unit,schd, ixk,ifact, +, yht : ',&
-! iuni,p_keys(iuni), ixk_,keyf_, &
-! j_v(p_log(ixk_)), sumxkf2(ixk_,keyf_)
-! write(p_n16,*)'  xk, fact : ', &
-! j_vname(p_log(ixk_)), j_vname(p_fact(keyf_))
-! endif !if(sumxkf(ixk_,keyf_)<0.0)  15002
-! enddo !ixk_=1,p_nlog  14998
-! enddo !iuni=1,p_nunits  14989
-
-! !Korjataan kantavaihtoehdoista avaintehtaisiin vietävillä määrilla
-! do i=1,p_lx0	!kannan ve-sarakkeet
-! wei=p_x(p_lx(i)+p_nrowz)	! vaihtoehdon paino
-! iuni=p_lunit(p_lx(i))		! vaihtoehdon yksikkö
-! call j_getobsiv(iuni,p_ivmatc,p_ivkeepc,p_ivunit) !,p_ivtransc,j_ivunit) ! printxkf yksikön tiedot v-vektoriin
-! if(p_ivtrans.gt.0)call dotrans(p_ivtrans,1)								! muunnokset yksikön tiedoilla
-
-! iobs=p_ibaunit(iuni)+p_isch(p_lx(i))					! kantavaihtoehdon indeksi
-! call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0) !,p_ivtransx,0)
-! !		if(p_ivsubtrans.gt.0)call dotrans(p_ivsubtrans,1)
-
-! ! Lisätään painon osuus yksikön kantavaihtoehdosta avaintehtaalle vietävää määrää
-! do ixk_=1,p_nlog	! puutavaralaji-muuttujat
-! keyf_ = p_keyfact(iuni,ixk_)
-! sumxkf2(ixk_,keyf_) = sumxkf2(ixk_,keyf_) +  &
-! wei*j_v(p_log(ixk_))
-! if(sumxkf(ixk_,keyf_)<0.0) then
-! endif !if(sumxkf(ixk_,keyf_)<0.0)  15028
-! enddo !ixk_=1,p_nlog  15024
-
-! iobs=p_ibaunit(iuni)+p_keys(iuni) 						! yksikön avainvaihtoehdon indeksi
-! call j_getobsiv(iobs,p_ivxdatmat,p_ivkeepx,0)! ,p_ivtransx,0)				!	avainvaihtoehto v-vektoriin ?
-! !	if(p_ivsubtrans.gt.0)call dotrans(p_ivsubtrans,1)
-! if(j_err)return
-
-! ! Vähennetään painon osuus yksikön avainvaihtoehdosta avaintehtaalle vietävää määrää
-! do ixk_=1,p_nlog	! puutavaralaji-muuttujat
-! keyf_ = p_keyfact(iuni,ixk_)
-! sumxkf2(ixk_,keyf_) = sumxkf2(ixk_,keyf_) -  &
-! wei*j_v(p_log(ixk_))
-! if(sumxkf(ixk_,keyf_)<0.0) then
-! write(p_n16,*)'Avainve -: unit, ve, paino, ixk,ifact, -, yht : ' ,&
-! iuni, p_keys(iuni),wei, ixk_,keyf_, &
-! wei*j_v(p_log(ixk_)),&
-! sumxkf2(ixk_,keyf_)
-! endif !if(sumxkf(ixk_,keyf_)<0.0)  15042
-! enddo !ixk_=1,p_nlog  15038
-
-! enddo !i=1,p_lx0  15013
-
-! do i= p_mxd+1,p_lf0	! kannan tehdasmuuttujat
-! iuni=p_lunit(p_lf(i))		! tehdasmuuttujan yksikkö
-! if(i==p_lf01) iuni=iunit
-! ixk_ = p_ixkf(p_lf(i))	! puutavaramuuttujan indeksi xky-listalla
-! ifact_ = p_ixkffact(p_lf(i))		! tehtaan indeksi factories-listalla
-! keyf_ = p_keyfact(iuni,ixk_)	! avaintehdas
-
-! sumxkf2(ixk_,keyf_) = sumxkf2(ixk_,keyf_) - p_x(p_lf(i)+p_nrowz)
-! sumxkf2(ixk_,ifact_) = sumxkf2(ixk_,ifact_) + p_x(p_lf(i)+p_nrowz)
-! if (sumxkf(ixk_,ifact_)<0.0) then
-! write(p_n16,*)'Kantaxkf + : srk, unit,ixk,ifact, +, yht : ', &
-! p_lf(i), iuni,ixk_,ifact_, p_x(p_lf(i)+p_nrowz), &
-! sumxkf2(ixk_,ifact_)
-! write(p_n16,*)'  xk, fact : ',j_vname(p_log(ixk_)), j_vname(p_fact(ifact_))
-! endif !if (sumxkf(ixk_,ifact_)<0.0)  15061
-! if(sumxkf(ixk_,keyf_)<0.0) then
-! write(p_n16,*)'Avaint. - : srk, unit, ixk,ikeyf, -, yht : ', &
-! p_lf(i),iuni, ixk_,keyf_, p_x(p_lf(i)+p_nrowz), sumxkf2(ixk_,keyf_)
-! write(p_n16,*)'  xk, fact : ',j_vname(p_log(ixk_)), &
-! j_vname(p_fact(keyf_))
-! endif !if(sumxkf(ixk_,keyf_)<0.0)  15067
-! enddo !i= p_mxd+1,p_lf0  15052
-
-! deallocate(sumxkf2)
-! endif !if(p_p.and.any(sumxkf<0.0))  14981
-
-! deallocate(sumxkf)
-! return
-! end subroutine !subroutine printxkf()
-
-
-! !Puutavaralaji-muuttujien (määrien) tulostus ratkaisussa
-! subroutine printsumxk(idom_)
-! iunitrans = 0
-
-! call getsolx()
-! do ixk_ = 1,p_nlog
-! jx=j_inlistobject(p_log(ixk_),p_ivkeepx)  !p_log(ixk_),p_ivkeepx)
-! call j_getname(p_log(ixk_))
-! write(p_n16,*) j_oname(1:j_loname),p_sumx((idom_-1)*p_nxvartot+jx)
-! enddo !ixk_ = 1,p_nlog  15088
-! return
-
-! end subroutine !subroutine printsumxk(idom_)
-! !end subroutine jlp2 !subroutine jlp(iob,io)
-
-! !subroutine initvec()
-
-! !j_xpresent)then
 
 ! !
 
 subroutine factxps(i,key)
 	write(6,*)'factxps'
 end subroutine
-! integer pvars_
-! !fdomain fcurix ja fcurixy täytyy päivittää
-! !call jlpfcurix(i)
-! !call jlpfcurixy(i)
-! !if(j_o(p_ivxdatmat)%r(10261*keepx).eq.0.)stop 33
-! !write(16,*)j_xdattokaobs,j_ibaunit(i)+key,'j_xdatlast',j_xdatlast
+!
 
-! !	ibxdatkey=ibaxmat(p_ibaunit(i)+key) !,2)
-! ibxdatkey=ibaxdat(p_ibaunit(i)+key) !,2)
-
-! !if(i.le.2)write(16,*)'ibxdatkey i',ibxdatkey,i
-
-! !if(j_o(p_ivxdatmat)%r(10261*keepx).eq.0.)then
-! !write(16,*)ibxdatkey,ibxdatkey/keepx,j_ibaunit(i)+key
-! !write(16,*)'j_xdatlast',j_xdatlast,j_xdatfirst2,j_xdatlast2
-! !stop 34
-! !endif
-! !	write(19,*)p_ivxdatmat,j_ibaunit(i),key,ibxdatkey,j_lopp
-! !nunitsrow tehdasmja-riveille
-! !?? p_subfilre,rejects vrt. x-mja tehtävärivit
-
-! ! do j=0, p_nrow
-! ! if (p_ix(j)==0) then
-! ! if (p_ixcurfact(j)) then !ehdosta puuttuu rivit, joilla y-tehdasmjia
-! ! p_nunitsrow(j) = p_nunitsrow(j) + 1
-! ! endif !if (p_ixcurfact(j))  12457
-! ! endif !if (p_ix(j)==0)  12456
-! ! enddo !j=0, p_nrow  12455
-
-! ! if(i.eq.p_nunits) then
-! ! write(p_n16,*)'p_nfyrow',p_nfyrow
-! ! write(p_n16,*)'p_nxrow',p_nxrow
-! ! write(p_n16,*)'nfxrow',p_nfxrow
-! ! write(p_n16,*)'irowfxvars: ',p_irowfxvars
-! ! write(p_n16,*)'irowffact: ',p_irowffact
-! ! write(p_n16,*)'irowfkeep: ',p_irowfkeep
-! ! write(p_n16,*)'ibafx: ',p_ibafx
-! ! write(p_n16,*)'ibaunit: ',p_ibaunit(1:min(100,p_nunits))
-! ! write(p_n16,*)'key: ',key
-! ! write(p_n16,*)'o(ivkeepx)%i(1): ',j_o(p_ivkeepx)%i(1)
-! ! write(p_n16,*)'irowrow',p_irowrow
-! ! write(p_n16,*)'fxrow',p_fxrow
-! ! write(p_n16,*)'nfyrow',p_nfyrow
-! ! write(p_n16,*)'fyrow',p_fyrow(1:p_nfyrow)
-! ! endif !if(p_p.and.i.eq.p_nunits) then
-! !if(j_o(p_ivxdatmat)%r(10261*keepx).eq.0.)stop 49
-! !xk-tehdasmuuttujat
-! if(p_p8.and.i.le.2)write(6,*)'<44454 i key p_nfxrow',i,key,p_nfxrow,'p_fxrow(1:10)',p_fxrow(1:p_nrow)
-
-! if(p_p8.and.i.le.1)write(6,*)'<ibafx',p_ibafx(1:10)
-! if(p_p8.and.i.le.1)write(6,*)'<4888 p_irowffact(p_ibafx(irowj)+k)',p_irowffact(1:10)
-! do jj=1,p_nfxrow
-! irowj=p_fxrow(jj) !domainissa olevat rivit
-! !	irowj =j+1 ! p_irowrow(j)
-! !		write(6,*)'<379>',p_nfxrow,jj,irowj,p_nfxinrow(irowj),p_ibafx(irowj),p_irowfxvars(p_ibafx(irowj)+1:p_ibafx(irowj)+1)
-! !xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
-! !xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
-! if(p_p8.and.i.le.2.and.jj.lt.10)write(6,*)'<588 i,jj, ',i,jj,p_nfxinrow(irowj),p_nfxinrow(irowj)
-! do k=1,p_nfxinrow(irowj)
-! ! onko kerrointa vastaava tehdas sama kuin laskentayksikön avaintehdas kerrointa vastaavalla muuttujalla
-! ! irowfxvars, irowffact : tehdasmuuttujat & tehtaat esiintymisjärjestyksessä
-! !if(p_p) then
-! !endif !if(p_p) then
-! if(i.lt.2)write(6,*)'<19# i,k,p_keyfact(i,p_irowfxvars(p_ibafx(irowj)+k)),p_irowffact(p_ibafx(irowj)+k)',&
-! i,k,p_keyfact(i,p_irowfxvars(p_ibafx(irowj)+k)),p_irowffact(p_ibafx(irowj)+k)
-! !		write(6,*)'<777 jj,j,irowj,k,p_nfxinrow(irowj)',jj,j,irowj,k,p_nfxinrow(irowj)
-! !		write(6,*)'7e7e7,p_ibafx(irowj),p_ibafx(irowj)+k,p_irowfxvars(p_ibafx(irowj)+k)',&
-! !			p_ibafx(irowj),p_ibafx(irowj)+k,p_irowfxvars(p_ibafx(irowj)+k)
-! !		if(p_irowfxvars(p_ibafx(irowj)+k).gt.30)write(6,*)'***',p_irowfxvars
-
-! if(p_keyfact(i,p_irowfxvars(p_ibafx(irowj)+k)).eq. &
-! p_irowffact(p_ibafx(irowj)+k))then
-
-
-
-! p_xps(irowj)=p_xps(irowj)+ p_coeffx(p_ibafx(irowj)+k)*&
-! j_o(p_ivxdatmat)%d(ibxdatkey+p_irowfkeep(p_ibafx(irowj)+k)) !ibaxmat
-
-! if(jj.eq.0.and.i.le.2)write(6,*)'<5566',i,jj,irowj,k,p_ibafx(irowj), &
-! p_coeffx(p_ibafx(irowj)+k),ibxdatkey,p_irowfkeep(p_ibafx(irowj)+k),&
-! j_o(p_ivxdatmat)%d(ibxdatkey+p_irowfkeep(p_ibafx(irowj)+k)),p_xps(irowj)
-! endif !if(p_keyfact(i,p_irowfxvars(p_ibafx(irowj)+k)).e  15175
-! enddo !k=1,p_nfxinrow(irowj)  15163
-! enddo !jj=1,p_nfxrow  15156
-
-! ! if (p_nfy.gt.0) then
-! ! do j=1,j_o(p_ivkeepc)%i(1)
-! ! j_v(j_o(p_ivkeepc)%i2(j))=j_o(p_ivmatc)%d((i-1)*j_o(p_ivkeepc)%i(1)+j)
-! ! enddo !j=1,j_o(p_ivkeepc)%i(1)  15191
-
-
-! ! !	do j=1,p_nutiltrans
-! ! !	call dotrans(p_utiltrans(j),1)
-! ! call dotrans(p_ivutiltrans,1)
-! ! if(j_err)then
-! ! write(6,*)'error for unit ',i
-! ! stop 771
-! ! endif !if(j_err)  15199
-! ! !	enddo !j=1,p_nutiltrans  12634
-! ! endif !if (p_nfy.gt.0)  15190
-! ! !if(j_o(p_ivxdatmat)%r(10261*keepx).eq.0.)stop 314
-! ! do jj=1,p_nfyrow
-! ! !ivn-laskurin käsittely ei toimi, jos mukana on domaineja
-! ! j=p_fyrow(jj) !domainissa olevat rivit
-! ! irowj =j+1 !p_irowrow(j)
-! ! if(i.le.2)write(6,*)'<5454,jj,j,irowj',j,j,irowj
-! ! !xps = sums over the keyschedules vector s in Eq. (6.14) in JLP-manual
-! ! do k=1,p_nfyinrow(irowj)
-! ! ! irowfyvars, irowfyfact : tehdasmuuttujat & tehtaat esiintymisjärjestyksessä
-! ! ! coeffx:n tilalle muunnosten output-muuttujat => haaetaan %%puuljit%%tehtaat -listoista siäkkäisillä silmukoilla
-! ! ! koko alla oleva if* silmukoiden sisälle
-! ! ! irowfxvars-> irowfyvars (huom! lista), vast irowffact->irowfyfact (huom! lista) , ibafx->ibafy
-! ! listy=p_irowfyvars(p_ibafy(irowj)+k)
-! ! listf=p_irowfyfact(p_ibafy(irowj)+k)
-! ! !	call j_getname(listy)
-! ! !if(j.le.0)write(6,*)'<88899 ',k,j_o(listy)%i(1),j_oname(1:j_loname)
-! ! do pvars_=1,j_o(listy)%i(1)
-! ! !		write(6,*)'<333 ',pvars_
-! ! !mjan xmat-sarake
-! ! iv2elpos = p_ifyvarskeep(p_ibafykeep(p_ibafy(irowj)+k)+pvars_-1)
-! ! !listy-listan pvars_:innen ptl-mjan paikka (järjestysnumero) xk-listassa
-! ! iv2xykypos_ = p_ifyvarsxk(p_ibafykeep(p_ibafy(irowj)+k)+pvars_-1)
-! ! !call j_getname(listf)
-! ! !	if(i.le.2)write(6,*)'<688 ',j_oname(1:j_loname),' ',j_o(listf)%i(1)
-! ! do ifact_=1,j_o(listf)%i(1)
-! ! !onko tehdas (ifact_) puutavaralaji-muuttujan (pvars_) avaintehdas
-! ! !tehdas-y-mjaan liittyvänn muunnoksen outputmjien eli gamma-kertoimien poiminta v-vektorista
-! ! !indeksi, josta ibafyfact-vektorissa alkaa irowj:nnen tehtävärivin tehdaslista-esiintymät
-! ! !indeksi, josta ifyfactfact-vektorissa alkaa irowj:nnen tehtävärivin k:nnen tehdaslista-esiintymän
-! ! !(ibafy(irowj)+k) tehtaiden järjestysnumerot factories-listassa
-! ! ! iv3factpos_ : tehdaslistan list ifact_:innen tehtaan paikka (järjestysnumero) factories-listassa
-! ! iv3factpos_ = p_ifyfactfact(p_ibafyfact(p_ibafy(irowj)+k)+ifact_-1)
-! ! !						if(i.le.2)write(6,*)'<22 ',i,' iv3factpos_ ',iv3factpos_,p_keyfact(i,iv2xykypos_)
-! ! !						if(i.le.2)write(6,*)'<23 ',i,' ; ',p_keyfact(i,1:p_nlog)
-
-! ! if(p_keyfact(i,iv2xykypos_).eq.iv3factpos_) then
-! ! !if(p_p)then
-! ! !endif !if(p_p)then
-! ! !			write(p_n16,*)'<666,',i,iv2xykypos_,iv3factpos_
-! ! !				write(p_n16,*)'<777',p_fyfactout(iv2xykypos_,iv3factpos_)
-
-! ! p_xps(irowj)=p_xps(irowjj)+ j_v(p_fyfactout(iv2xykypos_,iv3factpos_))*&
-! ! j_o(p_ivxdatmat)%d(ibxdatkey+iv2elpos)
-! ! call j_getname(p_fyfactout(iv2xykypos_,iv3factpos_))
-
-! ! !			if(j.eq.0.and.i.ge.6.and.i.le.10)write(p_n16,*)'##& ',i, ibxdatkey,iv2xykypos_,iv3factpos_,&
-! ! !		p_fyfactout(iv2xykypos_,iv3factpos_),&
-! ! !			iv2elpos,j_o(p_ivxdatmat)%d(ibxdatkey+iv2elpos),&
-! ! !			j_v(p_fyfactout(iv2xykypos_,iv3factpos_)),p_xps(j),j_oname(1:j_loname)
-
-
-! ! !						if(i.gt.10) stop 'hui'
-! ! ! if(j.eq.0.and.i.le.2)then
-! ! ! call j_getname(j_o(p_ivkeepx)%i2(iv2elpos),p_fyfactout(iv2xykypos_,iv3factpos_))
-
-! ! ! write(6,*)'##& ',i, ibxdatkey,j_oname(1:j_loname),'  ',j_oname2(1:j_loname2),&
-! ! ! iv2elpos,j_o(p_ivxdatmat)%d(ibxdatkey+iv2elpos),&
-! ! ! j_v(p_fyfactout(iv2xykypos_,iv3factpos_)),p_xps(j)
-! ! ! endif
-
-! ! endif !if(p_keyfact(i,iv2xykypos_).eq.iv3factpos_)  15240
-
-! ! enddo !ifact_=1,j_o(listf)%i(1)  15229
-! ! enddo !pvars_=1,j_o(listy)%i(1)  15221
-
-! enddo !k=1,p_nfyinrow(irowj)  15212
-! enddo !jj=1,p_nfyrow  15206
-
-! ! if(p_p) then
-! write(p_n16,*)'**fact** xps <38xx>',i,p_xps(0:10)
-! endif !if(p_p)  12670
-! return
 ! end subroutine
 
-function ibaxmat(iobs)
+function ibamatx(iobs)
 	use jmod, only: p_ntemp0
  
-	ibaxmat=(iobs-1)*p_ntemp0
+	ibamatx=(iobs-1)*p_ntemp0
 end function
 
 function ibaxdat(iobs)
-	use jmod, only: p_keepx
-	ibaxdat=(iobs-1)*p_keepx
+	use jmod, only: p_nkeepx
+	ibaxdat=(iobs-1)*p_nkeepx
 end function
 
 logical function indomain(ido)
@@ -17614,7 +15961,7 @@ logical function indomain(ido)
 		indomain=.true.
 	else
 		indomain=.false.
-	endif !if(p_domvars(ido).eq.j_ivall)  15126
+	endif !if(p_domvars(ido).eq.j_ivall)  13556
 	p_idomba=p_idomba+p_ndomv
 	return
 end function
@@ -17629,13 +15976,13 @@ logical function indomain2(ido,iuni)
 	if(p_domvars(ido).eq.j_ivall)then
 		indomain2=.true.
 		return
-	endif !if(p_domvars(ido).eq.j_ivall)  15139
+	endif !if(p_domvars(ido).eq.j_ivall)  13569
 	idomba=(iuni-1)*p_ndomv
 	if(btest(p_domainbits(idomba+p_icurint(ido)),p_icurbit(ido)))then
 		indomain2=.true.
 	else
 		indomain2=.false.
-	endif !if(btest(p_domainbits(idomba+p_icurint(ido)),p_icurbit(ido  15144
+	endif !if(btest(p_domainbits(idomba+p_icurint(ido)),p_icurbit(ido  13574
 	return
 end function
 
@@ -17646,7 +15993,7 @@ subroutine zerocap()
 	use jmod, only: p_nfxinrow
 	use jmod, only: p_nfyinrow
 	use jmod, only: p_ix
-	use jmod, only: p_irowfxvars
+	use jmod, only: p_irowfvarx
 	use jmod, only: p_ibafx
 	use jmod, only: p_irowffact
 	use jmod, only: j_0
@@ -17664,7 +16011,7 @@ subroutine zerocap()
 				p_ix(irowj_-1).eq.0)then !.and.j_ix(irowj_).eq.0)then !
 			!z-muuttujat tsekattva a-matriisista)
  
-			jxk=p_irowfxvars(p_ibafx(irowj_)+1)
+			jxk=p_irowfvarx(p_ibafx(irowj_)+1)
 			jf = p_irowffact(p_ibafx(irowj_)+1)
 			p_zeroc=p_rhs2(irowj_-1).eq.j_0
  
@@ -17673,23 +16020,23 @@ subroutine zerocap()
 			!20181116 #p_zeroc_z
 			do iz=1,p_nz
 				if(p_a(irowj_-1+p_abas(iz)).ne.0.)p_zeroc=.false.  !(jxk,jf)=.false.
-			enddo !iz=1,p_nz  15170
+			enddo !iz=1,p_nz  13600
 			if(p_zeroc)then  !J-err=.true.
 				write(6,*)'at row' ,irowj_, 'there is zero capacity for timber ',jxk,&
 					'and factory ',jf
 				write(6,*)'remove the row and put the price or utility negative'
 				j_err=.true.
  
-			endif !if(p_zeroc)  15173
+			endif !if(p_zeroc)  13603
  
-		endif !if(p_nfxinrow(irowj_).eq.1.and. p_nfyinrow(irowj_).eq.0.an  15159
-	enddo !irowj_ = 2,p_nrow  15156
+		endif !if(p_nfxinrow(irowj_).eq.1.and. p_nfyinrow(irowj_).eq.0.an  13589
+	enddo !irowj_ = 2,p_nrow  13586
 	return
 end subroutine
 
 subroutine jlp00(iob,io)
 	use jmod, only: p_nterm
-	use jmod, only: p_termvars
+	use jmod, only: p_termvar
 	use jmod, only: j_otype
 	use jmod, only: j_iptable
 	use jmod, only: j_inlistobject
@@ -17700,17 +16047,17 @@ subroutine jlp00(iob,io)
 	use jmod, only: j_loname
 	use jmod, only: j_err
 	use jmod, only: j_o
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: j_ivout
 	use jmod, only: p_ivkeys
 	use jmod, only: p_nunits
 	use jmod, only: p_keys
 	use jmod, only: j_0
 	use jmod, only: p_objf
-	use jmod, only: p_ivmatc
+	use jmod, only: p_ivdatamatc
 	use jmod, only: j_dapu
 	use jmod, only: p_coef
-	use jmod, only: p_ivxdatmat
+	use jmod, only: p_ivdatamatx
 	use jmod, only: p_maxo
 	use jmod, only: j_dapu2
 	use jmod, only: j_ninf
@@ -17719,7 +16066,22 @@ subroutine jlp00(iob,io)
 	integer*8 ibax,nkeepx
 	!without
 	!	call jlpcoef_(p_ivproblem,j_ivout,ivobjects)
-	call initjlp2(iob,io)
+	call initjlp2(iob,io)   ! jlp00(    no constraints
+ 
+	!get options and when xpresent
+	! p_ivtrans
+	! p_maxrounds
+	! p_zopt
+	! p_ivix
+	! p_ix
+	! p_nnotareavars
+	! p_tried
+	! p_fastusedsame
+	! p_intapp
+	! p_fastmake
+	! p_fastpros p_fastpros2  /100
+	! p_fast
+	! p_warm p_warmf
  
 	nc=0
 	nx=0
@@ -17727,7 +16089,7 @@ subroutine jlp00(iob,io)
 	!	write(6,*)'p_nterm',p_nterm
 	allocate(ikeepc(1:p_nterm),ikeepx(1:p_nterm),itermc(1:p_nterm),itermx(1:p_nterm))
 	do ival=1,p_nterm
-		i=p_termvars(ival)
+		i=p_termvar(ival)
 		write(6,*)'i',i,j_otype(i),j_iptable
 		if(j_otype(i).eq.j_iptable)cycle
 		ikeepc0=j_inlistobject(i,p_ivkeepc)
@@ -17735,25 +16097,25 @@ subroutine jlp00(iob,io)
 			nc=nc+1
 			ikeepc(nc)=ikeepc0
 			itermc(nc)=ival
-		endif !if(ikeepc0.gt.0)  15204
+		endif !if(ikeepc0.gt.0)  13649
 		ikeepx0=j_inlistobject(i,p_ivkeepx)
 		if(ikeepx0.gt.0)then
 			if(ikeepc0.gt.0)nc=nc-1
 			nx=nx+1
 			ikeepx(nx)=ikeepx0
 			itermx(nx)=ival
-		endif !if(ikeepx0.gt.0)  15210
+		endif !if(ikeepx0.gt.0)  13655
 		if(ikeepx0.le.0.and.ikeepc0.le.0)then
 			call j_getname(i)
 			write(6,*)j_oname(1:j_loname),' is not in cdata or in xdata'
 			j_err=.true.
-		endif !if(ikeepx0.le.0.and.ikeepc0.le.0)  15216
-	enddo !ival=1,p_nterm  15199
+		endif !if(ikeepx0.le.0.and.ikeepc0.le.0)  13661
+	enddo !ival=1,p_nterm  13644
  
 	nkeepx=j_o(p_ivkeepx)%i(1)
 	nkeepc=j_o(p_ivkeepc)%i(1)
 	if(j_err)goto 90
-	p_ivkeys=j_deflistobject(j_ivout,'%keys',list0=p_nunits,ilist=.true.)
+	p_ivkeys=j_deflist(j_ivout,'%keys',list0=p_nunits,ilist=.true.) ! jlp00
 	p_keys=>j_o(p_ivkeys)%i2(1:p_nunits)
 	ibac=0
 	ibax=0
@@ -17762,61 +16124,61 @@ subroutine jlp00(iob,io)
 	!	write(6,*)'coef', p_coef(1:p_nterm)
 	if(nc.eq.0)then  !there are
 		do i=1,p_nunits
-			ns=j_o(p_ivmatc)%d(ibac+1)
-			!		write(6,*)'iunit,ns',i,ns,p_nterm,p_ivxdatmat,ibax,ikeepx(1:nx),ibax+ikeepx
+			ns=j_o(p_ivdatamatc)%d(ibac+1)
+			!		write(6,*)'iunit,ns',i,ns,p_nterm,p_ivdatamatx,ibax,ikeepx(1:nx),ibax+ikeepx
  
-			j_dapu=dot_product(p_coef(1:p_nterm),j_o(p_ivxdatmat)%d(ibax+ikeepx))
-			!			write(18,*)i,ns,ibax,j_o(p_ivxdatmat)%d(ibax+ikeepx),j_dapu
+			j_dapu=dot_product(p_coef(1:p_nterm),j_o(p_ivdatamatx)%d(ibax+ikeepx))
+			!			write(18,*)i,ns,ibax,j_o(p_ivdatamatx)%d(ibax+ikeepx),j_dapu
 			if(.not.p_maxo)j_dapu=-j_dapu
 			p_keys(i)=1
 			ibax=ibax+nkeepx
 			do j=2,ns
-				j_dapu2=dot_product(p_coef(1:p_nterm),j_o(p_ivxdatmat)%d(ibax+ikeepx))
-				write(18,*)j,ibax,j_o(p_ivxdatmat)%d(ibax+ikeepx),j_dapu2,j_dapu
+				j_dapu2=dot_product(p_coef(1:p_nterm),j_o(p_ivdatamatx)%d(ibax+ikeepx))
+				write(18,*)j,ibax,j_o(p_ivdatamatx)%d(ibax+ikeepx),j_dapu2,j_dapu
 				if(.not.p_maxo)j_dapu2=-j_dapu2
 				if(j_dapu2.gt.j_dapu)then
 					p_keys(i)=j
 					j_dapu=j_dapu2
-				endif !if(j_dapu2.gt.j_dapu)  15247
+				endif !if(j_dapu2.gt.j_dapu)  13692
 				ibax=ibax+nkeepx
  
-			enddo !j=2,ns  15243
+			enddo !j=2,ns  13688
 			ibac=ibac+nkeepc
 			p_objf=p_objf+j_dapu
 			!		write(6,*)'i,daspu,j_objf',i,p_objf,j_dapu,ns
-		enddo !i=1,p_nunits  15234
+		enddo !i=1,p_nunits  13679
 	else
 		do i=1,p_nunits
-			ns=j_o(p_ivmatc)%d(ibac+1)
+			ns=j_o(p_ivdatamatc)%d(ibac+1)
 			j_dapu=j_ninf
  
 			do j=1,ns
 				j_dapu2=j_0
 				do j2=1,nx
-					j_dapu2=j_dapu2+p_coef(itermx(j2))*j_o(p_ivxdatmat)%d(ibax+ikeepx(j2))
+					j_dapu2=j_dapu2+p_coef(itermx(j2))*j_o(p_ivdatamatx)%d(ibax+ikeepx(j2))
  
-				enddo !j2=1,nx  15265
+				enddo !j2=1,nx  13710
 				if(.not.p_maxo)j_dapu2=-j_dapu2
 				if(j_dapu2.gt.j_dapu)then
 					p_keys(i)=j
 					j_dapu=j_dapu2
-				endif !if(j_dapu2.gt.j_dapu)  15270
+				endif !if(j_dapu2.gt.j_dapu)  13715
 				ibax=ibax+nkeepx
  
 				p_objf=p_objf+j_dapu
-			enddo !j=1,ns  15263
+			enddo !j=1,ns  13708
 			j_dapu2=j_0
 			do j=1,nc
-				j_dapu2=j_dapu2+p_coef(itermc(j))*j_o(p_ivmatc)%d(ibac+ikeepc(j))
+				j_dapu2=j_dapu2+p_coef(itermc(j))*j_o(p_ivdatamatc)%d(ibac+ikeepc(j))
  
-			enddo !j=1,nc  15279
+			enddo !j=1,nc  13724
 			if(.not.p_maxo)j_dapu2=-j_dapu2
  
 			p_objf=p_objf+j_dapu2
 			ibac=ibac+nkeepc
-		enddo !i=1,p_nunits  15259
+		enddo !i=1,p_nunits  13704
  
-	endif !if(nc.eq.0)  15233
+	endif !if(nc.eq.0)  13678
 	write(6,*)'objf',p_objf
  90 deallocate(ikeepc,ikeepx,itermc,itermx)
 end subroutine
@@ -17835,45 +16197,42 @@ subroutine initdata0(iob,io)
 	use jmod, only: p_ivunit
 	use jmod, only: j_mdata
 	use jmod, only: j_ipdata
-	use jmod, only: j_o
-	use jmod, only: p_ivdatac
 	use jmod, only: p_ivdatax
-	use jmod, only: j_getname
-	use jmod, only: j_oname
-	use jmod, only: j_loname
 	use jmod, only: j_getdataobject
-	use jmod, only: j_divdata
+	use jmod, only: p_datamatx
+	use jmod, only: p_keepx
+	use jmod, only: j_dnkeep
+	use jmod, only: p_nkeepx
 	use jmod, only: j_getmatrix
-	use jmod, only: p_ivxdatmat
+	use jmod, only: p_ivdatamatx
 	use jmod, only: j_getkeep
 	use jmod, only: p_ivkeepx
-	use jmod, only: p_keepx
-	use jmod, only: p_ivmatc
+	use jmod, only: j_getupdata
+	use jmod, only: p_ivdatac
+	use jmod, only: p_ivdatamatc
+	use jmod, only: p_datamatc
 	use jmod, only: p_ivkeepc
 	use jmod, only: p_keepc
+	use jmod, only: p_nkeepc
+	use jmod, only: j_o
 	use jmod, only: p_ivs
-	use jmod, only: j_ivns
+	use jmod, only: j_nrows
+	use jmod, only: p_lopp
+	use jmod, only: p_ivnsvar
 	use jmod, only: j_inlistobject
 	use jmod, only: j_printname
-	use jmod, only: j_subfilterlink
-	use jmod, only: j_codelink
-	use jmod, only: j_msubfilter
-	use jmod, only: p_subfilter_
-	use jmod, only: j_subrejectlink
-	use jmod, only: j_msubreject
-	use jmod, only: p_subreject_
-	use jmod, only: p_subfilre
-	use jmod, only: p_isxvar
+	use jmod, only: p_isvarx
 	use jmod, only: p_npvar
-	use jmod, only: p_isxval
+	use jmod, only: p_istermx
 	use jmod, only: p_nterm
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: j_ivout
 	use jmod, only: p_ivnxinrow
 	use jmod, only: p_nrowtot
-	use jmod, only: p_nxinrow
-	use jmod, only: p_nxrowcur
-	use jmod, only: p_termvars
+	use jmod, only: p_ninrowx
+	use jmod, only: p_nrowcurx
+	use jmod, only: j_getname
+	use jmod, only: p_termvar
 	use jmod, only: p_ivvars
 	use jmod, only: p_nxval
 	use jmod, only: p_rowofterm
@@ -17885,11 +16244,9 @@ subroutine initdata0(iob,io)
 	use jmod, only: p_nunits
 	use jmod, only: j_dapu
 	use jmod, only: p_maxns
-	use jmod, only: j_getdat
-	use jmod, only: p_lopp
 	use jmod, only: p_xpresent
-	use jmod, only: p_ivxvars
-	use jmod, only: p_xvars
+	use jmod, only: p_ivvarx
+	use jmod, only: p_varx
 	use jmod, only: p_vars
 	use jmod, only: p_ivibaunit
 	use jmod, only: p_ibaunit
@@ -17899,6 +16256,48 @@ subroutine initdata0(iob,io)
 	use jmod, only: p_ivns
 	use jmod, only: p_ns
 	use jmod, only: p_fpresent
+	write(6,*)'initdata0'
+	! p_ivarea=
+	! p_isunit
+	!p_ivdatac=ivdata
+	! p_ivdatax=j_o(ivdata)%i(3)
+	! p_ivunit
+	!		p_ivkeepx=
+	! p_nkeepx=
+	! p_ivdatamatc=
+	! p_ivkeepc=
+	! p_ivunit=
+	! p_ivdatamatx=
+	! p_lopp=
+	! p_datamatx
+	! p_ivs
+	!	j_ivns
+	!j_filterlink
+	!p_filter_
+	!j_rejectlink=
+	!p_reject=
+	!p_filre
+	!p_isvarx
+	!p_istermx
+	!p_ivnxinrow=
+	!p_ninrowx(0:)
+	!p_nrowcurx
+	!p_nxvar
+	!p_nstot
+	!p_ibaunitbas
+	!p_nrejtot=
+	!p_maxns
+	!p_nunits
+	!p_ivxvar
+	!p_varx
+	!p_ivibaunit
+	!p_ibaunit
+	!p_ivkeys
+	!p_keys
+	!	p_ivns
+	!	p_ns=
+ 
+ 
 	! init data also when there are no constraints
 	p_ivarea=j_igetopt(iob,io,j_marea)
 	if(p_ivarea.eq.0)then   !option area->,
@@ -17907,8 +16306,8 @@ subroutine initdata0(iob,io)
 			write(6,*)'**jlp, area-variable does not exist'
 			j_err=.true.
 			return
-		endif !if(p_ivarea.le.0)  15299
-	endif !if(p_ivarea.eq.0)  15297
+		endif !if(p_ivarea.le.0)  13786
+	endif !if(p_ivarea.eq.0)  13784
  
  
 	call j_getoption_index(iob,io,j_munit,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
@@ -17919,148 +16318,120 @@ subroutine initdata0(iob,io)
 	if(noptarg.gt.0)then
 		p_ivunit=j_optarg0(1)
 		p_isunit=.true.
-	endif !if(noptarg.gt.0)  15312
+	endif !if(noptarg.gt.0)  13799
  
 	!	write(6,*)'here'
 	call j_getoption_index(iob,io,j_mdata,1,1,j_ipdata,.true.,noptarg,j_optarg0)
 	if(j_err)then
 		write(6,*)'jlp() neeeds data->, problems without schedules are solved with jlpz()'
 		return
-	endif !if(j_err)  15319
+	endif !if(j_err)  13806
  
-	ivdata=j_optarg0(1)
-	level=j_o(ivdata)%i(12)
-	p_ivdatac=ivdata  !j_topdata(ivdata)
-	!	j_o(iv)%i(14)=j_o(ivmat)%i(1)  !number of observa
-	!j_o(iv)%i(3)=ivsub;j_o(iv)%i(4)=ivnobsw
-	!	j_o(iv)%i(5)=ivup
+	p_ivdatax=j_optarg0(1)
+	! level=j_o(ivdata)%i(12)
+	! p_ivdatac=ivdata  !j_topdata(ivdata)
+	! !	j_o(iv)%i(14)=j_o(ivmat)%i(1)  !number of observa
+	! !j_o(iv)%i(3)=ivsub;j_o(iv)%i(4)=ivnobsw
+	! !	j_o(iv)%i(5)=ivup
  
-	p_ivdatax=j_o(ivdata)%i(3)  !(ivdata)
-	!	levelxdata=j_o(p_ivdatax)%i(12)
-	call j_getname(p_ivdatax)
+	! p_ivdatax=j_o(ivdata)%i(3)  !(ivdata)
+	! !	levelxdata=j_o(p_ivdatax)%i(12)
+	! call j_getname(p_ivdatax)
  
-	write(6,*)'xdata ',j_oname(1:j_loname)  !,' cdata ',j_oname2(1:j_loname2),' xdata ',j_oname3(1:j_loname3)
-	!	write(6,*)'level ',level ,p_ivdatac,p_ivdatax
-	call j_getdataobject(iob,io,ivdata=p_ivdatax)
+	! write(6,*)'xdata ',j_oname(1:j_loname)  !,' cdata ',j_oname2(1:j_loname2),' xdata ',j_oname3(1:j_loname3)
+	! !	write(6,*)'level ',level ,p_ivdatac,p_ivdatax
+ 
+	! call j_getdataobject(iob,io,ivdata=p_ivdatax,pointmat=>p_datamatx,)
  
 	!		endif
-	!Z
+	write(6,*)
 	if(p_isunit)then
-		p_ivdatax=j_divdata
- 
-		p_ivdatac=j_divdata
-		!	p_ivsubtrans=j_divtrans
-		p_ivxdatmat=j_getmatrix(p_ivdatax);if(j_err)return !j_o(p_ivdatax)%i(1)
- 
-		p_ivkeepx=j_getkeep(p_ivdatax);if(j_err)return !j_o(p_ivdatax)%i(2)
- 
-		p_keepx=j_o(p_ivkeepx)%i(1)
-		!		p_ivunit=ivunit
-		!	ivxdatmat=
+		!	p_ivdatax=ivdata
+		call j_getdataobject(iob,io,ivdata=p_ivdatax,pointmat=p_datamatx,pointkeep=p_keepx)
+		p_nkeepx=j_dnkeep		!	ivxdatmat=
 	else
+		!	p_ivdatac=j_getupdata(ivdata,needed=.true.)
+		if(j_err)return
+		!	call j_getdataobject(iob,io,ivdata=p_ivdatax,pointmat=p_datamatx,pointmatup=p_datamatc,&
+		!		pointkeep=p_keepx,pointkeepup=p_keepc)
+		!	if(j_err)return
  
-		if(p_ivdatac.eq.p_ivdatax)then
+		p_ivdatamatx=j_getmatrix(p_ivdatax,point=p_datamatx);if(j_err)return
+		p_ivkeepx=j_getkeep(p_ivdatax,point=p_keepx,len=p_nkeepx);if(j_err)return
+		p_ivdatac=j_getupdata(p_ivdatax,needed=.true.)
+		if(j_err)write(6,*)'*** data-> must now refer to xdata for consistency with other functions with hierarchical data'
+		if(j_err)return
+		p_ivdatamatc=j_getmatrix(p_ivdatac,point=p_datamatc);if(j_err)return
+		p_ivkeepc=j_getkeep(p_ivdatac,point=p_keepc,len=p_nkeepc);if(j_err)return
  
-			write(6,*)'with nonhierarchical data there must be unit->'
-			j_err=.true.
-			return
+		!		write(6,*)'xx',p_datamatx(1:20)
+		!		write(6,*)'cc',p_datamatc(1:20)
  
-		endif !if(p_ivdatac.eq.p_ivdatax)  15355
-		p_ivunit=0
-		!	p_ivdatac=j_ivdata
-		!	p_ivdatax= j_o(p_ivdatac)%i(3)
-		!	!is(p_p8)write(6,*)'<64646 p_ivdatax)
-		! if(p_ivdatax.le.0)then
-		! call j_printname('data ',p_ivdatac,' does not have subdata and there is no unit->')
-		! write(6,*)'*note data> must now refer to unit data'
-		! j_err=.true.
-		! return
-		! endif !if(p_ivdatax.le.0)   6135
- 
-		!	p_ivsubtrans=j_igetopt(iob,io,j_msubtrans) !object given in subtrans-option
-		!write(6,*)'<5444p_ivsubtrans',p_ivsubtrans
-		! if(p_ivsubtrans.gt.0)then
-		! if(j_otype(p_ivsubtrans).ne.j_iptrans)then
-		! call j_printname('**jlp: subtrans->',p_ivsubtrans,' is not transformation')
-		! j_err=.true. ;return
-		! endif !if(j_otype(p_ivsubtrans).ne.j_iptrans)   5712
-		! endif !if(p_ivsubtrans.gt.0)   5711
-		!	p_ivxdatmat=j_o(p_ivdatax)%i(1)
-		!	j_o(iv)%i(14)=j_o(ivmat)%i(1)  !number of observa
-		!j_o(iv)%i(3)=ivsub;j_o(iv)%i(4)=ivnobsw
-		!	j_o(iv)%i(5)=ivup
-		!i(14)
-		!i(12)=level
-		!i(13) index of nobsw variable
-		!j_o(iv)%i(11)=ivvars
-		!j_o(iv)%i(14)=ivvars2
- 
-		p_ivkeepx=j_o(p_ivdatax)%i(11) !!2)
-		p_keepx=j_o(p_ivkeepx)%i(1)
-		p_ivmatc=j_getmatrix(p_ivdatac);if(j_err)return  !; j_o(p_ivdatac)%i(1) !j_dimat !j_o(p_ivdatac)%i(1)
-		p_ivkeepc=j_getkeep(p_ivdatac);if(j_err)return !j_o(p_ivdatac)%i(2) !j_o(p_ivdatac)%i(2)
-		p_keepc=j_o(p_ivkeepc)%i(1)  !j_o(p_ivkeepc)%i(1)
- 
-		p_ivunit=j_o(p_ivdatac)%i(6)  ! index of unit variable
- 
-		call j_getname(p_ivunit)
-		!	write(6,*)'UNIT ',j_oname(1:j_loname)
- 
+		p_ivunit=j_o(p_ivdatac)%i(6)
 		p_ivs=j_o(p_ivdatax)%i(6)     ! index of Obs
  
-		j_ivns=j_o(p_ivdatac)%i(4)   !variable 'Ns' telling the number of schedules in each unit (nobsw variable)
-		iiv=j_inlistobject(j_ivns,p_ivkeepc)
+		!write(6,*)'xmat',p_ivs,p_datamatx(1:20)
+		!	stop
+		p_lopp=j_nrows(p_ivdatamatx)
+		!		p_datamatx=>j_o(p_ivdatamatx)%d(1:p_nkeepx*p_lopp)
+		!		call j_getname(p_ivunit)
+		!	write(6,*)'UNIT ',j_oname(1:j_loname)
+		p_ivnsvar=j_o(p_ivdatac)%i(4)   !variable 'Ns' telling the number of schedules in each unit (nobsw variable)
+		nsindex=j_inlistobject(p_ivnsvar,p_ivkeepc)
+		write(6,*)'nsindex ',nsindex
 		!	write(6,*)'cdatai ',j_o(p_ivdatac)%i(1:10)
-		if(iiv.le.0)then
-			call j_printname('**nobsw variable ',j_ivns,' not in the cdata')
+ 
+		if(nsindex.le.0)then
+			call j_printname('**nobsw variable ',p_ivnsvar,' not in the cdata')
 			j_err=.true.;return
- 
-		endif !if(iiv.le.0)  15407
+		endif !if(nsindex.le.0)  13865
 		!write(6,*)'p_ivdatac ',p_ivdatac
-		! subfilter->
-		j_subfilterlink=j_codelink(iob,io,j_msubfilter)
-		p_subfilter_=j_subfilterlink.ne.0
+		! ! subfilter->
+		! j_filterlink=j_codelink(iob,io,j_msubfilter)
+		! p_filter_=j_filterlink.ne.0
  
-		j_subrejectlink=j_codelink(iob,io,j_msubreject)
-		p_subreject_=j_subrejectlink.ne.0
-		p_subfilre=p_subfilter_.or.p_subreject_
+		! j_rejectlink=j_codelink(iob,io,j_msubreject)
+		! p_reject=j_rejectlink.ne.0
+		! p_filre=p_filter_.or.p_reject
  
-		!is(p_p8)write(6,*)'<4075,p_ivdatac,p_xdata ',p_ivdatac,p_ivdatax, 'keepx ',p_keepx
-	endif !if(p_isunit)  15341
-	if(allocated(p_isxvar))deallocate(p_isxvar);allocate(p_isxvar(1:p_npvar)) ;p_isxvar=.false.
+		!is(p_p8)write(6,*)'<4075,p_ivdatac,p_xdata ',p_ivdatac,p_ivdatax, 'keepx ',p_nkeepx
+	endif !if(p_isunit)  13829
+	if(allocated(p_isvarx))deallocate(p_isvarx);allocate(p_isvarx(1:p_npvar))
+	p_isvarx=.false.
  
  
  
-	if(allocated(p_isxval))deallocate(p_isxval);allocate(p_isxval(1:p_nterm)) ;p_isxval=.false.
+	if(allocated(p_istermx))deallocate(p_istermx);allocate(p_istermx(1:p_nterm))
+	p_istermx=.false.
  
-	!if(allocated(p_nxinrow))deallocate(p_nxinrow);allocate(p_nxinrow(0:p_nrow)) ;p_nxinrow=0
-	p_ivnxinrow=j_deflistobject(j_ivout,'%nxinrow',list0=p_nrowtot,ilist=.true.)
-	p_nxinrow(0:)=>j_o(p_ivnxinrow)%i2(1:p_nrowtot)
+	!if(allocated(p_ninrowx))deallocate(p_ninrowx);allocate(p_ninrowx(0:p_nrow)) ;p_ninrowx=0
+	p_ivnxinrow=j_deflist(j_ivout,'%nxinrow',list0=p_nrowtot,ilist=.true.)
+	p_ninrowx(0:)=>j_o(p_ivnxinrow)%i2(1:p_nrowtot)
  
-	p_nxrowcur=0  !number of rows having x
-	!p xrowcur
+	p_nrowcurx=0  !number of rows having x
+	!p rowcurx
 	ivkeep=j_o(p_ivdatax)%i(11)    !2)
 	call j_getname(ivkeep)
 	!	write(6,*)'ivkeep',ivkeep,j_oname(1:j_loname)
 	do ival=1,p_nterm
-		i=p_termvars(ival)
+		i=p_termvar(ival)
 		ikeep=j_inlistobject(i,ivkeep)
  
 		iout=0
 		!if(p_ivsubtrans.gt.0)iout=j_inlistobject(i,j_trans_output(p_ivsubtrans))
 		if(ikeep.gt.0)then
-			p_isxval(ival)=.true.  ! is x variaböe
-			!write(6,*)'**',p_termvars(ival),p_ivvars
-			jix=j_inlistobject(p_termvars(ival),p_ivvars)
-			if(jix.gt.0)p_isxvar(jix)=.true.
+			p_istermx(ival)=.true.  ! is x variaböe
+			!write(6,*)'**',p_termvar(ival),p_ivvars
+			jix=j_inlistobject(p_termvar(ival),p_ivvars)
+			if(jix.gt.0)p_isvarx(jix)=.true.
 			p_nxval=p_nxval+1
 			iro=p_rowofterm(ival)
-			p_nxinrow(iro)=p_nxinrow(iro)+1
-			if(p_nxinrow(iro).eq.1)p_nxrowcur=p_nxrowcur+1
+			p_ninrowx(iro)=p_ninrowx(iro)+1
+			if(p_ninrowx(iro).eq.1)p_nrowcurx=p_nrowcurx+1
  
-		endif !if(ikeep.gt.0)  15444
-	enddo !ival=1,p_nterm  15438
-	p_nxvar=count(p_isxvar)
+		endif !if(ikeep.gt.0)  13903
+	enddo !ival=1,p_nterm  13897
+	p_nxvar=count(p_isvarx)
  
 	p_nstot=0  !total number of schedules
 	!ibasclass=0  given earlier
@@ -18074,61 +16445,62 @@ subroutine initdata0(iob,io)
  
 	!write(6,*)'6666pisunit',p_isunit
 	if(p_isunit)then
-		nntem=j_o(p_ivxdatmat)%i(1)/2
+		nntem=j_o(p_ivdatamatx)%i(1)/2
 		if(allocated(j_itempvector))then
 			if(size(j_itempvector).lt.nntem)deallocate(j_itempvector)
-		endif !if(allocated(j_itempvector))  15471
+		endif !if(allocated(j_itempvector))  13930
 		if(.not.allocated(j_itempvector))allocate(j_itempvector(1:nntem))
 		inde=j_inlistobject(p_ivunit,p_ivkeepx)
 		!	write(6,*)'inde',inde
 		p_nunits=1
-		j_dapu=j_o(p_ivxdatmat)%d(inde)
-		ibas=p_keepx
+		j_dapu=j_o(p_ivdatamatx)%d(inde)
+		ibas=p_nkeepx
 		iprev=1
 		iprev=1
 		p_maxns=1
 		!	write(6,*)'indet',inde,old
-		do i=2,j_o(p_ivxdatmat)%i(1)
-			!	if(i.lt.200)write(6,*)i,j_o(p_ivxdatmat)%d(ibas+inde),old,ibas
-			if(j_o(p_ivxdatmat)%d(ibas+inde).ne.j_dapu)then
+		do i=2,j_o(p_ivdatamatx)%i(1)
+			!	if(i.lt.200)write(6,*)i,j_o(p_ivdatamatx)%d(ibas+inde),old,ibas
+			if(j_o(p_ivdatamatx)%d(ibas+inde).ne.j_dapu)then
 				j_itempvector(p_nunits)=i-iprev
 				p_maxns=max(p_maxns,j_itempvector(p_nunits))
 				p_nunits=p_nunits+1
-				j_dapu=j_o(p_ivxdatmat)%d(ibas+inde)
+				j_dapu=j_o(p_ivdatamatx)%d(ibas+inde)
  
 				iprev=i
-			endif !if(j_o(p_ivxdatmat)%d(ibas+inde).ne.j_dapu)  15486
-			ibas=ibas+p_keepx
-		enddo !i=2,j_o(p_ivxdatmat)%i(1)  15484
-		j_itempvector(p_nunits)=j_o(p_ivxdatmat)%i(1)-iprev
+			endif !if(j_o(p_ivdatamatx)%d(ibas+inde).ne.j_dapu)  13945
+			ibas=ibas+p_nkeepx
+		enddo !i=2,j_o(p_ivdatamatx)%i(1)  13943
+		j_itempvector(p_nunits)=j_o(p_ivdatamatx)%i(1)-iprev
 		p_maxns=max(p_maxns,j_itempvector(p_nunits))
 		!	write(6,*)'shed',p_ns(1:p_nunits)
 	else
-		p_nunits=j_o(p_ivmatc)%i(1)
-	endif !if(p_isunit)  15469
+		p_nunits=j_o(p_ivdatamatc)%i(1)
+	endif !if(p_isunit)  13928
  
 	! if(allocated(p_valuedif))deallocate(p_valuedif,p_objdif)
 	! allocate(p_valuedif(1:p_nunits),p_objdif(1:p_nun
 	if(.not.p_isunit)p_maxns=j_o(p_ivdatac)%i(9)
 	!is(p_p8)write(6,*)'<pmaxns ',p_maxns
  
-	call j_getdat(p_ivdatax,p_lopp,p_ivxdatmat,p_ivkeepx)
+	!	call j_getdat(p_ivdatax,p_lopp,p_ivdatamatx,p_ivkeepx)
 	if(j_err)return
 	if(p_xpresent)then
-		p_ivxvars=j_deflistobject(j_ivout,'%xvars',list0=p_nxvar)
-		p_xvars=>j_o(p_ivxvars)%i2(1:p_nxvar)
-		p_xvars=pack(p_vars(1:p_npvar),p_isxvar)
-		p_ivibaunit=j_deflistobject(j_ivout,'%ibaunit',list0=p_nunits+1,ilist=.true.)
-		p_ibaunit=>j_o(p_ivibaunit)%i2(1:p_nunits+1)
-	end if !if(p_xpresent)  15510
+		p_ivvarx=j_deflist(j_ivout,'%varx',list0=p_nxvar)
+		p_varx=>j_o(p_ivvarx)%i2(1:p_nxvar)
+		p_varx=pack(p_vars(1:p_npvar),p_isvarx)
+ 
+	end if !if(p_xpresent)  13969
+	p_ivibaunit=j_deflist(j_ivout,'%ibaunit',list0=p_nunits+1,ilist=.true.)
+	p_ibaunit=>j_o(p_ivibaunit)%i2(1:p_nunits+1)
 	!if(allocated(p_ibaunit))deallocate(p_ibaunit)
 	if(.not.p_warm)then
-		p_ivkeys=j_deflistobject(j_ivout,'%keys',list0=p_nunits,ilist=.true.)
+		p_ivkeys=j_deflist(j_ivout,'%keys',list0=p_nunits,ilist=.true.)
 		p_keys=>j_o(p_ivkeys)%i2(1:p_nunits)
 		!	allocate(p_keys(1:p_nunits))  !;p_keys=0
-	endif !if(.not.p_warm)  15518
-	p_ivns= j_deflistobject(j_ivout,'%ns',list0=p_nunits,ilist=.true.)
-	p_ns=>j_o(p_ivns)%i2(1:p_nunits)
+	endif !if(.not.p_warm)  13978
+	p_ivns= j_deflist(j_ivout,'%ns',list0=p_nunits,ilist=.true.,point=p_ns)
+	!	p_ns=>j_o(p_ivns)%i2(1:p_nunits)
 	!	if(allocated(p_ns))deallocate(p_ns)
 	!write(6,*)'<356nunits ',p_nunits
 	!	allocate(p_ns(1:p_nunits))
@@ -18136,268 +16508,30 @@ subroutine initdata0(iob,io)
 	if(p_isunit)then
 		p_ns=j_itempvector(1:p_nunits)
 		deallocate(j_itempvector)
-	endif !if(p_isunit)  15529
+	endif !if(p_isunit)  13989
 	if(p_nxvar.eq.0.and..not.p_fpresent)then
 		write(6,*)'there are no x-variables even if data->'
 		j_err=.true.;return
  
-	endif !if(p_nxvar.eq.0.and..not.p_fpresent)  15533
+	endif !if(p_nxvar.eq.0.and..not.p_fpresent)  13993
+ 
+	p_ibaunit(1)=0 ! ibaunit, basis for schedules for each unit
+	iba=0
+	do i=1,p_nunits  !***********************
+		!	write(6,*)'in',i,p_nunits
+		if(.not.p_isunit)p_ns(i)=p_datamatc(iba+nsindex)
+		p_ibaunit(i+1)=p_ibaunit(i)+p_nkeepx
+		iba=iba+p_nkeepc
+	enddo !i=1,p_nunits  14001
+ 
+ 
+ 
+ 
  
  
 end subroutine initdata0
 
-subroutine fterms()
-	use jmod, only: p_ntable
-	use jmod, only: p_nlog
-	use jmod, only: p_nfact
-	use jmod, only: p_nlogfact
-	use jmod, only: p_ntable0
-	use jmod, only: p_isfvar
-	use jmod, only: p_isfval
-	use jmod, only: p_npvar
-	use jmod, only: p_nterm
-	use jmod, only: j_otype
-	use jmod, only: j_iptable
-	use jmod, only: p_termvars
-	use jmod, only: j_deflistobject
-	use jmod, only: j_ivout
-	use jmod, only: p_ivtables0
-	use jmod, only: p_ivtables
-	use jmod, only: p_ivtablecoef
-	use jmod, only: p_nfactmax
-	use jmod, only: j_inlistobject
-	use jmod, only: p_ivvars
-	use jmod, only: j_putlistobject
-	use jmod, only: j_o
-	use jmod, only: j_getname
-	use jmod, only: j_object
-	use jmod, only: j_oname
-	use jmod, only: j_loname
-	use jmod, only: j_err
-	use jmod, only: j_gettablecol
-	use jmod, only: j_gettablerow
-	use jmod, only: p_ndupmax
-	use jmod, only: p_ivxpart
-	use jmod, only: p_ivfpart
-	use jmod, only: p_ivtpart
-	use jmod, only: p_ivlog
-	use jmod, only: p_log
-	use jmod, only: p_ivlogkeep
-	use jmod, only: p_ivfact
-	use jmod, only: p_fact
-	use jmod, only: j_nextlimset
-	use jmod, only: j_getobject
-	use jmod, only: j_ipreal
-	use jmod, only: p_ndupmax1
-	use jmod, only: p_logfactstep
-	use jmod, only: p_ivtableterms
-	use jmod, only: p_ivlogfactterm
-	use jmod, only: p_logfactterm
-	use jmod, only: p_ivkeepx
-	use jmod, only: p_nfvar
-	use jmod, only: p_nfval
- 
-	!lists are expanded now
-	p_ntable=0
-	p_nlog=0
-	p_nfact=0
-	p_nlogfact=0
- 
-	p_ntable0=0
-	if(allocated(p_isfvar))deallocate(p_isfvar,p_isfval)
-	allocate(p_isfvar(1:p_npvar),p_isfval(1:p_nterm))
-	p_isfvar=.false. ;p_isfval=.false.
-	do i=1,p_nterm
-		if(j_otype(p_termvars(i)).eq.j_iptable)p_ntable0=p_ntable0+1
-	end do !i=1,p_nterm  15554
-	p_ivtables0=j_deflistobject(j_ivout,'%tables0',nres=p_ntable0)
-	p_ivtables=j_deflistobject(j_ivout,'%tables',nres=p_ntable0)
-	p_ivtablecoef=j_deflistobject(j_ivout,'%tablecoef',nres=p_ntable0)
-	!	p_ivtableterm=j_deflistobject(ivproblem,'%tableterm',nres=p_ntable0)
-	ntable0=0
-	p_nfactmax=0
-	do i=1,p_nterm
-		ivterm=p_termvars(i)
-		if(j_otype(ivterm).ne.j_iptable)cycle
-		p_isfval(i)=.true.
-		jif=j_inlistobject(ivterm,p_ivvars)
-		p_isfvar(jif)=.true.
-		!	write(6,*)'jif,',jif
-		ntable0=ntable0+1
-		iper0=j_putlistobject(p_ivtables0,single=ivterm,append=.true.)
- 
-		ntabv=j_o(p_ivtables)%i(1)
-		iper=j_putlistobject(p_ivtables,single=ivterm)
-		p_ntable=j_o(p_ivtables)%i(1)
-		if(p_ntable.gt.ntabv)then
- 
-			call j_getname(ivterm)
-			ivcoe=j_object(j_oname(1:j_loname)//'%coef')
-			if(ivcoe.le.0)then
-				write(6,*)j_oname(1:j_loname)//'%coef missing for table ',j_oname(1:j_loname)
-				j_err=.true.
-				return
-			endif !if(ivcoe.le.0)  15580
-			iper=j_putlistobject(p_ivtablecoef,single=ivcoe,append=.true.)
- 
-			ivlog=j_gettablecol(ivterm)  !j_o(ivterm)%i(4)
-			if(j_err)return
-			nlog=j_o(ivlog)%i(1)
-			ivfact=j_gettablerow(ivterm);if(j_err)return  !j_o(ivterm)%i(5)
-			nfact=j_o(ivfact)%i(1)
-			p_nfact=p_nfact+nfact
-			p_nlog=p_nlog+nlog
-			p_nlogfact=p_nlogfact+nlog*nfact
-			p_nfactmax=max(p_nfactmax,nfact)
-		endif !if(p_ntable.gt.ntabv)  15576
- 
- 
- 
-	enddo !i=1,p_nterm  15563
-	p_ndupmax=0
-	do i=1,p_nterm
-		ivterm=p_termvars(i)
-		ndup=0
-		if(j_otype(ivterm).eq.j_iptable)then
-			do i2=1,p_nterm
-				if(p_termvars(i2).eq.ivterm)ndup=ndup+1
-			enddo !i2=1,p_nterm  15606
- 
-		endif !if(j_otype(ivterm).eq.j_iptable)  15605
-		p_ndupmax=max(p_ndupmax,ndup)
-	enddo !i=1,p_nterm  15602
- 
- 
-	p_ivxpart=j_deflistobject(j_ivout,'%xpart',list0=p_nterm,ilist=.true.)
-	p_ivfpart=j_deflistobject(j_ivout,'%fpart',list0=p_nterm,ilist=.true.)
-	p_ivtpart=j_deflistobject(j_ivout,'%tpart',list0=p_nterm,ilist=.true.)
-	p_ivlog=j_deflistobject(j_ivout,'%log',list0=p_nlog,ilist=.true.)
-	p_log=>j_o(p_ivlog)%i2(1:p_nlog)
-	p_ivlogkeep=j_deflistobject(j_ivout,'%logkeep',list0=p_nlog,ilist=.true.)
-	p_ivfact=j_deflistobject(j_ivout,'%fact',list0=p_nfact)
-	p_fact=>j_o(p_ivfact)%i2(1:p_nfact)
- 
- 
-	do i=1,p_nterm
-		!		write(6,*)'ii',i
-		ivterm=p_termvars(i)
-		if(j_otype(ivterm).eq.j_iptable)cycle
-		!	write(6,*)'jlpcoeff',i,j_otype(ivterm),j_iptable
- 
-		call j_getname(ivterm)
-		ito=j_nextlimset(j_oname,1,j_loname,'%2%')
-		!	write(6,*)'ito ',ito
-		if(ito.gt.j_loname)cycle
- 
-		ivx=j_getobject(0,j_oname(1:ito-1),j_ipreal)
-		ivf=j_getobject(0,j_oname(ito+3:j_loname),j_ipreal)
-		!	write(6,*)j_oname(1:ito-1),' / ',j_oname(ito+3:j_loname),ivx,ivf
-		do j=1,p_ntable
-			ivtable=j_o(p_ivtables)%i2(j)
- 
-			ivxt=j_gettablecol(ivtable)  !j_o(ivtable)%i(4)
-			ivft=j_gettablerow(ivtable)  !j_o(ivtable)%i(5)
-			call j_getname(ivtable,ivxt,ivft)
-			!		write(6,*)'%%',j_oname(1:j_loname),' ',j_oname2(1:j_loname2),' ',j_oname3(1:j_loname3),' '
-			ikx=j_inlistobject(ivx,ivxt)
-			ikf=j_inlistobject(ivf,ivft)
-			if(ikx.gt.0.and.ikf.gt.0)then
-				j_o(p_ivxpart)%i2(i)=ikx
-				j_o(p_ivfpart)%i2(i)=ikf
-				j_o(p_ivtpart)%i2(i)=j
-				p_isfval(i)=.true.
-				jif=j_inlistobject(ivterm,p_ivvars)
-				p_isfvar(jif)=.true.
-				!			p_nfvar=p_nfvar+1
-				ndup=1
-				do i1=1,i-1
-					if(j_o(p_ivxpart)%i2(i1).eq.ikx.and.j_o(p_ivfpart)%i2(i).eq.ikf.and.&
-						j_o(p_ivtpart)%i2(i).eq.j)ndup=ndup+1
-				enddo !i1=1,i-1  15657
-				!			p_ndupmax=max(p_ndupmax,ndup)
-				goto 500
-			endif !if(ikx.gt.0.and.ikf.gt.0)  15648
-		enddo !j=1,p_ntable  15639
-		call j_getname(ivterm)
-		write(6,*)'components of ',j_oname(1:j_loname),' are not in TABLEs'
-		j_err=.true.;return
-500  continue
- 
-	enddo !i=1,p_nterm  15625
-	p_ndupmax1=p_ndupmax+1
-	p_logfactstep =p_ndupmax1*p_nlog
-	p_ivtableterms=j_deflistobject(j_ivout,'%tableterms',list0=p_ndupmax1*p_ntable0,ilist=.true.)
- 
-	p_ivlogfactterm=j_deflistobject(j_ivout,'%logfactterm',list0=p_ndupmax1*p_nlogfact,ilist=.true.)
-	p_logfactterm=>j_o(p_ivlogfactterm)%i2(1:p_ndupmax1*p_nlogfact)
-	ntab=0
-	ibas=0
-	!	write(6,*)'termvars',p_nterm,p_termvars
-ntloop:	do i=1,p_nterm
-		ivterm=p_termvars(i)
-		if(j_otype(ivterm).eq.j_iptable)then
-			if(ntab.gt.0)then
-				do i2=1,ntab
-					if(p_termvars(i2).eq.ivterm)cycle ntloop
-				enddo !i2=1,ntab  15684
-			endif !if(ntab.gt.0)  15683
-			ntab=ntab+1
-			j_o(p_ivtableterms)%i2(ibas+1)=i
-			nd=1
-			do i2=i+1,p_nterm
-				if(p_termvars(i2).eq.ivterm)then
-					nd=nd+1
-					j_o(p_ivtableterms)%i2(ibas+nd)=i2
-				endif !if(p_termvars(i2).eq.ivterm)  15692
-			enddo !i2=i+1,p_nterm  15691
-			ibas=ibas+nd+1   !zeroend
-		endif !if(j_otype(ivterm).eq.j_iptable)  15682
-	end do ntloop !oop:	do i=1,p_nterm  15680
- 
-	nxf=0
-	ibas=0
-	nlogbas=0
-	do j=1,p_ntable
-		!	write(6,*)'jtab',j,p_ntable
-		ivtable=j_o(p_ivtables)%i2(j)
-		ivxt=j_gettablecol(ivtable);if(j_err)return !j_o(ivtable)%i(4)
-		ivft=j_gettablerow(ivtable);if(j_err)return  !j_o(ivtable)%i(5)
-		nlog=j_o(ivxt)%i(1)
-		j_o(p_ivlog)%i2(nlogbas+1:nlogbas+nlog)=j_o(ivxt)%i2(1:nlog)
- 
-		do ilog=1,nlog
-			ivlo=j_o(ivxt)%i2(ilog)
-			ik=j_inlistobject(ivlo,p_ivkeepx)
-			if(ik.le.0)then
-				call j_getname(ivlo)
-				write(6,*)j_oname(1:j_loname),' is not in xdata'
-				j_err=.true.
- 
-			endif !if(ik.le.0)  15715
-			j_o(p_ivlogkeep)%i2(nlogbas+ilog)=ik
- 
-			do ifact=1,nfact
-				nd=0
-				do i=1,p_nterm
-					if(j_o(p_ivtpart)%i2(i).ne.j)cycle
-					if(j_o(p_ivxpart)%i2(i).ne.ilog)cycle
-					if(j_o(p_ivfpart)%i2(i).ne.ifact)cycle
-					nd=nd+1
-					p_logfactterm(ibas+nd)=i    !
-				enddo !i=1,p_nterm  15725
-				ibas=ibas+nd+1  !zero
-			enddo !ifact=1,nfact  15723
-		enddo !ilog=1,nlog  15712
-		nlogbas=nlogbas+nlog
-	enddo !j=1,p_ntable  15704
-	if(j_err)return
-	p_nfvar=count(p_isfvar)
-	p_nfval=count(p_isfval)
-	write(6,*)'found ',p_nfvar,' f-variables ',p_ntable,' tables ',p_nfvar-p_ntable,' %2% variables '
-	write(6,*)p_nfval, 'f-terms'
-end subroutine fterms
-
-subroutine initfact(iob,io)
+subroutine fterms(iob,io)
 	use jmod, only: j_getoption
 	use jmod, only: j_mknn
 	use jmod, only: j_ipreal
@@ -18405,139 +16539,581 @@ subroutine initfact(iob,io)
 	use jmod, only: j_err
 	use jmod, only: j_v
 	use jmod, only: p_knn
+	use jmod, only: j_deflist
+	use jmod, only: j_ivout
+	use jmod, only: p_ivlogpart
+	use jmod, only: p_nterm
+	use jmod, only: p_logpart
+	use jmod, only: p_ivfactpart
+	use jmod, only: p_factpart
+	use jmod, only: p_ivtabpart
+	use jmod, only: p_tabpart
+	use jmod, only: p_ntable0
+	use jmod, only: p_isvarf
+	use jmod, only: p_istermf
+	use jmod, only: p_npvar
+	use jmod, only: j_otype
+	use jmod, only: j_iptable
+	use jmod, only: p_termvar
+	use jmod, only: p_ivtable
+	use jmod, only: j_putlistobject
+	use jmod, only: j_o
+	use jmod, only: p_ntable
+	use jmod, only: p_table
+	use jmod, only: p_nlog
+	use jmod, only: p_nfact
+	use jmod, only: p_nlogfact
+	use jmod, only: p_nfactmax
+	use jmod, only: j_gettablecol
+	use jmod, only: j_gettablerow
+	use jmod, only: p_ivlog
+	use jmod, only: p_log
+	use jmod, only: p_ivkeeplog
+	use jmod, only: p_keeplog
+	use jmod, only: p_ivfact
+	use jmod, only: p_fact
+	use jmod, only: p_ivlogfact
+	use jmod, only: p_logfact
+	use jmod, only: p_ivtableutil
+	use jmod, only: p_tableutil
+	use jmod, only: p_ivtablenlog
+	use jmod, only: p_tablenlog
+	use jmod, only: p_ivtableneibas
+	use jmod, only: p_tableneibas
+	use jmod, only: j_getname
+	use jmod, only: j_inlist
+	use jmod, only: p_nkeepx
+	use jmod, only: p_keepx
+	use jmod, only: j_oname
+	use jmod, only: j_loname
+	use jmod, only: j_getobject
+	use jmod, only: j_oname2
+	use jmod, only: j_loname2
+	use jmod, only: j_inlistobject
+	use jmod, only: p_ivvars
+	use jmod, only: j_defmatrix
+	use jmod, only: j_matreg
+	use jmod, only: p_ndupmax
+	use jmod, only: p_ndupmax1
+	use jmod, only: p_logfactstep
+	use jmod, only: p_ivlogfactterm
+	use jmod, only: p_logfactterm
+	use jmod, only: p_nvarf
+	use jmod, only: p_ntermf
 	use jmod, only: j_mutiltrans
 	use jmod, only: j_iptrans
 	use jmod, only: p_ivutiltrans
-	use jmod, only: p_nterm
-	use jmod, only: j_inlistobject
-	use jmod, only: p_ivkeepx
-	use jmod, only: j_getname
-	use jmod, only: p_termvars
-	use jmod, only: j_oname
-	use jmod, only: j_loname
-	use jmod, only: j_oname2
-	use jmod, only: j_loname2
-	use jmod, only: j_oname3
-	use jmod, only: j_loname3
-	use jmod, only: p_nlog
-	use jmod, only: p_neig
-	use jmod, only: p_neigu
-	use jmod, only: p_nunits
-	use jmod, only: j_itempvector
-	use jmod, only: p_nfactmax
-	use jmod, only: p_keyfact
-	use jmod, only: j_getobs0
-	use jmod, only: p_ivdatac
-	use jmod, only: p_ntable
-	use jmod, only: j_o
-	use jmod, only: p_ivtables
-	use jmod, only: p_ivtablecoef
-	use jmod, only: j_gettablerow
-	use jmod, only: j_gettablecol
-	use jmod, only: j_dapu
-	use jmod, only: j_0
-	integer*8 ::i8
+	write(6,*)'fterms'
+	!input p_nterm p_termvar
+	!p_ntable=
+	!p_nlog
+ 
+	!lists are expanded now
+	!p_ntable=0
+	!p_nlog=0
+	!p_nfact=0
+	!p_nlogfact=0
+	!p_nfact=
+	!p_ntable0   occurences
+	!p_nfactmax
+	!p_istermf  term
+	!p_isvarf  fvars
  
 	call j_getoption(iob,io,j_mknn,1,1,j_ipreal,.true.,narg,j_optarg0)
 	if(j_err)return
 	p_knn=j_v(j_optarg0(1))
  
+	write(6,*)'p_knn',p_knn
+ 
+	p_ivlogpart=j_deflist(j_ivout,'%logpart',list0=p_nterm,ilist=.true.,point=p_logpart)
+	p_ivfactpart=j_deflist(j_ivout,'%factpart',list0=p_nterm,ilist=.true.,point=p_factpart)
+	p_ivtabpart=j_deflist(j_ivout,'%tabpart',list0=p_nterm,ilist=.true.,point=p_tabpart)
+ 
+ 
+	p_ntable0=0
+	if(allocated(p_isvarf))deallocate(p_isvarf,p_istermf)
+	allocate(p_isvarf(1:p_npvar),p_istermf(1:p_nterm))
+	p_isvarf=.false. ;p_istermf=.false.
+	do i=1,p_nterm
+		if(j_otype(p_termvar(i)).eq.j_iptable)p_ntable0=p_ntable0+1
+	end do !i=1,p_nterm  14047
+	!	p_ivtable0=j_deflist(j_ivout,'%tables0',nres=p_ntable0)
+	p_ivtable=j_deflist(j_ivout,'%table',nres=p_ntable0)
+	write(6,*)'p_ntable0',p_ntable0
+	do i=1,p_nterm
+		ivterm=p_termvar(i)
+		if(j_otype(ivterm).ne.j_iptable)cycle
+		iper=j_putlistobject(p_ivtable,single=ivterm)
+		p_istermf(i)=.true.
+	enddo !i=1,p_nterm  14053
+	p_ntable=j_o(p_ivtable)%i(1)
+	p_table=>j_o(p_ivtable)%i2(1:p_ntable)
+	p_nlog=0
+	p_nfact=0
+	p_nlogfact=0
+	p_nfactmax=0
+	do i=1,p_ntable
+ 
+		ivlog=j_gettablecol(p_table(i))  !j_o(ivterm)%i(4)
+		if(j_err)return
+		nlog=j_o(ivlog)%i(1)
+ 
+		ivfact=j_gettablerow(p_table(i));if(j_err)return  !j_o(ivterm)%i(5)
+		nfact=j_o(ivfact)%i(1)
+		p_nlog=p_nlog+nlog
+		p_nfact=p_nfact+nfact
+		p_nlogfact=p_nlogfact+nlog*nfact
+		p_nfactmax=max(p_nfactmax,nfact)
+	enddo !i=1,p_ntable  14065
+ 
+	p_ivlog=j_deflist(j_ivout,'%log',nres=p_nlog)
+	p_log=>j_o(p_ivlog)%i2(1:p_nlog)
+	p_ivkeeplog=j_deflist(j_ivout,'%keeplog',list0=p_nlog,ilist=.true.,point=p_keeplog)
+ 
+	p_ivfact=j_deflist(j_ivout,'%fact',nres=p_nfact,point=p_fact)
+ 
+ 
+	p_ivlogfact=j_deflist(j_ivout,'%logfact',list0=p_nlogfact,point=p_logfact)
+	!	p_ivtabledata=j_deflist(j_ivout,'%tabledata',list0=p_ntable,point=p_tabledata)
+	lkm=0
+	p_ivtableutil=j_deflist(j_ivout,'%tableutil',list0=p_ntable,point=p_tableutil)
+	p_ivtablenlog=j_deflist(j_ivout,'%tablenlog',list0=p_ntable,point=p_tablenlog,ilist=.true.)
+	p_ivtableneibas=j_deflist(j_ivout,'%tableneibas',list0=p_ntable,point=p_tableneibas,ilist=.true.)
+ 
+ 
+	write(6,*)'p_nlogfact ',p_nlogfact
+	nlog2=0
+	nfact2=0
+	nlogfact2=0
+	do i=1,p_ntable
+		ivtable=p_table(i)
+		call j_getname(-1,-1,ivtable)  !oname3
+		ivlog=j_gettablecol(p_table(i))  !j_o(ivterm)%i(4)
+		if(j_err)return
+ 
+		nlog=j_o(ivlog)%i(1)
+		p_tablenlog(i)=nlog
+		p_log(nlog2+1:nlog2+nlog)=j_o(ivlog)%i2(1:nlog)
+		!	write(6,*)'nlog,knn,ibas',nlog,p_nn,p_tableneibas(i)
+		if(i.lt.p_ntable)p_tableneibas(i+1)=p_tableneibas(i)+nlog*p_knn
+		!	write(6,*)'nlog,k_nn,p_tableneibas(i+1)',nlog,k_nn,p_tableneibas(i+1)
+ 
+		ivfact=j_gettablerow(p_table(i));if(j_err)return  !j_o(ivterm)%i(5)
+		nfact=j_o(ivfact)%i(1)
+ 
+		p_fact(nfact2+1:nfact2+nfact)=j_o(ivfact)%i2(1:nfact)
+ 
+ 
+ 
+		do ilog=1,nlog
+			ilog2=nlog2+ilog
+ 
+			ik=j_inlist(p_log(ilog2),p_nkeepx,p_keepx)
+ 
+ 
+			call j_getname(p_log(ilog2))
+			if(ik.le.0)then
+				write(6,*)j_oname(1:j_loname),' is not in xdata'
+				j_err=.true.
+				cycle
+			endif !if(ik.le.0)  14125
+			p_keeplog(ilog2)=ik
+			j_o(ivtable)%i2(ilog)=ik
+ 
+			do ifact=1,nfact
+				ifact2=nfact2+ifact
+				call j_getname(-1,p_fact(ifact2))
+				ilofa=j_getobject(0,j_oname(1:j_loname)//'%2%'//j_oname2(1:j_loname2),j_ipreal)
+				nlogfact2=nlogfact2+1
+				p_logfact(nlogfact2)=ilofa
+ 
+				do j=1,p_nterm
+					if(ilofa.eq.p_termvar(j))then
+						p_logpart(j)=ilog
+						p_factpart(j)=ifact
+						p_tabpart(j)=i
+						jif=j_inlistobject(p_termvar(j),p_ivvars)
+						p_isvarf(jif)=.true.
+						p_istermf(j)=.true.
+					endif !if(ilofa.eq.p_termvar(j))  14141
+					if(ivtable.eq.p_termvar(j))then
+						p_tabpart(j)=i
+						p_istermf(j)=.true.
+						jif=j_inlistobject(p_termvar(j),p_ivvars)
+						p_isvarf(jif)=.true.
+					endif !if(ivtable.eq.p_termvar(j))  14149
+				enddo !j=1,p_nterm  14140
+ 
+			enddo !ifact=1,nfact  14133
+		enddo !ilog=1,nlog  14118
+		if(j_err)return
+		nlog2=nlog2+nlog
+		nfact2=nfact2+nfact
+ 
+		p_tableutil(i)=j_defmatrix(j_ivout,'%'//j_oname(1:j_loname)//'%util',nlog,nfact,j_matreg) !ivob)
+ 
+	enddo !i=1,p_ntable  14098
+	write(6,*)'log',p_log
+	write(6,*)'keeplog',p_keeplog
+	write(6,*)'p_tableneibas',p_tableneibas
+	if(j_err)return
+ 
+ 
+	! ivlog=j_gettablecol(ivtable,len=nlog,point=j_templist2)  !j_o(ivtable)%i(4)
+	! ivfac=j_gettablerow(ivtable,len=nfac,point=j_templist3)  !j_o(ivtable)%i(5)
+	! call j_getname(ivtable,ivlog,ivfac)
+	! ivdata=j_getobject(j_ivout,'%'//j_oname(1:j_loname)//'%data',j_ipreal)
+	! ivcoefmat=j_defmatrix(j_ivout,'%'//j_oname(1:j_loname)//'%data%matrix',p_nunits,nlog*nfac,j_matreg)
+ 
+	! ivkeep=j_deflist(j_ivout,'%'//j_oname(1:j_loname)//'%data%keep',list0=nlog*nfac,point=j_templist)
+	! call j_defdata(ivdata,ivcoefmat,ivkeep)
+	! !	call j_getname(ivdata)
+	! write(6,*)'TABLEDATA ',j_oname(1:j_loname)
+	! p_tabledata(j)=ivdata
+ 
+	! enddo !j=1,p_ntable  14088
+	p_ndupmax=0
+	do i=1,p_nterm
+		ivterm=p_termvar(i)
+		ndup=0
+		if(j_otype(ivterm).eq.j_iptable)then
+			do i2=1,p_nterm-1
+				if(p_termvar(i2).eq.ivterm)ndup=ndup+1
+			enddo !i2=1,p_nterm-1  14190
+ 
+		endif !if(j_otype(ivterm).eq.j_iptable)  14189
+		p_ndupmax=max(p_ndupmax,ndup)
+	enddo !i=1,p_nterm  14186
+ 
+	p_ndupmax1=p_ndupmax+1
+	p_logfactstep =p_ndupmax1*p_nlog
+	!all tableterms
+	!	p_ivtableterm=j_deflist(j_ivout,'%tableterm',list0=p_ndupmax1*p_ntable0,ilist=.true.)
+ 
+	p_ivlogfactterm=j_deflist(j_ivout,'%logfactterm',list0=p_ndupmax1*p_nlogfact, &
+		ilist=.true.,point=p_logfactterm)
+ 
+	! nxf=0
+	! ibas=0
+	! nlogbas=0
+	! do j=1,p_ntable
+	! !	write(6,*)'jtab',j,p_ntable
+	! ivtable=p_table(j)
+	! ivxt=j_gettablecol(ivtable);if(j_err)return !j_o(ivtable)%i(4)
+	! ivft=j_gettablerow(ivtable);if(j_err)return  !j_o(ivtable)%i(5)
+ 
+	! nlog=j_o(ivxt)%i(1)
+ 
+ 
+	! do ilog=1,nlog
+	! ivlo=j_o(ivxt)%i2(ilog)
+	! ik=j_inlistobject(ivlo,p_ivkeepx)
+ 
+	! !			j_o(p_ivkeeplog)%i2(nlogbas+ilog)=ik
+	! p_keeplog(nlogbas+ilog)=ik
+	! do ifact=1,nfact
+	! nd=0
+	! do i=1,p_nterm
+	! if(j_o(p_ivtab)%i2(i).ne.j)cycle
+	! if(j_o(p_ivlogpart)%i2(i).ne.ilog)cycle
+	! if(j_o(p_ivfactpart)%i2(i).ne.ifact)cycle
+	! nd=nd+1
+	! p_logfactterm(ibas+nd)=i    !
+	! enddo !i=1,p_nterm  14262
+	! ibas=ibas+p_ndupmax1  !zero
+	! enddo !ifact=1,nfact  14260
+	! enddo !ilog=1,nlog  14249
+	! nlogbas=nlogbas+nlog
+	! enddo !j=1,p_ntable  14240
+	if(j_err)return
+	p_nvarf=count(p_isvarf)
+	p_ntermf=count(p_istermf)
+ 
+	write(6,*)'found ',p_nvarf,' f-variables ',p_ntable,' tables ',p_nvarf-p_ntable,' %2% variables '
+	write(6,*)p_ntermf, 'f-terms'
+ 
 	call j_getoption(iob,io,j_mutiltrans,1,1,j_iptrans,.true.,narg,j_optarg0)
 	if(j_err)return
 	p_ivutiltrans=j_optarg0(1)
  
+end subroutine fterms
+
+subroutine initfact()
+	use jmod, only: p_nlogfact
+	use jmod, only: p_nunits
+	use jmod, only: p_kntot
+	use jmod, only: p_knn
+	use jmod, only: p_nlog
+	use jmod, only: p_kntot2
+	use jmod, only: j_deflist
+	use jmod, only: j_ivout
+	use jmod, only: p_ivneig
+	use jmod, only: j_o
+	use jmod, only: p_neig
+	use jmod, only: j_defmatrix
+	use jmod, only: j_matreg
+	use jmod, only: p_ivneigu
+	use jmod, only: p_neigu
+	use jmod, only: j_itempvector
+	use jmod, only: p_nfactmax
+	use jmod, only: j_tempvectors
+	use jmod, only: p_ivkeyfact
+	use jmod, only: p_keyfact
+	use jmod, only: j_0
+	use jmod, only: p_xps
+	use jmod, only: p_nrow
+	use jmod, only: j_getobs0
+	use jmod, only: p_ivdatac
+	use jmod, only: p_ivutiltrans
+	use jmod, only: j_err
+	use jmod, only: p_ntable
+	use jmod, only: p_table
+	use jmod, only: j_gettablecoef
+	use jmod, only: p_tablecoefcur
+	use jmod, only: j_gettablerow
+	use jmod, only: p_tablelog
+	use jmod, only: j_gettablecol
+	use jmod, only: j_18
+	use jmod, only: j_dapu
+	use jmod, only: j_ninf
+	use jmod, only: p_valueopt
+	use jmod, only: p_ns
+	use jmod, only: p_value
+	use jmod, only: j_yes
+	use jmod, only: p_nterminrow
+	use jmod, only: p_tabpart
+	use jmod, only: p_isvarx
+	use jmod, only: p_xmat
+	use jmod, only: p_tablenlog
+	use jmod, only: p_coef
+	use jmod, only: p_tableneibas
+	use jmod, only: p_datamatx
+	use jmod, only: p_factpart
+	use jmod, only: p_keeplog
+	use jmod, only: p_keys
+	use jmod, only: p_nkeepx
+	use jmod, only: p_ntemp0
+	integer*8 ::i8
  
-	do i=1,p_nterm
-		ivx=ivxofterm(i)
+	!p_knn
+	!p_utiltrans
+	!p_ivtablecoef
+	!p_tablecoef
+	! p_knn p_ivutiltrans p_neig p_neigu p_keyfact
  
-		if(ivx.ne.0)then
-			iperk=j_inlistobject(ivx,p_ivkeepx)
-			if(iperk.le.0)then
-				call j_getname(ivx,p_termvars(i),p_ivkeepx)
-				write(6,*)j_oname(1:j_loname),' in ',j_oname2(1:j_loname2),' is not in ',j_oname3(1:j_loname3)
-				j_err=.true.
-			endif !if(iperk.le.0)  15761
-		endif !if(ivx.ne.0)  15759
-	enddo !i=1,p_nterm  15756
-	if(j_err)return
-	!	p_ivknn= j_deflistobject(j_ivout,'%knn',list0=p_ntable)
-	! kntot=0
-	! do i=1,p_ntable
-	! ivt=j_o(p_ivtables)%i2(i)
-	! ivf=j_gettablerow(ivt)  !j_o(ivt)%i(2)
+	write(6,*)'initfact'
+ 
+ 
+	write(6,*)'p_nlogfact,p_nunits,',p_nlogfact,p_nunits
+	!	p_ivtablecoef=j_defmatrix(j_ivout,'%tablecoef',p_nlogfact,p_nunits,j_matreg,point=p_tablecoef)
+	!	p_tablecoef=j_o(p_ivtablecoef)%d(1:p_nlogfact*p_nunits)
+ 
+	! do i=1,p_nterm
+	! ivx=ivxofterm(i)
+ 
+	! if(ivx.ne.0)then
+	! iperk=j_inlistobject(ivx,p_ivkeepx)
+	! if(iperk.le.0)then
+	! call j_getname(ivx,p_termvar(i),p_ivkeepx)
+	! write(6,*)j_oname(1:j_loname),' in ',j_oname2(1:j_loname2),' is not in ',j_oname3(1:j_loname3)
+	! j_err=.true.
+	! endif !if(iperk.le.0)  14230
+	! endif !if(ivx.ne.0)  14228
+	! enddo !i=1,p_nterm  14225
 	! if(j_err)return
-	! nf=j_o(ivf)%i(1)
-	! call j_getname(ivt)
-	! ivkn=j_object(j_oname(1:j_loname)//'%knn')
-	! kn=5
-	! if(ivkn.gt.0)then
-	! kn=j_v(ivkn)
-	! if(kn.lt.1.or.kn.gt.nf)then
-	! write(6,*)j_oname(1:j_loname)//'%knn has illegal value ',kn
-	! write(6,*)'default value 5 used'
-	! kn=5
-	! end if !if(kn.lt.1.or.kn.gt.nf)  15498
  
-	! endif !if(ivkn.gt.0)  15496
-	! j_o(p_ivknn)%i2(i)=kn
-	! kntot=kntot+kn
- 
-	! end do !i=1,p_ntable  15488
-	kntot=p_knn*p_nlog
-	if(allocated(p_neig))deallocate(p_neig,p_neigu)
-	allocate(p_neig(1:kntot*p_nunits),p_neigu(1:kntot*p_nunits))
+	p_kntot=p_knn*p_nlog
+	write(6,*)'knnhere',p_knn
+	p_kntot2=p_kntot*p_nunits
+	p_ivneig=j_deflist(j_ivout,'%neig',list0=p_kntot2,ilist=.true.,ncol=p_kntot)
+	p_neig=>j_o(p_ivneig)%i2(1:p_kntot2)
+	p_ivneigu=j_defmatrix(j_ivout,'%neigu',p_nunits,p_kntot,j_matreg,point=p_neigu) !ivob)
+	!	p_ivtablecoeftot=j_defmatrix(j_ivout,'%tablecoeftot',p_nunits,p_nlogfact,j_matreg,point=p_tablecoeftot)
+	!	p_neigu=>j_o(p_ivneigu)%d(1:p_kntot2)
+	! if(allocated(p_neig))deallocate(p_neig,p_neigu)
+	! allocate(p_neig(1:kntot*p_nunits),p_neigu(1:p_kntot*p_nunits))
 	if(allocated(j_itempvector))deallocate(j_itempvector)
 	allocate(j_itempvector(1:p_nfactmax))
-	if(allocated(p_keyfact))deallocate(p_keyfact);allocate(p_keyfact(1:p_nunits*p_nlog))
+	if(allocated(j_tempvectors))deallocate(j_tempvectors)
+	allocate(j_tempvectors(1:p_nfactmax))
+	p_ivkeyfact=j_deflist(j_ivout,'%keyfact',list0=p_nunits*p_nlog,ilist=.true.,ncol=p_nlog)
+	p_keyfact=>j_o(p_ivkeyfact)%i2(1:p_nunits*p_nlog)
+	write(6,*)'keyfactinit'
 	ibasn=0
 	jkey=0
+	ibaxmat=0
+	ibadatamatx=0
+	ibaneigu=0
+	ibatablecoeftot=0
+ 
+	p_xps(0:p_nrow)=j_0
+	!ibadatamatx0=0
 	!	write(6,*)'nfactmax',p_nfactmax
-	do i8=1,p_nunits
+	do i8=1_8,p_nunits
+		ibadatamatx0=ibadatamatx
+		ibasnold=ibasn
 		call j_getobs0(p_ivdatac,i8)
 		call dotrans(p_ivutiltrans,1)
 		if(j_err)then
 			write(6,*)'error occurred for unit ',i8
 			return
-		endif !if(j_err)  15804
+		endif !if(j_err)  14313
+		write(6,*)'i8',i8
+		!write(6,*)ibatablecoef,ibatablecoef+p_nlogfact
+		!	write(6,*)'p_logfact',p_logfact
+		!	write(6,*)'ptablecoef',p_tablecoef
+		!	p_tablecoef(ibatablecoef+1:ibatablecoef+p_nlogfact)=j_v(p_logfact)
+ 
+		!j_ierr=0
 		do ip=1,p_ntable
+			ibatablecoefcur=0
+			!	write(6,*)'ip ',ip,p_ivtable
 			ibas=0
-			ivtable= j_o(p_ivtables)%i2(ip)
-			ivcoe=j_o(p_ivtablecoef)%i2(ip)
-			ivlog=j_gettablerow(ivtable)
-			nlog=j_o(ivtable)%i(1)
+			ivtable=p_table(ip)
  
-			ivfact=j_gettablecol(ivtable)
-			nfact=j_o(ivfact)%i(1)
+			ivcoe=j_gettablecoef(ivtable,point=p_tablecoefcur)
  
+			if(j_err)return
  
+			!	call j_getname(ivtable,ivcoe)
+			!	write(6,*)'djjd ',j_oname(1:j_loname),' ** ',j_oname2(1:j_loname2)
+			!	write(6,*) p_tablecoefcur
+			!	stop
  
+			if(j_err)return
+			ivlog=j_gettablerow(ivtable,point=p_tablelog,len=nlog);if(j_err)return
+			ivfact=j_gettablecol(ivtable,len=nfact);if(j_err)return
  
+			!		ivfact=j_gettablecol(ivtable,point=p_tablefact,len=nfact);if(j_err)return
+			ibatablemat=(i8-j_18)*nlog*nfact
+			!		write(6,*)'nlog,nfac',nlog,nfact,' ivlog ',ivlog,' ivfact ',ivfact
+			!		ivmat=j_getmatrix( p_tabledata(ip),point=j_tempdpoint)
+			!	j_tempdpoint(ibatablemat+1:ibatablemat+nlog*nfact)=p_tablecoefcur(1:nlog*nfact)
+			!		write(6,*)'ivtable,ivcoe,ivlog,nlog,ivfact,nfact',ivtable,ivcoe,ivlog,nlog,ivfact,nfact
 			do j=1,nlog
-				!			write(6,*)'unit,table,log ',i8,ip,j
-				call ssortp(j_o(ivcoe)%d(ibas+1:ibas+nfact),1,nfact,j_itempvector)
+ 
+				j_tempvectors(1:nfact)=-p_tablecoefcur(ibas+1:ibas+nfact)
+				call ssortp(j_tempvectors,1,nfact,j_itempvector)
+				!		if(i8.le.2.and.j.le.2)write(6,*)' index', j_itempvector(1:nfact)
 				do k=1,p_knn
-					j_dapu=j_o(ivcoe)%d(ibas+j_itempvector(k))
+ 
+					j_dapu=p_tablecoefcur(ibas+j_itempvector(k))
 					if(j_dapu.gt.j_0)then
-						p_neig(ibasn+1:ibasn+k)=j_itempvector(k)
+						p_neig(ibasn+k)=j_itempvector(k)
 						p_neigu(ibasn+k)=j_dapu
-					endif !if(j_dapu.gt.j_0)  15826
-				enddo !k=1,p_knn  15824
+ 
+					endif !if(j_dapu.gt.j_0)  14357
+				enddo !k=1,p_knn  14354
+				write(6,*)'i8,log',i8,j,p_tablecoefcur(ibas+1:ibas+nfact),j_itempvector(1:nfact)
+				write(6,*)p_neig(ibasn+1:ibasn+p_knn)
 				jkey=jkey+1
 				p_keyfact(jkey)=p_neig(ibasn+1)
- 
-				!		write(6,*)p_neig(ibasn+1:ibasn+p_knn),p_neigu(ibasn+1:ibasn+p_knn)
+				!	if(i8.le.2_8.and.j.le.2)write(6,*)'i8,ip,ilog,jkey,keyfact ',i8,ip,j,jkey,p_keyfact(jkey)
+				!	if(i8.le.2_8.and.j.le.2)write(6,*)p_neig(ibasn+1:ibasn+p_knn),p_neigu(ibasn+1:ibasn+p_knn)
 				ibas=ibas+nfact
 				ibasn=ibasn+p_knn
+				ibatablecoefcur=ibatablecoefcur+nfact
+			enddo !j=1,nlog  14349
  
-			enddo !j=1,nlog  15821
-		enddo !ip=1,p_ntable  15808
-	enddo !i8=1,p_nunits  15801
+		enddo !ip=1,p_ntable  14324
+ 
+		!		write(6,'(14i4)')p_neig(ibasnold+1:ibasn)
+ 
+		if(j_err)return
+		!	write(6,*)'i8,p_nlog p_ns(i8),p_nterminrow(0)',i8,p_nlog,p_ns(i8),p_nterminrow(0)
+		!		do ilog=1,p_nlog
+ 
+		p_valueopt=j_ninf
+		do k=1,p_ns(i8)
+ 
+			p_value=j_0
+			j_yes=.true.
+			do it=1,p_nterminrow(0)
+				itable=p_tabpart(it)
+				if(p_isvarx(it).and.j_yes)then
+					!		if(i8.le.2)write(6,*)'p_coef(it)*p_xmat(ibaxmat+1)',p_coef(it),p_xmat(ibaxmat+1)
+					p_value=p_value+p_xmat(ibaxmat+1)
+					j_yes=.false.  ! xmat only once
+				elseif(itable.ne.0)then
+					ivtable=p_table(itable)
+					!	write(6,*)'i8,it,p_table(it),p_knn,ibaneigu,p_knn,p_kntot',i8,it,p_table(it),p_knn,ibaneigu,p_knn,p_kntot
+					!	if(i8.le.2_8)write(6,*)'i8,k,it,p_coef(it),ibaneigu,ind,neigu ',&
+					!		i8,k,it,p_coef(it),ibaneigu,ibaneigu+(p_table(it)-1)*p_knn+1,p_neigu(ibaneigu+(p_table(it)-1)*p_knn+1)
+					!	write(6,*)i8,it,p_table(it)
+					itabas=ibaneigu+(itable-1)*p_knn
+					do ilog=1,p_tablenlog(itable)
+ 
+						p_value=p_value+p_coef(it)*p_neigu(ibaneigu+p_tableneibas(itable)+1)* &
+							p_datamatx(ibadatamatx+j_o(ivtable)%i2(ilog))
+ 
+						!			write(6,*)i8,it,ilog,p_value,p_coef(it),ibaneigu,p_tableneibas(itable),&
+						!				p_neigu(ibaneigu+p_tableneibas(itable)+1),&
+						!				p_datamatx(ibadatamatx+j_o(ivtable)%i2(ilog)),ibadatamax
+ 
+					enddo !ilog=1,p_tablenlog(itable)  14400
+ 
+				elseif(p_factpart(it).ne.0)then
+					p_value=p_value+p_coef(it)*p_datamatx(ibadatamatx+p_keeplog(ilog))
+				endif !if(p_isvarx(it).and.j_yes)  14389
+ 
+			enddo !it=1,p_nterminrow(0)  14387
+			write(6,*)p_value
+			if(p_value.gt.p_valueopt)then
+				p_keys(i8)=k
+				p_valueopt=p_value
+			endif !if(p_value.gt.p_valueopt)  14417
+			!		write(6,*)'k,value,valueop',k,p_value,p_valueopt,p_keys(i8)
+			ibadatamatx=ibadatamatx+p_nkeepx
+		enddo !k=1,p_ns(i8)  14383
+ 
+		do ir=0,p_nrow
+ 
+ 
+		enddo !ir=0,p_nrow  14425
+		!	j_err=.true.
+		!	return
+		!		enddo !ilog=1,p_nlog  14682
+		ibaxmat=ibaxmat+p_ntemp0
+		ibaneigu=ibaneigu+p_kntot
+ 
+ 
+		!	ibadatamatx=ibadatamatx+p_ns(i8)*p_nkeepx
+		ibatablecoeftot=ibatablecoeftot+p_nlogfact
+ 
+		!jj=ibadatamax/p_nkeepx
+		!	write(6,*)'jj',jj
+ 
+ 
+	enddo !i8=1_8,p_nunits  14308
+	!	write(6,*)'ibaneigu,p_kntot2',ibaneigu,p_kntot2
 	deallocate(j_itempvector)
  
  
+ 
+ 
 end subroutine initfact
+
+! subroutine initkeysx()
+! integer*8 ::i8
+! jkey=0
+! ibaxmat=0
+
+! p_xps(0:p_nrow)=j_0
+
+! do i8=1_8,p_nunits
+! p_valueopt=j_ninf
+! do k=1,p_ns(i8)
+! p_value=p_xmat(ibaxmat+1)
+! if(p_value.gt.p_valueopt)then
+! p_keys(i8)=k
+! p_valueopt=p_value
+! endif !if(p_value.gt.p_valueopt)  14397
+! ibaxmat=ibaxmat+p_ntemp0
+! enddo
+! end subroutine
+
 subroutine initzvar()
-	use jmod, only: j_deflistobject
+	use jmod, only: j_deflist
 	use jmod, only: j_ivout
 	use jmod, only: p_ivzvars
 	use jmod, only: p_nz
@@ -18546,45 +17122,40 @@ subroutine initzvar()
 	use jmod, only: p_fpresent
 	use jmod, only: p_vars
 	use jmod, only: p_npvar
-	use jmod, only: p_isxvar
-	use jmod, only: p_isfvar
+	use jmod, only: p_isvarx
+	use jmod, only: p_isvarf
  
  
  
-	p_ivzvars=j_deflistobject(j_ivout,'%zvars',list0=p_nz)
+	p_ivzvars=j_deflist(j_ivout,'%zvars',list0=p_nz)
 	p_zvars=>j_o(p_ivzvars)%i2(1:p_nz)
 	! if(allocated(p_zvars))deallocate(p_zvars)
 	! allocate(p_zvars(1:p_nz))
-	!	write(6,*)'p_fpresent,p_zopt,p_isxvar',p_fpresent,p_zopt,p_isxvar
+	!	write(6,*)'p_fpresent,p_zopt,p_isvarx',p_fpresent,p_zopt,p_isvarx
 	if (p_fpresent) then
  
  
-		p_zvars(1:p_nz)=pack(p_vars(1:p_npvar),.not.p_isxvar.and..not.p_isfvar)
+		p_zvars(1:p_nz)=pack(p_vars(1:p_npvar),.not.p_isvarx.and..not.p_isvarf)
 	else
-		p_zvars(1:p_nz)=pack(p_vars(1:p_npvar),.not.p_isxvar)
-		!	write(6,*)'p_is%%%%%%%%%%%%%%%',p_isxvar
+		p_zvars(1:p_nz)=pack(p_vars(1:p_npvar),.not.p_isvarx)
+		!	write(6,*)'p_is%%%%%%%%%%%%%%%',p_isvarx
 		!	write(6,*)'zvr2',p_zvars(1:p_nz)
-	endif !if (p_fpresent)  15854
+	endif !if (p_fpresent)  14480
 	!		write(6,*)'num55es '
-	ivzvar=j_deflistobject(j_ivout,'%zvars',list0=p_nz,list=p_zvars(1:p_nz))
+	ivzvar=j_deflist(j_ivout,'%zvars',list0=p_nz,list=p_zvars(1:p_nz))
  
  
  
 end subroutine initzvar
 
-function ivxofterm(iterm)
-	use jmod, only: j_o
-	use jmod, only: p_ivtpart
-	use jmod, only: p_ivtables
-	use jmod, only: j_gettablecol
-	use jmod, only: p_ivxpart
-	itable=j_o(p_ivtpart)%i2(iterm)
-	if(itable.le.0)then
-		ivxofterm=0
-	else
-		ivtable=j_o(p_ivtables)%i2(itable)
-		ivcol=j_gettablecol(ivtable)
-		ikx=j_o(p_ivxpart)%i2(iterm)
-		ivxofterm=j_o(ivcol)%i2(ikx)
-	endif !if(itable.le.0)  15872
-end function ivxofterm
+! function ivxofterm(iterm)
+! itable=p_table(iterm) !j_o(p_ivtab)%i2(iterm)
+! if(itable.le.0)then
+! ivxofterm=0
+! else
+! ivtable=p_table(itable) !j_o(p_ivtable)%i2(itable)
+! ivcol=j_gettablecol(ivtable)
+! ikx=p_logpart(iterm)  !j_o(p_ivlogpart)%i2(iterm)
+! ivxofterm=j_o(ivcol)%i2(ikx)
+! endif !if(itable.le.0)  14408
+! end function ivxofterm

@@ -72,10 +72,11 @@ The leaders of Luke told that it is a good idea to open the software, and this i
 Luke cannot let me take care of the publication but the leaders wanted to publish \textbf{J} 
 themselves. This started a frustrating and humillating process which lasted six 
 and half years. Eleven 
-leaders of Luke were involved in the process. 
+leaders of Luke were involved in the process, 
+and none of them was eventually interested to get the software publisehd. 
  
 I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017. 
-I was not informed of the decision. Later Luke turned down any cooperation 
+I was not informed of the decision. Later Luke turned down explicitly any cooperation 
 in the publication or in the development of 
 the software. 
  
@@ -94,18 +95,22 @@ I was told in Olavinlinna that there has actually been no disagreement
 between me and Luke in this process. 
 As I could not accept the interpretation that I had fighted six and half years against wind mills, 
 I described in previous versions some details of the process. This kept my bitterness 
-alive which was unfortunate for my mind and also because 
+alive which was unfortunate for my peace of mind and also because 
 I knew well how pathetic old bitter men are. After some recent rounds of argumentation, the research director 
 called me in January 12 2023 and admitted that Luke did not handle the opening and publication properly 
 and that Luke will improve its procedures. I want now look forward, and I make 
 only two comments. 
+ 
 First, I think that if a government research institute decides that a sowtware can be 
 opened and published, the principal author should have the right to participate in the 
-preparation of the formal opening decision and to take care of the publication. Second. 
+preparation of the formal opening decision and to take care of the publication. 
+ 
+Second. 
 The software contained so much dirty code that it could not be developed without my involvement, 
-and barely even maintained. This 
-suggests that an expert organization should listen the best experts before 
-turning down the cooperation with them. 
+and barely even maintained. The leaders of Luke did not know this because they were not 
+interested to discuss with me anything related to the state, publication or 
+development of the software. I think that an expert organization should 
+always consult best experts and not only those who can express them most persuasively. 
  
  
 \subsection*{Rewriting the software} 
@@ -169,6 +174,11 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 23.2.2023. The most important change is that the \textcolor{VioletRed}{data}() function is rewritten. 
+Now it is simpler and more easy to maintain. It is not possible to make two \textcolor{teal}{DATA} objects with 
+a single call to \textcolor{VioletRed}{data}(), but it is not really reasonable to put unit data and schedules data 
+into the same file. There are some other changes which are note yet fully reported. Examples go through 
+but there are some not properly tested features. 
  
 Version 25.1.2023. Factory optimization started. It does not work yet 
 but the example shows how it can be used in the future. 
@@ -258,6 +268,22 @@ if execution of \textbf{Jlp22} terminates unexpectedly, the error debugging info
 With the debug version the problematic line is indicated. 
 See chapter \ref{error} for more information of error handling. 
  
+ 
+\subsection{System requirement} 
+\label{system} 
+! 
+ 
+ 
+Figures are made with Gnoplot. 
+Gnuplot is freely available at 
+ 
+ 
+https://sourceforge.net/projects/gnuplot/files/gnuplot/5.4.2/ 
+ 
+Download  download gp542-win64-mingw.exe. This will install gnuplot on your windows 
+system under C::\textbackslash Program Files\gnuplot\. \textbf{Jlp22} will strat Gnuplot automatically when 
+plotting figures if Gnuplot is on the PATH (see section Installing Gnuplot and \textbf{Jlp22}). 
+Dcomentation is found also in \ref{gnu} 
  
 \subsection{Developing own \textbf{Jlp22} functions in Fortran} 
 \label{intro2} 
@@ -597,6 +623,16 @@ te=0\,{\color{ForestGreen}!delete also text object te}\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
+\subsection{system() executes Windows commands} 
+\label{systemcom} 
+Windows system commands can be given by\\ 
+system('command')\\ 
+For instance \\ 
+system('cls') clears screen 
+system('dir') prints the directory 
+\subsection{cls clears screen} 
+\label{cls} 
+command cls clears screen, thus cls is equivalent to system('cls') 
 \subsection{Input programming} 
 \label{inpuprog} 
 The purpose of the input programming is to read or generate \textbf{Jlp22} commands or input lines 
@@ -1218,6 +1254,7 @@ The following objects are generated during the initilaization.
  
  
 \noindent \textcolor{teal}{Data}  \tabto{25mm }  List \tabto{45mm }    List object used to indicate current data setsDat 
+ 
  
  
  
@@ -3249,6 +3286,14 @@ put OBJ into \textcolor{teal}{LIST}
 Usage:\\ 
 Output=\textcolor{VioletRed}{table}(rowlist,collist)\\ 
 This can be used in factory optimizations 
+ 
+ 
+ 
+ 
+ 
+call j\_getname(ivout) 
+call j\_getname(j\_o(ivout)\%i(6)) 
+\textcolor{VioletRed}{write}(6,*)'jdjdj ',j\_oname(1:j\_loname) 
 \subsection{\textcolor{teal}{lista}(2,-4) makes \textcolor{teal}{LIST} from part of \textcolor{teal}{LIST} \textcolor{teal}{lista}} 
 \label{sublist} 
 A list can be made taking a part of \textcolor{teal}{LIST}. 
@@ -4014,27 +4059,20 @@ This festure is now deleted as it is possible to stack several data matrices and
 \end{note} 
 \subsection{\textcolor{VioletRed}{data}() Making a \textcolor{teal}{DATA}}\index{data()} 
 \label{data} 
-\textcolor{teal}{Data} objects are created with the \textcolor{VioletRed}{data}() function. Two linked data objects can be created with the 
-same function call (using option \textcolor{blue}{subdata->} and options thereafter in the following 
-description). It is recommended that two linked data objects are created with one \textcolor{VioletRed}{data}() 
-function call only in case the data is read from a single file where subdata observations are 
-stored immediately after the upper data observation.  \textcolor{teal}{Data} objects can be linked also afterwards with the \textcolor{VioletRed}{linkdata}() function. 
-A data object can created by a \textcolor{VioletRed}{data}() function when data are read from files 
-or data are created using transformation objects. New data objects can 
+\textcolor{teal}{Data} objects can be created with the \textcolor{VioletRed}{data}() function. 
+A data object can created by a \textcolor{VioletRed}{data}() function when data are read from a file 
+or from the following input paragraph. New data objects can 
 be created with \textcolor{VioletRed}{newdata}() function from previous data objects and/or matrices. 
-If data objects can created using transformation objects either with \textcolor{VioletRed}{data}() function 
-or by creating first data matrix by transformation and then using \textcolor{VioletRed}{newdata}() to 
+A data object can created using a \textcolor{teal}{TRANS} object 
+by creating first data matrix with \textcolor{VioletRed}{matrix}() and then using \textcolor{VioletRed}{newdata}() to 
 create data object. 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent Output  \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{Data} \tabto{7cm} 
+\noindent Output  \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{DATA} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent \noindent Output  \tabto{3cm} 1 \tabto{5cm}  Data \tabto{7cm} 
+\noindent \noindent Output  \tabto{3cm} 1 \tabto{5cm}  DATA \tabto{7cm} 
 \textcolor{teal}{Data} object to be created. 
-It is recommended that this default is used only when only one data object 
-is used in the analysis. 
-	! 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4042,11 +4080,10 @@ is used in the analysis.
 \noindent \textcolor{blue}{read}  \tabto{3cm} 0|1- \tabto{5cm}  REAL|List \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Variables read from the input files. If the first variable is \%nobsw its 
-name is changed into Output\%nobsw which is assumed in hierarchical data. 	If no arguments are given and there is no readfirst-> option 
-then the variables to read in are stored in the first line of the data file separated 
-with commas.?? Also the … -shortcut can be used to define the varaible list. If no arguments are given and 
-there is readfirst-> option then the variable names are read from the second 
-line. 
+name is changed into Output\%nobsw which is assumed in hierarchical data. 
+If no arguments are given 
+then the variables to be read in are stored in the first line of the data file separated 
+with commas. Also the … -shortcut can be used to define the variable list. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4054,8 +4091,7 @@ line.
 \noindent \textcolor{blue}{in}  \tabto{3cm} 0- \tabto{5cm}  Char \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent input file or list of input files. If no files are given, data is read from the following input 
-paragraph. If either of \textcolor{blue}{read->} or \textcolor{blue}{in->} option is given, then both options must 
-be present. 
+paragraph. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4065,12 +4101,8 @@ be present.
 \noindent  Format of the data as follows \newline 
 \$  Fortran format '*', the default \newline 
 \textcolor{teal}{b}    Single precison binary \newline 
-bs  Single precison binary opened with access='stream' 
-Needed for Pascal files in Windows. \newline 
 \textcolor{teal}{B}  Double precison binary.\newline 
 Char giving a Fortran format, e.g. '(4f4.1,1x,f4.3)' \newline 
-d4 Single precison direct access for Gfortran files.\newline 
-d1 Single precison direct acces for Intel Fortran files. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4078,8 +4110,6 @@ d1 Single precison direct acces for Intel Fortran files.
 \noindent \textcolor{blue}{maketrans} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent Transformations computed for each observation when reading the data 
- 
- 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4087,10 +4117,11 @@ d1 Single precison direct acces for Intel Fortran files.
 \noindent \textcolor{blue}{keep} \tabto{3cm} -1|1- \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  variables kept in the data object, default: all \textcolor{blue}{read->} variables plus the output 
-variables of \textcolor{blue}{maketrans->} transformations. 
- 
- 
- 
+variables of \textcolor{blue}{maketrans->} transformations. If tr is the \textcolor{blue}{maketrans->} object, 
+then \textcolor{blue}{keep->}(\textcolor{teal}{x},x4,@tr\%output) can be used to pick part of \textcolor{blue}{read->} variables and 
+all output variables of tr. \textcolor{blue}{keep->} can be used to put into data matrix columns which 
+are utilized later. If there the is \textcolor{blue}{read->}@readv, then \textcolor{blue}{keep->}(@readv,\textcolor{teal}{Regf},\textcolor{teal}{Resid}) 
+can be used to put \textcolor{teal}{Regf} and \textcolor{teal}{Resid} to the data, and these are the utilisez in regressions. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4115,8 +4146,6 @@ observations will be rejected from the data object. If \textcolor{blue}{filter->
 reject statement is checked for observations which have passed the filter. Option 
 \textcolor{blue}{reject->} can utilize automatically created variable \textcolor{teal}{Record} which tells which 
 input record has been just read. If observations are rejected, then the Obsvariable has as its value number of already accepted observations+1. 
-subdata the name of the lower level data object to be created. This option is not allowed, if 
-there are multiple input files defined in option \textcolor{blue}{in->}. 
  
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -4126,9 +4155,8 @@ there are multiple input files defined in option \textcolor{blue}{in->}.
 \begin{changemargin}{3cm}{0cm} 
 \noindent  This option tells that if \textcolor{blue}{nobs->} option gives the number of observations 
 then after the current \textcolor{teal}{DATA} is read in, the file remains open so that other DATAs can be read from the same file. 
-This option is useful when storing schdules having the tree structure and unpacking the structure 
+This option is useful when storing schedules having the tree structure and unpacking the structure 
 with \textcolor{VioletRed}{joindata}(). See also \textcolor{VioletRed}{splitdata}(). 
- 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4138,23 +4166,17 @@ with \textcolor{VioletRed}{joindata}(). See also \textcolor{VioletRed}{splitdata
 \noindent  This tells that the reading continues from 
 the file which was left open with the previous \textcolor{blue}{keepopen->} option. 
  
- 
-subread,…,subobs sub data options similar as \textcolor{blue}{read->}…obs-> for the upper level data. 
-(\textcolor{blue}{subform->}'\textcolor{teal}{bgaya}' is the format for the Gaya system). The following options 
-can be used only if \textcolor{blue}{subdata->} is present 
- 
- 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{nobswcum} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\noindent \textcolor{blue}{up} \tabto{3cm} -1|1 \tabto{5cm}   \textcolor{teal}{DATA} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  A variable telling the cumulative number of subdata observations up to the 
-current upper data observation but not including it. This is useful when accessing 
-the data matrix one upper level unit by time, i.e., the observation numbers within 
-upper level observation are nobswcum+1,…,nobswcum+nobsw 
- 
+\noindent  Gives the upper level data to which the data is linked. The first keep 
+variable must be updata\%nobsw, which tells the number of children observations for 
+each up data observation. If there is up data then the variable \textcolor{teal}{Data}\%obsw will give 
+the number of observation within the upper level observation. The up data 
+is automatically linked to the \textcolor{teal}{DATA} created. 
  
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -4163,58 +4185,53 @@ upper level observation are nobswcum+1,…,nobswcum+nobsw
 \noindent \textcolor{blue}{duplicate} \tabto{3cm} -1|2 \tabto{5cm}   \textcolor{teal}{TRANS}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent \noindent duplicate \tabto{3cm} -1|2 \tabto{5cm}   TRANS  \tabto{7cm} 
-The two transformation object arguments describe how observations in the subdata 
-will be duplicated. The first transformation object should have Duplicates as an 
+The two \textcolor{teal}{TRANS} object arguments describe how observations 
+will be duplicated. This can be used only with \textcolor{blue}{up->}. Without up\_ the duplcation can be treated 
+with standard matrix operations.The first transformation object should have Duplicates as an 
 output variable so that the value of Duplicates tells how many duplicates ar 
 made (0= no duplication). The second transformation object defines how the values 
 of subdata variables are determined for each duplicate. The number of duplicate 
 is transmitted to the variable \textcolor{teal}{Duplicate}. These transformations are called also 
 when \textcolor{teal}{Duplicate}=0. This means that when there is the \textcolor{blue}{duplicate->} option, 
 then all transformations for the subdata can be defined in the duplicate 
-transformation object, and \textcolor{blue}{submaketrans->} is not necessary. 
+transformation object, and \textcolor{blue}{submaketrans->} is not necessary. If there are duplications 
+the \%nobsw variable of the upper level data is updated. 
  
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{oldsubobs} \tabto{3cm} -1|1 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\noindent oldobs \tabto{3cm} -1|1 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  If there are duplications of sub-observations, then this option gives the variable 
+\noindent  If there are duplications of observations, then this option gives the variable 
 into which the original observation number is put. This can be stored in the 
-subdata by putting it into \textcolor{blue}{subkeep->} list, or, if \textcolor{blue}{subkeep->} option is not given 
-then this variable is automatically put into the \textcolor{blue}{keep->} list of the subdata. 
- 
+data by putting it into \textcolor{blue}{keep->} list, or, if \textcolor{blue}{keep->} option is not given 
+then this variable is automatically put into the \textcolor{blue}{keep->} list of the data. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{oldobsw} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  This works similarly with respect to the initial obsw variable as \textcolor{blue}{oldsubobs->} 
+\noindent  This works similarly with respect to the 
+initial obsw variable as oldobs-> 
 works for initial obs variable. 
- 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{nobs} \tabto{3cm} -1|1 \tabto{5cm}  Real \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  There are two uses of this option. First, a data object can be created without reading 
-from a file or from the following input paragraph by using \textcolor{blue}{nobs->} option and 
-\textcolor{blue}{maketrans->} transformation, which can use \textcolor{teal}{Obs} variable as argument. Creation 
-of data object this way is indicated by the presence of \textcolor{blue}{nobs->} option and absence 
-of \textcolor{blue}{in->} and \textcolor{blue}{read->} options. Second, if \textcolor{blue}{read->} option is present \textcolor{blue}{nobs->} 
-option can be used to indicate how many records are read from a file and what 
-will be the number of observations. Currently \textcolor{blue}{reject->} or \textcolor{blue}{filter->} can not 
-be used to reject records (consult authors if this would be needed). If there are 
-fewer records in file as given in \textcolor{blue}{nobs->} option, an error occurs. There are three 
-reasons for using \textcolor{blue}{nobs->} option this way. First, one can read a small sample 
+\noindent  Gives the number of records in the data file. 
+If there are 
+fewer records in file as given in \textcolor{blue}{nobs->} option, an error occurs. There are two 
+reasons for using \textcolor{blue}{nobs->} option. First, one can read a small sample 
 from a large file for testing purposes. Second, the reading is slightly faster as the 
 data can be read directly into proper memory area without using linked buffers. 
-Third, if the data file is so large that a virtual memory overflow occurs, then it may 
+Third, if the data file is so large that a memory overflow occurs, then it may 
 be possible to read data in as linked buffers are not needed. 
-In case \textcolor{blue}{nobs->} option is present and \textcolor{blue}{read->} option is absent either 
-\textcolor{blue}{maketrans->} or \textcolor{blue}{keep->} option (or both) is required. 
+If there is up dta, nobs is not needed as the numbers of observations can be computed 
+from the \%nobsw variable in the upper level data. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4243,28 +4260,24 @@ for each period. Default values are \textcolor{blue}{par->}(8,93).
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{rfhead}  \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
+\noindent \textcolor{blue}{rfhead}  \tabto{3cm} -1-1 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  When reading data from a text file, the first line can contain a header which is 
-printed but othewise ignored 
+\noindent  When reading data from a text file, the first lines can contain a header which is 
+printed but othewise ignored. If the number of header lines is geater than one, 
+the argument gives the number of header lines. 
  
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{rfcode}  \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
+\noindent \textcolor{blue}{rfcode}  \tabto{3cm} -1-1 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent The data file can contain also \textbf{Jlp22}-code which is first executed. Note the code can 
 be like var1,var,\textcolor{teal}{x1}...x5=1,2,3,4,5,6,7, which give the possibility to 
 define variables which describe the \textcolor{blue}{in->} file. 
+If there are both header and code lines, they are read in the same order as 
+the options are. 
  
- 
-rfsubhead-> works for subdata similarly as \textcolor{blue}{rfhead->} for data. 
-rfsubcode works for subdata similarly as \textcolor{blue}{rfcode->} for data 
- 
-If there are both \textcolor{blue}{rfhead->} and \textcolor{blue}{rfcode->} then \textcolor{blue}{rfhead->} is excuted first. 
-\textcolor{blue}{rfhead->} and \textcolor{blue}{rfcode->} replace readfirst-> option  of previous versions which was too 
-complicated. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4276,36 +4289,32 @@ complicated.
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
- 
+\begin{note} 
+It was earlier possiblöe to create both the upper level data and subdata with the same \textcolor{VioletRed}{data}(). 
+This made the function very complicated. The function is also otherwise greatly 
+simplified. 
+\end{note} 
+\begin{note} 
+Direct acces formats and format for reading Pascal binary files are easy 
+to include. 
+\end{note} 
 \begin{note} 
 \textcolor{VioletRed}{data}() function will create a data object object, which is a compound object consisting 
 of links to data matrix, etc. see \textcolor{teal}{Data} object object. If \textcolor{teal}{Data} is the output 
 of the function, the function creates the list \textcolor{teal}{Data}\%keep telling the 
 variables in the data and 
 \textcolor{teal}{Data}\%matrix containg the data as a single precision matrix. The number of observations can be obtained by \textcolor{VioletRed}{nobs}(\textcolor{teal}{Data}) or by 
-\textcolor{VioletRed}{nrows}(\textcolor{teal}{Data}\%matrix). 
+\textcolor{VioletRed}{nrows}(\textcolor{teal}{Data}\%matrix) or \textcolor{VioletRed}{nobs}(\textcolor{teal}{Data}). 
 \end{note} 
 \begin{note} 
 See common options section for how data objects used in other \textbf{Jlp22} functions will be defined. 
 \end{note} 
+ 
 \begin{note} 
-The \textcolor{blue}{in->} and \textcolor{blue}{subin->} can refer to the same file, or if both are without arguments 
-then data are in the following input paragraph. In this case \textcolor{VioletRed}{data}() function read first one 
-upper level record and then \textcolor{blue}{nobsw->} lower level records. 
-\end{note} 
-\begin{note} 
-In ealier versions, the user could select teh name for the variable telling the number 
+In ealier versions, the user could select the name for the variable telling the number 
 of the observation. After version Dec 20 2022, the name for \textcolor{teal}{DATA} \textcolor{teal}{datab} is always \textcolor{teal}{datab}\%obs. 
 \end{note} 
-\begin{note} 
-When reading the data the  can be used in maketrans- 
-> transformation and in \textcolor{blue}{reject->} option and \textcolor{blue}{filter->} option, and the variable dtab\%obs refers to 
-the number of observation in resulting data object. The variable \textcolor{teal}{Record} gets the number of 
-the read record in the input file, and can be used in \textcolor{blue}{maketrans->} transformations and in 
-\textcolor{blue}{reject->} and \textcolor{blue}{filter->} options. If \textcolor{blue}{subdata->} option is given, variable Subreject gets 
-the number of record in the sub file, and it can be used in \textcolor{blue}{submaketrans->} transformations 
-and in \textcolor{blue}{subreject->} option and in \textcolor{blue}{subfilter->} option. 
-\end{note} 
+ 
 \begin{note} 
 Options \textcolor{blue}{nobs->}100, \textcolor{blue}{reject->}(\textcolor{teal}{Record}.gt.100) and \textcolor{blue}{filter->} 
 (\textcolor{teal}{Record}.le.100) result in the same data object, but when reading a large file, the \textcolor{blue}{nobs->} 
@@ -4318,25 +4327,192 @@ If no observations are rejected, obs variable and \textcolor{teal}{Record} varia
 If virtual memory overflow occurs, see \textcolor{blue}{nobs->} optio. This should not happen easily with the currrent 
 64-bit application. 
 \end{note} 
-\begin{note} 
-After publishing \textcolor{VioletRed}{splitdata}() and \textcolor{VioletRed}{joindata}() functions I hope to get rid of the possibility to 
-read both the upper level and sublevel data from the same file. 
-\end{note} 
  
-\begin{note} 
-Earlier versions contained \textcolor{blue}{trans->} and \textcolor{blue}{subtrans->}options which associated 
-a permanent transformation object with the data object. This feature is now deleted because 
-it may confuse and is not really needed. If tranformations are needed in functions 
-they can always be included using \textcolor{blue}{trans->} . 
-\end{note} 
+ 
+ 
 \singlespacing 
 \begin{example}[dataex]data() generates a new data object by reading data.\\ 
 \label{dataex} 
-\noindent data1=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1}...\textcolor{teal}{x3}),\textcolor{blue}{in->})\\ 
-1,2,3\\ 
-4,5,6\\ 
-7,8,9\\ 
+\noindent {\color{ForestGreen}**This example now contains several combinations of options}\\ 
+{\color{ForestGreen}** and this example is not yet cleaned}\\ 
+{\color{ForestGreen}** it may not contain all possible option comination s}\\ 
+da=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{in->})\\ 
+1,2\\ 
+3,4\\ 
+/  \\ 
+da\%keep;\\ 
+da\%matrix;\\ 
+ 
+da2=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1}...x4),\textcolor{blue}{in->})\\ 
+1,2,3,4\\ 
+5,6,7,8\\ 
+/      \\ 
+da2\%keep;\\ 
+da2\%matrix;\\ 
+\textcolor{VioletRed}{write}('da2.txt',\$,da2\%matrix)\\ 
+\textcolor{VioletRed}{close}('da2.txt')\\ 
+tr=\textcolor{VioletRed}{trans}()\\ 
+x13=\textcolor{teal}{x1}+\textcolor{teal}{x3}\\ 
+/                                            \\ 
+da2=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'da2.txt',\textcolor{blue}{read->}(\textcolor{teal}{x1}...x4),\textcolor{blue}{keep->}(\textcolor{teal}{x2},x4,x13),\textcolor{blue}{maketrans->}tr)\\ 
+da2\%keep;\\ 
+da2\%matrix;\\ 
+\textcolor{VioletRed}{delete\_f}('da2.txt')\\ 
+ 
+\textcolor{VioletRed}{write}('da3.txt',\$,'\textcolor{teal}{x1}...\textcolor{teal}{x3}')\\ 
+\textcolor{VioletRed}{write}('da3.txt',\$,da2\%matrix)\\ 
+\textcolor{VioletRed}{close}('da3.txt')\\ 
+da3=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'da3.txt',\textcolor{blue}{read->})\\ 
+da3\%keep;\\ 
+da3\%matrix;\\ 
+\textcolor{VioletRed}{delete\_f}('da3.txt')\\ 
+ 
+ 
+da=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{keep->}(\textcolor{teal}{x1},\textcolor{teal}{x2},\textcolor{teal}{Regf},\textcolor{teal}{Resid}),\textcolor{blue}{in->})\\ 
+1,2\\ 
+3,4\\ 
+/  \\ 
+da\%keep;\\ 
+da\%matrix;\\ 
+ 
+tr=\textcolor{VioletRed}{trans}()\\ 
+\textcolor{teal}{x1}\#\textcolor{teal}{x2}=\textcolor{teal}{x1}*\textcolor{teal}{x2}\\ 
+\textcolor{teal}{x1}\%\textcolor{teal}{x2}=\textcolor{teal}{x1}+\textcolor{teal}{x2}\\ 
+/                                                                                  \\ 
+dab=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{maketrans->}tr,\textcolor{blue}{in->})\\ 
+1,2\\ 
+3,4\\ 
+/  \\ 
+dab\%keep;\\ 
+dab\%matrix;\\ 
+ 
+trup=\textcolor{VioletRed}{trans}()\\ 
+\textcolor{teal}{x1}\#\textcolor{teal}{y1}=\textcolor{teal}{x1}*\textcolor{teal}{y1}\\ 
+\textcolor{teal}{x2}\%\textcolor{teal}{y2}=\textcolor{teal}{x2}+\textcolor{teal}{y2}\\ 
+/                                                                                  \\ 
+{\color{ForestGreen}**first variable must be \%nobsw}\\ 
+da\%keep(1)=da\%nobsw\\ 
+ 
+dasub=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{y1},\textcolor{teal}{y2}),\textcolor{blue}{in->},\textcolor{blue}{up->}da,\textcolor{blue}{maketrans->}trup)\\ 
+3,4\\ 
+6,7\\ 
+8,9\\ 
+10,11\\ 
 /    \\ 
+dasub\%keep;\\ 
+dasub\%matrix;\\ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{data->}dasub)\\ 
+{\color{ForestGreen}**utilize upper level data}\\ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{data->}dasub,\textcolor{blue}{up->})\\ 
+ 
+ndupl=\textcolor{VioletRed}{trans}()\\ 
+Duplicates=0\\ 
+\textcolor{VioletRed}{if}(da\%obs.eq.\,2.and.Obsw.eq.2)Duplicates=2\\ 
+/                                                                 \\ 
+dupl=\textcolor{VioletRed}{trans}()\\ 
+\textcolor{teal}{x1}\#\textcolor{teal}{y1}=\textcolor{teal}{x1}*\textcolor{teal}{y1}\\ 
+\textcolor{teal}{x2}\%\textcolor{teal}{y2}=\textcolor{teal}{x2}+\textcolor{teal}{y2}\\ 
+\textcolor{VioletRed}{if}(\textcolor{teal}{Duplicate}.gt.0)\textcolor{VioletRed}{then}\\ 
+\textcolor{teal}{x1}\#\textcolor{teal}{y1}=\textcolor{teal}{x1}\#\textcolor{teal}{y1}+\textcolor{teal}{Duplicate}\\ 
+\textcolor{teal}{x1}\%\textcolor{teal}{y1}=\textcolor{teal}{x1}\#\textcolor{teal}{y1}+\textcolor{teal}{Duplicate}\\ 
+\textcolor{VioletRed}{endif}\\ 
+ 
+/                           \\ 
+ 
+da\%keep;\\ 
+da\%matrix;\\ 
+dasub3=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{y1},\textcolor{teal}{y2}),\textcolor{blue}{in->},\textcolor{blue}{up->}da,\textcolor{blue}{maketrans->}trup)\,{\color{ForestGreen}!,duplicate->(ndupl,dupl))}\\ 
+3,4\\ 
+6,7\\ 
+8,9\\ 
+10,11\\ 
+/    \\ 
+dasub3\%keep;\\ 
+dasub3\%matrix;\\ 
+ 
+da\%keep;\\ 
+da\%matrix;\\ 
+dasub2=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{y1},\textcolor{teal}{y2}),\textcolor{blue}{in->},\textcolor{blue}{up->}da,\textcolor{blue}{duplicate->}(ndupl,dupl))\\ 
+3,4\\ 
+6,7\\ 
+8,9\\ 
+10,11\\ 
+/    \\ 
+da\%matrix;\\ 
+dasub2\%keep;\\ 
+dasub2\%matrix;\\ 
+ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{data->}dasub)\\ 
+{\color{ForestGreen}**utilize upper level data}\\ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{data->}dasub2,\textcolor{blue}{up->})\\ 
+\textcolor{Red}{;return}\\ 
+\textcolor{VioletRed}{write}('dasub.txt',\$,dasub\%matrix)\\ 
+\textcolor{VioletRed}{close}('dasub.txt')\\ 
+{\color{ForestGreen}**this must be redefined because duplication changed nobsw}\\ 
+da=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(da\%nobsw,\textcolor{teal}{x2}),\textcolor{blue}{keep->}(da\%nobsw,\textcolor{teal}{x2},\textcolor{teal}{Regf},\textcolor{teal}{Resid}),\textcolor{blue}{in->})\\ 
+1,2\\ 
+3,4\\ 
+/  \\ 
+da\%keep;\\ 
+da\%matrix;\\ 
+dasub=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{y1},\textcolor{teal}{y2}),\textcolor{blue}{in->}'dasub.txt',\textcolor{blue}{up->}da,\textcolor{blue}{maketrans->}trup,\\ 
+\textcolor{blue}{keep->}(\textcolor{teal}{y1},\textcolor{teal}{y2},@trup\%output,\textcolor{teal}{Regf},\textcolor{teal}{Resid}))\\ 
+dasub\%keep;\\ 
+dasub\%matrix;\\ 
+{\color{ForestGreen}** x2 is now alwasy zero}\\ 
+\textcolor{VioletRed}{regr}(\textcolor{teal}{y1},\textcolor{teal}{x2},\textcolor{blue}{data->}dasub)\\ 
+{\color{ForestGreen}** Regf and Resid are put into the data matrix}\\ 
+dasub\%matrix;\\ 
+ 
+{\color{ForestGreen}** now x2 is picked from the up-data}\\ 
+\textcolor{VioletRed}{regr}(\textcolor{teal}{y1},\textcolor{teal}{x2},\textcolor{blue}{data->}dasub,\textcolor{blue}{up->})\\ 
+dasub\%matrix;\\ 
+\textcolor{VioletRed}{delete\_f}('dasub.txt')\\ 
+ 
+ 
+\textcolor{VioletRed}{write}('data.txt',\$,da\%matrix)\\ 
+\textcolor{VioletRed}{close}('data.txt')\\ 
+dc=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{in->}'data.txt')\\ 
+dc\%matrix;\\ 
+dc=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{in->}'data.txt',\textcolor{blue}{maketrans->}tr)\\ 
+dc\%keep;\\ 
+dc\%matrix;\\ 
+{\color{ForestGreen}** another way to make data}\\ 
+damat=\textcolor{VioletRed}{matrix}(\textcolor{VioletRed}{nrows}(da\%matrix),\textcolor{VioletRed}{ncols}(da\%matrix),\textcolor{blue}{in->}'data.txt')\\ 
+da2=\textcolor{VioletRed}{newdata}(damat,\textcolor{blue}{read->}(\textcolor{teal}{x1}...x4))\\ 
+da2\%matrix;\\ 
+ 
+\textcolor{VioletRed}{delete\_f}('data.txt')\\ 
+ 
+\textcolor{VioletRed}{write}('data.txt','(4f4.0)',da\%matrix)\\ 
+\textcolor{VioletRed}{close}('data.txt')\\ 
+ 
+dc=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{form->}'(2f4.0)',\textcolor{blue}{in->}'data.txt')\\ 
+\textcolor{VioletRed}{delete\_f}('data.txt')\\ 
+dc\%matrix;\\ 
+ 
+\textcolor{VioletRed}{write}('data.bin','\textcolor{teal}{b}',da\%matrix)\\ 
+\textcolor{VioletRed}{close}('data.bin')\\ 
+dc=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{form->}'\textcolor{teal}{b}',\textcolor{blue}{in->}'data.bin')\\ 
+dc\%matrix;\\ 
+dc=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{form->}'\textcolor{teal}{b}',\textcolor{blue}{in->}'data.bin',\textcolor{blue}{maketrans->}tr)\\ 
+dc\%keep;\\ 
+dc\%matrix;\\ 
+\textcolor{VioletRed}{delete\_f}('data.bin')\\ 
+ 
+\textcolor{VioletRed}{write}('data.bin','\textcolor{teal}{B}',da\%matrix)\\ 
+\textcolor{VioletRed}{close}('data.bin')\\ 
+dc=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{form->}'\textcolor{teal}{B}',\textcolor{blue}{in->}'data.bin')\\ 
+dc\%keep;\\ 
+dc\%matrix;\\ 
+ 
+dc=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{form->}'\textcolor{teal}{B}',\textcolor{blue}{in->}'data.bin',\textcolor{blue}{maketrans->}tr)\\ 
+dc\%keep;\\ 
+dc\%matrix;\\ 
+\textcolor{VioletRed}{delete\_f}('data.bin')\\ 
+ 
+\textcolor{Red}{;return}\\ 
+ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -4550,36 +4726,29 @@ in the data.
 \vspace{0.2cm} 
 \subsection{\textcolor{VioletRed}{linkdata}() Links or combines hierarchical DATAs}\index{linkdata()} 
 \label{linkdata} 
-\textcolor{VioletRed}{linkdata}(\textcolor{blue}{data->},\textcolor{blue}{subdata->}) 
+\textcolor{VioletRed}{linkdata}(updata,subdata,...) 
 links hierarchical data sets. Currently linkdata can create also one flat file which can be used in \textcolor{VioletRed}{jlp}() 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{data} \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{DATA} \tabto{7cm} 
+\noindent Args \tabto{3cm} 2-999 \tabto{5cm}  \textcolor{teal}{DATA} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  the upper level data set object 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent \textcolor{blue}{subdata}  \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{DATA} \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  the lower data set object 
+\noindent  \textcolor{teal}{DATA} objects in up to down order. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
 In versions before 20.12.2022 \textcolor{blue}{nobsw->} obtion was needed to tell what is the number 
-of \textcolor{blue}{subdata->} -observations under the current upper level observation. When I made the data format for storing 
+of subdata -observations under the current upper level observation. When I made the data format for storing 
 schedules having the tree structure efficiently, everything became too complicated when allowing any 
-freedom with respect to the nobsw-variable. Thus the nobsw variable in \textcolor{teal}{DATA} \textcolor{teal}{datab} has 
-name \textcolor{teal}{datab}\%nosw and it must be the first variable among the keep-variables of the \textcolor{teal}{DATA}. 
+freedom with respect to the nobsw-variable. Thus the nobsw variable in \textcolor{teal}{DATA} subdata has 
+name subdat\%nosw and it must be the first variable among the keep-variables of the \textcolor{teal}{DATA}. 
 \end{note} 
+ 
 \begin{note} 
-In most cases links between data sets can be either made using sub-options of \textcolor{VioletRed}{data}() 
-function or \textcolor{VioletRed}{linkdata}() function. If there is need to duplicate lower level observations, then 
-this can be currently made only in \textcolor{VioletRed}{data}() function. Also when the data for both the upper 
-level and lower level data are read from the same file, then \textcolor{VioletRed}{data}() function must be used. 
+In most cases links between data sets can be made be making a \textcolor{teal}{DATA} with \textcolor{blue}{up->} option. 
+If there is need to duplicate lower level observations, then 
+this can be currently made only in \textcolor{VioletRed}{data}() function. 
 \end{note} 
 \begin{note} 
 When using linked data in  functions, the values of the upper level variables are 
@@ -4615,7 +4784,7 @@ stand and schedule data can be given in \textcolor{blue}{unit->} option
 \textcolor{teal}{datab}\%keep;\\ 
 {\color{ForestGreen}**link now DATAs}\\ 
 {\color{ForestGreen}** First varaible in the upper level dataa must be dataa\%nobsw}\\ 
-\textcolor{VioletRed}{linkdata}(\textcolor{blue}{data->}\textcolor{teal}{dataa},\textcolor{blue}{subdata->}\textcolor{teal}{datab})\\ 
+\textcolor{VioletRed}{linkdata}(\textcolor{teal}{dataa},\textcolor{teal}{datab})\\ 
 \textcolor{teal}{listb}=;list(\textcolor{teal}{datab}\%?);\\ 
 @listb;\\ 
 {\color{ForestGreen}** when working with subdata the upper level data is feeded in for all observations}\\ 
@@ -4733,7 +4902,7 @@ there are examples of the new data format after \textcolor{VioletRed}{splitdata}
 xdata=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'xdat.txt',\textcolor{blue}{read->}(npv\#0,npv\#5,income1...income5),\textcolor{blue}{time->})\\ 
 \textcolor{VioletRed}{stat}()\\ 
  
-\textcolor{VioletRed}{linkdata}(\textcolor{blue}{data->}cdata,\textcolor{blue}{subdata->}xdata)\\ 
+\textcolor{VioletRed}{linkdata}(cdata,xdata)\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{up->})\\ 
  
  
@@ -5227,8 +5396,12 @@ then that observation is rejected when computing statistics for that variable.
 \singlespacing 
 \begin{example}[statex]stat() computes minimums, maximums, means and std deviatons\\ 
 \label{statex} 
-\noindent ;if(\textcolor{VioletRed}{type}(data1).ne.\textcolor{teal}{DATA})dataex\\ 
-;if(\textcolor{VioletRed}{type}(data1).ne.\textcolor{teal}{DATA})dataex\\ 
+\noindent data1=\textcolor{VioletRed}{data}(\textcolor{blue}{in->},\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2},\textcolor{teal}{x3}))\\ 
+1,2,3\\ 
+4,6,8\\ 
+3,8,20\\ 
+6,8,9\\ 
+/    \\ 
 \textcolor{VioletRed}{stat}()\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}data1,\textcolor{blue}{sum->}\textcolor{teal}{x2},\textcolor{blue}{mean->},\textcolor{blue}{filter->}(\textcolor{teal}{x3}.le.18.5))\\ 
 li=;list(\textcolor{teal}{x2}\%?);\\ 
@@ -5794,10 +5967,10 @@ used also to teach how the algorithm proceeds.
 \item  Output\%objective= value of the objective function 
 \item  	Output\%rows= the vector the valuef of the constraint rows. 
 \item   Output\%shprice = vector of shadow prices of the rows 
-\item  Output\%xvars= \textcolor{teal}{LIST} of xvariables in the schedules data 
-Output\%xvarsproblem= \textcolor{teal}{LIST} of \textcolor{teal}{x}-variables in the PROB 
-\item  Output\%xsum= Vector of sums of variables in Output\%xvarsproblem 
-\item  Output\%xprice Shadow prices of the variables in Output\%xvarsproblem 
+\item  Output\%varx= \textcolor{teal}{LIST} of xvariables in the schedules data 
+Output\%varxproblem= \textcolor{teal}{LIST} of \textcolor{teal}{x}-variables in the PROB 
+\item  Output\%xsum= Vector of sums of variables in Output\%varxproblem 
+\item  Output\%xprice Shadow prices of the variables in Output\%varxproblem 
 \item   Output\%xsumint The sums of \textcolor{teal}{x}-variables in the integer approximation, generated if \textcolor{blue}{integer->} is present 
 \end{itemize} 
 \end{changemargin} 
@@ -5813,7 +5986,7 @@ Output\%xvarsproblem= \textcolor{teal}{LIST} of \textcolor{teal}{x}-variables in
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{data} \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{DATA} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Unit data when schedules data is linked to it with \textcolor{VioletRed}{linkdata}() or schedules data when 
+\noindent  Schedules data (Sic!) linked to it with unitdata if ubit-> is not given 
 \textcolor{blue}{unit->} gives the  unit variable which changes when unit changes. 
 	! 
 \end{changemargin} 
@@ -5876,6 +6049,13 @@ A possible rule is fast\%->(\textcolor{VioletRed}{min}(Fast\%+5-(\textcolor{teal
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{blue}{maxrounds}\% \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  maximum number of rounds over all units. Default \textcolor{blue}{maxrounds->}3000 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{report} \tabto{3cm} -1|1 \tabto{5cm}   \textcolor{teal}{CHAR}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  the results are written to the file spesified. 
@@ -5904,7 +6084,9 @@ The default is \textcolor{blue}{refac->}1000.
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
- 
+\begin{note} 
+The \textcolor{blue}{data->} must now always refer to schdedules data (for several reasons) 
+\end{note} 
 \begin{note} 
 In small problems dCPU, i.e. increase of used CPU time is not very accurate. 
 \end{note} 
@@ -5918,9 +6100,9 @@ below
 \label{jlpex} 
 \noindent cdata=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'cdat.txt',\textcolor{blue}{read->}(cdata\%nobsw,site))\\ 
 \textcolor{VioletRed}{stat}()\\ 
-xdata=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'xdat.txt',\textcolor{blue}{read->}(npv\#0,npv\#5,income1...income5))\\ 
+xdata=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'xdat.txt',\textcolor{blue}{read->}(npv\#0,npv\#5,income1...income5),\textcolor{blue}{up->}cdata)\\ 
 \textcolor{VioletRed}{stat}()\\ 
-\textcolor{VioletRed}{linkdata}(\textcolor{blue}{data->}cdata,\textcolor{blue}{subdata->}xdata)\\ 
+ 
  
 \textcolor{teal}{proba}=\textcolor{VioletRed}{problem}();\\ 
 {\color{ForestGreen}** In this problem the 4\% net present value at the beginning is maximixe}\\ 
@@ -5934,7 +6116,7 @@ npv\#5-npv\#0>0\\
 plist=;list(\textcolor{teal}{proba}\%?);\\ 
 @plist;\\ 
  
-\textcolor{teal}{jlpa}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{proba},\textcolor{blue}{data->}cdata,\textcolor{blue}{showdomain->}('site.le.3','site.gt.3'))\\ 
+\textcolor{teal}{jlpa}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{proba},\textcolor{blue}{data->}xdata,\textcolor{blue}{showdomain->}('site.le.3','site.gt.3'))\\ 
 {\color{ForestGreen}** sums of x-variables are stored into the same variables with jlpa\%prefix}\\ 
 \textcolor{teal}{jlpa}\%income5;\\ 
 \textcolor{teal}{jlpa}\%income5[site.le.3];\\ 
@@ -5973,7 +6155,7 @@ npv\#5-npv\#0>0\\
 /            \\ 
 plistb=;list(\textcolor{teal}{probb}\%?);\\ 
 {\color{ForestGreen}*** these  could be printed with @plistb;}\\ 
-\textcolor{teal}{jlpb}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{probb},\textcolor{blue}{data->}cdata,\textcolor{blue}{showdomain->}'3.lt.site')\\ 
+\textcolor{teal}{jlpb}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{probb},\textcolor{blue}{data->}xdata,\textcolor{blue}{showdomain->}'3.lt.site')\\ 
 \textcolor{teal}{jlpb}\%income5;\\ 
 \textcolor{teal}{jlpb}\%income5[site.gt.3];\\ 
 \textcolor{teal}{jlpb}\%income5[3.lt.site];\\ 
@@ -5981,185 +6163,7 @@ plistb=;list(\textcolor{teal}{probb}\%?);\\
 probc=\textcolor{VioletRed}{problem}();\\ 
 npv\#0==max\\ 
 /         \\ 
-jlpc=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}probc,\textcolor{blue}{data->}cdata,\textcolor{blue}{showdomain->}'3.lt.site')\\ 
-\end{example} 
-\vspace{-7mm} \rule{5cm}{0.1pt} 
-\onehalfspacing 
-\subsection{Factory opimization} 
-\label{factopt} 
-In factory optimization problems logs are transported to factories. The utility of tansported logs is defined 
-introduced into the problem using terms which are TABLE objects. A TABLE consists of two \textcolor{teal}{LIST} objects. 
-The first \textcolor{teal}{LIST} in factory optimization gives log types transported to to factories which are stored in the second \textcolor{teal}{LIST}. 
-The properties of the factories in one factory list are defined with \textcolor{VioletRed}{datawcase}() function, which produces a standard \textcolor{teal}{DATA} 
-object with an additional link to the 
-\textcolor{teal}{LIST} of cases, which must the same as or equal to the first argument of \textcolor{VioletRed}{table}() function. 
-Associated with 
-with each TABLE term in a problem there is a \textcolor{teal}{MATRIX} with name table\%coef 
-(table is the name of the table) having as many rows as there are 
-elements in the log type 
-\textcolor{teal}{LIST} in the TABLE term and as many columns as there are in the factory \textcolor{teal}{LIST} of the TABLE. 
-An element of the matrix correponding to a log type and a factory tells what is the utility obtained when 
-one unit of the log type is tranported to the factory. 
-There is a transformation which describes how the utility coefficients of all TABLE terms can be computed from the 
-unit variables and the factory variables defined with the \textcolor{VioletRed}{datawcase}() function. 
-Constraints can contain variables for variables telling how much of a given log type is trasnported 
-to a given factory. Typically these constraints describe the capacities of factories. 
-These variables look like  logtype\%2\%factory. 
-There are two factory optimization options: 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent \textcolor{blue}{knn} \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{REAL}  \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  When considering to which factory a log type is transported, only knn 
-factories according to values in table\%coef are considered. 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent utiltran \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  Transformation telling how table\%coef are computed for each unit. 
-\end {changemargin} 
-\hrule 
-\vspace{0.2cm} 
-\begin{note} 
-If a given factory has no capacity for a given log type, no capacity constrain is needed. 
-The zero capacity is indicated by giving a negative utility in \%coef matrix for a log type for which 
-there is no capacity. 
-\end{note} 
-\singlespacing 
-\begin{example}[factopt]Factory optimization (in preparation)\\ 
-\label{factopt} 
-\noindent {\color{ForestGreen}**	The following example shows how the factory optimization will work.}\\ 
- 
-{\color{ForestGreen}** There are 10 stands}\\ 
-{\color{ForestGreen}** coordinates of stands in 100 x 100 area}\\ 
-loc=\textcolor{VioletRed}{matrix}(10,2);\\ 
-loc=\textcolor{VioletRed}{ran}();\\ 
-loc=100*loc;\\ 
-{\color{ForestGreen}** numbers of schedules in each stand}\\ 
-ns=\textcolor{VioletRed}{matrix}(10,\textcolor{blue}{in->})\\ 
-3                                                          \\ 
-4                                                          \\ 
-3                                                          \\ 
-4                                                          \\ 
-3                                                          \\ 
-2                                                          \\ 
-4                                                          \\ 
-3                                                          \\ 
-3                                                          \\ 
-3                                                          \\ 
-/                                                          \\ 
- 
-{\color{ForestGreen}** x and y are coordinates of of stands}\\ 
-cdata=\textcolor{VioletRed}{newdata}(ns,loc,\textcolor{blue}{read->}(cdata\%nobsw,\textcolor{teal}{x},\textcolor{teal}{y}))\\ 
-\textcolor{VioletRed}{stat}(\textcolor{blue}{sum->})\\ 
- 
-{\color{ForestGreen}** NS is total number of schedules generated randomly fro 5 periods}\\ 
-NS=cdata\%nobsw\%sum;\\ 
-xmat0=\textcolor{VioletRed}{matrix}(NS)\\ 
-xmat0=\textcolor{VioletRed}{ran}()\\ 
-xmat0=10*xmat0\\ 
- 
-tr=\textcolor{VioletRed}{trans}()\\ 
-\textcolor{Red}{;do}(i,2,5)\\ 
-\textcolor{teal}{x}"i"=\textcolor{teal}{x}"i-1"+\textcolor{VioletRed}{ran}()\\ 
-\textcolor{Red}{;enddo}\\ 
-\textcolor{Red}{;do}(i,1,5)\\ 
-sawlog"i"=0.2*\textcolor{teal}{x}"i"\\ 
-pulplog"i"=0.3*sawlog"i"\\ 
-\textcolor{Red}{;enddo}\\ 
-/                      \\ 
- 
-xdata=\textcolor{VioletRed}{newdata}(xmat0,\textcolor{blue}{read->}\textcolor{teal}{x1},\textcolor{blue}{maketrans->}tr)\\ 
-\textcolor{VioletRed}{stat}()\\ 
-\textcolor{VioletRed}{linkdata}(\textcolor{blue}{data->}cdata,\textcolor{blue}{subdata->}xdata)\\ 
- 
-{\color{ForestGreen}** sawmill properties, X and Y are coordinates of sawmills}\\ 
-sawdata=\textcolor{VioletRed}{datawcase}(\textcolor{blue}{read->}(X,Y,capacity1...capacity5,util1...util5))\\ 
-S1,20,30,5,6,7,8,6,10,10,11,10,10,12\\ 
-S2,70,60,6,6,7,8,6,10,12,13,13,11,15\\ 
-S3,10,70,5,6,7,8,6,10,13,14,14,11,13\\ 
-/                                   \\ 
- 
-{\color{ForestGreen}**pulpmill properties}\\ 
-pulpdata=\textcolor{VioletRed}{datawcase}(\textcolor{blue}{read->}(X,Y,capacity1...capacity5,util1...util5))\\ 
-P1,40,30,2,3,2,4,3,4,3,3,4,4,4\\ 
-P2,80,70,2,3,2,4,3,6,4,4,5,5,5\\ 
-P3,20,90,2,3,2,4,3,6,5,5,6,6,4\\ 
-/                             \\ 
- 
-{\color{ForestGreen}** sawlogs for different periods}\\ 
-sawlogs=\textcolor{VioletRed}{list}(sawlog1...sawlog5);\\ 
-pulplogs=\textcolor{VioletRed}{list}(pulplog1...pulplog5);\\ 
- 
-{\color{ForestGreen}** utility obtained from sawmills}\\ 
-sutil=\textcolor{VioletRed}{table}(sawdata\%case,sawlogs);\\ 
- 
-{\color{ForestGreen}** matrix to which utilities are computed}\\ 
-sutil\%coef=\textcolor{VioletRed}{matrix}(\textcolor{VioletRed}{len}(sawdata\%case),\textcolor{VioletRed}{len}(sawlogs))\\ 
- 
-{\color{ForestGreen}** utility from pulpmills}\\ 
-putil=\textcolor{VioletRed}{table}(pulpdata\%case,pulplogs);\\ 
- 
-{\color{ForestGreen}** matrix to which utilities are computed}\\ 
-putil\%coef=\textcolor{VioletRed}{matrix}(\textcolor{VioletRed}{len}(pulpdata\%case),\textcolor{VioletRed}{len}(pulplogs))\\ 
- 
-scost=0.1\,\,{\color{ForestGreen}! cost of transporting sawlogs, these could be period dependent}\\ 
-pcost=0.2\,\,{\color{ForestGreen}! cost of transporting pulp logs}\\ 
- 
-util=\textcolor{VioletRed}{trans}()\\ 
-\textcolor{Red}{;do}(i,1,\textcolor{VioletRed}{len}(sawdata\%case))\\ 
-\textcolor{Red}{;do}(j,1,\textcolor{VioletRed}{len}(sawlogs))\\ 
- 
-{\color{ForestGreen}*sawdata("i",util"j") is value of variable util"j" for observation i in saw mill data}\\ 
-sutil\%\textcolor{VioletRed}{coef}("i","j")=sawdata("i",util"j")-\\ 
-scost*\textcolor{VioletRed}{sqrt}((sawdata("i",X)-\textcolor{teal}{x})***2+(sawdata("i",Y)-\textcolor{teal}{y})***2)\\ 
- 
-\textcolor{Red}{;enddo}\\ 
-\textcolor{Red}{;enddo}\\ 
- 
-\textcolor{Red}{;do}(i,1,\textcolor{VioletRed}{len}(pulpdata\%case))\\ 
-\textcolor{Red}{;do}(j,1,\textcolor{VioletRed}{len}(pulplogs))\\ 
- 
-putil\%\textcolor{VioletRed}{coef}("i","j")=pulpdata("i",util"j")-\\ 
-pcost*\textcolor{VioletRed}{sqrt}((pulpdata("i",X)-\textcolor{teal}{x})***2+(pulpdata("i",Y)-\textcolor{teal}{y})***2)\\ 
- 
-\textcolor{Red}{;enddo}\\ 
-\textcolor{Red}{;enddo}\\ 
-/                      \\ 
- 
-fprob=\textcolor{VioletRed}{problem}()\\ 
-{\color{ForestGreen}** utility from sawmills + utility from pulpmills}\\ 
-sutil+putil==max\\ 
- 
-\textcolor{Red}{;do}(j,1,\textcolor{VioletRed}{len}(sawlogs))\\ 
-\textcolor{Red}{;do}(i,1,\textcolor{VioletRed}{len}(sawdata\%case))\\ 
- 
-{\color{ForestGreen}* capacity constraints}\\ 
-;if(sawdata("i",capacity"j").gt.0)@sawlogs("j")\%2\%@sawdata\%case("i")<sawdata("i",capacity"j")\\ 
- 
-\textcolor{Red}{;enddo}\\ 
-\textcolor{Red}{;enddo}\\ 
- 
-\textcolor{Red}{;do}(j,1,\textcolor{VioletRed}{len}(pulplogs))\\ 
-\textcolor{Red}{;do}(i,1,\textcolor{VioletRed}{len}(pulpdata\%case))\\ 
- 
-;if(pulpdata("i",capacity"j").gt.0)@pulplogs("j")\%2\%@pulpdata\%case("i")<pulpdata("i",capacity"j")\\ 
- 
-\textcolor{Red}{;enddo}\\ 
-\textcolor{Red}{;enddo}\\ 
-/                      \\ 
- 
-li=;list(fprob\%?);\\ 
-@li;\\ 
-f=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}fprob,\textcolor{blue}{data->}cdata,\textcolor{blue}{utiltrans->}util,\textcolor{blue}{knn->}2)\\ 
-\textcolor{Red}{;return}\\ 
- 
- 
- 
- 
+jlpc=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}probc,\textcolor{blue}{data->}xdata,\textcolor{blue}{showdomain->}'3.lt.site')\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -6845,9 +6849,10 @@ xy=\textcolor{teal}{x}*\textcolor{teal}{y}\\
 \textcolor{teal}{x2}=\textcolor{teal}{x}*\textcolor{teal}{x}\\ 
 \textcolor{VioletRed}{enddo}\\ 
 /                           \\ 
+{\color{ForestGreen}*** This example takes some time}\\ 
 \textcolor{VioletRed}{call}(\textcolor{teal}{transa})\\ 
 fi=\textcolor{VioletRed}{plot3d}(mat,\textcolor{blue}{sorted->},\textcolor{blue}{continue->}fcont)\\ 
-{\color{ForestGreen}** This is commneted becaseu it takes some time}\\ 
+{\color{ForestGreen}** This is commneted because it takes some time}\\ 
 {\color{ForestGreen}** fi=plot3d(mat2,sorted->,continue->fcont)}\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 

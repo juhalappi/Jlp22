@@ -31,7 +31,7 @@ module jomod
 	logical, dimension(j_noptions) :: j_codeoption_=.false.
  
  
-	parameter (j_nobjecttypes1=j_nobjecttypes_+o1_nobjecttypes)
+	parameter (j_nobjecttypes1=j_notypes+o1_nobjecttypes)
 	parameter (j_nobjecttypes2=j_nobjecttypes1+o2_nobjecttypes)
 	parameter (j_nobjecttypes3=j_nobjecttypes2+o3_nobjecttypes)
 	parameter (j_nobjecttypes=j_nobjecttypes3)

@@ -7,7 +7,7 @@ module jomod
 	use o1_mod, only: o1_noptions
 	use o2_mod, only: o2_noptions
 	use o3_mod, only: o3_noptions
-	use jmod, only: j_nobjecttypes_
+	use jmod, only: j_notypes
 	use o1_mod, only: o1_nobjecttypes
 	use o2_mod, only: o2_nobjecttypes
 	use o3_mod, only: o3_nobjecttypes
@@ -56,7 +56,7 @@ module jomod
 	logical, dimension(j_noptions) :: j_codeoption_=.false.
  
  
-	parameter (j_nobjecttypes1=j_nobjecttypes_+o1_nobjecttypes)
+	parameter (j_nobjecttypes1=j_notypes+o1_nobjecttypes)
 	parameter (j_nobjecttypes2=j_nobjecttypes1+o2_nobjecttypes)
 	parameter (j_nobjecttypes3=j_nobjecttypes2+o3_nobjecttypes)
 	parameter (j_nobjecttypes=j_nobjecttypes3)

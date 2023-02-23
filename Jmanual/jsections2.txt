@@ -15,7 +15,7 @@ section changes
 
 section intro
 subsection intro1
-!subsection system
+subsection system
 subsection intro2
 
 section git
@@ -43,6 +43,8 @@ section cominout
 subsection inpuline
 subsection inpupara
 subsection short
+subsection systemcom
+subsection cls
 subsection inpuprog
 subsection inpuad
 subsection inpureplace
@@ -371,7 +373,7 @@ subsection problemo PROBLEM object
 subsection problem problem(): defining a a PROBLEM object
 !subsection problem2 problem(): defining a a PROBLEM object
 subsection jlp jlp(): solving a PROBLEM with schedules data
-subsection factopt 
+!!subsection factopt 
 subsection jlpz jlpz(): solving an ordinary Lp-problem
 subsection jlpcoef  
 !!subsection weights weights() weights of schedules

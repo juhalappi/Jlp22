@@ -113,12 +113,12 @@ subroutine j_print(iv,ofile,oformat,maxlines,debug)
 		return
 	endif !if(debug)    102
  
-	if(iv.le.j_namedv)then
+	if(iv.le.j_named)then
 		call j_getline(j_ivnames,iv,name,le)
-	else !if(iv.le.j_namedv)then
+	else !if(iv.le.j_named)then
 		name(1:1)=' ';le=1
-		!		write(6,*)'<55>',iv,j_namedv,j_nv
-	end if !if(iv.le.j_namedv)    116
+		!		write(6,*)'<55>',iv,j_named,j_nv
+	end if !if(iv.le.j_named)    116
  
 	write(6,*)'tasiv,otype',iv,j_otype(iv)
 	if(iv.le.j_nv)then
@@ -156,7 +156,7 @@ subroutine j_print(iv,ofile,oformat,maxlines,debug)
 				write(nu_,*)name(1:le),' is text object with ',j_o(iv)%i(0),' lines:'
 			endif !if(nu_.eq.6)    154
 			if(iv.eq.j_ivnames)then
-				do i=1,j_namedv
+				do i=1,j_named
 					call j_getline(j_ivnames,i,name,le)
 					if(j_err)return
 					if(le.lt.34)name(le+1:34)=' '
@@ -166,8 +166,8 @@ subroutine j_print(iv,ofile,oformat,maxlines,debug)
 					if(allocated(j_o(i)%r))isiz=isiz+size(j_o(i)%r)
 					if(allocated(j_o(i)%ch))isiz=isiz+size(j_o(i)%ch)/4
 					if(allocated(j_o(i)%d))isiz=isiz+2*size(j_o(i)%d)
-					write(nu_,*)int2(i),' ',name(1:max(34,le)),' type= ',j_objecttypes(j_otype(i))(1:8),' size=',isiz
-				end do !i=1,j_namedv    159
+					write(nu_,*)int2(i),' ',name(1:max(34,le)),' type= ',j_otypes(j_otype(i))(1:8),' size=',isiz
+				end do !i=1,j_named    159
 			else !if(iv.eq.j_ivnames)then
 				if(maxlines.gt.j_o(iv)%i(0))then
 					call j_writetext(nu_,iv,0)
@@ -321,12 +321,12 @@ subroutine j_print(iv,ofile,oformat,maxlines,debug)
 	else !if(iotype.gt.j_ipreal)then
 		if(j_otype(iv).eq.j_ipreal)then
 			!iv_ = j_o(iob)%i(io+1+j)
-			if(iv.le.j_namedv)then
+			if(iv.le.j_named)then
  
 				write(nu_,*)name(1:le),'=',j_v(iv)
-			else !if(iv.le.j_namedv)then
+			else !if(iv.le.j_named)then
 				write(nu_,*)j_v(iv), 'is constant'
-			endif !if(iv.le.j_namedv)    324
+			endif !if(iv.le.j_named)    324
 		end if !if(j_otype(iv).eq.j_ipreal)    322
 	end if !if(iotype.gt.j_ipreal)    129
 	!	end do !do j=1,narg
@@ -574,11 +574,11 @@ logical function j_isdollar(iv)
 	j_isdollar=.false.
  
  
-	if(iv.le.j_namedv)then
+	if(iv.le.j_named)then
 		j_isdollar=j_o(j_ivnames)%ch(j_o(ivnames)%i(iv)).eq.'$'
  
  
-	endif !if(iv.le.j_namedv)    577
+	endif !if(iv.le.j_named)    577
  
 	! endif
 	return
@@ -656,15 +656,15 @@ subroutine j_startfunction(iob,io,iptype,narg,arg,ivout,delout,iptype2,minarg,ma
 				if(j_otype(arg(i_))/=iptype) then
 					irgtype=j_otype(arg(i_))
 					!	write(6,*)'iarg',i_,irgtype,iptype
-					if(arg(i_).le.j_namedv)then
+					if(arg(i_).le.j_named)then
 						call j_getline(j_ivnames,arg(i_),name,le)
-					elseif(arg(i_).le.j_nv)then !if(arg(i_).le.j_namedv)then
+					elseif(arg(i_).le.j_nv)then !if(arg(i_).le.j_named)then
 						name='temporary variable'
 						le=18
-					else !if(arg(i_).le.j_namedv)then
+					else !if(arg(i_).le.j_named)then
 						name='constant'
 						le=8
-					endif !if(arg(i_).le.j_namedv)    659
+					endif !if(arg(i_).le.j_named)    659
 					if(j_err)return
 					if(yes) write(6,*)j_function_name(ifunc,j_lenfunctions(ifunc)),' should have ',&
 						j_objecttype_name(iptype,j_lenobjecttypes(iptype)),' arguments '
@@ -698,11 +698,11 @@ subroutine j_startfunction(iob,io,iptype,narg,arg,ivout,delout,iptype2,minarg,ma
 		endif !if(narg.gt.maxarg)    692
 	endif !if(present(maxarg))    691
 	! call j_getoption_index(iob,io,j_mtitle,-1,1,j_ipchar,.true.,noptarg,j_optarg0)
-	! if(j_optarg0(1).gt.0.and.ivout.le.j_namedv.and.ivout.ne.j_ivresult)then
+	! if(j_optarg0(1).gt.0.and.ivout.le.j_named.and.ivout.ne.j_ivresult)then
 	! j_otitle(ivout)=j_optarg0(1)
-	! else !if(j_optarg0(1).gt.0.and.ivout.le.j_namedv.and.ivout.ne.j_ivresult)then
+	! else !if(j_optarg0(1).gt.0.and.ivout.le.j_named.and.ivout.ne.j_ivresult)then
 	! if(ivout.le.j_mxnamedv)j_otitle(ivout)=0
-	! endif !if(j_optarg0(1).gt.0.and.ivout.le.j_namedv.and.ivout.ne.j_ivresult)then
+	! endif !if(j_optarg0(1).gt.0.and.ivout.le.j_named.and.ivout.ne.j_ivresult)then
  
 	j_iob(ivout)=iob
 	j_io(ivout)=io
@@ -924,23 +924,23 @@ subroutine j_getoption_index(iob,io,moption,minarg,maxarg,iptype,needsarg,noptar
 		!if(present(istart))istart=j_linkoption(iob,io,moption)
 		optarg => j_o(iob)%i(ili+1:ili+noptarg)
 		if(iptype.gt.0.or.iptype.eq.-1)then
-			! if(iptype.gt.j_nobjecttypes_)then
+			! if(iptype.gt.j_notypes)then
 			! write(6,*)'*j* argument iptype has illegal value ',iptype,' in option ',j_options( moption)
 			! j_err=.true.;return
-			! endif !if(iptype.lt.0.or.iptype.gt.j_nobjecttypes_)    927
+			! endif !if(iptype.lt.0.or.iptype.gt.j_notypes)    927
 			do i=1,noptarg
 				if(iptype.eq.-1)then
 					if(j_otype(optarg(i)).ne.j_ipreal)then
 						call j_getname(optarg(i))
-						write(6,*)'*w* ',j_oname(1:j_loname),' is made REAL it was ',j_objecttypes(j_otype(optarg(i)))
+						write(6,*)'*w* ',j_oname(1:j_loname),' is made REAL it was ',j_otypes(j_otype(optarg(i)))
 						call j_del(optarg(i))
 					endif !if(j_otype(optarg(i)).ne.j_ipreal)    933
 				elseif(j_otype(optarg(i)).ne.iptype)then
 					call j_getname(optarg(i))
 					leno=len_trim(j_options( moption))
 					write(6,*)'*arguments of ',j_options( moption)(1:leno),'-> must be ',&
-						j_objecttypes(iptype)
-					write(6,*)j_oname(1:j_loname),' is ',j_objecttypes(j_otype(optarg(i)))
+						j_otypes(iptype)
+					write(6,*)j_oname(1:j_loname),' is ',j_otypes(j_otype(optarg(i)))
 					if(iptype.eq.j_ipreal)write(6,*)'*note objects can be made REAL using delete_o() function'
 					j_err=.true.
 				endif !if(iptype.eq.-1)    932
@@ -1445,19 +1445,19 @@ function j_getobject(ivin,name,itype,useold,silent) ! %%object get old or new ob
 	endif !if(ivout.gt.0)   1437
  
  
-	if(j_namedv.ge.j_mxnamedv) then
+	if(j_named.ge.j_mxnamedv) then
 		!21040522 oli: stop 'increase max number of named vars in j.par'
 		write(6,*)'****increase max number of named vars ',j_mxnamedv,' in j.par and restart j'
 		j_err=.true.
 		return
-	endif !if(j_namedv.ge.j_mxnamedv)   1448
-	j_namedv=j_namedv+1
-	ivout=j_namedv
+	endif !if(j_named.ge.j_mxnamedv)   1448
+	j_named=j_named+1
+	ivout=j_named
 	!	if(ivin.le.0)then
 	! if(.not.(j_isletter(name(li1:li1)).or.name(li1:li1).eq."'"))then
 	! write(6,*)'**(2)illegal variable name (2): ',name(li1:);j_err=.true.
  
-	! j_namedv=j_namedv-1
+	! j_named=j_named-1
 	! return
 	! end if !if(.not.(j_isletter(name(li1:li1)).or.name(li1:li1).eq."'"   1576
 	!20140522 tarkistetaan, ettei mja == jokin funktio
@@ -1465,7 +1465,7 @@ function j_getobject(ivin,name,itype,useold,silent) ! %%object get old or new ob
 	if(i_>0) then
 		write(6,*)'**error: ',name2(1:le),' is reserved for function'
 		j_err=.true.
-		j_namedv=j_namedv-1
+		j_named=j_named-1
 		return
 	endif !if(i_>0)   1465
 	if(itype.eq.j_ipchar.and.name2(1:1).ne."'")then
@@ -1482,7 +1482,7 @@ function j_getobject(ivin,name,itype,useold,silent) ! %%object get old or new ob
 	if(i_>0) then
 		write(6,*)'**error: ',name2(1:le),' is reserved for function'
 		j_err=.true.
-		j_namedv=j_namedv-1
+		j_named=j_named-1
 		return
 	endif !if(i_>0)   1482
 	! call j_puttext(j_ivnames,name2(1:le))
@@ -1540,14 +1540,14 @@ subroutine j_getobjectnam(name,itype,ivout) ! %%object get old or new object, UU
 	!write(6,*)'<522> ivout ',ivout
  
 	!20140522 oli: if(namedv.ge.mxnamedv)stop 'increase max number of named vars in j.par'
-	if(j_namedv.ge.j_mxnamedv) then
+	if(j_named.ge.j_mxnamedv) then
 		!21040522 oli: stop 'increase max number of named vars in j.par'
 		write(6,*)'****increase max number of named vars ',j_mxnamedv,' in j.par and restart j'
 		j_err=.true.
 		return
-	endif !if(j_namedv.ge.j_mxnamedv)   1543
-	j_namedv=j_namedv+1
-	ivout=j_namedv
+	endif !if(j_named.ge.j_mxnamedv)   1543
+	j_named=j_named+1
+	ivout=j_named
 	le=len(name)
 	if(itype.eq.j_ipchar)then
 		if(ishipsu)then
@@ -1564,14 +1564,14 @@ subroutine j_getobjectnam(name,itype,ivout) ! %%object get old or new object, UU
 		if(i_>0) then
 			write(6,*)'**error: ',name,' is reserved for function'
 			j_err=.true.
-			j_namedv=j_namedv-1
+			j_named=j_named-1
 			return
 		endif !if(i_>0)   1564
 		do li1=1,le
 			if(.not.(j_isletter(name(li1:li1)).or.name(li1:li1).eq."'"))then
 				write(6,*)'*illegal symbol ',name(li1:li1),' in variable name (3): /',name//'/';j_err=.true.
  
-				j_namedv=j_namedv-1
+				j_named=j_named-1
 				return
 			end if !if(.not.(j_isletter(name(li1:li1)).or.name(li1:li1).eq."'"   1571
 		enddo !li1=1,le   1570
@@ -1924,7 +1924,7 @@ subroutine j_i8i4(i8,i4)
 endsubroutine
  
 !20150812(arg1<->arg2) oli: subroutine defmatrix(name,iv,ndim1,ndim2,itype,ivout) ! defines a matrix object
-integer function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! defines a matrix object %%matrix
+integer function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point) ! defines a matrix object %%matrix
 	integer, intent(in):: iv,itype
 	integer,intent(in) ::ndim1,ndim2
 	character*(*), intent(in):: name
@@ -1932,6 +1932,7 @@ integer function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! defi
 	logical,intent(in),optional::nod
 	integer,intent(in),optional::rowtot
 	integer*8::ndim18,ndim28,rowtot8
+	double precision,dimension(:),optional,intent(out),pointer::point
 	logical sing,no
 	ndim18=ndim1
 	ndim28=ndim2
@@ -1945,11 +1946,14 @@ integer function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! defi
 	rowtot8=ndim18
 	if(present(rowtot))rowtot8=rowtot
 	!	write(6,*)'rowtot',rowtot8
-	j_defmatrix=j_defmatrix8(iv,name,ndim18,ndim28,itype,single=sing,nod=no,rowtot=rowtot8)
- 
+	if(present(point))then
+		j_defmatrix=j_defmatrix8(iv,name,ndim18,ndim28,itype,single=sing,nod=no,rowtot=rowtot8,point=point)
+	else
+		j_defmatrix=j_defmatrix8(iv,name,ndim18,ndim28,itype,single=sing,nod=no,rowtot=rowtot8)
+	endif !if(present(point))   1949
 end function
  
-integer function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! defines a matrix object %%matrix
+integer function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point) ! defines a matrix object %%matrix
 	integer, intent(in):: iv,itype
 	integer*8,intent(in) ::ndim1,ndim2
 	integer*8:: nel
@@ -1957,6 +1961,7 @@ integer function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! def
 	logical,intent(in),optional::single
 	logical,intent(in),optional::nod
 	integer*8,intent(in),optional::rowtot
+	double precision,dimension(:),optional,intent(out),pointer::point
 	integer*8 ::rowtot8
 	!	logical expand !can the matrix be expanded
 	logical sing,no
@@ -1966,7 +1971,7 @@ integer function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! def
 		write(6,*)'*j* defmatrix: j_err=true at start '
 		j_err=.true.
 		return
-	endif !if(j_err)   1965
+	endif !if(j_err)   1970
 	no=.false.
 	if(present(nod))no=nod
 	sing=.false.
@@ -1984,23 +1989,23 @@ integer function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! def
 		write(6,*)'*j* defmatrix: illegal dimensions: ',ndim1,ndim2,' for ',j_oname(1:j_loname)
 		j_err=.true.
 		return
-	endif !if(ndim1.le.0.or.ndim2.le.0)   1982
+	endif !if(ndim1.le.0.or.ndim2.le.0)   1987
 	!if(ndim1.eq.1.and.ndim2.eq.1)call j_getobject(iv,name,j_ipreal,ivout)
 	if(itype.eq.j_matdiag.and.ndim1.ne.ndim2)then
 		write(6,*)'*j* diagonal-> and nrows ',ndim1,' .ne. ncols ',ndim2
 		j_err=.true.;return
  
-	endif !if(itype.eq.j_matdiag.and.ndim1.ne.ndim2)   1989
+	endif !if(itype.eq.j_matdiag.and.ndim1.ne.ndim2)   1994
 	!20150812(arg1<->arg2) oli: 	call getv(name,iv,ipmatrix,ivout) !call getv2(ipmatrix,iv,ior)
 	! if(sing)then
 	! call j_getobject(iv,name,j_ipmatrix0,ivout)
 	! else !if(sing)then
-	!write(6,*)'<34defm,j_namedv',j_namedv
+	!write(6,*)'<34defm,j_named',j_named
 	!	write(6,*)'defm ',iv,name,'_je_err ',j_err
  
 	!	write(6,*)'deaft ',iv,name,'_je_err ',j_err,'ivout',ivout
 	!	write(6,*)'defm ',iv,name,'_je_err ',j_err,ivout
-	!write(6,*)'<34defmivout,namedv',ivout,j_namedv
+	!write(6,*)'<34defmivout,namedv',ivout,j_named
 	!endif !if(sing)then
 	!20140522 virheenkäsittely
 	!20141113 j_err täydennys
@@ -2009,7 +2014,7 @@ integer function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! def
 		write(6,*) '*j* defmatrix j_err=true in getv'
 		j_err=.true.
 		return
-	endif !if(j_err)   2008
+	endif !if(j_err)   2013
 	if(sing)j_otype(ivout)=j_ipmatrixs
 	! write(6,*)name,lines,leng,ivout,ior
 	!ndim1,ndim2,ndim1*ndim2
@@ -2059,7 +2064,8 @@ integer function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! def
 				!			write(6,*)'ndim1*ndim2',ndim1*ndim2
 				allocate( j_o(ivout)%d(1:rowtot8*ndim2))
 				j_o(ivout)%d=j_0
-			endif !if(sing)   2054
+				if(present(point))point=>j_o(ivout)%d(1:rowtot8*ndim2)
+			endif !if(sing)   2059
 			!write(6,*)'<5477',ndim1,ndim2,ivout,j_o(ivout)%d
 		else if(itype.eq.j_matclass)then !if(itype.eq.j_matreg.or.itype.eq.j_matdiag)then
 			! if(sing)then
@@ -2090,8 +2096,8 @@ integer function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot) ! def
 			! i(9) the row which is stored after i(10)
 			! i(11) the row which is stored after i(12)
  
-		end if !if(itype.eq.j_matreg.or.itype.eq.j_matdiag.or.itype.eq.j_m   2053
-	endif !if(.not.no)   2050
+		end if !if(itype.eq.j_matreg.or.itype.eq.j_matdiag.or.itype.eq.j_m   2058
+	endif !if(.not.no)   2055
 	j_defmatrix8=ivout
 	!write(6,*)'hdhdhd',j_defmatrix8,j_otype(ivout)
 	return
@@ -2114,7 +2120,21 @@ end function j_defmatrix8 !
 !subroutine j_defdata(iv,ivmat,ivkeep,ivcases,ivprolog,ivmaketrans,ivtrans,& ! %%data
 !		ivepilog,ivvars,ivsub,ivnobsw,ivup,ivobs,ivobsw,ivnobswcum) !%%data
 subroutine j_defdata(iv,ivmat,ivkeep,ivcases) !%%data
-	!module vmod
+ 
+	! j_o(ivup)%i(3)=ivsub;j_o(ivsub)%i(5)=ivup
+	! !j_o(ivdatanow)%i(13)
+	! j_o(ivsub)%i(7)=ivobswsub
+	! j_o(ivup)%i(7)=ivobswup
+	! !ivvars=j_o(ivsub)%i(11)
+	! ivvarsup=j_o(ivup)%i(11)
+	! iper=j_putlistobject(j_o(ivsub)%i(11),ivin=ivvarsup)
+	! iper=j_putlistobject(j_o(ivsub)%i(14),ivin=ivvarsup)
+	! !	call  j_deflist(ivsub,'%vars',iout,list0=newk,list=newkeep(1:newk))
+	! !j_o(ivsub)%i(11)=iout
+	! if(j_o(ivup)%i(12).eq.0)j_o(ivup)%i(12)=1  !12 level
+	! j_o(ivsub)%i(12)=j_o(ivup)%i(12)+1
+	! j_o(ivup)%i(13)=linknobswup
+	! j_o(ivsub)%i(13)=1
  
 	integer, intent(in):: iv,ivmat,ivkeep
 	!integer, intent(in):: ivsub,ivnobsw,ivup,ivobsw,ivnobswcum
@@ -2132,12 +2152,13 @@ subroutine j_defdata(iv,ivmat,ivkeep,ivcases) !%%data
 	!	j_o(iv)%i(7)=ivobsw
 	!	if(ivup.eq.0)j_o(iv)%i(7)=ivobs
 	!	j_o(iv)%i(8)=ivnobswcum
-	ivvars=j_deflistobject(iv,'%vars',ivin=ivkeep)
-	ivvars2=j_deflistobject(iv,'%vars2',ivin=ivkeep)
+	ivvars=j_deflist(iv,'%vars',ivin=ivkeep)
+	ivvars2=j_deflist(iv,'%vars2',ivin=ivkeep)
 	!	j_o(iv)%i(14)=j_o(ivmat)%i(1)  !number of observa
 	!j_o(iv)%i(3)=ivsub;j_o(iv)%i(4)=ivnobsw
 	!	j_o(iv)%i(5)=ivup
 	!i(14)
+	! determined in linkdata
 	!i(12)=level
 	!i(13) index of nobsw variable
 	j_o(iv)%i(11)=ivvars
@@ -2208,17 +2229,37 @@ integer function j_dataup(iv)  ! %%data
 	j_dataup=j_o(iv)%i(5)
 	return
 end function !integer function j_dataup(iv)
-integer*8 function j_nrows(iv)
+ 
+integer*8 function j_nrows(iv,mi,ma)
 	integer,intent(in)::iv
+	integer,optional,intent(in)::mi,ma
 	if(j_otype(iv).eq.j_ipmatrix)then
 		j_nrows=j_i4i8(j_o(iv)%i(14:15))
+ 
 	elseif(j_otype(iv).eq.j_ipreal)then
 		j_nrows=j_18
+	elseif(j_otype(iv).eq.j_iplist)then
+		j_nrows=j_o(iv)%i(1)
 	else
 		call j_getname(iv)
 		write(6,*)j_oname(1:j_loname),' is not MATRIX or REAL'
 		j_err=.true.;return
-	endif !if(j_otype(iv).eq.j_ipmatrix)   2213
+	endif !if(j_otype(iv).eq.j_ipmatrix)   2236
+	if(present(mi))then
+		if(j_nrows.lt.mi)then
+			call j_getname(iv)
+			write(6,*)j_oname(1:j_loname),' has ',j_nrows,' rows, it should have  at least',mi
+			j_err=.true.;return
+		endif !if(j_nrows.lt.mi)   2249
+	endif !if(present(mi))   2248
+	if(present(ma))then
+		if(j_nrows.gt.ma)then
+			call j_getname(iv)
+			write(6,*)j_oname(1:j_loname),' has ',j_nrows,' rows, it should have  at most',ma
+			j_err=.true.
+			return
+		endif !if(j_nrows.gt.ma)   2256
+	endif !if(present(ma))   2255
  
 end function
  
@@ -2226,25 +2267,45 @@ integer*8 function j_nrowtot(iv)
 	integer,intent(in)::iv
 	if(j_otype(iv).eq.j_ipmatrix)then
 		j_nrowtot=j_i4i8(j_o(iv)%i(20:21))
+	elseif(j_otype(iv).eq.j_iplist)then
+		j_nrowtot=j_o(iv)%i(1)
 	else
 		call j_getname(iv)
 		write(6,*)j_oname(1:j_loname),' is not MATRIX or REAL'
 		j_err=.true.;return
-	endif !if(j_otype(iv).eq.j_ipmatrix)   2227
+	endif !if(j_otype(iv).eq.j_ipmatrix)   2268
  
 end function
  
-integer*8 function j_ncols(iv)
+integer*8 function j_ncols(iv,mi,ma)
 	integer,intent(in)::iv
+	integer,optional,intent(in)::mi,ma
 	if(j_otype(iv).eq.j_ipmatrix)then
 		j_ncols=j_i4i8(j_o(iv)%i(16:17))
+ 
 	elseif(j_otype(iv).eq.j_ipreal)then
 		j_ncols=j_18
 	else
 		call j_getname(iv)
-		write(6,*)j_oname(1:j_loname),' is not MATRIX or REAL'
+		write(6,*)j_oname(1:j_loname),' is not MATRIX or REAL but ',j_otypes(j_otype(iv))
 		j_err=.true.;return
-	endif !if(j_otype(iv).eq.j_ipmatrix)   2239
+	endif !if(j_otype(iv).eq.j_ipmatrix)   2283
+	if(present(mi))then
+		if(j_ncols.lt.mi)then
+			call j_getname(iv)
+			write(6,*)j_oname(1:j_loname),' has ',j_ncols,' cols, it should have  at least',mi
+			j_err=.true.;return
+		endif !if(j_ncols.lt.mi)   2294
+	endif !if(present(mi))   2293
+	if(present(ma))then
+		if(j_ncols.gt.ma)then
+			call j_getname(iv)
+ 
+			write(6,*)j_oname(1:j_loname),' has ',j_ncols,' cols, it should have  at most',ma
+			j_err=.true.
+			return
+		endif !if(j_ncols.gt.ma)   2301
+	endif !if(present(ma))   2300
  
 end function
  
@@ -2252,13 +2313,15 @@ integer*8 function j_nelem(iv)
 	integer,intent(in)::iv
 	if(j_otype(iv).eq.j_ipmatrix)then
 		j_nelem=j_i4i8(j_o(iv)%i(18:19))
+	elseif(j_otype(iv).eq.j_iplist)then
+		j_nelem=j_o(iv)%i(1)
 	elseif(j_otype(iv).eq.j_ipreal)then
 		j_nelem=j_18
 	else
 		call j_getname(iv)
 		write(6,*)j_oname(1:j_loname),' is not MATRIX or REAL'
 		j_err=.true.;return
-	endif !if(j_otype(iv).eq.j_ipmatrix)   2253
+	endif !if(j_otype(iv).eq.j_ipmatrix)   2314
  
 end function
  
@@ -2318,7 +2381,7 @@ function j_deftrans(iv,name,leng,lenin,lenout,ivinl,ivoutl, &
 	!write(6,*)'<44deftrans iv name',iv,name
  
 	j_deftrans=j_getobject(iv,name,j_iptrans)
-	!write(6,*)'<33deftrivout,namedv,otyp*2',ivout,j_namedv,j_otype(ivout),j_iptrans
+	!write(6,*)'<33deftrivout,namedv,otyp*2',ivout,j_named,j_otype(ivout),j_iptrans
 	!20140522 virheenkäsittely
 	if(j_err) return
  
@@ -2330,29 +2393,29 @@ function j_deftrans(iv,name,leng,lenin,lenout,ivinl,ivoutl, &
 	if(lenin.gt.0)then
 		!20150812(arg1<->arg2) oli: 		call deflist('input%',j_deftrans,lenin,ivinl)
 		!call j_deflist(j_deftrans,'%input',lenin,ivinl)
-		ivinl=j_deflistobject(j_deftrans,'%input',nres=lenin)
+		ivinl=j_deflist(j_deftrans,'%input',nres=lenin)
  
 	else !if(lenin.gt.0)then
 		ivinl=0
-	end if !if(lenin.gt.0)   2330
+	end if !if(lenin.gt.0)   2393
 	if(lenout.gt.0)then
 		!20150812(arg1<->arg2) oli: 		call deflist('output%',j_deftrans,lenout,ivoutl)
-		ivoutl=j_deflistobject(j_deftrans,'%output',nres=lenout) !,ivoutl)
+		ivoutl=j_deflist(j_deftrans,'%output',nres=lenout) !,ivoutl)
  
 	else !if(lenout.gt.0)then
 		ivoutl=0
-	end if !if(lenout.gt.0)   2338
+	end if !if(lenout.gt.0)   2401
 	if(lenin.gt.0.or.lenout.gt.0)then
-		ivlocal=j_deflistobject(j_deftrans,'%local',nres=40) !,ivoutl)
+		ivlocal=j_deflist(j_deftrans,'%local',nres=40) !,ivoutl)
 	else
 		ivlocal=0
-	endif !if(lenin.gt.0.or.lenout.gt.0)   2345
+	endif !if(lenin.gt.0.or.lenout.gt.0)   2408
 	if(linsource.gt.0)then
 		!20150812(arg1<->arg2) oli: 		call deftext2('source%',ivout,linsource,40*linsource,linsource,ivsource)
 		ivsource=j_deftext2(j_deftrans,'%source',linsource,40*linsource,linsource)
 	else !if(linsource.gt.0)then
 		ivsource=0
-	endif !if(linsource.gt.0)   2350
+	endif !if(linsource.gt.0)   2413
 	ivarg_=0
 	if(present(ivarg))ivarg_=ivarg
 	! write(6,*)'linsource,ivsource ',linsource,ivsource
@@ -2383,7 +2446,7 @@ integer function j_trans_input(iv) ! get the input variable list for a transform
 		j_trans_input=j_o(iv)%i2(1)
 	else !if(iv.gt.0)then
 		j_trans_input=0
-	endif !if(iv.gt.0)   2382
+	endif !if(iv.gt.0)   2445
 	return
 end function j_trans_input !integer function j_trans_input(iv)
  
@@ -2395,7 +2458,7 @@ integer function j_trans_output(iv) ! %%trans outputlist; if there is no then re
 		!write(6,*)'<547iv',iv
 		!call j_printname('tr ',iv,' ')
 		j_trans_output=j_o(iv)%i2(2)
-	endif !if(iv.le.0)   2392
+	endif !if(iv.le.0)   2455
 	return
 end function j_trans_output !integer function j_trans_output(iv)
  
@@ -2422,15 +2485,15 @@ subroutine j_cleartext(ivtext) !clear %%text %%object without deleting it
  
 	integer, intent(in):: ivtext
  
-	if(ivtext.le.0.or.ivtext.gt.j_namedv)then
+	if(ivtext.le.0.or.ivtext.gt.j_named)then
 		write(6,*)'*j* cleartext: illegal ivtext ',ivtext
 		j_err=.true.
 		return
-	endif !if(ivtext.le.0.or.ivtext.gt.j_namedv)   2425
+	endif !if(ivtext.le.0.or.ivtext.gt.j_named)   2488
 	if(j_otype(ivtext).ne.j_iptext)then
 		write(6,*)'*j* cleartext: ivtext= ',ivtext ,' illegal  type ',j_otype(ivtext)
 		j_err=.true.
-	endif !if(j_otype(ivtext).ne.j_iptext)   2430
+	endif !if(j_otype(ivtext).ne.j_iptext)   2493
 	j_o(ivtext)%i(0)=0
 end subroutine j_cleartext !subroutine j_cleartext(ivtext)
  
@@ -2456,14 +2519,14 @@ subroutine j_cleartrans(ivtrans) !clears %%trans %%object without deleting it
 		j_err= .true.
 		call j_printname('**cleartrans: object ',ivtrans,' is not transformation')
 		return
-	endif !if(j_otype(ivtrans)==j_iptrans)   2446
+	endif !if(j_otype(ivtrans)==j_iptrans)   2509
 	return
 end subroutine j_cleartrans !subroutine j_cleartrans(ivtrans)
  
  
 ! subroutine j_gettrans(ivtrans,ivinput,ivoutput) ! %%trans get a trans-%%object
 ! !module typemod
-! use j_globalsmod, only: j_namedv   ! current namber of named objects
+! use j_globalsmod, only: j_named   ! current namber of named objects
 ! use errmod, only: j_err
 ! use j_globalsmod, only: j_otype
 ! use j_globalsmod, only: j_IPTRANS   ! free named transformations
@@ -2481,7 +2544,7 @@ end subroutine j_cleartrans !subroutine j_cleartrans(ivtrans)
 ! integer, intent(in):: ivtrans
 ! integer, intent(out):: ivinput, ivoutput
  
-! if(ivtrans.le.0.or.ivtrans.gt.j_namedv)then
+! if(ivtrans.le.0.or.ivtrans.gt.j_named)then
 ! write(6,*)'*j* getrans, illegal value for ivtrans ',ivtrans
 ! j_err=.true.
 ! return
@@ -2510,12 +2573,12 @@ subroutine j_printsource(iob,io)
 				write(6,*)'source row ',ili !,j_o(ivsource)%i2(i),io-1
 				call j_printtext(ivsource,ili)
 				return
-			endif !if(j_o(ivsource)%i2(i).ge.io-2)   2507
-		enddo !i=1,j_o(ivsource)%i(0)   2505
+			endif !if(j_o(ivsource)%i2(i).ge.io-2)   2570
+		enddo !i=1,j_o(ivsource)%i(0)   2568
  
 	else !if(ivsource.ne.0)then
 		call j_printname('transformation set=',iob,' ')
-	endif !if(ivsource.ne.0)   2503
+	endif !if(ivsource.ne.0)   2566
  
  
  
@@ -2545,7 +2608,7 @@ recursive subroutine j_debug(iob)  !writes what is the origin of an error %%erro
 			j_o(ivsource)%i(lin+1)-1 )
 		call j_pause('<t'//j_chi5(lin,0)//'>',do=.true.)
  
-	endif !if(ivsource.ne.0)   2542
+	endif !if(ivsource.ne.0)   2605
  
  
  
@@ -2585,10 +2648,10 @@ subroutine j_debugerr(iob,io)  !writes waht is the origin of an error %%error
 			if(j_o(iob)%i(i).lt.0)then
 				ili=ili-j_o(iob)%i(i)
  
-			endif !if(j_o(iob)%i(i).lt.0)   2585
+			endif !if(j_o(iob)%i(i).lt.0)   2648
  
  
-		enddo !i=1,io-1   2584
+		enddo !i=1,io-1   2647
 		call j_getname(ivsource)
 		write(6,*)'*****error on row ',ili,' in ',j_oname(1:j_loname) !,j_o(ivsource)%i2(i),io-1
 		call j_printtext(ivsource,ili)
@@ -2597,7 +2660,7 @@ subroutine j_debugerr(iob,io)  !writes waht is the origin of an error %%error
 		write(6,*)'* ask J. Lappi where is the error line'
 	else !if(ivsource.ne.0)then
 		call j_printname('*err* transformation set=',iob,' ')
-	endif !if(ivsource.ne.0)   2569
+	endif !if(ivsource.ne.0)   2632
  
 	do loc=1,j_nopt
 		if(j_optioniob(loc).eq.iob)then
@@ -2605,10 +2668,10 @@ subroutine j_debugerr(iob,io)  !writes waht is the origin of an error %%error
 				j_optioniob(loc)=j_optioniob(j_nopt)
 				j_optiontot(loc)=j_optiontot(j_nopt)
 				j_optionlink(loc)=j_optionlink(j_nopt)
-			endif !if(loc.lt.j_nopt)   2604
+			endif !if(loc.lt.j_nopt)   2667
 			j_nopt=j_nopt-1
-		endif !if(j_optioniob(loc).eq.iob)   2603
-	enddo !loc=1,j_nopt   2602
+		endif !if(j_optioniob(loc).eq.iob)   2666
+	enddo !loc=1,j_nopt   2665
  
  
  
@@ -2646,7 +2709,7 @@ subroutine j_where(iob,io)
 		!	write(6,*)
 		write(6,*)'You are just at sit> prompt, my dear'
 		return
-	endif !if(j_ninc.eq.1)   2645
+	endif !if(j_ninc.eq.1)   2708
  
  
 	n1=j_o(j_ivinput0)%i( j_o(j_ivinput0)%i(0)+1) -1
@@ -2661,7 +2724,7 @@ subroutine j_where(iob,io)
 		notsame=any(j_o(j_ivinput1)%ch(1:n1).ne.j_o(j_ivinput2)%ch(1:n2))
 	else !if(n1.eq.n2)then
 		notsame=.true.
-	endif !if(n1.eq.n2)   2660
+	endif !if(n1.eq.n2)   2723
 	if(notsame)then
 		write(6,*)'****cleaned input'
 		call j_printtext(j_ivinput1,0)
@@ -2670,18 +2733,18 @@ subroutine j_where(iob,io)
 		!			write(6,*)'original'
 		call j_printtext(j_ivinput0,0)
  
-	endif !if(notsame)   2665
+	endif !if(notsame)   2728
 	notsame=.false.
 	if(n2.eq.n3)then
 		notsame=any(j_o(j_ivinput1)%ch(1:n2).ne.j_o(j_ivinput2)%ch(1:n3))
 	else !if(n2.eq.n3)then
 		notsame=.true.
-	endif !if(n2.eq.n3)   2675
+	endif !if(n2.eq.n3)   2738
 	if(notsame)then
 		!	write(6,*)'**input after interpreting input programming: '
 		write(6,*)'interpreted'
 		call j_printtext(j_ivinput2,0)
-	endif !if(notsame)   2680
+	endif !if(notsame)   2743
  
 	! write(6,77)inp(1:linp)
 	! write(6,*)'**previous line:',inpold(1:linpold)
@@ -2703,7 +2766,7 @@ subroutine j_where(iob,io)
 		!	call j_closeunit(j_nul(i))
 		! write(6,*)' ifiout_trans', nuliv(nul(i))
 		!	endif !if(j_nul(i).gt.0)then
-	enddo !i=ial,j_ninc   2697
+	enddo !i=ial,j_ninc   2760
  
  
  
@@ -2723,12 +2786,12 @@ subroutine j_puttext(iv,text) ! put %%text into text %%object
 		j_err=.true.
 		return
  
-	endif !if(j_otype(iv).ne.j_iptext.and.j_otype(iv).ne.j_ipfigure)   2720
+	endif !if(j_otype(iv).ne.j_iptext.and.j_otype(iv).ne.j_ipfigure)   2783
 	if(j_err)then
 		write(6,*)'*j* j_putttext called with j_err=.true.'
 		return
  
-	endif !if(j_err)   2727
+	endif !if(j_err)   2790
 	! write(6,*)'obj',iv
 	!  write(6,*)'00:',o(io)%i(0)
 	ibas=j_o(iv)%i( j_o(iv)%i(0)+1) -1
@@ -2742,7 +2805,7 @@ subroutine j_puttext(iv,text) ! put %%text into text %%object
 	jj=0
 	do j=1,le
 		j_o(iv)%ch(ibas+j)=text(j:j)
-	end do !j=1,le   2743
+	end do !j=1,le   2806
 	j_o(iv)%i(0)=j_o(iv)%i(0)+1
 	!write(6,*)'<66',j_o(iv)%i(0),size(j_o(iv)%i),ubound(j_o(iv)%i,dim=1)
 	!	if( j_o(iv)%i(0) .ge.ubound(j_o(iv)%i,dim=1))write(6,*)'<66565>',j_o(iv)%i(0),ubound(j_o(iv)%i,dim=1)
@@ -2754,8 +2817,8 @@ subroutine j_puttext(iv,text) ! put %%text into text %%object
 			write(6,*)'*j* error detected in j_puttext when increasing ',j_oname(1:j_loname)
 			write(6,*)'j_o(iv)%i(0)',j_o(iv)%i(0),ubound(j_o(iv)%i,dim=1)
 			return
-		endif !if(j_err)   2752
-	endif !if( j_o(iv)%i(0) .ge.ubound(j_o(iv)%i,dim=1))   2749
+		endif !if(j_err)   2815
+	endif !if( j_o(iv)%i(0) .ge.ubound(j_o(iv)%i,dim=1))   2812
 	j_o(iv)%i( j_o(iv)%i(0)+1 )=j_o(iv)%i( j_o(iv)%i(0))+len(text)
 	return
 end subroutine j_puttext !subroutine j_puttext(iv,text)
@@ -2788,18 +2851,18 @@ integer function j_nlines(iv) !number of lines in a %%text object
 	!end module vmod
  
 	integer, intent(in):: iv
-	if(iv.lt.0.or.iv.gt.j_namedv)then
+	if(iv.lt.0.or.iv.gt.j_named)then
 		write(6,*)'*j* j_nlines: argument ',iv,' is not named object'
 		j_err=.true.
 		return
  
-	endif !if(iv.lt.0.or.iv.gt.j_namedv)   2791
+	endif !if(iv.lt.0.or.iv.gt.j_named)   2854
 	if(j_otype(iv).ne.j_iptext)then
 		call j_printname('*j* j_nlines: argument ',iv,' is not a text object')
 		j_err=.true.
 		return
  
-	endif !if(j_otype(iv).ne.j_iptext)   2797
+	endif !if(j_otype(iv).ne.j_iptext)   2860
  
 	j_nlines=j_o(iv)%i(0)
 	return
@@ -2893,15 +2956,15 @@ subroutine j_printtext(iob,line) ! print line of %%text object, if line=0 -> pri
 			write(6,*)'*illegal line ',line, ' for text object ',iv,&
 				' having ',j_o(iob)%i(0), ' lines'
 			j_err=.true.;return
-		endif !if(line.gt.j_o(iob)%i(0).or.line.le.0)   2890
+		endif !if(line.gt.j_o(iob)%i(0).or.line.le.0)   2953
  
 		line1=line;line2_=line
-	end if !if(line.eq.0)   2886
+	end if !if(line.eq.0)   2949
  
 	do j=line1,line2_
 		!write(6,*)j,o(iob)%i(j),o(iob)%i(j+1)-1
 		write(6,*)(j_o(iob)%ch(k),k=j_o(iob)%i(j),j_o(iob)%i(j+1)-1 )
-	end do !j=line1,line2_   2901
+	end do !j=line1,line2_   2964
 	return
 end subroutine j_printtext !subroutine j_printtext(iob,line)
  
@@ -2916,7 +2979,7 @@ subroutine j_gettext(iob,line) ! print line of %%text object, if line=0 -> print
 		write(6,*)'*illegal line ',line, ' for text object ',iv,&
 			' having ',j_o(iob)%i(0), ' lines'
 		j_err=.true.;return
-	endif !if(line.gt.j_o(iob)%i(0).or.line.le.0)   2913
+	endif !if(line.gt.j_o(iob)%i(0).or.line.le.0)   2976
 	!	integer ::line2_
  
 	! write(6,*)'printtext,iob',iob
@@ -2932,7 +2995,7 @@ subroutine j_gettext(iob,line) ! print line of %%text object, if line=0 -> print
 	j_lgottext=j_o(iob)%i(line+1)-j_o(iob)%i(line)
 	do j=1,j_lgottext
 		j_gottext(j:j)=j_o(iob)%ch(j_o(iob)%i(line)+j-1)
-	enddo !j=1,j_lgottext   2933
+	enddo !j=1,j_lgottext   2996
 	!		write(6,*)(j_o(iob)%ch(k),k=j_o(iob)%i(j),j_o(iob)%i(j+1)-1 )
 	!	end do !do j=line1,line2_
 	return
@@ -2957,7 +3020,7 @@ subroutine j_writetext(nu,iob,line,nonum) ! write line of %%text object to unit,
 		! write(6,*)'lines',line2_
 	else !if(line.eq.0)then
 		line1=line;line2_=line
-	end if !if(line.eq.0)   2953
+	end if !if(line.eq.0)   3016
  
 	do j=line1,line2_
 		!write(6,*)j,o(iob)%i(j),o(iob)%i(j+1)-1
@@ -2970,7 +3033,7 @@ subroutine j_writetext(nu,iob,line,nonum) ! write line of %%text object to unit,
 			lkm=i2-i1+1
 			do jj=1,lkm
 				j_cline(jj:jj)=j_o(iob)%ch(jj+i1-1)
-			enddo !jj=1,lkm   2971
+			enddo !jj=1,lkm   3034
 			call j_toutf8(j_cline(1:lkm),lkm)
 			if(present(nonum))then
  
@@ -2983,8 +3046,8 @@ subroutine j_writetext(nu,iob,line,nonum) ! write line of %%text object to unit,
 					write(nu,'(i2,(a78))')j,' '//j_cline(1:lkm)
 				else !if(j.le.99)then
 					write(nu,'(i4,(a76))')j,' '//j_cline(1:lkm)
-				endif !if(j.le.99)   2982
-			endif !if(present(nonum))   2975
+				endif !if(j.le.99)   3045
+			endif !if(present(nonum))   3038
 		else !if(nu.ne.6)then
 			if(present(nonum))then
 				write(nu,'(160a1)')(j_o(iob)%ch(k),k=j_o(iob)%i(j),j_o(iob)%i(j+1)-1 )
@@ -2993,10 +3056,10 @@ subroutine j_writetext(nu,iob,line,nonum) ! write line of %%text object to unit,
 					write(nu,'(i2,(78a1))')j,' ',(j_o(iob)%ch(k),k=j_o(iob)%i(j),j_o(iob)%i(j+1)-1 )
 				else !if(j.le.99)then
 					write(nu,'(i4,(76a1))')j,' ',(j_o(iob)%ch(k),k=j_o(iob)%i(j),j_o(iob)%i(j+1)-1 )
-				endif !if(j.le.99)   2992
-			endif !if(present(nonum))   2989
-		endif !if(nu.ne.6)   2966
-	end do !j=line1,line2_   2962
+				endif !if(j.le.99)   3055
+			endif !if(present(nonum))   3052
+		endif !if(nu.ne.6)   3029
+	end do !j=line1,line2_   3025
 	return
 end subroutine j_writetext !subroutine j_writetext(nu,iob,line)
  
@@ -3017,24 +3080,24 @@ subroutine j_getobjectname(ivin,name,name2,le2)  ! !!object
 			call j_getchar(ivin,name2,le2)
 		else !if(j_otype(ivin).eq.j_ipchar)then
 			call j_objectname(ivin,name2,le2)
-		endif !if(j_otype(ivin).eq.j_ipchar)   3015
+		endif !if(j_otype(ivin).eq.j_ipchar)   3078
 	else !if(ivin.gt.0)then
 		name2(1:le)=name(1:le)
 		le2=le
 		goto 90
-	endif !if(ivin.gt.0)   3014
+	endif !if(ivin.gt.0)   3077
 	!	if(name(1:1).ne.'@')then; li1=1;else;li1=2;end if
  
  
 	if(le.gt.0)then
 		name2(le2+1:le2+le)=name(1:le)
 		le2=le2+le
-	endif !if(le.gt.0)   3029
+	endif !if(le.gt.0)   3092
 90	continue
 	if(.not.(j_isletter(name2(1:1)).or.name2(1:1).eq."'"))then
 		write(6,*)'**illegal object name: ',name2(1:le2)
 		j_err=.true.
-	end if !if(.not.(j_isletter(name2(1:1)).or.name2(1:1).eq."'"))   3034
+	end if !if(.not.(j_isletter(name2(1:1)).or.name2(1:1).eq."'"))   3097
 	return
  
 end subroutine !subroutine j_getobjectname(ivin,name,name2,le2)
@@ -3066,7 +3129,7 @@ subroutine j_getline(iv,line,buffer,le) ! get line from %%text object iv into bu
 		write(6,*)' use print(Names) to see the object'
 		j_err=.true.
 		return
-	endif !if(line.gt.j_o(iv)%i(0).or.line.le.0)   3061
+	endif !if(line.gt.j_o(iv)%i(0).or.line.le.0)   3124
  
 	do k=j_o(iv)%i(line),j_o(iv)%i(line+1)-1
 		le=le+1
@@ -3075,10 +3138,10 @@ subroutine j_getline(iv,line,buffer,le) ! get line from %%text object iv into bu
 			j_err=.true.
 			le=le-1  !beginning is however corrrect
 			return
-		endif !if(le.gt.lebu)   3073
+		endif !if(le.gt.lebu)   3136
 		buffer(le:le)=j_o(iv)%ch(k)
 		if(le.ge.lebu)return
-	end do !k=j_o(iv)%i(line),j_o(iv)%i(line+1)-1   3071
+	end do !k=j_o(iv)%i(line),j_o(iv)%i(line+1)-1   3134
 	return
 end subroutine j_getline !subroutine j_getline(iv,line,buffer,le)
  
@@ -3093,20 +3156,20 @@ subroutine j_getname(iv,iv2,iv3) ! get line from %%text object iv into buffer
 	if(iv.ne.-1)then
 		call j_getname0(iv,j_oname,j_loname)
  
-	endif !if(iv.ne.-1)   3093
+	endif !if(iv.ne.-1)   3156
  
 	if(present(iv2))then
-		!	write(6,*)'getnaiv2',iv2,j_namedv,
+		!	write(6,*)'getnaiv2',iv2,j_named,
 		if(iv2.ne.-1)call j_getname0(iv2,j_oname2,j_loname2)
  
  
-	endif !if(present(iv2))   3098
+	endif !if(present(iv2))   3161
 	if(present(iv3))then
-		!	write(6,*)'getnaiv2',iv2,j_namedv,
+		!	write(6,*)'getnaiv2',iv2,j_named,
 		if(iv3.ne.-1)call j_getname0(iv3,j_oname3,j_loname3)
  
  
-	endif !if(present(iv3))   3104
+	endif !if(present(iv3))   3167
  
  
 	return
@@ -3118,18 +3181,18 @@ subroutine j_getname0(iv,name,lname)
 	integer,intent(out) ::lname
 	character*(*),intent(out) ::name
 	character*6 chr
-	if(iv.le.j_namedv.and.iv.gt.0)then
+	if(iv.le.j_named.and.iv.gt.0)then
 		call j_getline(j_ivnames,iv,name,lname)
  
  
-	elseif(iv.gt.j_mxnamedv.and.iv.le.j_nv)then !if(iv.le.j_namedv)then
+	elseif(iv.gt.j_mxnamedv.and.iv.le.j_nv)then !if(iv.le.j_named)then
 		write(chr,'(i6)')iv
 		do j=1,4
 			if(chr(j:j).ne.' ')exit
-		enddo !j=1,4   3127
+		enddo !j=1,4   3190
 		name='TEMP'//chr(j:6)
 		lname=len_trim(name)
-	elseif(iv.gt.0.and.iv.le.j_mxv)then !if(iv.le.j_namedv)then
+	elseif(iv.gt.0.and.iv.le.j_mxv)then !if(iv.le.j_named)then
 		write(name,*)j_v(iv)
 		lname=len_trim(name)
 	else
@@ -3137,7 +3200,7 @@ subroutine j_getname0(iv,name,lname)
 		!	j_oname(1:3)='iv='
 		lname=len_trim(name)
  
-	endif !if(iv.le.j_namedv.and.iv.gt.0)   3121
+	endif !if(iv.le.j_named.and.iv.gt.0)   3184
 end subroutine !subroutine j_getline(iv,line,buffer,le)
  
  
@@ -3160,14 +3223,14 @@ subroutine j_getline2(iv,line,buffer,le) !%%text as getline but fills end of buf
 			j_oname(1:j_loname)
 		j_err=.true.
 		return
-	endif !if(line.gt.j_o(iv)%i(0).or.line.le.0)   3156
+	endif !if(line.gt.j_o(iv)%i(0).or.line.le.0)   3219
 	! write(17,*)line,o(iv)%i(line+1)-o(iv)%i(line),len(buffer)
 	! le=le+1
 	do k=j_o(iv)%i(line),j_o(iv)%i(line+1)-1
 		le=le+1
 		buffer(le:le)=j_o(iv)%ch(k)
 		if(le.ge.lenb)return
-	end do !k=j_o(iv)%i(line),j_o(iv)%i(line+1)-1   3166
+	end do !k=j_o(iv)%i(line),j_o(iv)%i(line+1)-1   3229
 	buffer(le+1:)=' '
  
 	return
@@ -3196,10 +3259,10 @@ subroutine j_getchar(iv,buffer,le) !%%io get %%char constant or char variable or
 				write(6,*)'*j* j_getchar called with too small buffer lentgth ',lem
 				j_err=.true.
 				return
-			endif !if(le.gt.lem)   3195
+			endif !if(le.gt.lem)   3258
 			buffer(le:le)=j_o(j_ivnames)%ch(i)
 			if(buffer(le:le).eq.'~')buffer(le:le)="'"
-		end do !i=j_o(iv)%i(1),j_o(iv)%i(2)   3193
+		end do !i=j_o(iv)%i(1),j_o(iv)%i(2)   3256
 		!	write(6,*)'le ',le
 		!	write(6,*)buffer(1:le)
 		!write(6,*)'/'//j_o(j_ivnames)%ch(j_o(iv)%i(1)-1)//'/'//j_o(j_ivnames)%ch(j_o(iv)%i(2)+1)
@@ -3209,7 +3272,7 @@ subroutine j_getchar(iv,buffer,le) !%%io get %%char constant or char variable or
 	else !if(j_otype(iv).eq.j_ipchar)then
 		le=8
 		call j_reps2(buffer,1,8,le,j_v(iv))
-	endif !if(j_otype(iv).eq.j_ipchar)   3189
+	endif !if(j_otype(iv).eq.j_ipchar)   3252
 	return
 end subroutine j_getchar !subroutine j_getchar(iv,buffer,le)
  
@@ -3234,16 +3297,16 @@ subroutine j_getchar2(iv,buffer,le) !get %%char constant or char varaible into b
 				write(6,*)'*j* j_getchar called with too small buffer lentgth ',lem
 				j_err=.true.
 				return
-			endif !if(le.gt.lem)   3233
+			endif !if(le.gt.lem)   3296
 			buffer(le:le)=j_o(j_ivnames)%ch(i)
-		end do !i=j_o(iv)%i(1),j_o(iv)%i(2)   3231
+		end do !i=j_o(iv)%i(1),j_o(iv)%i(2)   3294
 	elseif(iv.eq.j_ivdollar)then !if(j_otype(iv).eq.j_ipchar)then
 		le=1
 		buffer(1:1)='*'
 	else !if(j_otype(iv).eq.j_ipchar)then
 		call j_printname('*Object ',iv,' is not character constant or character variable')
 		j_err = .true.
-	endif !if(j_otype(iv).eq.j_ipchar)   3228
+	endif !if(j_otype(iv).eq.j_ipchar)   3291
 	return
 end subroutine j_getchar2 !subroutine j_getchar2(iv,buffer,le)
  
@@ -3260,31 +3323,60 @@ subroutine j_getchar3(iv,buffer,le,ext) !get character
 			call j_getchar(iv,buffer,le)
 		else !if(j_otype(iv).eq.j_ipchar)then
 			call j_getline(j_ivnames,ivin,buffer,le)
-		endif !if(j_otype(iv).eq.j_ipchar)   3259
-	endif !if(present(iv))   3258
+		endif !if(j_otype(iv).eq.j_ipchar)   3322
+	endif !if(present(iv))   3321
 	if(present(ext))then
 		le2=j_lentrim(ext)
 		buffer(le+1:le+le2)=ext
 		le=le+le2
-	endif !if(present(ext))   3265
+	endif !if(present(ext))   3328
 	return
 end subroutine j_getchar3 !subroutine j_getchar3(iv,buffer,le,ext)
  
-function j_object(name) ! %%object get the index of object with name, if not defined return 0
-	!parmod
-	! integer ionames,ioreal,iochar,iocharv,iocconst,iocursor,ioval    !,iotempdata
-	!end module parmod
- 
+function j_object(name,iv,needed) ! %%object get the index of object with name, if not defined return 0
 	character*(*), intent(in) :: name
+	integer,intent(in),optional::iv
+	logical,intent(in),optional:: needed
  
+	character*60 oname
 	!bypass initila @
-	if(len(name).le.0)then
-		j_object=0
-	elseif(name(1:1).ne.'@')then !if(len(name).le.0)then
-		j_object=j_line(j_ivnames,name)
-	else !if(len(name).le.0)then
-		j_object=j_line(j_ivnames,name(2:))
-	end if !if(len(name).le.0)   3281
+	if(present(iv))then
+		call j_getname0(iv,oname,loname)
+		!	write(6,*)'oname ',oname(1:loname),loname,' *',oname(1:loname)//name
+		j_object=j_line(j_ivnames,oname(1:loname)//name)
+		!	write(6,*)'objec',j_object
+		if(present(needed))then
+			if(j_object.le.0)then
+				write(6,*)oname(1:loname)//name,' does not exist'
+				j_err=.true.
+			endif !if(j_object.le.0)   3349
+		endif !if(present(needed))   3348
+	else
+		if(len(name).le.0)then
+			j_object=0
+			if(present(needed))then
+				if(j_object.le.0)then
+					write(6,*)'j_object called with empty name'
+					j_err=.true.
+				endif !if(j_object.le.0)   3358
+			endif !if(present(needed))   3357
+		elseif(name(1:1).ne.'@')then !if(len(name).le.0)then
+			j_object=j_line(j_ivnames,name)
+			i1=1
+		else !if(len(name).le.0)then
+			j_object=j_line(j_ivnames,name(2:))
+			i1=2
+		end if !if(len(name).le.0)   3355
+		if(present(needed))then
+			if(j_object.le.0)then
+				write(6,*)oname(i1:loname)//name,' does not exist'
+				j_err=.true.
+ 
+			endif !if(j_object.le.0)   3371
+		endif !if(present(needed))   3370
+ 
+	endif !if(present(iv))   3343
+ 
 	!write(6,*)'<6661j_object ',name,j_object
 	return
 end function j_object !function j_object(name)
@@ -3334,16 +3426,16 @@ function j_object2(name,iv)! get index of %%object with name name//name_of_iv if
 			kk=0
 			do k=j_o(j_ivnames)%i(j),j_o(j_ivnames)%i(j)+le-1 ;kk=kk+1
 				if(j_o(j_ivnames)%ch(k).ne.name(kk:kk))cycle names
-			enddo !k=j_o(j_ivnames)%i(j),j_o(j_ivnames)%i(j)+le-1 ;kk=kk+1   3335
+			enddo !k=j_o(j_ivnames)%i(j),j_o(j_ivnames)%i(j)+le-1 ;kk=kk+1   3427
 			kk=0
 			do k=j_o(j_ivnames)%i(j)+le,j_o(j_ivnames)%i(j+1)-1
 				ivc=j_o(j_ivnames)%i(iv)+kk
 				if(j_o(j_ivnames)%ch(k).ne.j_o(j_ivnames)%ch(ivc ))cycle names
 				kk=kk+1
-			enddo !k=j_o(j_ivnames)%i(j)+le,j_o(j_ivnames)%i(j+1)-1   3339
+			enddo !k=j_o(j_ivnames)%i(j)+le,j_o(j_ivnames)%i(j+1)-1   3431
 			j_object2=j;return
-		endif !if(j_o(j_ivnames)%i(j+1)-j_o(j_ivnames)%i(j).eq.le+le2)   3333
-	enddo names !es: do j=1,j_o(j_ivnames)%i(0)   3332
+		endif !if(j_o(j_ivnames)%i(j+1)-j_o(j_ivnames)%i(j).eq.le+le2)   3425
+	enddo names !es: do j=1,j_o(j_ivnames)%i(0)   3424
 	j_object2=0
 	return
 end function j_object2 !function j_object2(name,iv)
@@ -3371,21 +3463,21 @@ function j_object3(iv,name,char)
 	!if(name(1:1).ne.'@')then
 	! mtja=line(ivnames,name)
 	!else
-	if(iv.gt.j_namedv)then
-		write(6,*)'trying to get name of unnamed object ',iv,' maximum is ', j_namedv
+	if(iv.gt.j_named)then
+		write(6,*)'trying to get name of unnamed object ',iv,' maximum is ', j_named
 		j_err=.true.
 		return
-	endif !if(iv.gt.j_namedv)   3374
+	endif !if(iv.gt.j_named)   3466
 	if(iv.gt.0)then
 		call j_getname(iv)
 		if(le.gt.0)then
 			j_oname(j_loname+1:j_loname+le)=name
 			j_loname=j_loname+le
-		endif !if(le.gt.0)   3381
+		endif !if(le.gt.0)   3473
 	else
 		j_oname=name
 		j_loname=le
-	endif !if(iv.gt.0)   3379
+	endif !if(iv.gt.0)   3471
  
 	! name can contain ' or not
 	!write(6,*)'ischar,iv,le,j_oname(1:j_loname)',ischar,iv,le,j_oname(1:j_loname)
@@ -3395,16 +3487,16 @@ function j_object3(iv,name,char)
 			j_object3=j_object(j_oname(1:j_loname))
 		else
 			j_object3=j_object("'"//j_oname(1:j_loname)//"'")
-		endif !if(ishipsu)   3394
+		endif !if(ishipsu)   3486
 	else
  
 		j_object3=j_object(j_oname(1:j_loname))
-	endif !if(ischar)   3392
+	endif !if(ischar)   3484
 	if(j_object3.gt.0)then
 		if(ischar)j_o(j_object3)%i(3:4)=0
 		return
  
-	endif !if(j_object3.gt.0)   3403
+	endif !if(j_object3.gt.0)   3495
 	call j_getobjectnam(j_oname(1:j_loname),j_ipchar,j_object3)
  
 	if(ischar)then
@@ -3414,7 +3506,7 @@ function j_object3(iv,name,char)
 		! enddo
 		j_o(j_object3)%i(1)=j_o(j_ivnames)%i(j_object3)+1
 		j_o(j_object3)%i(2)=j_o(j_ivnames)%i(j_object3+1)-2
-	endif !if(ischar)   3410
+	endif !if(ischar)   3502
 	!if(p)write(6,*)'<6669',j_o(ivout)%i(1:2)
  
  
@@ -3440,12 +3532,12 @@ function j_line(iv,name)   !get line number of %%text object consisting of name,
 				kk=kk+1
  
 				if(j_o(iv)%ch(k).ne.name(kk:kk))goto 5
-			end do !k=j_o(iv)%i(j),j_o(iv)%i(j+1)-1   3439
+			end do !k=j_o(iv)%i(j),j_o(iv)%i(j+1)-1   3531
 			j_line=j
 			return
-		endif !if(j_o(iv)%i(j+1)-j_o(iv)%i(j).eq.le)   3437
+		endif !if(j_o(iv)%i(j+1)-j_o(iv)%i(j).eq.le)   3529
 5 	continue
-	enddo !j=1,j_o(iv)%i(0)   3435
+	enddo !j=1,j_o(iv)%i(0)   3527
 	j_line=0
 	return
 end function j_line !function j_line(iv,name)
@@ -3469,10 +3561,10 @@ function j_line2(ivtext,ivchar) ! as j_line but now the input %%text is a charva
  
 	if(j_otype(ivtext).ne.j_iptext)then
 		call j_printname('**not legal text',ivtext,' '); j_err=.true.;return
-	endif !if(j_otype(ivtext).ne.j_iptext)   3470
+	endif !if(j_otype(ivtext).ne.j_iptext)   3562
 	if(j_otype(ivchar).ne.j_ipchar)then
 		call j_printname('**Not legal charv',ivchar,' ') ;j_err=.true. ;return
-	endif !if(j_otype(ivchar).ne.j_ipchar)   3473
+	endif !if(j_otype(ivchar).ne.j_ipchar)   3565
 	le=j_o(ivchar)%i(2)-j_o(ivchar)%i(1)+1
 	do j=1,j_o(ivtext)%i(0)
 		if(j_o(ivtext)%i(j+1)-j_o(ivtext)%i(j).eq.le)then
@@ -3481,11 +3573,11 @@ function j_line2(ivtext,ivchar) ! as j_line but now the input %%text is a charva
 			do k=j_o(ivtext)%i(j),j_o(ivtext)%i(j+1)-1
 				if(j_o(ivtext)%ch(k).ne.j_o(j_ivnames)%ch(kk))goto 5
 				kk=kk+1
-			enddo !k=j_o(ivtext)%i(j),j_o(ivtext)%i(j+1)-1   3481
+			enddo !k=j_o(ivtext)%i(j),j_o(ivtext)%i(j+1)-1   3573
 			j_line2=j;return
-		endif !if(j_o(ivtext)%i(j+1)-j_o(ivtext)%i(j).eq.le)   3478
+		endif !if(j_o(ivtext)%i(j+1)-j_o(ivtext)%i(j).eq.le)   3570
 5 	continue
-	enddo !j=1,j_o(ivtext)%i(0)   3477
+	enddo !j=1,j_o(ivtext)%i(0)   3569
 	j_line2=0
  
 	return
@@ -3574,7 +3666,7 @@ subroutine j_putoi2(iv,iel,ival) !putting value ival into element iel the intege
 		! iel0=iel !iel may contain reference to h2
 		call j_inci2(iv,iel)
 		! iel=iel0
-	endif !if(iel.gt.ubound(j_o(iv)%i2,dim=1))   3573
+	endif !if(iel.gt.ubound(j_o(iv)%i2,dim=1))   3665
 	j_o(iv)%i2(iel)=ival
 	return
 end subroutine j_putoi2 !subroutine j_putoi2(iv,iel,ival)
@@ -3595,8 +3687,8 @@ subroutine j_putoi(iv,iel,ival) !putting value ival into element iel the integer
 			write(6,*)'*j* error detected in j_putoi when increasing ',j_oname(1:j_loname)
 			write(6,*)j_o(iv)%i(0),iel,size(j_o(iv)%i)
 			return
-		endif !if(j_err)   3593
-	endif !if(iel.gt.iup)   3591
+		endif !if(j_err)   3685
+	endif !if(iel.gt.iup)   3683
 	j_o(iv)%i(iel)=ival
 	! if(iel.eq.0)then
 	! if(ival.ge.iup)call j_inci(iv)   !putoizero
@@ -3620,8 +3712,8 @@ subroutine j_putoizero(iv,ival) !put ival to o(iv)%i(0) and 0 to o(iv)%i(ival+1)
 			call j_getname(iv)
 			write(6,*)'*j* error detected in j_puttext when increasing ',j_oname(1:j_loname)
 			return
-		endif !if(j_err)   3619
-	endif !if(ival.ge.iup)   3617
+		endif !if(j_err)   3711
+	endif !if(ival.ge.iup)   3709
 	j_o(iv)%i(ival+1)=0
 	return
 end subroutine j_putoizero !subroutine j_putoizero(iv,ival)
@@ -3641,14 +3733,14 @@ subroutine j_incch(iv,mins) !increase size of %%char fork of an %%object iv i.e.
 		write(6,*)'*j* j_incch trying to expand character fork which is not allocated'
 		j_err=.true.
 		return
-	endif !if(.not.allocated(j_o(iv)%ch))   3640
+	endif !if(.not.allocated(j_o(iv)%ch))   3732
  
 	isi=size(j_o(iv)%ch)
 	if(isi.le.0)then
 		write(6,*)'*j* j_incch, trying to increas charcater vector which has zero size'
 		j_err=.true.
 		return
-	endif !if(isi.le.0)   3647
+	endif !if(isi.le.0)   3739
 	allocate(ch2(1:isi))
 	!call j_printname('*doubling the  size of text fork of ',iv, ' ')
 	ch2=j_o(iv)%ch
@@ -3674,7 +3766,7 @@ subroutine j_inci(iv,mins) !increase size of the integer fork of an %%object iv 
 		write(6,*)'*j* j_inci trying to expand %i fork which is not allocated'
 		j_err=.true.
 		return
-	endif !if(.not.allocated(j_o(iv)%i))   3673
+	endif !if(.not.allocated(j_o(iv)%i))   3765
  
 	lb=lbound(j_o(iv)%i,dim=1)
 	iup=ubound(j_o(iv)%i,dim=1)
@@ -3711,7 +3803,7 @@ subroutine j_incr(iv,mins) !increase size of the real fork of  %%object iv ,i.e.
 		write(6,*)'*j* j_incr trying to expand %r fork which is not allocated'
 		j_err=.true.
 		return
-	endif !if(.not.allocated(j_o(iv)%r))   3710
+	endif !if(.not.allocated(j_o(iv)%r))   3802
  
 	lb=lbound(j_o(iv)%r,dim=1)
 	iup=ubound(j_o(iv)%r,dim=1)
@@ -3745,7 +3837,7 @@ subroutine j_inctxt(iv,mins) !increase size of the real fork of  %%object iv ,i.
 	j_o(j_gpiout)%txt(isize+1:isize2)=' '
 	do i=1,isize
 		j_o(j_gpiout)%i2(i)=len_trim(j_o(j_gpiout)%txt(i))
-	enddo !i=1,isize   3746
+	enddo !i=1,isize   3838
 	j_o(j_gpiout)%i2(isize+1:isize2)=0
 	j_o(j_gpiout)%i(2)=isize2
 	deallocate(temp)
@@ -3768,7 +3860,7 @@ subroutine j_inci2(iv,mins) !increase size of the 2. integer fork of %%object iv
 		write(6,*)'*j* j_inci2 trying to expand %i2 fork which is not allocated'
 		j_err=.true.
 		return
-	endif !if(.not.allocated(j_o(iv)%i2))   3767
+	endif !if(.not.allocated(j_o(iv)%i2))   3859
  
 	lb=lbound(j_o(iv)%i2,dim=1)
 	iup=ubound(j_o(iv)%i2,dim=1)
@@ -3796,9 +3888,9 @@ function j_isin(text,vector,n) !location of text in character vector vector with
 			if(text(1:le1).eq.vector(i)(1:le2))then
 				j_isin=i
 				return
-			endif !if(text(1:le1).eq.vector(i)(1:le2))   3796
-		endif !if(le1.eq.le2)   3794
-	enddo !i=1,n   3792
+			endif !if(text(1:le1).eq.vector(i)(1:le2))   3888
+		endif !if(le1.eq.le2)   3886
+	enddo !i=1,n   3884
 	j_isin=0
 	return
 end function j_isin !function j_isin(text,vector,n)
@@ -3827,13 +3919,13 @@ subroutine j_clean(text,le) ! remove blanks, tabs etc , le is the length of the 
 			if(ichar(text(j:j)).eq.194)then
 				write(6,*)'illegal use of "'
 				j_err=.true.;return
-			endif !if(ichar(text(j:j)).eq.194)   3827
+			endif !if(ichar(text(j:j)).eq.194)   3919
 			write(6,*)'ichar ',(ichar(text(jj:jj)),jj=1,le1)
 			write(6,*)text(1:le1),' contains illegal non-ascii character'
 			write(6,*)'change the text file encoding to ANSI or remove non-ascii'
 			j_err=.true.
 			return
-		endif !if(text(j:j).gt.'~')   3826
+		endif !if(text(j:j).gt.'~')   3918
 		if(p)write(6,*)'j,jj',j,jj,ischar,text(j:j)
 		jj=jj+1
  
@@ -3843,13 +3935,13 @@ subroutine j_clean(text,le) ! remove blanks, tabs etc , le is the length of the 
 			le=le1-j
 			text(1:le)=text(j+1:le1)
 			return
-		endif !if(jj.eq.1.and.(text(jj:jj).eq.'!'.or.text(jj:jj).eq.'*'))   3840
+		endif !if(jj.eq.1.and.(text(jj:jj).eq.'!'.or.text(jj:jj).eq.'*'))   3932
 		if(jj.ne.j)text(jj:jj)=text(j:j) !this can now be used for clean character constants also
-	enddo !j=1,le1   3820
+	enddo !j=1,le1   3912
 	le=jj
 	if(le.lt.le1)then
 		text(jj+1:le1)=' '
-	endif !if(le.lt.le1)   3850
+	endif !if(le.lt.le1)   3942
 	if(p)write(6,*)text(1:le),le
 	!	if(p)stop
 	return
@@ -3869,7 +3961,7 @@ subroutine j_differ(list1,n1,list2,n2,list3,n3) !picks from %%list1 elements whi
 		if(any(list1(i).eq.list2(1:n2)))cycle
 		no=no+1
 		list3(no)=list1(i)
-	enddo !i=1,n1   3868
+	enddo !i=1,n1   3960
 	n3=no
 	return
 end subroutine j_differ !subroutine j_differ(list1,n1,list2,n2,list3,n3)
@@ -3883,7 +3975,7 @@ function j_ndiffer(list1,n1,list2,n2) !number of elements of %%list1 which are n
 	do i=1,n1
 		if(any(list1(i).eq.list2(1:n2)))cycle
 		j_ndiffer=j_ndiffer+1
-	enddo !i=1,n1   3883
+	enddo !i=1,n1   3975
 	return
 end function j_ndiffer !function j_ndiffer(list1,n1,list2,n2)
  
@@ -3901,7 +3993,7 @@ subroutine j_union(list1,n1,list2,n2,list3,n3) !the union of %%list1 and list2 p
 		if(any(list2(i).eq.list1(1:n1)))cycle
 		no=no+1
 		list3(no)=list2(i)
-	enddo !i=1,n2   3900
+	enddo !i=1,n2   3992
 	n3=no
 	return
 end subroutine j_union !subroutine j_union(list1,n1,list2,n2,list3,n3)
@@ -3914,7 +4006,7 @@ function j_nunion(list1,n1,list2,n2) !size of union of %%list1 and list2
 	do i=1,n2
 		if(any(list2(i).eq.list1(1:n1)))cycle
 		j_nunion=j_nunion+1
-	enddo !i=1,n2   3914
+	enddo !i=1,n2   4006
 	return
 end function j_nunion !function j_nunion(list1,n1,list2,n2)
  
@@ -3933,14 +4025,14 @@ subroutine j_uniondif(list1,n1,list2,n2,list3,n3,list4,n4)  !%%list1+list2-list3
 		if(any(list1(i).eq.list3(1:n3)))cycle
 		no=no+1
 		list4(no)=list1(i)
-	enddo !i=1,n1   3932
+	enddo !i=1,n1   4024
  
 	no1=no
 	do i=1,n2
 		if(any(list2(i).eq.list4(1:no1)).or.any(list3(1:n3).eq.list2(i)))cycle
 		no=no+1
 		list4(no)=list2(i)
-	enddo !i=1,n2   3939
+	enddo !i=1,n2   4031
 	n4=no
 	return
 end subroutine j_uniondif !subroutine j_uniondif(list1,n1,list2,n2,list3,n3,list4,n4)
@@ -3974,7 +4066,7 @@ subroutine j_msd2(nvar,x,xm,ss,wt,sumwt,summa)
 		apu=x(i)-xm(i)
 		xm(i)=xm(i)+b*apu
 		ss(i)=ss(i)+c*apu**2
-	end do !i=1,nvar   3973
+	end do !i=1,nvar   4065
 	summa=summa+wt*x
 	!	write(6,*)'<176>x(1),xm(1),ss(1),wt,sumwt',x(1),xm(1),ss(1),wt,sumwt
 	return
@@ -3994,7 +4086,7 @@ subroutine j_msd21(x,xm,ss,wt,sumwt,summa)
 		!	end do !do i=1,nvar
 		sumwt=j_0
  
-	end if !if(sumwt.lt.j_0)   3990
+	end if !if(sumwt.lt.j_0)   4082
 	if(present(summa))summa=summa+x
 	sumwt=sumwt+wt
 	b=wt/sumwt
@@ -4017,8 +4109,8 @@ function j_nonblank(inp,ial,lop)
 		if(ichar(inp(i:i)).gt.32)then
 			j_nonblank=i
 			return
-		endif !if(ichar(inp(i:i)).gt.32)   4017
-	enddo !i=ial,lop   4016
+		endif !if(ichar(inp(i:i)).gt.32)   4109
+	enddo !i=ial,lop   4108
 	j_nonblank=lop+1
 	return
 end function j_nonblank !function j_nonblank(inp,ial,lop)
@@ -4033,8 +4125,8 @@ function j_lastblank(inp,ial,lop)
 		if(inp(i:i)<=' ') then
 			j_lastblank=i
 			return
-		endif !if(inp(i:i)<=' ')   4033
-	enddo !i=lop,ial,-1   4032
+		endif !if(inp(i:i)<=' ')   4125
+	enddo !i=lop,ial,-1   4124
 	j_lastblank = 0
 	return
 end function j_lastblank !function j_lastblank(inp,ial,lop)
@@ -4064,18 +4156,18 @@ subroutine j_reps2(inp,i1,i2,lop,aa)
 		do i=ie-1,2,-1
 			if(chv(i:i).ne.'0') goto 2
 			nz=nz+1
-		enddo !i=ie-1,2,-1   4064
+		enddo !i=ie-1,2,-1   4156
 2   if(nz.ne.0.and.ie.lt.8)then
 		!        write(6,*)nz,i,':',chv
 			do  j=i+1,i+nz
 				chv(j:j)=chv(j+nz:j+nz)
 				!        write(6,*)j,':',chv
-			enddo ! j=i+1,i+nz   4070
-		endif !2   if(nz.ne.0.and.ie.lt.8)   4068
+			enddo ! j=i+1,i+nz   4162
+		endif !2   if(nz.ne.0.and.ie.lt.8)   4160
 		!        write(6,*)i1,i2,lop,chv,nz
 		call j_repl(inp,i1,i2,lop,chv,8-nz)
 		!        write(6,*)lop,':',inp
-	endif !if(ii2.eq.ii1+1.or.aa.eq.0.)   4056
+	endif !if(ii2.eq.ii1+1.or.aa.eq.0.)   4148
 	return
 end subroutine j_reps2 !subroutine j_reps2(inp,i1,i2,lop,aa)
  
@@ -4099,7 +4191,7 @@ subroutine j_repl(jono1,i1,i2,linp,jono2,le2) !replaces the substring jono1(i1:i
 		do  i=i2+1,linp
 			jono1(j:j)=jono1(i:i)
 			j=j+1 !do 1 i=i2+1,linp
-		enddo ! i=i2+1,linp   4099
+		enddo ! i=i2+1,linp   4191
 		jono1(linp+nc+1:linp)=' '
 	else if(nc.gt.0) then !if(nc.lt.0)then
 		! shift right
@@ -4109,12 +4201,12 @@ subroutine j_repl(jono1,i1,i2,linp,jono2,le2) !replaces the substring jono1(i1:i
 			!     call jout(1,'call ambulance')
 			stop 'per..'
 			!         return
-		endif !if(j.gt.linp2)   4108
+		endif !if(j.gt.linp2)   4200
 		do  i=linp,i2+1,-1
 			jono1(j:j)=jono1(i:i)
 			j=j-1 !do 2 i=linp,i2+1,-1
-		enddo ! i=linp,i2+1,-1   4113
-	endif !if(nc.lt.0)   4096
+		enddo ! i=linp,i2+1,-1   4205
+	endif !if(nc.lt.0)   4188
 	if(le2.gt.0)jono1(i1:i1+le2-1)=jono2(1:le2)
 	linp=linp+nc
 	return
@@ -4134,7 +4226,7 @@ subroutine j_repse(inp,i1,i2,lop,iii,ial2)
 	write(buf,1)iii
 	do j=1,8
 		if(buf(j:j).ne.' ')exit !do 20 j=1,8
-	enddo !j=1,8   4135
+	enddo !j=1,8   4227
 	!21 continue
 	!         if(buf(j:j).eq.'-')buf(j:j)='_'
 	li=9-j
@@ -4143,7 +4235,7 @@ subroutine j_repse(inp,i1,i2,lop,iii,ial2)
 		! move left
 		do  k=i1+li,lop+jero
 			inp(k:k)=inp(k-jero:k-jero) !do 30 k=i1+li,lop+jero
-		enddo ! k=i1+li,lop+jero   4144
+		enddo ! k=i1+li,lop+jero   4236
 		inp(lop+jero+1:lop)=' '
 	else if(jero.gt.0)then !if(jero.lt.0)then
 		! move right
@@ -4151,9 +4243,9 @@ subroutine j_repse(inp,i1,i2,lop,iii,ial2)
 		do  k=lop,i2+1,-1
 			!      write(6,*)'k,ik',k,inp(k:k)
 			inp(k+jero:k+jero)=inp(k:k) !do 31 k=lop,i2+1,-1
-		enddo ! k=lop,i2+1,-1   4151
+		enddo ! k=lop,i2+1,-1   4243
 		!     if(inp(1:1).eq.'$')write(6,*)'häär',inp
-	end if !if(jero.lt.0)   4142
+	end if !if(jero.lt.0)   4234
 	inp(i1:i1+li-1)=buf(j:8)
 	if(present(ial2))ial2=i1+li
 	!           if(inp(1:1).eq.'$')write(6,*)'nyt',inp
@@ -4234,7 +4326,7 @@ character*8 function j_chr8b(a,le)
 		j_chr8b='0';le=1; return
 	elseif(a.eq.1)then !if(a.eq.zero)then
 		j_chr8b='1';le=1; return
-	endif !if(a.eq.zero)   4233
+	endif !if(a.eq.zero)   4325
 	!      write(6,*)a
 	last=16
 	if(a.gt.0.)then
@@ -4275,28 +4367,28 @@ character*8 function j_chr8b(a,le)
 15  	format(g16.4)
 			buf(14:15)=buf(15:16)
 			last=15
-		endif !if(a.lt.1.e-10)   4241
+		endif !if(a.lt.1.e-10)   4333
 		!      write(6,*)'last',last,'buf',buf,'/'
 		do i=12,6,-1
 			if((buf(i:i).ne.'0'.and.buf(i:i).ne.'.').or.buf(i+1:i+1).eq.'.')exit
-		enddo !i=12,6,-1   4280
+		enddo !i=12,6,-1   4372
 		do j=1,8
 			if(buf(j:j).ne.' ')exit
-		enddo !j=1,8   4283
+		enddo !j=1,8   4375
  
 		if(buf(13:16).eq.' ')then
 			le=i-j+1
 			if(le.gt.8.and.buf(j:j).eq.'0')then
 				j=j+1;le=le-1
-			endif !if(le.gt.8.and.buf(j:j).eq.'0')   4289
+			endif !if(le.gt.8.and.buf(j:j).eq.'0')   4381
 			j_chr8b=buf(j:i)
 		else !if(buf(13:16).eq.' ')then
 			le=i-j+1+ last-13+1
 			if(le.gt.8.and.buf(j:j).eq.'0')then
 				j=j+1;le=le-1
-			endif !if(le.gt.8.and.buf(j:j).eq.'0')   4295
+			endif !if(le.gt.8.and.buf(j:j).eq.'0')   4387
 			j_chr8b=buf(j:i)//buf(13:last)
-		endif !if(buf(13:16).eq.' ')   4287
+		endif !if(buf(13:16).eq.' ')   4379
 		!     if(le.gt.8)  write(6,*)'chr8b:',chr8b,' le:',le
 		return
 	else !if(a.gt.0.)then
@@ -4338,35 +4430,35 @@ character*8 function j_chr8b(a,le)
 25    format(g16.3)
 			buf(14:15)=buf(15:16)
 			last=15
-		endif !if(aa.lt.1.e-10)   4304
+		endif !if(aa.lt.1.e-10)   4396
 		!      write(6,*)'last',last,'buf',buf,'/'
  
 		do i=12,6,-1
 			if((buf(i:i).ne.'0'.and.buf(i:i).ne.'.').or.buf(i+1:i+1).eq.'.')exit
-		enddo !i=12,6,-1   4344
+		enddo !i=12,6,-1   4436
 		do j=1,8
 			if(buf(j:j).ne.' ')exit
-		enddo !j=1,8   4347
+		enddo !j=1,8   4439
 		if(buf(j+1:j+1).eq.'0')then
 			buf(j+1:j+1)=buf(j:j);j=j+1
-		endif !if(buf(j+1:j+1).eq.'0')   4350
+		endif !if(buf(j+1:j+1).eq.'0')   4442
  
 		if(buf(13:16).eq.' ')then
 			le=i-j+1
 			if(le.gt.8.and.buf(j:j).eq.'0')then
 				j=j+1;le=le-1
-			endif !if(le.gt.8.and.buf(j:j).eq.'0')   4356
+			endif !if(le.gt.8.and.buf(j:j).eq.'0')   4448
 			j_chr8b=buf(j:i)
 		else !if(buf(13:16).eq.' ')then
 			le=i-j+1+ last-13+1
 			if(le.gt.8.and.buf(j:j).eq.'0')then
 				j=j+1;le=le-1
-			endif !if(le.gt.8.and.buf(j:j).eq.'0')   4362
+			endif !if(le.gt.8.and.buf(j:j).eq.'0')   4454
 			j_chr8b=buf(j:i)//buf(13:last)
-		endif !if(buf(13:16).eq.' ')   4354
+		endif !if(buf(13:16).eq.' ')   4446
 		!      if(le.gt.8)  write(6,*)'chr8b:',chr8b,' le:',le
 		return
-	endif !if(a.gt.0.)   4240
+	endif !if(a.gt.0.)   4332
  
 1 format(f16.7)
 2 format(e8.1)
@@ -4377,13 +4469,13 @@ character*8 function j_chr8b(a,le)
 			buf(i:i)=' '
 		else !if(buf(i:i).eq.'0')then
 			exit
-		endif !if(buf(i:i).eq.'0')   4376
-	enddo !i=16,1,-1   4375
+		endif !if(buf(i:i).eq.'0')   4468
+	enddo !i=16,1,-1   4467
  
 	if(buf(i:i).eq.'.')then
 		buf(i:i)=' '
 		i=i-1
-	endif !if(buf(i:i).eq.'.')   4383
+	endif !if(buf(i:i).eq.'.')   4475
 	le=i
 	j_chr8b=buf(1:8)
 	return
@@ -4403,7 +4495,7 @@ integer function j_countlim(inp,linp,lim)
 		if(inp(j:j).eq."[")haka=.true.
 		if(inp(j:j).eq."]")haka=.false.
 		if(inp(j:j).eq.lim.and..not.haka.and..not.hipsu)j_countlim=j_countlim+1
-	enddo !j=1,linp   4401
+	enddo !j=1,linp   4493
 	return
 end function
  
@@ -4428,7 +4520,7 @@ function j_nextlimset(inp,ial,lop,limset)
 	else
 		j_nextlimset=ial+ik-1
  
-	endif !if(ik.le.0)   4426
+	endif !if(ik.le.0)   4518
  
 end function !function j_nextlim(inp,ial,lop,limit)
  
@@ -4462,13 +4554,13 @@ function j_nextlim(inp,ial,lop,limit,inhipsu)
 				if(inp(i:i).eq.limit(j:j))then
 					j_nextlim=i
 					return
-				endif !if(inp(i:i).eq.limit(j:j))   4462
-			enddo ! j=1,le   4461
+				endif !if(inp(i:i).eq.limit(j:j))   4554
+			enddo ! j=1,le   4553
  
-		enddo ! i=ial,lop   4460
+		enddo ! i=ial,lop   4552
 		j_nextlim=lop+1
 		return
-	endif !if(ishipsu)   4459
+	endif !if(ishipsu)   4551
  
  
 	haka=.false.
@@ -4481,32 +4573,32 @@ function j_nextlim(inp,ial,lop,limit,inhipsu)
 		j_nextlim=lop+1
 		return
  
-	endif !if(ial.le.0.or.lop.gt.linp)   4477
+	endif !if(ial.le.0.or.lop.gt.linp)   4569
 	do  i=ial,lop
 		if(inp(i:i).eq."'")then
 			hipsu=.not.hipsu
 			cycle
-		endif !if(inp(i:i).eq."'")   4486
+		endif !if(inp(i:i).eq."'")   4578
 		if(inp(i:i).eq.'['.and..not.hipsu)then
 			haka=.true.
 			cycle
-		endif !if(inp(i:i).eq.'['.and..not.hipsu)   4490
+		endif !if(inp(i:i).eq.'['.and..not.hipsu)   4582
 		if(haka)then
 			if(inp(i:i).eq.']')haka=.false.
 			cycle
-		endif !if(haka)   4494
+		endif !if(haka)   4586
 		if(haka.or.hipsu)cycle
 		do  j=1,le
 			if(inp(i:i).eq.limit(j:j)) goto 3
-		enddo ! j=1,le   4499
-	enddo ! i=ial,lop   4485
+		enddo ! j=1,le   4591
+	enddo ! i=ial,lop   4577
 	!1 continue !do 1 i=ial,lop
 	i=lop+1
 3 j_nextlim=i
 	if(haka)then
 		write(6,*)ial,lop,'*unclosed [ in ', inp(ial:lop),(ichar(inp(j:j)),j=ial,lop)
 		j_err=.true.
-	endif !if(haka)   4506
+	endif !if(haka)   4598
 	return
 end function j_nextlim !function j_nextlim(inp,ial,lop,limit)
  
@@ -4532,29 +4624,29 @@ function j_prevlim(inp,ial,limit)
 		if(inp(i:i).eq."'")then
 			hipsu=.not.hipsu
 			cycle
-		endif !if(inp(i:i).eq."'")   4532
+		endif !if(inp(i:i).eq."'")   4624
  
 		if(inp(i:i).eq.']'.and..not.hipsu)then
 			haka=.true.
 			cycle
-		endif !if(inp(i:i).eq.']'.and..not.hipsu)   4537
+		endif !if(inp(i:i).eq.']'.and..not.hipsu)   4629
 		if(haka)then
 			if(inp(i:i).eq.'[')haka=.false.
 			cycle
-		endif !if(haka)   4541
+		endif !if(haka)   4633
 		if(haka.or.hipsu)cycle
 		do  j=1,le
 			if(inp(i:i).eq.limit(j:j)) goto 3
-		enddo ! j=1,le   4546
+		enddo ! j=1,le   4638
 		!2   continue !do 2 j=1,le
-	enddo ! i=ial,1,-1   4531
+	enddo ! i=ial,1,-1   4623
 	! 1 continue !do 1 i=ial,1,-1
 	i=0
 3 j_prevlim=i
 	if(haka)then
 		write(6,*)ial,lop,'*unclosed [ in ', inp(ial:lop),(ichar(inp(j:j)),j=ial,lop)
 		j_err=.true.
-	endif !if(haka)   4554
+	endif !if(haka)   4646
 	return
 end function j_prevlim !function j_prevlim(inp,ial,limit)
  
@@ -4629,9 +4721,9 @@ function j_nextlim2(inp,ial,lop,limit) !likem nextlim but [] sequences are not i
 		! endif
 		do  j=1,le
 			if(inp(i:i).eq.limit(j:j)) goto 3
-		enddo ! j=1,le   4630
+		enddo ! j=1,le   4722
 		!2   continue !do 2 j=1,le
-	enddo ! i=ial,lop   4621
+	enddo ! i=ial,lop   4713
 	! 1 continue !do 1 i=ial,lop
 	i=lop+1
 3 j_nextlim2=i
@@ -4667,7 +4759,7 @@ function j_nextword(inp,ial,lop,limit)
 	if(ial+le-1>lop) then
 		j_nextword = lop+1
 		return
-	endif !if(ial+le-1>lop)   4667
+	endif !if(ial+le-1>lop)   4759
  
 	i = index(inp(ial:lop),limit(1:le))
 	!###TESTAUS###
@@ -4676,7 +4768,7 @@ function j_nextword(inp,ial,lop,limit)
 		j_nextword = ial+i-1
 	else !if(i>0) then
 		j_nextword = lop+1
-	endif !if(i>0)   4675
+	endif !if(i>0)   4767
 	return
 end function j_nextword !function j_nextword(inp,ial,lop,limit)
  
@@ -4710,7 +4802,7 @@ subroutine j_jreplace(inp,ial,lop,cout,lcout,word1,lword1,word2,lword2)
 		ialin = ialin + lword1 + npit
 		!if(nextw<lop) goto 1
 		goto 1
-	endif !if(nextw<lop)   4705
+	endif !if(nextw<lop)   4797
 	lcout = ialout - 1
 	return
 end subroutine j_jreplace !subroutine j_jreplace(inp,ial,lop,cout,lcout,word1,lword1,word2,lword2)
@@ -4736,7 +4828,7 @@ function j_nextrp(inp,ial,lop)
 		if(inp(i:i).eq.'[')markkuv=markkuv+1
 		if(inp(i:i).eq.']')markkur=markkur+1
 		if(isulv.eq.isulr.and.markkur.eq.markkuv) goto 3
-	enddo ! i=ial,lop   4733
+	enddo ! i=ial,lop   4825
 	!1 continue !do 1 i=ial,lop
 	i=lop+1
 3 j_nextrp=i
@@ -4757,8 +4849,8 @@ subroutine j_adjul2(inp)
 		if(ichar(inp(i:i)).gt.32)then
 			if(i.gt.1)  inp=inp(i:)
 			return
-		endif !if(ichar(inp(i:i)).gt.32)   4757
-	enddo ! i=1,lop   4755
+		endif !if(ichar(inp(i:i)).gt.32)   4849
+	enddo ! i=1,lop   4847
 	!1 continue !do 1 i=1,lop
 	return
 end subroutine j_adjul2 !subroutine j_adjul2(inp)
@@ -4814,11 +4906,11 @@ character*10 function j_chr10(a)
 		else !if(a.gt.1.d13)then
 			write(buf,1)a
 			if(buf(1:3).eq.'***')write(buf,2)a
-		endif !if(a.gt.1.d13)   4808
+		endif !if(a.gt.1.d13)   4900
 	else !if(abs(a).gt.1.e-5.or.a.eq.zero)then
 		write(buf,2)a
 		if(buf(1:3).eq.'***')write(buf,3)a
-	endif !if(abs(a).gt.1.e-5.or.a.eq.zero)   4807
+	endif !if(abs(a).gt.1.e-5.or.a.eq.zero)   4899
 1 format(f20.9)
 2 format(e10.5)
 3 format(e10.4)
@@ -4838,11 +4930,13 @@ subroutine j_gayainit(iob,io)
  
 	integer, intent(in):: iob,io
  
-	npar=j_nargopt(iob,io,j_mpar) !number of parameters given in par-> option
+	!	npar=j_nargopt(iob,io,j_mpar) !number of parameters given in par-> option
 	!	j_g_maxvar=j_nargopt(iob,j_msubread) !!n umber of variables given in subread-> option
-	j_g_maxvar=j_nread(2)  !datansubread_
+	call j_getoption_index(iob,io,j_mpar,-1,2,j_ipreal,.true.,npar,j_optarg0)
  
-	!	write(6,*)'<47477 ',j_g_maxvar,j_nread(2),npar
+	j_g_maxvar=j_nread  !datansubread_
+ 
+	!	write(6,*)'<47477 ',j_g_maxvar,j_nread,npar
  
 	if(npar.ge.1)then
 		if(npar.eq.1)then
@@ -4850,30 +4944,32 @@ subroutine j_gayainit(iob,io)
 			write(6,*)'*there must be two par-parameters'
 			j_err=.true.
 			return
-		endif !if(npar.eq.1)   4848
-		lip=j_linkoption(iob,io,j_mpar)
-		j_g_ngvar=j_v(j_o(iob)%i(lip+1) ) ! value of first parameter in par->
-		j_g_npvar=j_v(j_o(iob)%i(lip+2) ) !value of second
- 
-	else !if(npar.ge.1)then
+		endif !if(npar.eq.1)   4942
+		!lip=j_linkoption(iob,io,j_mpar)
+		j_g_ngvar=j_v(j_optarg0(1)) !j_o(iob)%i(lip+1) ) ! value of first parameter in par->
+		j_g_npvar=j_v(j_optarg0(2))  !j_o(iob)%i(lip+2) ) !value of second
+		write(6,*)'j_g_ngvar,j_g_npvar',j_g_ngvar,j_g_npvar
+	else
+		! default values
 		! default values
 		j_g_ngvar=8
 		j_g_npvar=93
-	endif !if(npar.ge.1)   4847
+	endif !if(npar.ge.1)   4941
+	!	write(6,*)'j_g_npvar,j_g_ngvar,j_g_npvar+j_g_ngvar',j_g_npvar,j_g_ngvar,j_g_npvar+j_g_ngvar
 	j_g_nvar=j_g_npvar+j_g_ngvar
 	j_nper=(j_g_maxvar-j_g_ngvar)/j_g_npvar
 	j_g_nvarre=j_g_maxvar-j_g_nvar   ! parameter (g_nvarre=g_maxvar-g_nvar)
  
 	! g_maxvar=g_npvar*nper+g_ngvar     !parameter (g_maxvar=g_npvar*maxper+g_ngvar)
-	write(6,*)'gaya: j_g_ngvar,j_g_npvar, nper ',j_g_ngvar,j_g_npvar,j_nper
+	write(6,*)'gaya: j_g_ngvar,j_g_npvar, nper ',j_g_ngvar,j_g_npvar,j_nper !,'j_g_nvarre',j_g_nvarre
 	!	write(6,*)'g_ngvar,g_npvar,nper,j_g_maxvar=',j_g_ngvar,j_g_npvar,j_nper,j_g_maxvar
- 
+	write(6,*)'(j_g_maxvarold',j_g_maxvarold
 	if(j_g_maxvarold.lt.j_g_maxvar)then
 		if(allocated(j_g_xx))deallocate(j_g_xx,j_g_p,j_g_var,j_g_ixl)
 		allocate (j_g_xx(1:j_g_maxvar),j_g_p(1:j_g_maxvar),j_g_var(1:j_g_maxvar))
 		allocate (j_g_ixl(1:j_g_maxvar))
 		j_g_maxvarold=j_g_maxvar
-	endif !if(j_g_maxvarold.lt.j_g_maxvar)   4871
+	endif !if(j_g_maxvarold.lt.j_g_maxvar)   4967
 end subroutine !subroutine j_gayainit(iob)
  
  
@@ -4939,10 +5035,12 @@ subroutine j_gayax(nuo2,is)  !,readxl,v)
 	t1=secnds(0.)
 	call cpu_time(c1)
 	read(NUo2)nsper,ip,(j_g_p(ii),ii=1,ip)
+	!	write(17,*)'sper',nsper,ip
 	!	  write(6,*)nsper,ip,(g_p(ii),ii=1,ip)
 	t2=secnds(0.)
 	call cpu_time(c2)
 	call j_f_pca_gaya(j_g_xx,ixx,j_g_p,ip)
+	!	write(17,*)ixx,ip
 	t3=secnds(0.)
 	call cpu_time(c3)
 	rt=rt+t2-t1
@@ -4954,16 +5052,19 @@ subroutine j_gayax(nuo2,is)  !,readxl,v)
 	j_g_var(2)=nsper*1.
 	Do  j=3,j_g_ngvar
 		j_g_var(j)=j_g_xx(j-2) !Do 110 j=3,j_g_ngvar
-	enddo ! j=3,j_g_ngvar   4955
+	enddo ! j=3,j_g_ngvar   5053
 	!C Variable slnr and nsper is not in g_xx-array (out-packed version of p)
 	!C This means that g_ngvar-2 out of g_ngvar non-periodic x-variables
 	!C is read 'directly'. Thus, the 111 loop has to start from
 	!C g_ngvar-1 (not g_ngvar+1)
+ 
 	ij=j_g_ngvar
 	do  j=j_g_ngvar-1,ixx
 		ij=ij+1
+		!	if(ij+((nsper-1)*j_g_npvar).gt.j_g_maxvar)write(6,*)'hep ij,ij-((nsper-1)*j_g_npvar,nsper,j_g_ngvar,j_g_npvar,j,ixx',&
+		!		ij,ij-(nsper-1)*j_g_npvar,nsper,j_g_ngvar,j_g_npvar,j,ixx,ij+((nsper-1)*j_g_npvar)
 		j_g_var(ij+((nsper-1)*j_g_npvar))=j_g_xx(j) !Do 111 j=j_g_ngvar-1,ixx
-	enddo ! j=j_g_ngvar-1,ixx   4963
+	enddo ! j=j_g_ngvar-1,ixx   5062
  
 	!Chfh      ij=nper*g_npvar+g_ngvar
 	!Chfh      read(NUo2)(var(j),j=g_ngvar+1,ij),(var(j),j=1,g_ngvar)
@@ -4975,7 +5076,7 @@ subroutine j_gayax(nuo2,is)  !,readxl,v)
 	! apu=j_g_var(ij)
 	! !         if(areav(ij) )apu=area*apu
 	! 5 V(readxl(i))=apu !do 5 i=1,readxl(0)
-	j_v(j_d(2)%readv)=j_g_var(1:j_nread(2))
+	j_v(j_readv)=j_g_var(1:j_nread)
 	!       if(is.eq.1)write(6,*)'area2',area,'nverdi',v(readxl(4))
 	!*         if(iperk.ne.12456)write(6,*)(v(readxl(jjj)),jjj=1,
 	!*     2   readxl(0) )
@@ -5023,8 +5124,8 @@ subroutine j_f_pca_gaya(x,ix,p,ipp)
 			!           compress number
 			jz=ichar(cc(4:4))
 			goto 4
-		endif !if(cc(1:3).eq.cw(i))   5019
-3 continue !3 i=1,5   5017
+		endif !if(cc(1:3).eq.cw(i))   5120
+3 continue !3 i=1,5   5118
 31 continue
 	ip=ipp
 	ji=1
@@ -5041,22 +5142,22 @@ subroutine j_f_pca_gaya(x,ix,p,ipp)
 			do  j=1,nz
 				ix=ix+1
 				x(ix)=0. !do 2 j=1,nz
-			enddo ! j=1,nz   5041
+			enddo ! j=1,nz   5142
 			!           decompress number
 			kz=kz+1
 		else !if(jz.ne.0.and.cc(1:3).eq.cw(ji))then
 			ix=ix+1
 			x(ix)=p(i)
-		endif !if(jz.ne.0.and.cc(1:3).eq.cw(ji))   5039
-1 continue !1 i=1,ip   5037
+		endif !if(jz.ne.0.and.cc(1:3).eq.cw(ji))   5140
+1 continue !1 i=1,ip   5138
 
 	!       compare decompress and compress number, if possible
 	if(jz.gt.0.and.jz.lt.255)then
 		if(jz.ne.kz)then
 			write(*,*)' F_PCA decompress error: jz .ne. kz',jz,kz
 			stop 'F_PCA'
-		endif !if(jz.ne.kz)   5055
-	endif !if(jz.gt.0.and.jz.lt.255)   5054
+		endif !if(jz.ne.kz)   5156
+	endif !if(jz.gt.0.and.jz.lt.255)   5155
 	return
 end subroutine j_f_pca_gaya !subroutine j_f_pca_gaya(x,ix,p,ipp)
 !end of gaya sub *****************************************
@@ -5097,7 +5198,7 @@ double precision function j_rlinter(x0,x1,y0,y1,x)  !linear interpolation
 		write(6,*)'x0==x1 in interpolation'
 		j_err=.true.
 		return
-	endif !if(x1.eq.x0)   5096
+	endif !if(x1.eq.x0)   5197
  
 	j_rlinter=y0+(x-x0)*(y1-y0)/(x1-x0)
 	return
@@ -5122,7 +5223,7 @@ double precision function j_sqrtt(x)
 		j_sqrtt=sqrt(x)
 	else !if(x.ge.0)then
 		j_sqrtt=-sqrt(-x)
-	endif !if(x.ge.0)   5121
+	endif !if(x.ge.0)   5222
 	return
 end function j_sqrtt !double precision function j_sqrtt(x)
  
@@ -5142,16 +5243,16 @@ double precision function j_flini(np,x,y,r1,r2)
 	if(r1.ge.r2)then
 		j_flini=0.
 		return
-	endif !if(r1.ge.r2)   5142
+	endif !if(r1.ge.r2)   5243
 	if(np.le.1)then
 		j_flini=y(1)*(r2-r1)
 		return
-	end if !if(np.le.1)   5146
+	end if !if(np.le.1)   5247
 	sum=0.d0
 	!search first x.ge. r1
 	do  i=1,np
 		if(x(i).gt.r1)goto 2 !do 1 i=1,np
-	enddo ! i=1,np   5152
+	enddo ! i=1,np   5253
 	!*       write(6,*)'satana'
 	j_flini=0.
 	return
@@ -5163,7 +5264,7 @@ double precision function j_flini(np,x,y,r1,r2)
 		j_flini=(r2-r1)*0.5*(ya+yy)
 		!   write(6,*)'flini ',flini
 		return
-	endif !if(r2.le.x(i))   5161
+	endif !if(r2.le.x(i))   5262
 	sum=(x(i)-r1)*0.5*(ya+y(i))
 	ia=i
 	!*         write(6,*)'**sum,ia',sum,ia
@@ -5175,8 +5276,8 @@ double precision function j_flini(np,x,y,r1,r2)
 			goto 8
 		else !if(x(i+1).ge.r2.or.i.eq.np-1)then
 			sum=sum+(x(i+1)-x(i))*0.5*(y(i+1)+y(i))
-		endif !if(x(i+1).ge.r2.or.i.eq.np-1)   5172
-	enddo !i=ia,np-1   5171
+		endif !if(x(i+1).ge.r2.or.i.eq.np-1)   5273
+	enddo !i=ia,np-1   5272
  
 8 j_flini=sum
 	! write(6,*)'flini ',flini
@@ -5192,13 +5293,13 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 	nupdate=.true.
 	if(present(update))then
 		nupdate=.not.update
-	endif !if(present(update))   5193
+	endif !if(present(update))   5294
 	!	p=j_v(j_ivdebug).gt.j_0
 	!write(6,*)'<666nupdate ',nupdate
 	if(nupdate)then
 		call j_startfunction(iob,io,0,j_gpnarg,j_gparg,j_gpiout)
 		!	write(6,*)'gpiout',j_gpiout
-		if(j_gpiout.gt.j_namedv)then
+		if(j_gpiout.gt.j_named)then
 			!io=io+narg+3
 			j_gpnewio=io+j_gpnarg+3
 			!		write(6,*)'newio',j_o(iob)%i(j_gpnewio:j_gpnewio+8)
@@ -5207,23 +5308,23 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 				if(j_otype(ili).ne.j_iplist)then
 					write(6,*)'figure can be stored only in named object'
 					j_err=.true.;return
-				endif !if(j_otype(ili).ne.j_iplist)   5207
+				endif !if(j_otype(ili).ne.j_iplist)   5308
 				if(j_o(iob)%i(j_gpnewio+1).ne.2)then
 					write(6,*)'LIST() can have here only one argument'
 					j_err=.true.;return
-				endif !if(j_o(iob)%i(j_gpnewio+1).ne.2)   5211
+				endif !if(j_o(iob)%i(j_gpnewio+1).ne.2)   5312
 				iel=j_v( j_o(iob)%i(j_gpnewio+3))
 				j_gpiout=j_o(ili)%i2(iel)
 				!			write(6,*)'out',j_gpiout
 			else !if(j_o(iob)%i(j_gpnewio).eq.3)then
 				write(6,*)'figure cannot be temporary object'
 				j_err=.true.;return
-			endif !if(j_o(iob)%i(j_gpnewio).eq.3)   5205
-		endif !if(j_gpiout.gt.j_namedv)   5201
+			endif !if(j_o(iob)%i(j_gpnewio).eq.3)   5306
+		endif !if(j_gpiout.gt.j_named)   5302
  
 		!		write(6,*)'<66iout,append,j_otype(iout)',iout,append,j_otype(iout)
  
-		j_gpshow=j_isopt(iob,io,j_mshow,.true.)
+		j_gpshow=j_isoption(iob,io,j_mshow,.true.)
  
 		!	write(6,*)'show',j_gpshow
 		!	endif
@@ -5244,9 +5345,9 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 				write(6,*)'illegal marksize->',isi
 				j_err=.true.
 				return
-			endif !if(isi.le.0.or.isi.ge.10)   5243
+			endif !if(isi.le.0.or.isi.ge.10)   5344
 			j_gpps(5:5)=char(48+isi)
-		endif !if(noptarg.le.0)   5239
+		endif !if(noptarg.le.0)   5340
 		call j_getoption_index(iob,io,j_maxes,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
 		if(j_err)return
 		if(noptarg.gt.0)then
@@ -5254,7 +5355,7 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 			j_gpaxes=j_v(j_optarg0(1))
 		else
 			j_gpaxes=11
-		endif !if(noptarg.gt.0)   5252
+		endif !if(noptarg.gt.0)   5353
  
 		j_gpappend=j_linkoption(iob,io,j_mappend,clear=.true.).ge.0
 		!	call j_defchar(j_gpiout,'.jfig',ivout)
@@ -5271,7 +5372,7 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 			allocate(j_o(j_gpiout)%d(1:10))  ! given xmin xmax xmin2 xmax2 ymin ymax obtained
 			j_otype(j_gpiout)=j_ipfigure
 			j_gpappend=.false.
-		end if !if(j_otype(j_gpiout).ne.j_ipfigure)   5261
+		end if !if(j_otype(j_gpiout).ne.j_ipfigure)   5362
 		if(.not.j_gpappend)then
 			j_o(j_gpiout)%d(1:6)=1.7d20
 			j_o(j_gpiout)%d(7)=1.7d20
@@ -5304,15 +5405,15 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 			nres=(j_o(j_gpiout)%i(4)+1)/2 !i4 reserved plot command rows
 			j_o(j_gpiout)%i(1)=j_gpbas+nres
 			!		write(6,*)'<888hhd55',j_o(j_gpiout)%i(1)
-		endif !if(.not.j_gpappend)   5275
+		endif !if(.not.j_gpappend)   5376
  
 		!call j_startfunction(iob,io,iptype,narg,arg,ivout)
  
 		call j_getoption_index(iob,io,j_mpoints,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
 		if(noptarg.gt.0)j_gppoints=j_v(j_optarg0(1))
  
-	endif !if(nupdate)   5198
-	j_gpcontinue=j_isopt(iob,io,j_mcontinue)
+	endif !if(nupdate)   5299
+	j_gpcontinue=j_isoption(iob,io,j_mcontinue)
 	!	write(6,*)'<49 gpcontinue ',j_gpcontinue
 	! call j_getoption_index(iob,io,j_mcontinue,-1,1,j_ipreal,.false.,.false.,noptarg,j_optarg0)
 	! if(noptarg.lt.0)then
@@ -5334,8 +5435,8 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 			if(j_gpset.lt.0.or.j_gpset.gt.5)then
 				write(6,*)'set-> should be between 1 and 5'
 				j_err=.true.;return
-			endif !if(j_gpset.lt.0.or.j_gpset.gt.5)   5334
-		endif !if(noptarg.lt.0)   5328
+			endif !if(j_gpset.lt.0.or.j_gpset.gt.5)   5435
+		endif !if(noptarg.lt.0)   5429
  
 		call j_getoption_index(iob,io,j_mmark,-1,1,0,.true.,noptarg,j_optarg0)
 		if(noptarg.le.0)then
@@ -5346,15 +5447,15 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 			if(j_otype(j_gpmark).ne.j_ipreal.and.j_otype(j_gpmark).ne.j_ipchar)then
 				write(6,*)'mark-> must be REAL or CHAR'
 				j_err=.true.;return
-			endif !if(j_otype(j_gpmark).ne.j_ipreal.and.j_otype(j_gpmark).ne.   5346
-		endif !if(noptarg.le.0)   5341
+			endif !if(j_otype(j_gpmark).ne.j_ipreal.and.j_otype(j_gpmark).ne.   5447
+		endif !if(noptarg.le.0)   5442
  
 		call j_getoption_index(iob,io,j_mwidth,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
 		if(noptarg.le.0)then
 			j_gpwidth=1
 		else !if(noptarg.le.0)then
 			j_gpwidth=j_v(j_optarg0(1))
-		endif !if(noptarg.le.0)   5353
+		endif !if(noptarg.le.0)   5454
 		j_gplw(5:5)=char(48+j_gpwidth)
  
 		call j_getoption_index(iob,io,j_mmark,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
@@ -5362,7 +5463,7 @@ subroutine j_startfig(iob,io,update) !defines a figure object
  
 		else !if(noptarg.le.0)then
 			j_gpmark=j_optarg0(1)  !0  no mark
-		endif !if(noptarg.le.0)   5361
+		endif !if(noptarg.le.0)   5462
  
 		call j_getoption_index(iob,io,j_mcolor,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
 		if(noptarg.le.0)then
@@ -5370,14 +5471,14 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 		else !if(noptarg.le.0)then
 			j_gpicolor=j_v(j_optarg0(1))
 			if(j_gpicolor.gt.8)j_gpicolor=1
-		endif !if(noptarg.le.0)   5368
+		endif !if(noptarg.le.0)   5469
  
 		call j_getoption_index(iob,io,j_mstyle,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
 		if(noptarg.le.0)then
 			j_gpstyle=1
 		else !if(noptarg.le.0)then
 			j_gpstyle=j_v(j_optarg0(1))
-		endif !if(noptarg.le.0)   5376
+		endif !if(noptarg.le.0)   5477
 		j_gplt(5:5)=char(48+j_gpstyle)
  
 		call j_getoption_index(iob,io,j_mlabel,-1,1,j_ipchar,.true.,noptarg,j_optarg0)
@@ -5385,8 +5486,8 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 			j_gplelabel=0
 		else !if(noptarg.le.0)then
 			call j_getchar(j_optarg0(1),j_gplabel,j_gplelabel)
-		endif !if(noptarg.le.0)   5384
-	endif !if(nupdate)   5325
+		endif !if(noptarg.le.0)   5485
+	endif !if(nupdate)   5426
  
 	call j_getoption_index(iob,io,j_mtitle,-1,1,j_ipchar,.true.,noptarg,j_optarg0)
 	if(j_err)return
@@ -5433,8 +5534,8 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 			call j_putfig0(1,'set title "'//j_gptitle(1:ifo-1)//'" font "'//j_gptitle(ifo+1:j_gpletitle-1)//'"')
 		else
 			call j_putfig0(1,'set title "'//j_gptitle(1:j_gpletitle)//'"')
-		endif !if(ifo.gt.0)   5432
-	endif !if(j_gpletitle.gt.0)   5427
+		endif !if(ifo.gt.0)   5533
+	endif !if(j_gpletitle.gt.0)   5528
 	!
 	if(j_gplexlabel.gt.0)then
 		ifo=j_font(j_gpxlabel,j_gplexlabel)
@@ -5445,8 +5546,8 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 				'" font "'//j_gpxlabel(ifo+1:j_gplexlabel-1)//'"')
 		else
 			call j_putfig0(2,'set xlabel "'//j_gpxlabel(1:j_gplexlabel)//'"')
-		endif !if(ifo.gt.0)   5443
-	endif !if(j_gplexlabel.gt.0)   5439
+		endif !if(ifo.gt.0)   5544
+	endif !if(j_gplexlabel.gt.0)   5540
 	if(j_gpleylabel.gt.0)then
 		ifo=j_font(j_gpylabel,j_gpleylabel)
 		if(j_err)return
@@ -5458,8 +5559,8 @@ subroutine j_startfig(iob,io,update) !defines a figure object
  
 			call j_putfig0(3,'set ylabel "'//j_gpylabel(1:j_gpleylabel)//'"')
  
-		endif !if(ifo.gt.0)   5453
-	endif !if(j_gpleylabel.gt.0)   5450
+		endif !if(ifo.gt.0)   5554
+	endif !if(j_gpleylabel.gt.0)   5551
 	!	call j_putfig0(3,'set ylabel "'//j_gpylabel(1:j_gpleylabel)//'"')
  
 	!subroutine j_getoption_index(iob,io,moption,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg) !
@@ -5470,7 +5571,7 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 		if(j_gpix.le.0)then
 			write(6,*)'xrange-> requires x->'
 			j_err=.true.;return
-		endif !if(j_gpix.le.0)   5470
+		endif !if(j_gpix.le.0)   5571
 		ii1=j_object3(j_gpix,'%min')
 		ii2=j_object3(j_gpix,'%max')
 		!		write(6,*)'ii1,ii2',ii1,ii2
@@ -5478,7 +5579,7 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 			write(6,*)'...%min  or ...%max does not exist'
 			j_err=.true. ;return
  
-		endif !if(ii1.le.0.or.ii2.le.0)   5477
+		endif !if(ii1.le.0.or.ii2.le.0)   5578
 		!xmin=j_v(ii1)
 		!xmax=j_v(ii2)
 		write(6,*)'using xrange->(',j_chr10(j_v(ii1)),',',j_chr10(j_v(ii2)),') given by ',j_vname(ii1),&
@@ -5497,10 +5598,10 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 			j_o(j_gpiout)%txt(4)='set xrange['//j_chr10(j_v(j_optarg0(1)))//':'//&
 				j_chr10(j_v(j_optarg0(2)))//']'
  
-		endif !if(noptarg.eq.1.or.noptarg.eq.3)   5494
+		endif !if(noptarg.eq.1.or.noptarg.eq.3)   5595
 		j_o(j_gpiout)%i2(4)=len_trim(j_o(j_gpiout)%txt(4))
  
-	endif !if(noptarg.eq.0.and.nupdate)   5469
+	endif !if(noptarg.eq.0.and.nupdate)   5570
  
  
 	call j_getoption_index(iob,io,j_myrange,-1,2,j_ipreal,.true.,noptarg,j_optarg0)
@@ -5513,7 +5614,7 @@ subroutine j_startfig(iob,io,update) !defines a figure object
 	elseif(noptarg.eq.2)then !if(noptarg.eq.1)then
 		j_o(j_gpiout)%txt(5)='set yrange['//j_chr10(j_v(j_optarg0(1)))//':'//&
 			j_chr10(j_v(j_optarg0(2)))//']'
-	endif !if(noptarg.eq.1)   5511
+	endif !if(noptarg.eq.1)   5612
 	if(noptarg.gt.0)j_o(j_gpiout)%i2(5)=len_trim(j_o(j_gpiout)%txt(5))
  
 	!	if(p)write(6,*)'<736736 nres,j_gpbas,j_o(j_gpiout)%i(1)',nres,j_gpbas,j_o(j_gpiout)%i(1)
@@ -5583,7 +5684,7 @@ subroutine j_openread(fil,for,nu,irecl) ! open file for reading
 		write(6,*)'*J* too many open files, ask R. Lempinen to increase mxunits'
 		j_err = .true.
 		return
-	endif !if(j_nused.ge.j_mxunits)   5582
+	endif !if(j_nused.ge.j_mxunits)   5683
 	nu=j_nunits(j_nused+1)
 	!write(6,*)'file:',fil,' ofr',for,nu
 	if(for(1:1).eq.'b'.or.for(1:1).eq.'B')then
@@ -5598,12 +5699,12 @@ subroutine j_openread(fil,for,nu,irecl) ! open file for reading
 				access='stream',iostat=ios,action='READ')
 		else !if(for(ise:ise).eq.'s')then
 			open(nu,err=90,file=fil,form='unformatted',status='old',iostat=ios,action='READ')
-		endif !if(for(ise:ise).eq.'s')   5596
+		endif !if(for(ise:ise).eq.'s')   5697
 	elseif(for(1:1).eq.'d')then !if(for(1:1).eq.'b'.or.for(1:1).eq.'B')then
 		if(.not.present(irecl))then
 			write(6,*)'*j* j_openread: argument irecl not presetn'
 			j_err=.true.;return
-		endif !if(.not.present(irecl))   5603
+		endif !if(.not.present(irecl))   5704
 		isc=1
 		if(for(2:2).eq.'4')isc=4
 		open(nu,err=90,file=fil,form='unformatted',access='direct',recl=isc*irecl,&
@@ -5611,7 +5712,7 @@ subroutine j_openread(fil,for,nu,irecl) ! open file for reading
 	else !if(for(1:1).eq.'b'.or.for(1:1).eq.'B')then
 		!if(for(1:1).eq.'*'.or.for(1:1).eq.'(')then
 		open(nu,err=90,file=fil,form='formatted',status='old',iostat=ios,action='READ')
-	end if !if(for(1:1).eq.'b'.or.for(1:1).eq.'B')   5589
+	end if !if(for(1:1).eq.'b'.or.for(1:1).eq.'B')   5690
 	j_nused=j_nused+1
  
 	!write(6,*)'<<opening ',nu,fil
@@ -5642,11 +5743,11 @@ subroutine j_openreadiv(ivi,for,nu,ext,irecl) !get file for reading when file na
 	if(iv.eq.j_ivdollar)then
 		nu=5
 		return
-	endif !if(iv.eq.j_ivdollar)   5642
+	endif !if(iv.eq.j_ivdollar)   5743
 	if(j_otype(iv).eq.j_iptext)then
 		nu=-iv
 		return
-	endif !if(j_otype(iv).eq.j_iptext)   5646
+	endif !if(j_otype(iv).eq.j_iptext)   5747
 	ifi=iv
 	if(j_otype(iv).ne.j_ipchar)then
 		if(present(ext))then
@@ -5658,8 +5759,8 @@ subroutine j_openreadiv(ivi,for,nu,ext,irecl) !get file for reading when file na
 			call j_printname('*trying to open file ',iv,' which is not character variable or constant')
 			j_err=.true.
 			return
-		endif !if(present(ext))   5652
-	endif !if(j_otype(iv).ne.j_ipchar)   5651
+		endif !if(present(ext))   5753
+	endif !if(j_otype(iv).ne.j_ipchar)   5752
 	!file from filemod
 	!combines getchar and openread
 	call j_getchar(ifi,j_filename,le)
@@ -5671,7 +5772,7 @@ subroutine j_openreadiv(ivi,for,nu,ext,irecl) !get file for reading when file na
 	if(j_nused.ge.j_mxunits)then
 		write(6,*) '*j* mxunits'
 		j_err=.true.
-	endif !if(j_nused.ge.j_mxunits)   5671
+	endif !if(j_nused.ge.j_mxunits)   5772
 	nu=j_nunits(j_nused+1)
 	!write(6,*)'file:',fil,' ofr',for,nu
 	if(for(1:1).eq.'*'.or.for(1:1).eq.'(')then
@@ -5681,7 +5782,7 @@ subroutine j_openreadiv(ivi,for,nu,ext,irecl) !get file for reading when file na
 		else !if(ivi.gt.0)then
 908			open(nu,err=908,file=j_filename(1:le),form='formatted',status='old',&
 				iostat=ios,action='READWRITE')
-		endif !if(ivi.gt.0)   5678
+		endif !if(ivi.gt.0)   5779
 		j_nused=j_nused+1
 		j_unitchar(nu)=-iv     ! readfile
 		call j_putiounit(nu,iv) ! j_o(iv)%i(4)=nu
@@ -5693,7 +5794,7 @@ subroutine j_openreadiv(ivi,for,nu,ext,irecl) !get file for reading when file na
 		else !if(ivi.gt.0)then
 904			open(nu,err=904,file=j_filename(1:le),form='unformatted',status='old',&
 				iostat=ios,action='READWRITE')
-		endif !if(ivi.gt.0)   5690
+		endif !if(ivi.gt.0)   5791
 		j_nused=j_nused+1
 		j_unitchar(nu)=-iv
 		call j_putiounit(nu,iv) !j_o(iv)%i(4)=nu
@@ -5706,7 +5807,7 @@ subroutine j_openreadiv(ivi,for,nu,ext,irecl) !get file for reading when file na
 			write(6,*)'*j* j_openreadiv, missing irecl'
 			j_err=.true.
 			return
-		endif !if(present(irecl))   5702
+		endif !if(present(irecl))   5803
 		j_nused=j_nused+1
 		j_unitchar(nu)=-iv
 		call j_putiounit(nu,iv) !j_o(iv)%i(4)=nu
@@ -5716,7 +5817,7 @@ subroutine j_openreadiv(ivi,for,nu,ext,irecl) !get file for reading when file na
 		!if(for(1:1).eq.'*'.or.for(1:1).eq.'(')then
 		write(6,*)'*illegal format:',for,', cannot open file'
 		goto 91
-	end if !if(for(1:1).eq.'*'.or.for(1:1).eq.'(')   5677
+	end if !if(for(1:1).eq.'*'.or.for(1:1).eq.'(')   5778
 90 write(6,*)'**error opening file:',j_filename(1:le),' iostat=',ios
 	if(ios.eq.29)write(*,*)'file not found'
 	if(ios.eq.30)write(6,*)'file opened by other application?'
@@ -5760,7 +5861,7 @@ subroutine j_getwritefile(ivfile,ivform,bin,del) !get file for writing, name is 
 	else !if(j_otype(ivform).eq.j_ipchar)then
 		write(6,*)'**illegal format in write'
 		j_err=.true. ;return
-	endif !if(j_otype(ivform).eq.j_ipchar)   5756
+	endif !if(j_otype(ivform).eq.j_ipchar)   5857
 	if(ivfile.eq.j_ivdollar)return
 	call j_getchar(ivfile,j_filename,le)
 	!le=0
@@ -5772,7 +5873,7 @@ subroutine j_getwritefile(ivfile,ivform,bin,del) !get file for writing, name is 
 		write(6,*)'*j* maxunits (2)'
 		j_err=.true.
 		return
-	endif !if(j_nused.ge.j_mxunits)   5771
+	endif !if(j_nused.ge.j_mxunits)   5872
 	nu=j_nunits(j_nused+1)
 	!write(6,*)'file:',filename(1:le)
 	inquire(file=j_filename(1:le),exist=yes)
@@ -5783,8 +5884,8 @@ subroutine j_getwritefile(ivfile,ivform,bin,del) !get file for writing, name is 
 		if(ans.ne.'y'.and.ans.ne.'Y')then
 			write(6,*)'**was not allowed replace file:';j_err=.true.
 			return
-		endif !if(ans.ne.'y'.and.ans.ne.'Y')   5783
-	endif !if(yes.and..not.replace)   5779
+		endif !if(ans.ne.'y'.and.ans.ne.'Y')   5884
+	endif !if(yes.and..not.replace)   5880
 	if (bin)then
 		open(unit=nu,iostat=ier,err=90,file=j_filename(1:le),&
 			ACCESS='SEQUENTIAL',status='REPLACE',form='UNFORMATTED',action='WRITE')
@@ -5792,7 +5893,7 @@ subroutine j_getwritefile(ivfile,ivform,bin,del) !get file for writing, name is 
 		open(unit=nu,  err=90,file=j_filename(1:le),&
 			ACCESS='SEQUENTIAL',status='REPLACE',form='FORMATTED',action='WRITE', &
 			iostat=ier)
-	endif !if (bin)   5788
+	endif !if (bin)   5889
 	!	j_nused=j_nused+1; j_unitchar(nu)=ivfile; j_o(ivfile)%i(4)=nu;return
 	j_nused=j_nused+1; j_unitchar(nu)=ivfile; call j_putiounit(nu,ivfile);return
 90  write(6,*)'error opening file for writing: ',j_filename(1:le),&
@@ -5844,13 +5945,13 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 		j_err=.true.
  
 		return
-	endif !if(rw.ne.'r'.and.rw.ne.'w'.and.rw.ne.'a')   5842
+	endif !if(rw.ne.'r'.and.rw.ne.'w'.and.rw.ne.'a')   5943
 	if(rw.eq.'r'.and.present(ivfile))then
 		if(abs(ivfile).eq.j_ivdollar)then
 			nu=5
 			return
-		endif !if(abs(ivfile).eq.j_ivdollar)   5849
-	endif !if(rw.eq.'r'.and.present(ivfile))   5848
+		endif !if(abs(ivfile).eq.j_ivdollar)   5950
+	endif !if(rw.eq.'r'.and.present(ivfile))   5949
 	!write(6,*)'<555>',ivfile
 	replace2=.false.
 	useit=.false.
@@ -5868,18 +5969,18 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 			if(j_form_(1:1).eq.'(')then
 				j_form_(1:1)='*'
 				lef=1
-			endif !if(j_form_(1:1).eq.'(')   5868
+			endif !if(j_form_(1:1).eq.'(')   5969
 		elseif(ivform.eq.j_ivdollar)then !if(j_otype(ivform).eq.j_ipchar.and.ivform.gt.32)then
 			j_form_='*'
 			lef=1
-		endif !if(j_otype(ivform).eq.j_ipchar.and.ivform.gt.32.and.ivform   5866
+		endif !if(j_otype(ivform).eq.j_ipchar.and.ivform.gt.32.and.ivform   5967
 	elseif(present(forma))then !if(present(ivform))then
 		j_form_=forma
 		lef=len_trim(j_form_)
 	else !if(present(ivform))then
 		j_form_='*'
 		lef=1
-	endif !if(present(ivform))   5863
+	endif !if(present(ivform))   5964
  
 	!write(6,*)'<778', ivform_
  
@@ -5896,7 +5997,7 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 		else !if(present(ext))then
 			call j_printname('*j* getfile: cannot make ',ivfile,' character')
 			j_err=.true.
-		endif !if(present(ext))   5888
+		endif !if(present(ext))   5989
 	else !if(present(ivfile))then
 		if(present(ext))then
 			ifi=j_defchar(0,ext)
@@ -5906,15 +6007,15 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 			write(6,*)'*j* j_getfile, NO FILE'
 			j_err=.true.
 			return
-		endif !if(present(ext))   5901
-	endif !if(present(ivfile))   5887
+		endif !if(present(ext))   6002
+	endif !if(present(ivfile))   5988
 	call j_getchar(ifi,j_filename,lefi)
 	!	write(6,*)'<77getf44',j_filename(1:lefi),ifi,j_otype(ifi)
 	if(j_nused.ge.j_mxunits)then
 		write(6,*)'*j* maxunits (2) in j_getfile'
 		j_err=.true.
 		return
-	endif !if(j_nused.ge.j_mxunits)   5913
+	endif !if(j_nused.ge.j_mxunits)   6014
 	!	write(6,*)'lefi',lefi
 	!	write(6,*)j_filename
 	nu=j_nunits(j_nused+1)
@@ -5930,7 +6031,7 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 		idac=4;isize=1
 	elseif(ivform_.eq.j_ivdg2)then !if(ivform_.eq.j_ivdi)then
 		idac=4;isize=2
-	endif !if(ivform_.eq.j_ivdi)   5923
+	endif !if(ivform_.eq.j_ivdi)   6024
 	! if(j_v(j_ivdac).le.0)then
 	! write(6,*)'$dac=0, should be 4 for Gfortran and 1 for Intel, use j.par, or the current include file'
 	! j_err=.true.
@@ -5939,7 +6040,7 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 	if(idac.ne.0.and..not.present(irecl))then
 		write(6,*)'*j*, irecl missing in j_getfile for direct access'
 		j_err=.true.
-	endif !if(idac.ne.0.and..not.present(irecl))   5939
+	endif !if(idac.ne.0.and..not.present(irecl))   6040
  
 	ope=.false.
 	inquire(file=j_filename(1:lefi),exist=yes,opened=ope)
@@ -5947,7 +6048,7 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 	if(rw.eq.'a')then
 		open(nu,err=90,file=j_filename(1:lefi),form='formatted',status='old',iostat=ios,access='APPEND')
 		goto 700
-	endif !if(rw.eq.'a')   5947
+	endif !if(rw.eq.'a')   6048
  
 	if(ope)nu=j_iounit(ifi)
 777			if(yes.and..not.replace2.and.rw.eq.'w')then
@@ -5961,7 +6062,7 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 				if(ope.and.j_form_(1:1).ne.'d')then
 					write(6,*)'the file is rewinded'
 					rewind(nu,err=981)
-				endif !if(ope.and.j_form_(1:1).ne.'d')   5961
+				endif !if(ope.and.j_form_(1:1).ne.'d')   6062
 				if(ope)return
 				useit=.true.
 			elseif(ans.ne.'d'.and.ans.ne.'D')then !if(ans.eq.'u'.or.ans.eq.'U')then
@@ -5970,7 +6071,7 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 				if(present(deleted))deleted=.true.
 				if(present(readit))readit=.false.
 				replace2=.true.
-			endif !if(ans.eq.'u'.or.ans.eq.'U')   5959
+			endif !if(ans.eq.'u'.or.ans.eq.'U')   6060
  
 		else !if(present(readit))then
 			write(6,*)' '
@@ -5979,15 +6080,15 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 			if(ans.eq.'d'.or.ans.eq.'D')then
 				write(6,*)'you mean probably y'
 				ans='y'
-			endif !if(ans.eq.'d'.or.ans.eq.'D')   5979
+			endif !if(ans.eq.'d'.or.ans.eq.'D')   6080
 			if(ans.ne.'y'.and.ans.ne.'Y')then
 				write(6,*)'**was not allowed replace file:';j_err=.true.
 				return
-			endif !if(ans.ne.'y'.and.ans.ne.'Y')   5983
+			endif !if(ans.ne.'y'.and.ans.ne.'Y')   6084
 			if(present(deleted))deleted=.true.
-		endif !if(present(readit))   5955
+		endif !if(present(readit))   6056
  
-	endif !777			if(yes.and..not.replace2.and.rw.eq.'w')   5953
+	endif !777			if(yes.and..not.replace2.and.rw.eq.'w')   6054
 	!if(ope)write(6,*)'old ',j_nused
 	if(ope)close(nu,err=93)
 	if(j_err)return
@@ -5999,11 +6100,11 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 			write(6,*)'*file ',j_filename(1:lefi),' does not exist'
 			j_err=.true.
 			return
-		endif !if(.not.yes)   5998
+		endif !if(.not.yes)   6099
 		if(ope)then
 			write(6,*)'*file '//j_filename(1:lefi)//' was already open, it is closed first'
 			close(nu,err=93)
-		endif !if(ope)   6003
+		endif !if(ope)   6104
 		!write(6,*)'<776,nu,form',nu,j_form(1:1)
 		!		if(j_form_(1:1).eq.'b'.or.j_form_(1:1).eq.'B')then
 		if(ivform_.eq.j_ivb.or.ivform_.eq.j_ivb2.or.ivform_.eq.j_ivbgaya)then
@@ -6028,7 +6129,7 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 			!	write(6,*)'<191lefi'
 			open(nu,err=90,file=j_filename(1:lefi),form='formatted',status='old',iostat=ios,action='READ')
 			!	write(6,*)'<19efi'
-		end if !if(ivform_.eq.j_ivb.or.ivform_.eq.j_ivb2.or.ivform_.eq.j_i   6009
+		end if !if(ivform_.eq.j_ivb.or.ivform_.eq.j_ivb2.or.ivform_.eq.j_i   6110
  
 	else !if(rw.eq.'r'.or.useit)then
  
@@ -6056,8 +6157,8 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 			open(unit=nu,  err=91,file=j_filename(1:lefi),&
 				ACCESS='SEQUENTIAL',status='REPLACE',form='FORMATTED',action='WRITE', &
 				iostat=ier)
-		endif !if(ivform_.eq.j_ivb.or.ivform_.eq.j_ivb2)   6043
-	endif !if(rw.eq.'r'.or.useit)   5996
+		endif !if(ivform_.eq.j_ivb.or.ivform_.eq.j_ivb2)   6144
+	endif !if(rw.eq.'r'.or.useit)   6097
  
 	!p=.true.
 	!write(6,*)'<44ope,nu,ifi',ope,nu,ifi
@@ -6071,7 +6172,7 @@ subroutine j_getfile(nu,rw,ivfile,ivform,forma,ext,replace,irecl,ivout,readit,de
 		j_unitchar(nu)=-ifi
 	else !if(rw.eq.'r')then
 		j_unitchar(nu)=ifi
-	endif !if(rw.eq.'r')   6069
+	endif !if(rw.eq.'r')   6170
 	!	write(6,*)'<66bef ',j_iounit(ifi)
 	call j_putiounit(nu,ifi)  !; if(p)write(6,*)'<hihuraa',nu,ifi
 	!write(6,*)'<66af ',j_iounit(ifi)
@@ -6100,8 +6201,8 @@ logical function j_exist(ivfile,ext) !check if file exist ivfile can be characte
 			ifi=j_defchar(ivfile,ext)
 			if(j_err)return
 			!		write(6,*)ifi,j_otype(ifi)
-		endif !if(present(ext))   6098
-	endif !if(j_otype(ivfile).ne.j_ipchar)   6097
+		endif !if(present(ext))   6199
+	endif !if(j_otype(ivfile).ne.j_ipchar)   6198
 	!	write(6,*)ifi,j_otype(ifi)
 	call j_getchar(ifi,j_filename,le)
 	inquire(file=j_filename(1:le),exist=j_exist)
@@ -6136,8 +6237,8 @@ subroutine j_getwritefilebin(ivfile,ext,irecl,ivout) !get file for writing, name
 			write(6,*)'*j* j_getwritefilebin error'
 			j_err=.true.
 			return
-		endif !if(present(ext))   6127
-	endif !if(j_otype(ivfile).ne.j_ipchar)   6126
+		endif !if(present(ext))   6228
+	endif !if(j_otype(ivfile).ne.j_ipchar)   6227
 	!	write(6,*)ifi,j_otype(ifi)
 	call j_getchar(ifi,j_filename,le)
 	!write(6,*)ifi,j_otype(ifi)
@@ -6145,7 +6246,7 @@ subroutine j_getwritefilebin(ivfile,ext,irecl,ivout) !get file for writing, name
 		write(6,*) '*j* mxunits must be increased'
 		j_err=.true.
 		return
-	endif !if(j_nused.ge.j_mxunits)   6144
+	endif !if(j_nused.ge.j_mxunits)   6245
 	nu=j_nunits(j_nused+1)
 	!write(6,*)'file:',filename(1:le)
 	inquire(file=j_filename(1:le),exist=yes)
@@ -6156,15 +6257,15 @@ subroutine j_getwritefilebin(ivfile,ext,irecl,ivout) !get file for writing, name
 		if(ans.ne.'y'.and.ans.ne.'Y')then
 			write(6,*)'**was not allowed replace file:';j_err=.true.
 			return
-		end if !if(ans.ne.'y'.and.ans.ne.'Y')   6156
-	end if !if(yes.and..not.replace)   6152
+		end if !if(ans.ne.'y'.and.ans.ne.'Y')   6257
+	end if !if(yes.and..not.replace)   6253
 	if(dir)then
 		open(unit=nu,iostat=ier,err=90,file=j_filename(1:le),form='unformatted',access='direct',recl=irecl,&
 			status='REPLACE',action='READWRITE')
 	else !if(dir)then
 		open(unit=nu,iostat=ier,err=90,file=j_filename(1:le),&
 			ACCESS='SEQUENTIAL',status='REPLACE',form='UNFORMATTED',action='WRITE')
-	endif !if(dir)   6161
+	endif !if(dir)   6262
 	!j_nused=j_nused+1;j_unitchar(nu)=ivfile; j_o(ivfile)%i(4)=nu;return
 	j_nused=j_nused+1
 	!	write(6,*)ifi,j_otype(ifi)
@@ -6191,7 +6292,7 @@ subroutine j_clearoption(iob,io) !clear options  %%option
 			if(j_optioniob(i).ne.iob)then
 				write(6,*)'clearoption wrong iob, ',iob,j_optioniob(i)
 				j_err=.true.;return
-			endif !if(j_optioniob(i).ne.iob)   6191
+			endif !if(j_optioniob(i).ne.iob)   6292
 			nopc=nopc+1
 		else !if(j_optionmoptio(2,i).eq.io)then
 			!do not drop
@@ -6200,11 +6301,11 @@ subroutine j_clearoption(iob,io) !clear options  %%option
 				j_optioniob(i-nopc)=iob
 				j_optiontot(i-nopc)=j_optiontot(i)
  
-			endif !if(nopc.gt.0)   6199
+			endif !if(nopc.gt.0)   6300
  
-		endif !if(j_optionmoptio(2,i).eq.io)   6189
+		endif !if(j_optionmoptio(2,i).eq.io)   6290
  
-	end do !i=1,j_nopt   6188
+	end do !i=1,j_nopt   6289
 	if(nopc.gt.0)j_nopt=j_nopt-nopc
  
 	return
@@ -6243,30 +6344,30 @@ function j_igetopt(iob,io,mopt) ! -1 ==not  0== opt->,  otherwise iv for first a
 	return
 end function j_igetopt !function j_igetopt(iob,io,mopt)
  
-logical function j_isopt(iob,io,mopt,default) ! -1 ==not  0== opt->,  otherwise iv for first argument %%option obsolete
+logical function j_isoption(iob,io,mopt,default) ! -1 ==not  0== opt->,  otherwise iv for first argument %%option obsolete
 	integer, intent(in):: iob,io, mopt
 	logical,intent(in),optional::default
 	iopt=j_linkoption(iob,io,mopt,clear=.true.)
 	!	write(6,*)'<55 ',iopt
 	if(iopt.lt.0)then
 		if(present(default))then
-			j_isopt=default
+			j_isoption=default
 		else
-			j_isopt=.false.
-		endif !if(present(default))   6252
+			j_isoption=.false.
+		endif !if(present(default))   6353
 	elseif(iopt.eq.0)then
-		j_isopt=.true.
+		j_isoption=.true.
 		!	write(6,*)'<44 tas'
 	elseif(j_v(j_o(iob)%i(iopt+1)).ne.j_0)then
-		j_isopt=.true.
+		j_isoption=.true.
 		!write(6,*)'6464',j_v(j_o(iob)%i(iopt+1))
 	else
-		j_isopt=.false.
-	endif !if(iopt.lt.0)   6251
+		j_isoption=.false.
+	endif !if(iopt.lt.0)   6352
  
 	!if(j_linkoption(iob,io,mopt).eq.0)then
 	return
-end function j_isopt !function j_igetopt(iob,io,mopt)
+end function j_isoption !function j_igetopt(iob,io,mopt)
  
  
 ! function j_igetoptval(iob,mopt,idef,idef0) ! -1 ==not  0== opt->,  otherwise iv for first argument
@@ -6302,11 +6403,11 @@ end function j_isopt !function j_igetopt(iob,io,mopt)
 ! j_igetoptout=0
 ! else !if(j_linkoption(iob,io,mopt).eq.0)then
 ! j_igetoptout=j_o(iob)%i(j_linkoption(iob,io,mopt)+1)
-! if(j_igetoptout.gt.j_namedv)then
+! if(j_igetoptout.gt.j_named)then
 ! write(6,*)'*option ',j_options(mopt),' must refer to object'
 ! j_err=.true.
 ! return
-! endif !if(j_igetoptout.gt.j_namedv)then
+! endif !if(j_igetoptout.gt.j_named)then
 ! endif !if(j_linkoption(iob,io,mopt).eq.0)then
 ! return
 ! end function j_igetoptout !function j_igetoptout(iob,mopt)
@@ -6360,14 +6461,14 @@ subroutine j_putoptv(iob,li,j,name,iv,value)
 		if(j_err) return
 		j_v(ivout)=value
 		return
-	endif !if(nargo.eq.0)   6356
+	endif !if(nargo.eq.0)   6457
 	ivf=j_o(iob)%i(li+1)
 	if(j_otype(ivf).eq.j_ipchar)then
 		if(nargo.gt.1)then
 			write(6,*)'*option cannot have several arguments if first is character'
 			j_err=.true.
 			return
-		endif !if(nargo.gt.1)   6366
+		endif !if(nargo.gt.1)   6467
 		call j_getchar(ivf,pref,le)
 		! write(6,*)'pref',pref,'ive',ive,'le,iv',le,iv,'single',single
 		!20150812(arg1<->arg2) oli: 		call getv(pref(1:le),iv,ipreal,ivout)
@@ -6375,14 +6476,14 @@ subroutine j_putoptv(iob,li,j,name,iv,value)
 		!20140522 virheenkäsittely
 		if(j_err) return
 		j_v(ivout)=value ;return
-	endif !if(j_otype(ivf).eq.j_ipchar)   6365
+	endif !if(j_otype(ivf).eq.j_ipchar)   6466
 	if(j.gt.nargo)return
 	iarg=j_o(iob)%i(li+j)
-	if(iarg.gt.j_namedv)then
+	if(iarg.gt.j_named)then
 		write(6,*)'*argument for option is not an object'
 		j_err=.true.
 		return
-	endif !if(iarg.gt.j_namedv)   6381
+	endif !if(iarg.gt.j_named)   6482
 	!20141219 oli: if(otype(iarg).ne.0)call del(iarg)
 	if(j_otype(iarg).ne.j_ipreal)call j_del(iarg)
 	j_v(iarg)=value
@@ -6420,14 +6521,14 @@ subroutine j_igetoptv(igeto,name,iv,single,ivout) !get output option varaible e.
 		ivout=0
 		j_err=.true.; return
 		return
-	endif !if(igeto.lt.0)   6418
+	endif !if(igeto.lt.0)   6519
 	if(igeto.eq.0)then
 		!20150812(arg1<->arg2) oli: 		call getv(name,iv,ipreal,ivout)
 		ivout=j_getobject(iv,name,j_ipreal)
 		!20140522 virheenkäsittely
 		if(j_err) return
 		return
-	endif !if(igeto.eq.0)   6424
+	endif !if(igeto.eq.0)   6525
 	if(j_otype(igeto).eq.j_ipchar)then
 		call j_getchar(igeto,pref,le)
 		if(pref(le:le).eq.'%'.or..not.single)then ;ive=iv;else;ive=0; end if
@@ -6439,7 +6540,7 @@ subroutine j_igetoptv(igeto,name,iv,single,ivout) !get output option varaible e.
 	else !if(j_otype(igeto).eq.j_ipchar)then
 		if(.not.single)write(6,*)'*wrn* putting many values to same variable'
 		ivout=igeto
-	endif !if(j_otype(igeto).eq.j_ipchar)   6431
+	endif !if(j_otype(igeto).eq.j_ipchar)   6532
 	return
 end subroutine j_igetoptv !subroutine j_igetoptv(igeto,name,iv,single,ivout)
  
@@ -6457,7 +6558,7 @@ subroutine j_getdataobject2(iob,io)  ! initilization for data-> option  %%data
 		j_disprint=.true.
 		j_dprint=-1
 		if(nopt.gt.0)j_dprint=j_v(j_optarg0(1))
-	endif !if(nopt.ge.0)   6456
+	endif !if(nopt.ge.0)   6557
  
  
  
@@ -6473,30 +6574,30 @@ subroutine j_getdataobject2(iob,io)  ! initilization for data-> option  %%data
 			write(6,*)'Available data objects:'
 			!	ial=1
 			!j_tempchar2=' '
-			do ii=1,j_namedv
+			do ii=1,j_named
 				if(j_otype(ii).eq.j_ipdata)then
 					!		write(6,*)'/'//j_vname(ii)//'/'
 					call j_getname(ii)
 					write(6,*)j_oname(1:j_loname)
 					!			j_tempchar2(ial:ial+23)=j_vname(ii)
 					!			ial=len_trim(j_tempchar2)+2
-				endif !if(j_otype(ii).eq.j_ipdata)   6477
+				endif !if(j_otype(ii).eq.j_ipdata)   6578
  
-			enddo !ii=1,j_namedv   6476
+			enddo !ii=1,j_named   6577
 			!	write(6,*)j_tempchar2(1:ial)
 			return
-		endif !if(j_otype(j_divdata).ne.j_ipdata)   6470
+		endif !if(j_otype(j_divdata).ne.j_ipdata)   6571
 	elseif(j_otype(j_ivdata).eq.j_iplist)then !if(nopt.eq.1)then
 		if(j_o(j_ivdata)%i(1).ne.1)then
 			write(6,*)'Data=list( ) can give only one data'
 			j_err=.true.
-		endif !if(j_o(j_ivdata)%i(1).ne.1)   6490
+		endif !if(j_o(j_ivdata)%i(1).ne.1)   6591
 		j_divdata=j_o(j_ivdata)%i2(1)
 		if(j_otype(j_divdata).ne.j_ipdata)then
 			call j_printname('Data=list(',j_divdata,') does not point to DATA')
 			j_err=.true.
 			j_divdata=0
-		endif !if(j_otype(j_divdata).ne.j_ipdata)   6495
+		endif !if(j_otype(j_divdata).ne.j_ipdata)   6596
 		if(j_err)return
 		if(j_dprint.gt.0)call j_printname('using data given in Data=list(',j_divdata ,')')
 	else if(j_dlastdata.gt.0)then !if(nopt.eq.1)then
@@ -6507,17 +6608,17 @@ subroutine j_getdataobject2(iob,io)  ! initilization for data-> option  %%data
 		write(*,*)'no data available'
 		j_err=.true.
 		return
-	endif !if(nopt.eq.1)   6468
+	endif !if(nopt.eq.1)   6569
  
 	!	write(6,*)'<1po',i
  
-	j_dimat=j_o(j_divdata)%i(1)
+	j_divmat=j_o(j_divdata)%i(1)
 	j_divkeep=j_o(j_divdata)%i(2)
-	!	call j_getname(j_dimat,j_divkeep)
+	!	call j_getname(j_divmat,j_divkeep)
  
 	j_dnkeep=j_o(j_divkeep)%i(1)
 	!	write(6,*)'<87',j_oname(1:j_loname),' ',j_oname2(1:j_loname2),' ',j_dnkeep
-	j_dnobs8=j_nrows(j_dimat)
+	j_dnobs8=j_nrows(j_divmat)
 	j_dnobs=j_dnobs8
 	write(6,*)'dnobs',j_dnobs
 	j_divobs=j_o(j_divdata )%i(6)
@@ -6538,11 +6639,11 @@ subroutine j_getdataobject2(iob,io)  ! initilization for data-> option  %%data
 	! if(nopt.gt.0)write(6,*)'<774',j_optarg0(1)
 	ivup=j_o(j_divdata)%i(5)
 	j_disup=ivup.ne.0
-	if(j_disup)j_disup=j_isopt(iob,io,j_mup,.false.)
+	if(j_disup)j_disup=j_isoption(iob,io,j_mup,.false.)
  
 	naddv=0
 	if(.not.j_disup)then
-		j_dimat=j_o(ivdata)%i(1)
+		j_divmat=j_o(ivdata)%i(1)
 		j_divkeep=j_o(ivdata)%i(2)
 		j_dnkeep=j_o(j_divkeepup)%i(3)
 		!	j_divnobsw=j_o(ivdata)%i(4)
@@ -6550,7 +6651,7 @@ subroutine j_getdataobject2(iob,io)  ! initilization for data-> option  %%data
 		!	j_divobsw=j_o(divdata)%i(7)
 		!	nadvv=j_o(j_divkeepup)%i(1)+1
 		!	j_divobsup=j_o(ivup)%i(6)
-	endif !if(.not.j_disup)   6544
+	endif !if(.not.j_disup)   6645
  
  
 	if(nopt.eq.1)then
@@ -6558,26 +6659,26 @@ subroutine j_getdataobject2(iob,io)  ! initilization for data-> option  %%data
 		if(j_otype(j_divtrans).ne.j_iptrans)then
 			call j_printname('trans-> does not refer to a transformation: ',j_divtrans,' ')
 			j_err=.true. ;return
-		endif !if(j_otype(j_divtrans).ne.j_iptrans)   6558
+		endif !if(j_otype(j_divtrans).ne.j_iptrans)   6659
 		ivoul=j_trans_output(j_divtrans)
 		noutv=j_o(ivoul)%i(1)
  
 		if(noutv.gt.0)then
-			j_divvars=j_deflistobject(j_divdata,'%vars',ivin=j_divkeep,nres=noutv+naddv)
+			j_divvars=j_deflist(j_divdata,'%vars',ivin=j_divkeep,nres=noutv+naddv)
 			iper=j_putlistobject(j_divvars,ivin=ivoul)
 			!function j_putlistobject(ivlist,single,list0,list,ivin,ignored)
-		endif !if(noutv.gt.0)   6565
+		endif !if(noutv.gt.0)   6666
 		j_distrans=.true.
  
-	endif !if(nopt.eq.1)   6556
+	endif !if(nopt.eq.1)   6657
 	if(j_disup)then
-		if(nopt.lt.1)j_divvars=j_deflistobject(j_divdata,'%vars',ivin=j_divkeep,nres=naddv)
+		if(nopt.lt.1)j_divvars=j_deflist(j_divdata,'%vars',ivin=j_divkeep,nres=naddv)
  
 		iper=j_putlistobject(j_divvars,ivin=j_divkeepup)
 		iper=j_putlistobject(j_divvars,single=j_o(ivup)%i(6))  !Unit variable
  
  
-	endif !if(j_disup)   6573
+	endif !if(j_disup)   6674
  
  
  
@@ -6588,22 +6689,22 @@ subroutine j_getdataobject2(iob,io)  ! initilization for data-> option  %%data
 		if(ifirst.lt.1.or.ifirst.gt.j_dnobs)then
 			write(6,*)'from->  should be between 1 and ',j_dnobs,' it is ',ifirst
 			j_err=.true.;return
-		endif !if(ifirst.lt.1.or.ifirst.gt.j_dnobs)   6588
+		endif !if(ifirst.lt.1.or.ifirst.gt.j_dnobs)   6689
 		j_dfrom=ifirst
 	else !if(nopt.gt.0)then
 		j_dfrom=1
-	endif !if(nopt.gt.0)   6586
+	endif !if(nopt.gt.0)   6687
 	call j_getoption(iob,io,j_muntil,-1,1,j_ipreal,.true.,nopt,j_optarg0)
 	if(nopt.gt.0)then
 		ifirst=j_v(j_optarg0(1))
 		if(ifirst.lt.1.or.ifirst.gt.j_dnobs8)then
 			write(6,*)'last->  should be between 1 and ',j_dnobs8,' it is ',ifirst
 			j_err=.true.;return
-		endif !if(ifirst.lt.1.or.ifirst.gt.j_dnobs8)   6599
+		endif !if(ifirst.lt.1.or.ifirst.gt.j_dnobs8)   6700
 		j_duntil=ifirst
 	else !if(nopt.gt.0)then
 		j_duntil=j_dnobs8
-	endif !if(nopt.gt.0)   6597
+	endif !if(nopt.gt.0)   6698
  
 	call j_getoption(iob,io,j_mprolog,-1,1,j_iptrans,.true.,nopt,j_optarg0)
 	if(j_err)return
@@ -6613,11 +6714,11 @@ subroutine j_getdataobject2(iob,io)  ! initilization for data-> option  %%data
 		if(j_otype(j_optarg0(1)).ne.j_iptrans)then
 			call j_printname('prolog-> does not refer to a transformation: ',j_optarg0(1),' ')
 			j_err=.true. ;return
-		endif !if(j_otype(j_optarg0(1)).ne.j_iptrans)   6613
+		endif !if(j_otype(j_optarg0(1)).ne.j_iptrans)   6714
 		call dotrans(j_optarg0(1),1)
 		!	write(6,*)'{{',3
 		if(j_err)return
-	endif !if(nopt.eq.1)   6611
+	endif !if(nopt.eq.1)   6712
  
 	call j_getoption(iob,io,j_mepilog,-1,1,j_iptrans,.true.,nopt,j_optarg0)
 	if(j_err)return
@@ -6627,8 +6728,8 @@ subroutine j_getdataobject2(iob,io)  ! initilization for data-> option  %%data
 		if(j_otype(j_depilog).ne.j_iptrans)then
 			call j_printname('epilog-> does not refer to a transformation: ',j_depilog,' ')
 			j_err=.true. ;return
-		endif !if(j_otype(j_depilog).ne.j_iptrans)   6627
-	endif !if(nopt.eq.1)   6625
+		endif !if(j_otype(j_depilog).ne.j_iptrans)   6728
+	endif !if(nopt.eq.1)   6726
 	!		id(j_divobsup)=0 !how may upper observations done
 	!when this is reached update upper level
 	!	write(6,*)'<1po3444'
@@ -6638,8 +6739,8 @@ end subroutine j_getdataobject2 !subroutine j_getdataobject(iob,io)
  
 subroutine j_getobs2(iobs)
 	integer,intent(in)::iobs
-	!	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat',iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat
-	!	write(6,*)j_o(j_dimat)%d(1:6)
+	!	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat',iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat
+	!	write(6,*)j_o(j_divmat)%d(1:6)
 	if(iobs.eq.j_dfrom)then
 		j_diba=(j_dfrom-1)*j_dnkeep
  
@@ -6651,15 +6752,15 @@ subroutine j_getobs2(iobs)
 				nsub=nsub+j_v(j_divnobsw)
 				j_dibaup=j_dibaup+j_dnkeepup
 				j_dobsup=j_dobsup+1
-			enddo !while(nsub.lt.j_dfrom)   6650
+			enddo !while(nsub.lt.j_dfrom)   6751
 			j_v(j_divobsup)=j_dobsup
 			j_dnextobs=nsub-j_dfrom+1  !testattava
-		endif !if(j_disup)   6646
-	endif !if(iobs.eq.j_dfrom)   6643
+		endif !if(j_disup)   6747
+	endif !if(iobs.eq.j_dfrom)   6744
 	if(j_disup)then
  
 		if(iobs.eq.j_dnextobs)then
-			j_v(j_o(j_divkeepup)%i2(1:j_dnkeepup))=j_o(j_dimatup)%d(j_dibaup+1:j_dibaup+ j_dnkeepup)
+			j_v(j_o(j_divkeepup)%i2(1:j_dnkeepup))=j_o(j_divmatup)%d(j_dibaup+1:j_dibaup+ j_dnkeepup)
 			j_dnextobs=j_dnextobs+j_v(j_divnobsw)
 			j_dibaup=j_dibaup+j_dnkeepup
 			j_v( j_divobsw)=1
@@ -6668,19 +6769,19 @@ subroutine j_getobs2(iobs)
  
 		else !if(iobs.eq.j_dnextobs)then
 			j_v( j_divobsw)=j_v( j_divobsw)+1
-		endif !if(iobs.eq.j_dnextobs)   6661
+		endif !if(iobs.eq.j_dnextobs)   6762
  
  
-	endif !if(j_disup)   6659
+	endif !if(j_disup)   6760
 	! write(6,*)'<55',j_diba,j_dnkeep,j_o(j_divkeep)%i2(1:j_dnkeep)
 	j_v( j_o(j_divkeep)%i2(1:j_dnkeep))= &
-		j_o(j_dimat)%d(j_diba+1:j_diba+ j_dnkeep)
+		j_o(j_divmat)%d(j_diba+1:j_diba+ j_dnkeep)
 	j_diba=j_diba+j_dnkeep
 	if(j_distrans)then
 		j_v(j_divobs)=iobs
 		call dotrans(j_divtrans,1)
 		if(j_err)write(6,*)'error in transformation for Obs ',iobs
-	endif !if(j_distrans)   6679
+	endif !if(j_distrans)   6780
 	j_rejected=.false.
 	!	j_dapu=j_codevalue(j_diob,j_dfilterlink)
 	if( j_disfilter)j_rejected=j_codevalue(j_diob,j_dfilterlink).eq.j_0
@@ -6690,10 +6791,11 @@ subroutine j_getobs2(iobs)
 	return
 end subroutine !subroutine j_getobs(iobs)
  
-subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%data
+subroutine j_getdataobject(iob,io,ivdata,pointmat,pointkeep,pointmatup,pointkeepup)  ! initilization for data-> option  %%data
 	integer,intent(in)::iob,io
 	integer,intent(in),optional::ivdata
- 
+	double precision,dimension(:),optional,pointer::pointmat,pointmatup
+	integer,dimension(:),optional,pointer::pointkeep,pointkeepup
 	!j_getoption_index(iob,io,moption,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg)
 	!  ivdata,,nobs,filterlink,rejectlink,ivtrans,ivvars
 	call j_getoption(iob,io,j_mprint,-1,1,j_ipreal,.true.,nopt,j_optarg0)
@@ -6703,7 +6805,7 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
 		j_disprint=.true.
 		j_dprint=-1
 		if(nopt.gt.0)j_dprint=j_v(j_optarg0(1))
-	endif !if(nopt.ge.0)   6702
+	endif !if(nopt.ge.0)   6804
  
  
  
@@ -6719,7 +6821,7 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
 			if(j_o(j_ivdata)%i(1).ne.1)then
 				write(6,*)'Data=list( ) can give only one data'
 				j_err=.true.
-			endif !if(j_o(j_ivdata)%i(1).ne.1)   6719
+			endif !if(j_o(j_ivdata)%i(1).ne.1)   6821
 			j_divdata=j_o(j_ivdata)%i2(1)
  
 			if(j_dprint.gt.0)call j_printname('using data given in Data=list(',j_divdata ,')')
@@ -6731,41 +6833,35 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
 			write(*,*)'no data available'
 			j_err=.true.
 			return
-		endif !if(nopt.eq.1)   6715
+		endif !if(nopt.eq.1)   6817
 	else
 		j_divdata=ivdata
  
-	endif !if(.not.present(ivdata))   6711
-	if(j_otype(j_divdata).ne.j_ipdata)then
-		call j_printname('*Object ',j_divdata, ' given in data-> is not DATA')
-		j_err=.true.
-		write(6,*)'Available data objects:'
-		!	ial=1
-		!j_tempchar2=' '
-		do ii=1,j_namedv
-			if(j_otype(ii).eq.j_ipdata)then
-				!		write(6,*)'/'//j_vname(ii)//'/'
-				call j_getname(ii)
-				write(6,*)j_oname(1:j_loname)
-				!			j_tempchar2(ial:ial+23)=j_vname(ii)
-				!			ial=len_trim(j_tempchar2)+2
-			endif !if(j_otype(ii).eq.j_ipdata)   6746
+	endif !if(.not.present(ivdata))   6813
+	call j_checkobject(j_divdata,j_ipdata,named=.true.)
  
-		enddo !ii=1,j_namedv   6745
-		!	write(6,*)j_tempchar2(1:ial)
-		return
-	endif !if(j_otype(j_divdata).ne.j_ipdata)   6739
  
 	!	write(6,*)'<1po',i
  
-	j_dimat=j_o(j_divdata)%i(1)
+	j_divmat=j_o(j_divdata)%i(1)
+ 
+ 
+ 
 	j_divkeep=j_o(j_divdata)%i(2)
-	!	call j_getname(j_dimat,j_divkeep)
+	!	call j_getname(j_divmat,j_divkeep)
  
 	j_dnkeep=j_o(j_divkeep)%i(1)
+	j_dkeep=>j_o(j_divkeep)%i2(1:j_dnkeep)
+	if(present(pointkeep))pointkeep=>j_o(j_divkeep)%i2(1:j_dnkeep)
 	!	write(6,*)'<87',j_oname(1:j_loname),' ',j_oname2(1:j_loname2),' ',j_dnkeep
  
-	j_dnobs8=j_nrows(j_dimat)  !=j_o(j_dimat )%i(1)
+	j_dnobs8=j_nrows(j_divmat)  !=j_o(j_divmat )%i(1)
+	j_dnobs=j_dnobs8
+	j_dsize8=j_dnobs8*j_dnkeep
+	j_dsize=j_dsize8
+	if(present(pointmat))pointmat=>j_o(j_divmat)%d(1:j_dsize)
+	j_dmat=>j_o(j_divmat)%d(1:j_dsize)
+ 
 	j_dnobs=j_dnobs8
 	j_divobs=j_o(j_divdata )%i(6)
 	!	write(6,*)'<1po32',j_dnobs
@@ -6776,6 +6872,11 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
  
 	j_drejectlink=j_codelink(iob,io,j_mreject)
 	j_disreject=j_drejectlink.ne.0
+ 
+	if(present(pointmat))pointmat=>j_o(j_divmat)%d(1:j_dnobs8)
+	if(present(pointkeep))pointkeep=>j_o(j_divkeep)%i2(1:j_dnkeep)
+ 
+ 
 	call j_getoption(iob,io,j_mtrans,-1,1,j_iptrans,.true.,nopt,j_optarg0)
 	if(j_err)return
  
@@ -6784,7 +6885,7 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
 	! write(6,*)'<77 ',nopt
 	! if(nopt.gt.0)write(6,*)'<774',j_optarg0(1)
  
-	j_disup=j_isopt(iob,io,j_mup,.false.)
+	j_disup=j_isoption(iob,io,j_mup,.false.)
  
 	naddv=0
 	if(j_disup)then
@@ -6793,16 +6894,24 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
 			write(6,*)'there is no up data, up-> ignored'
 			j_disup=.false.
 		else
-			j_dimatup=j_o(ivup)%i(1)
+			j_divmatup=j_o(ivup)%i(1)
 			j_divkeepup=j_o(ivup)%i(2)
+ 
 			j_dnkeepup=j_o(j_divkeepup)%i(3)
+			j_dkeepup=>j_o(j_divkeepup)%i2(1:j_dnkeepup)
 			j_divnobsw=j_o(ivup)%i(4)
 			j_dnextobs=1
 			j_divobsw=j_o(j_divdata)%i(7)
 			nadvv=j_o(j_divkeepup)%i(1)+1
 			j_divobsup=j_o(ivup)%i(6)
-		endif !if(ivup.le.0)   6792
-	endif !if(j_disup)   6790
+			j_dnobsup8=j_nrows(j_divmatup)  !=j_o(j_divmat )%i(1)
+			j_dnobsup=j_dnobs8
+			j_dsizeup8=j_dnobsup8*j_dnkeepup
+			j_dsizeup=j_dsizeup8
+			if(present(pointmatup))pointmatup=>j_o(j_divmatup)%d(1:j_dsizeup)
+			if(present(pointkeepup))pointkeepup=>j_o(j_divkeepup)%i2(1:j_dnkeepup)
+		endif !if(ivup.le.0)   6893
+	endif !if(j_disup)   6891
  
  
 	if(nopt.eq.1)then
@@ -6810,26 +6919,26 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
 		if(j_otype(j_divtrans).ne.j_iptrans)then
 			call j_printname('trans-> does not refer to a transformation: ',j_divtrans,' ')
 			j_err=.true. ;return
-		endif !if(j_otype(j_divtrans).ne.j_iptrans)   6810
+		endif !if(j_otype(j_divtrans).ne.j_iptrans)   6919
 		ivoul=j_trans_output(j_divtrans)
 		noutv=j_o(ivoul)%i(1)
  
 		if(noutv.gt.0)then
-			j_divvars=j_deflistobject(j_divdata,'%vars',ivin=j_divkeep,nres=noutv+naddv)
+			j_divvars=j_deflist(j_divdata,'%vars',ivin=j_divkeep,nres=noutv+naddv)
 			iper=j_putlistobject(j_divvars,ivin=ivoul)
 			!function j_putlistobject(ivlist,single,list0,list,ivin,ignored)
-		endif !if(noutv.gt.0)   6817
+		endif !if(noutv.gt.0)   6926
 		j_distrans=.true.
  
-	endif !if(nopt.eq.1)   6808
+	endif !if(nopt.eq.1)   6917
 	if(j_disup)then
-		if(nopt.lt.1)j_divvars=j_deflistobject(j_divdata,'%vars',ivin=j_divkeep,nres=naddv)
+		if(nopt.lt.1)j_divvars=j_deflist(j_divdata,'%vars',ivin=j_divkeep,nres=naddv)
  
 		iper=j_putlistobject(j_divvars,ivin=j_divkeepup)
 		iper=j_putlistobject(j_divvars,single=j_o(ivup)%i(6))  !Unit variable
  
  
-	endif !if(j_disup)   6825
+	endif !if(j_disup)   6934
  
  
  
@@ -6840,22 +6949,22 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
 		if(ifirst.lt.1.or.ifirst.gt.j_dnobs)then
 			write(6,*)'from->  should be between 1 and ',j_dnobs,' it is ',ifirst
 			j_err=.true.;return
-		endif !if(ifirst.lt.1.or.ifirst.gt.j_dnobs)   6840
+		endif !if(ifirst.lt.1.or.ifirst.gt.j_dnobs)   6949
 		j_dfrom=ifirst
 	else !if(nopt.gt.0)then
 		j_dfrom=1
-	endif !if(nopt.gt.0)   6838
+	endif !if(nopt.gt.0)   6947
 	call j_getoption(iob,io,j_muntil,-1,1,j_ipreal,.true.,nopt,j_optarg0)
 	if(nopt.gt.0)then
 		ifirst=j_v(j_optarg0(1))
 		if(ifirst.lt.1.or.ifirst.gt.j_dnobs)then
 			write(6,*)'last->  should be between 1 and ',j_dnobs,' it is ',ifirst
 			j_err=.true.;return
-		endif !if(ifirst.lt.1.or.ifirst.gt.j_dnobs)   6851
+		endif !if(ifirst.lt.1.or.ifirst.gt.j_dnobs)   6960
 		j_duntil=ifirst
 	else !if(nopt.gt.0)then
 		j_duntil=j_dnobs
-	endif !if(nopt.gt.0)   6849
+	endif !if(nopt.gt.0)   6958
  
 	call j_getoption(iob,io,j_mprolog,-1,1,j_iptrans,.true.,nopt,j_optarg0)
 	if(j_err)return
@@ -6865,11 +6974,11 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
 		if(j_otype(j_optarg0(1)).ne.j_iptrans)then
 			call j_printname('prolog-> does not refer to a transformation: ',j_optarg0(1),' ')
 			j_err=.true. ;return
-		endif !if(j_otype(j_optarg0(1)).ne.j_iptrans)   6865
+		endif !if(j_otype(j_optarg0(1)).ne.j_iptrans)   6974
 		call dotrans(j_optarg0(1),1)
 		!	write(6,*)'{{',3
 		if(j_err)return
-	endif !if(nopt.eq.1)   6863
+	endif !if(nopt.eq.1)   6972
  
 	call j_getoption(iob,io,j_mepilog,-1,1,j_iptrans,.true.,nopt,j_optarg0)
 	if(j_err)return
@@ -6879,8 +6988,8 @@ subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%
 		if(j_otype(j_depilog).ne.j_iptrans)then
 			call j_printname('epilog-> does not refer to a transformation: ',j_depilog,' ')
 			j_err=.true. ;return
-		endif !if(j_otype(j_depilog).ne.j_iptrans)   6879
-	endif !if(nopt.eq.1)   6877
+		endif !if(j_otype(j_depilog).ne.j_iptrans)   6988
+	endif !if(nopt.eq.1)   6986
 	!		id(j_divobsup)=0 !how may upper observations done
 	!when this is reached update upper level
 	!	write(6,*)'<1po3444'
@@ -6890,38 +6999,35 @@ end subroutine j_getdataobject !subroutine j_getdataobject(iob,io)
 subroutine j_linkdata(ivup,ivsub)
 	integer, intent(in)::ivup,ivsub
  
-	double precision,dimension(:),allocatable ::newdata
-	integer,dimension(:),allocatable ::newkeep,oldkeep,oldkeepiv
 	integer, dimension(:), pointer :: keepup
 	!	logical isupup
-	ivkeepup=j_o(ivup)%i(2)
-	nkeepup=j_o(ivkeepup)%i(1)
+	ivkeepup=j_getkeep(ivup,point=j_optarg3,len=nkeepup) !len=nkeepup);if(j_err)return !j_o(ivup)%i(2)
+	!	nkeepup=j_o(ivkeepup)%i(1)
 	ivobsup=j_o(ivup)%i(6)
-	ivmatup=j_o(ivup)%i(1)
-	ivnobswup=j_getobject(ivup,'%nobsw',j_ipreal)
-	linknobswup=j_inlistobject(ivnobswup,ivkeepup)
+	ivmatup=j_getmatrix(ivup);if(j_err)return ! ;j_o(ivup)%i(1)
  
-	!	write(6,*)'linknobswup',linknobswup
-	!	j_dnobswindex(level)=j_o(ivdatanow)%i(13)
-	!j_o(j_divdata)%i(12)! level
-	if(linknobswup.le.0)then
-		call j_getname(ivnobswup,ivup)
-		write(6,*)j_oname(1:j_loname),' is not in ',j_oname2(1:j_loname2)
-		j_err=.true. ;return
-	endif !if(linknobswup.le.0)   6907
+	call j_getname(ivup,j_optarg3(1))
+	if(j_oname2(1:j_loname2).eq.j_oname(1:j_loname)//'%nobsw')then
+		ivnobswup=j_optarg3(1)
+	elseif(j_oname2(1:j_loname2).eq.'%nobsw')then
+		ivnobswup=j_getobject(0,j_oname(1:j_loname)//'%nobsw''%nobsw',j_ipreal)
+		j_optarg3(1)=ivnobswup
+	else
+		write(6,*)'the first keep -variable in the up data ',j_oname(1:j_loname),' must be either ',&
+			'%nobsw or ',j_oname(1:j_loname)//'%nobsw'
+		j_err=.true.;return
+	endif !if(j_oname2(1:j_loname2).eq.j_oname(1:j_loname)//'%nobsw')   7010
+	!ivnobswup=j_getobject(ivup,'%nobsw',j_ipreal)
+	linknobswup=1  !j_inlistobject(ivnobswup,ivkeepup)
+ 
 	j_o(ivup)%i(4)=ivnobswup
 	call j_getname(ivup,ivnobswup)
  
-	!	write(6,*)'hellurei',j_oname(1:j_loname),ivup,j_oname2(1:j_loname2),ivnobswup
 	nobsup=j_o(ivmatup)%i(1)
 	!	write(6,*)'iiup',j_o(ivup)%i
 	ivtop=j_topdata(ivup)
+	!function j_getkeep(ivdata,point,len)
  
-	!	call j_getname(ivup,ivsub,ivtop)
-	!	write(6,*)'*********linkdata ',ivup,j_oname(1:j_loname),ivsub,j_oname2(1:j_loname2),&
-	!	ivtop,j_oname3(1:j_loname3)
-	!j_dnobswindex(level)=j_o(ivdatanow)%i(13)
-	!	write(6,*)'ivtop,ivup',ivtop,ivup
  
 	ivkeeptop=j_o(ivtop)%i(2)
  
@@ -6942,53 +7048,11 @@ subroutine j_linkdata(ivup,ivsub)
 		call j_getname(ivup)
 		!	write(6,*)'allo0cate ',nobstop,ivup,j_oname(1:j_loname)
 		j_o(ivup)%i2=0
-	endif !if(levelup.le.1)   6938
-	!write(6,*)'ivnobswtot ,ivtopkeep ',ivnobswtot,ivkeeptop
-	!	liwtot=j_inlistobject(ivnobswtot,ivkeeptop)
-	!write(6,*)'liwtot** ',liwtot
-	! if(liwtot.le.0)then  !now ivtop is ivup
-	! liwtot=nkeepup  !old
-	! nkeepup=liwtot+1  !
-	! !	write(6,*)'nkeepup&',nkeepup
-	!allocate(newdata(1:nobstop*nkeepup))
-	!	write(6,*)'new ',nobstop,nkeep2,nobstop*nkeepup
+	endif !if(levelup.le.1)   7044
+ 
 	ibas=0
 	ibas2=0
  
-	!	do i=1,nobstop
-	!	write(6,*)'i,nobstop,ntopkeep,nobstot*liwtot,linknobswup ', &
-	!		i,nobstop,ntopkeep,nobstop*liwtot,liwtot
- 
- 
-	! newdata(ibas2+1:ibas2+liwtot)
-	!	j_o(ivtop)%i2(i)=j_o(ivmattop)%d(ibas+1:ibas+liwtot)
-	! if(i.le.1)then
-	! write(6,*)'*********************'
-	! call j_getname(ivmattop)
-	! write(6,*)'newdata,ibas,ibas2',newdata(ibas2+1:ibas2+liwtot)
- 
-	! endif !if(i.le.1)   6950
-	!	if(ivtop.eq.ivup)then
-	! !	write(6,*)'here ',ibas2,liwtot,ibas2+liwtot,ivtopmat,ibas,linknobswup,ibas+linknobswup
-	! newdata(ibas2+nkeepup)=j_o(ivmattop)%d(ibas+linknobswup)
-	! !else
-	! !	stop 'here'
-	! !newdata(ibas2+liwtot)=j_0
-	! !endif !if(ivtop.eq.ivup)   6959
-	! ibas=ibas+liwtot
-	! ibas2=ibas2+nkeepup
-	! enddo !i=1,nobstop   6947
-	! call move_alloc(from=newdata, to=j_o(ivmattop)%d)
-	! !	if(i.eq.1)write(6,*)'dmat',j_o(ivmattop)%d(1:nkeepup)
-	! !	write(6,*)'ivtopkeep',ivkeeptop
-	! iper=j_putlistobject(ivkeeptop,single=ivnobswtot)
-	! nkeeptot=liwtot+1
-	! elseif(liwtot.ne.nkeeptop)then
-	! call j_getname(ivnobswtot,ivtopkeep)
-	! write(6,*)' variable ',j_oname(1:j_loname),' should be the last variable in ',&
-	! j_oname2(1:j_loname2), ' (i.e. made with linkdata)'
-	! j_err=.true.;return
-	! endif !if(liwtot.le.0)   6938
 	nobstot=0
 	ibas=0
 	nobswmax=0
@@ -7007,28 +7071,29 @@ subroutine j_linkdata(ivup,ivsub)
 			nobstot=nobstot+j_o(ivtop)%i2(i)
 			ibas=ibas+nkeeptop
 			ibas2=ibas2+nkeepup
-		enddo !i=1,nobstop   7001
+		enddo !i=1,nobstop   7065
  
 	else
 		!write(6,*)'nobstop,linknobswup,liwtot,ivupmat,nkeepup,j_o(ivupmat)%d',&
 		!	nobstop,linknobswup,liwtot,ivupmat,nkeepup,j_o(ivupmat)%d
 		do i=1,nobstop
-			!		write(6,*)'ii',i,ibas,linknobswup
+			!	write(6,*)'i,ibas,linknobswaup',i,ibas,linknobswup
 			nobsw=j_o(ivmatup)%d(ibas+linknobswup)
+			!		write(6,*)'i,ibas,linknobswaup',i,ibas,linknobswup,' nobsww',nobsw
 			!	j_o(ivdattop)%i2(i)= nobsw
 			nobswmax=max(nobsw,nobswmax)
  
 			nobstot=nobstot+nobsw
  
 			ibas=	ibas+nkeepup
-		enddo !i=1,nobstop   7015
+		enddo !i=1,nobstop   7079
 		! if(nobstot.ne.nobssub)then
 		! write(6,*)'*j* nobstot ',nobstot,' does not agree with nobssub ',nobssub
 		! j_err=.true. ;return
 		! endif !if(nobstot.ne.nobssub)   6991
  
  
-	endif !if(ivtop.ne.ivup)   6995
+	endif !if(ivtop.ne.ivup)   7059
 	j_o(ivtop)%i(9)=nobswmax
 	!	write(6,*)'nobswmax, nobstot',nobswmax,nobstot
 	if(nobssub.ne.nobstot)then
@@ -7036,59 +7101,9 @@ subroutine j_linkdata(ivup,ivsub)
 		j_err=.true.;return
  
  
-	endif !if(nobssub.ne.nobstot)   7034
- 
-	!	call j_getname(ivsub)
-	!	write(6,*)'sub ',j_oname(1:j_loname)
-	!j_o(iv)%i(3)=ivsub;j_o(iv)%i(4)=ivnobsw
-	!	j_o(iv)%i(5)=ivup
-	!i(14)
-	!i(12)=level
-	!i(13) index of nobsw variable
- 
-	! nobssub=j_o(j_o(ivsub)%i(1))%i(1)
- 
-	! else !if(iilink.le.0)then
-	! ntot=0
-	! maxnobsw=0
-	! ibas=0
-	! do i=1,nobsup
-	! !	call j_getobs0(ivup,i)
-	! !	nobo=j_v(ivnobsw)
-	! nobo=j_o(ivupmat)%d(ibas+linknobswup)
-	! maxnobsw=max(maxnobsw,nobo)
-	! ntot=ntot+nobo  ! int added 19.3.2019 by J.L.
-	! ibas=ibas+nkeep
-	! enddo !i=1,nobsup   6918
-	! if(ntot.ne.nobssub)then
-	! write(6,*)'**j_linkdata *sum of nobsw variable ',ntot
-	! write(6,*)'does not agree with the number of observations in the subdata ',nobssub
-	! j_err=.true.
-	! return
-	! endif !if(ntot.ne.nobssub)   6926
-	! j_o(ivup)%i(9)=maxnobsw
-	! !	write(6,*)'<418>maxnobsw',maxnobsw
-	! endif !if(iilink.le.0)   6904
-	!	ivobsw=j_igetopt(iob,io,j_mobsw)
-	!if(ivobsw.le.0)then
- 
-	!	end if !if(ivobsw.le.0)  15442
-	!end if !if(j_nargopt(iob,io,j_mnobsw).le.0)  15143
+	endif !if(nobssub.ne.nobstot)   7099
  
  
- 
-	!	call j_getoption(iob,io,j_mnobsw,-1,1,j_ipreal,.true.,narg,j_optarg0)
- 
-	!	call j_getobject(ivup,'%nobsw',j_ipreal,ivnobsw)
- 
- 
-	!nobswindex=j_inlistobject(ivnobsw,ivkeepup)
-	! if(nobswindex.le.0)then
-	! call j_getname(-1,ivnobsw)
-	! write(6,*)'nobsw variable ',j_oname2(1:j_loname2),' not in DATA ',j_oname(1:j_loname)
-	! j_err=.true.;return
-	! endif !if(nobswindex.le.0)   6952
-	!	if(j_o(ivup)%i(12).eq.0)then
 	!		keepup=>j_o(ivkeepup)%i2(1:nkeepup)
 	ivobswup=j_getobject(ivup,'%obsw',j_ipreal)
 	!	call j_getname(-1,ivobsw)
@@ -7098,6 +7113,7 @@ subroutine j_linkdata(ivup,ivsub)
 	ivobswsub=j_getobject(ivsub,'%obsw',j_ipreal)
 	call j_getname(ivsub,ivobswsub)
 	write(6,*)'obsw variable in ',j_oname(1:j_loname),' is ',j_oname2(1:j_loname2)
+	!write(6,*)'ivup,ivsub',ivup,ivsub
 	j_o(ivup)%i(3)=ivsub;j_o(ivsub)%i(5)=ivup
 	!j_o(ivdatanow)%i(13)
 	j_o(ivsub)%i(7)=ivobswsub
@@ -7106,30 +7122,13 @@ subroutine j_linkdata(ivup,ivsub)
 	ivvarsup=j_o(ivup)%i(11)
 	iper=j_putlistobject(j_o(ivsub)%i(11),ivin=ivvarsup)
 	iper=j_putlistobject(j_o(ivsub)%i(14),ivin=ivvarsup)
-	!	call  j_deflistobject(ivsub,'%vars',iout,list0=newk,list=newkeep(1:newk))
+	!	call  j_deflist(ivsub,'%vars',iout,list0=newk,list=newkeep(1:newk))
 	!j_o(ivsub)%i(11)=iout
 	if(j_o(ivup)%i(12).eq.0)j_o(ivup)%i(12)=1  !12 level
 	j_o(ivsub)%i(12)=j_o(ivup)%i(12)+1
 	j_o(ivup)%i(13)=linknobswup
 	j_o(ivsub)%i(13)=1
  
- 
-	!	write(6,*)'link2 ,nobswindex',linknobswup
- 
-	!	j_o(iv)%i(14)=j_o(ivmat)%i(1)  !number of observa
-	!j_o(iv)%i(3)=ivsub;j_o(iv)%i(4)=ivnobsw
-	!	j_o(iv)%i(5)=ivup
- 
-	!i(13) index of nobsw variable
- 
-	!	j_o(iv)%i(11)=ivvars
-	!	j_o(iv)%i(14)=ivvars2
- 
-	!	 %i(11) is %vars getting upper level variables fro
-	!if(present(ivcases))j_o(iv)%i(10)=ivcases
-	! j_o(iv)%i(9)=ivsub;j_o(iv)%i(10)=ivnobsw;j_o(iv)%i(11)=ivup
-	! j_o(iv)%i(12)=ivobs;j_o(iv)%i(13)=ivobsw;j_o(iv)%i(14)=ivnobswc
-	!j_o(ivsub)%i(14)=j_o(ivup)%i(14)+j_o(ivmat)%i(1)
  
 end subroutine
  
@@ -7142,7 +7141,7 @@ function j_datalevels(ivdata)
 	do while (j_o(ivdatac)%i(3).ne.0)
 		j_datalevels=j_datalevels+1
 		ivdatac=j_o(ivdatac)%i(3)
-	enddo !while (j_o(ivdatac)%i(3).ne.0)   7142
+	enddo !while (j_o(ivdatac)%i(3).ne.0)   7141
  
 end function
  
@@ -7154,7 +7153,7 @@ function j_bottomdata(ivdata)
 	j_bottomdata=ivdata
 	do while (j_o(j_bottomdata)%i(3).ne.0)
 		j_bottomdata=j_o(j_bottomdata)%i(3)
-	enddo !while (j_o(j_bottomdata)%i(3).ne.0)   7155
+	enddo !while (j_o(j_bottomdata)%i(3).ne.0)   7154
  
 end function
  
@@ -7167,7 +7166,7 @@ function j_topdata(ivdata)
 	do while (j_o(j_topdata)%i(5).ne.0)
 		j_topdata=j_o(j_topdata)%i(5)
 		!		write(6,*)'topdata ',j_topdata,j_o(j_topdata)%i
-	enddo !while (j_o(j_topdata)%i(5).ne.0)   7167
+	enddo !while (j_o(j_topdata)%i(5).ne.0)   7166
 	!	write(6,*)'topdata ',j_topdata,j_o(j_topdata)%i
 end function
  
@@ -7175,8 +7174,8 @@ end function
 ! integer,intent(in)::iobs
 ! logical p
 ! p=iobs.le.2
-! !	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat',iobs,j_disup
-! !	write(6,*)j_o(j_dimat)%d(1:6)
+! !	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat',iobs,j_disup
+! !	write(6,*)j_o(j_divmat)%d(1:6)
  
  
  
@@ -7187,9 +7186,9 @@ end function
 ! !	write(6,*)'level0  ',level0
 ! !	j_dobsw2(level0)=j_dobsw2(level0)+1
 ! !	write(6,*)'obsw nobsw',j_dobsw2(level0),j_dnobsw2(level0)
-! !		write(6,*)'level,j_dimat2(level),j_diba2(level),j_dnobswindex(level)',&
-! !	level0,j_dimat2(level0),j_diba2(level0),j_dnobswindex(level0)
-! !		j_dnobsw2(level0)=j_o(j_dimat2(level0))%d(j_diba2(level0)+j_dnobswindex(level0))
+! !		write(6,*)'level,j_divmat2(level),j_diba2(level),j_dnobswindex(level)',&
+! !	level0,j_divmat2(level0),j_diba2(level0),j_dnobswindex(level0)
+! !		j_dnobsw2(level0)=j_o(j_divmat2(level0))%d(j_diba2(level0)+j_dnobswindex(level0))
 ! if(p)write(6,*)'*******************************'
 ! if(p)write(6,*)'iobs,level0 init',iobs,level0,j_dobsw2(level0),j_dnobsw2(level0)
 ! 700		if(j_dobsw2(level0).eq.j_dnobsw2(level0))then
@@ -7197,11 +7196,11 @@ end function
 ! j_dobsw2(level0)=0
  
 ! !			write(6,*)j_oname(1:j_loname),j_diba2(level0-1)+ j_dnobswindex(level0-1),&
-! !			j_o(j_dimat2(level0-1))%i(1),j_o(j_dimat2(level0-1))%i(2),j_o(j_dimat2(level0-1))%i(3)
+! !			j_o(j_divmat2(level0-1))%i(1),j_o(j_divmat2(level0-1))%i(2),j_o(j_divmat2(level0-1))%i(3)
  
-! j_dnobsw2(level0)=j_o(j_dimat2(level0-1))%d(j_diba2(level0-1)+ j_dnobswindex(level0-1))
-! call j_getname(j_dimat2(level0-1))
-! if(p)write(6,*)'level0',level0,j_dnobsw2(level0),j_dimat2(level0-1),j_oname(1:j_loname)
+! j_dnobsw2(level0)=j_o(j_divmat2(level0-1))%d(j_diba2(level0-1)+ j_dnobswindex(level0-1))
+! call j_getname(j_divmat2(level0-1))
+! if(p)write(6,*)'level0',level0,j_dnobsw2(level0),j_divmat2(level0-1),j_oname(1:j_loname)
 ! !		write(6,*)'level0here dnobs',level0, j_dnobsw2(level0),' from ',j_diba2(level0-1)+ j_dnobswindex(level0-1)
 ! level0=level0-1
 ! if(p)write(6,*)'uus level0 ,j_dnobsw2(level0)',level0,j_dnobsw2(level0)
@@ -7220,11 +7219,11 @@ end function
 ! if(p)call j_getname(j_divobsw2(level))
 ! if(p)write(6,*)'level,obswiv',level,j_oname(1:j_loname),j_dobs2(level)
 ! j_v(j_divobsw2(level))=j_dobsw2(level)
-! call j_getname(j_dimat2(level))
+! call j_getname(j_divmat2(level))
 ! if(p)write(6,*)'level matrix',level,j_oname(1:j_loname),j_diba2(level)+1
-! if(p)write(6,*)j_o(j_dimat2(level))%d(1:20)
+! if(p)write(6,*)j_o(j_divmat2(level))%d(1:20)
 ! j_v(j_o(j_divkeep2(level))%i2(1:j_dnkeep2(level)))= &
-! j_o(j_dimat2(level))%d(j_diba2(level)+1:j_diba2(level)+ j_dnkeep2(level))
+! j_o(j_divmat2(level))%d(j_diba2(level)+1:j_diba2(level)+ j_dnkeep2(level))
 ! j_diba2(level)=j_diba2(level)+j_dnkeep2(level)
 ! if(p)then
 ! do j=1,j_dnkeep2(level)
@@ -7250,7 +7249,7 @@ end function
  
 ! ! call j_getname(j_divobs2(level),j_divobsw2(level))
 ! ! write(6,*)level,j_oname(1:j_loname),j_dobs2(level), j_oname2(1:j_loname2),j_dobsw2(level)
-! ! call j_getname(j_dimat2(level))
+! ! call j_getname(j_divmat2(level))
  
  
  
@@ -7260,8 +7259,8 @@ end function
 ! integer,intent(in)::ivdata
 ! logical p
  
-! !	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat',iobs,j_disup
-! !	write(6,*)j_o(j_dimat)%d(1:6)
+! !	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat',iobs,j_disup
+! !	write(6,*)j_o(j_divmat)%d(1:6)
 ! ivbot=j_bottomdata(ivdata)
 ! ivmat=j_o(ivbot)%i(1)
 ! nobs=j_o(ivmat)%i(1)
@@ -7275,9 +7274,9 @@ end function
 ! !	write(6,*)'level0  ',level0
 ! !	j_dobsw2(level0)=j_dobsw2(level0)+1
 ! !	write(6,*)'obsw nobsw',j_dobsw2(level0),j_dnobsw2(level0)
-! !		write(6,*)'level,j_dimat2(level),j_diba2(level),j_dnobswindex(level)',&
-! !	level0,j_dimat2(level0),j_diba2(level0),j_dnobswindex(level0)
-! !		j_dnobsw2(level0)=j_o(j_dimat2(level0))%d(j_diba2(level0)+j_dnobswindex(level0))
+! !		write(6,*)'level,j_divmat2(level),j_diba2(level),j_dnobswindex(level)',&
+! !	level0,j_divmat2(level0),j_diba2(level0),j_dnobswindex(level0)
+! !		j_dnobsw2(level0)=j_o(j_divmat2(level0))%d(j_diba2(level0)+j_dnobswindex(level0))
 ! if(p)write(6,*)'*******************************'
 ! if(p)write(6,*)'iobs,level0 init',iobs,level0,j_dobsw2(level0),j_dnobsw2(level0)
 ! 700		if(j_dobsw2(level0).eq.j_dnobsw2(level0))then
@@ -7285,12 +7284,12 @@ end function
 ! j_dobsw2(level0)=0
  
 ! !			write(6,*)j_oname(1:j_loname),j_diba2(level0-1)+ j_dnobswindex(level0-1),&
-! !			j_o(j_dimat2(level0-1))%i(1),j_o(j_dimat2(level0-1))%i(2),j_o(j_dimat2(level0-1))%i(3)
+! !			j_o(j_divmat2(level0-1))%i(1),j_o(j_divmat2(level0-1))%i(2),j_o(j_divmat2(level0-1))%i(3)
 ! if(level0.gt.1)then
-! if(j_dimat2(level0-1).le.0)write(6,*)'dimat ',j_dimat2(1:j_level)
-! j_dnobsw2(level0)=j_o(j_dimat2(level0-1))%d(j_diba2(level0-1)+ j_dnobswindex(level0-1))
-! call j_getname(j_dimat2(level0-1))
-! if(p)write(6,*)'level0',level0,j_dnobsw2(level0),j_dimat2(level0-1),j_oname(1:j_loname)
+! if(j_divmat2(level0-1).le.0)write(6,*)'dimat ',j_divmat2(1:j_level)
+! j_dnobsw2(level0)=j_o(j_divmat2(level0-1))%d(j_diba2(level0-1)+ j_dnobswindex(level0-1))
+! call j_getname(j_divmat2(level0-1))
+! if(p)write(6,*)'level0',level0,j_dnobsw2(level0),j_divmat2(level0-1),j_oname(1:j_loname)
 ! !		write(6,*)'level0here dnobs',level0, j_dnobsw2(level0),' from ',j_diba2(level0-1)+ j_dnobswindex(level0-1)
 ! level0=level0-1
 ! goto 700
@@ -7307,18 +7306,18 @@ end function
 ! if(p)call j_getname(j_divobsw2(level))
 ! if(p)write(6,*)'level,obswiv',level,j_oname(1:j_loname),j_dobs2(level)
 ! !	j_v(j_divobsw2(level))=j_dobsw2(level)
-! !	call j_getname(j_dimat2(level))
+! !	call j_getname(j_divmat2(level))
 ! if(p)write(6,*)'level matrix',level,j_oname(1:j_loname),j_diba2(level)+1
-! if(p)write(6,*)j_o(j_dimat2(level))%d(1:20)
+! if(p)write(6,*)j_o(j_divmat2(level))%d(1:20)
 ! !	j_v(j_o(j_divkeep2(level))%i2(1:j_dnkeep2(level)))= &
-! !		j_o(j_dimat2(level))%d(j_diba2(level)+1:j_diba2(level)+ j_dnkeep2(level))
+! !		j_o(j_divmat2(level))%d(j_diba2(level)+1:j_diba2(level)+ j_dnkeep2(level))
 ! j_diba2(level)=j_diba2(level)+j_dnkeep2(level)
  
 ! !		write(6,*)'level,diba2 ',	j_v(j_o(j_divkeep2(level))%i2(1:j_dnkeep2(level)))
 ! enddo !	do level=level0,j_level   7213
 ! j_dobs2(1)=j_dobs2(level)+1
-! !	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat',iobs,j_disup
-! !	write(6,*)j_o(j_dimat)%d(1:6)
+! !	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat',iobs,j_disup
+! !	write(6,*)j_o(j_divmat)%d(1:6)
  
  
  
@@ -7339,8 +7338,8 @@ end function
 subroutine j_getobs(iobs)
 	integer*8,intent(in)::iobs
 	integer*8 ::nsub
-	!	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat',iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat
-	!	write(6,*)j_o(j_dimat)%d(1:6)
+	!	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat',iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat
+	!	write(6,*)j_o(j_divmat)%d(1:6)
 	if(iobs.eq.j_dfrom)then
 		j_diba=(j_dfrom-1)*j_dnkeep
  
@@ -7349,26 +7348,26 @@ subroutine j_getobs(iobs)
 			nsub=1
 			j_dobsup=1
 			do while(nsub.lt.j_dfrom)
-				nsub=nsub+j_o(j_dimatup)%d(j_dibaup+1)
+				nsub=nsub+j_o(j_divmatup)%d(j_dibaup+1)
 				j_dibaup=j_dibaup+j_dnkeepup
 				j_dobsup=j_dobsup+1
-			enddo !while(nsub.lt.j_dfrom)   7351
+			enddo !while(nsub.lt.j_dfrom)   7350
 			j_v(j_divobsup)=j_dobsup
 			j_dnextobs=nsub-j_dfrom+1  !testattava
-		endif !if(j_disup)   7347
+		endif !if(j_disup)   7346
 		!	write(6,*)'iobsfro',iobs,j_dfrom,j_dnkeep,j_nkeepup,j_dobsup,j_dnextobs
-	endif !if(iobs.eq.j_dfrom)   7344
+	endif !if(iobs.eq.j_dfrom)   7343
 	if(j_disup)then
  
 		if(iobs.eq.j_dnextobs)then
 			! if(j_dibaup+ j_dnkeepup.gt.392987)then
-			! call j_getname(j_dimatup)
-			! write(6,*)iobs,j_dnkeepup,j_oname(1:j_loname),' ',j_o(j_dimatup)%i(1:3), &
+			! call j_getname(j_divmatup)
+			! write(6,*)iobs,j_dnkeepup,j_oname(1:j_loname),' ',j_o(j_divmatup)%i(1:3), &
 			! ' obsup ',j_dobsup
  
 			!endif !if(j_dibaup+ j_dnkeepup.gt.392987)   7282
-			j_v(j_o(j_divkeepup)%i2(1:j_dnkeepup))=j_o(j_dimatup)%d(j_dibaup+1:j_dibaup+ j_dnkeepup)
-			j_dnextobs=j_dnextobs+ j_o(j_dimatup)%d(j_dibaup+1)  !  j_v(j_divnobsw)
+			j_v(j_o(j_divkeepup)%i2(1:j_dnkeepup))=j_o(j_divmatup)%d(j_dibaup+1:j_dibaup+ j_dnkeepup)
+			j_dnextobs=j_dnextobs+ j_o(j_divmatup)%d(j_dibaup+1)  !  j_v(j_divnobsw)
 			j_dibaup=j_dibaup+j_dnkeepup
 			j_v( j_divobsw)=1
 			j_v(j_divobsup)=j_dobsup
@@ -7376,20 +7375,20 @@ subroutine j_getobs(iobs)
  
 		else !if(iobs.eq.j_dnextobs)then
 			j_v( j_divobsw)=j_v( j_divobsw)+1
-		endif !if(iobs.eq.j_dnextobs)   7363
+		endif !if(iobs.eq.j_dnextobs)   7362
  
  
-	endif !if(j_disup)   7361
+	endif !if(j_disup)   7360
 	! write(6,*)'<55',j_diba,j_dnkeep,j_o(j_divkeep)%i2(1:j_dnkeep)
-	!	write(17,*)iobs,j_diba,j_dnobs8,iobs*j_dnkeep,j_o(j_dimat)%i(3)
+	!	write(17,*)iobs,j_diba,j_dnobs8,iobs*j_dnkeep,j_o(j_divmat)%i(3)
 	j_v( j_o(j_divkeep)%i2(1:j_dnkeep))= &
-		j_o(j_dimat)%d(j_diba+1:j_diba+ j_dnkeep)
+		j_o(j_divmat)%d(j_diba+1:j_diba+ j_dnkeep)
 	j_diba=j_diba+j_dnkeep
 	if(j_distrans)then
 		j_v(j_divobs)=iobs
 		call dotrans(j_divtrans,1)
 		if(j_err)write(6,*)'error in transformation for Obs ',iobs
-	endif !if(j_distrans)   7388
+	endif !if(j_distrans)   7387
 	j_rejected=.false.
 	!	j_dapu=j_codevalue(j_diob,j_dfilterlink)
 	if( j_disfilter)j_rejected=j_codevalue(j_diob,j_dfilterlink).eq.j_0
@@ -7401,20 +7400,20 @@ end subroutine !subroutine j_getobs(iobs)
  
 ! subroutine j_getobs20()
  
-! !	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat',iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat
-! !	write(6,*)j_o(j_dimat)%d(1:6)
+! !	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat',iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat
+! !	write(6,*)j_o(j_divmat)%d(1:6)
 ! do iobs=1,j_dfrom-1
 ! level0=j_level
 ! !	do level0=j_level,1,-1
 ! !	write(6,*)'level0  ',level0
 ! !	j_dobsw2(level0)=j_dobsw2(level0)+1
 ! !	write(6,*)'obsw nobsw',j_dobsw2(level0),j_dnobsw2(level0)
-! !		write(6,*)'level,j_dimat2(level),j_diba2(level),j_dnobswindex(level)',&
-! !	level0,j_dimat2(level0),j_diba2(level0),j_dnobswindex(level0)
-! !		j_dnobsw2(level0)=j_o(j_dimat2(level0))%d(j_diba2(level0)+j_dnobswindex(level0))
+! !		write(6,*)'level,j_divmat2(level),j_diba2(level),j_dnobswindex(level)',&
+! !	level0,j_divmat2(level0),j_diba2(level0),j_dnobswindex(level0)
+! !		j_dnobsw2(level0)=j_o(j_divmat2(level0))%d(j_diba2(level0)+j_dnobswindex(level0))
 ! 700		if(j_dobsw2(level0).eq.j_dnobsw2(level0))then
 ! j_dobsw2(level0)=0
-! j_dnobsw2(level0)=j_o(j_dimat2(level0-1))%d(j_diba2(level0-1)+ &
+! j_dnobsw2(level0)=j_o(j_divmat2(level0-1))%d(j_diba2(level0-1)+ &
 ! j_dnobswindex(level0-1))
 ! level0=level0-1
  
@@ -7439,8 +7438,8 @@ subroutine j_getobswup(iobs,ivdata)
 	integer,intent(in)::iobs,ivdata
 	logical isup
  
-	!	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat',iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_dimat
-	!	write(6,*)j_o(j_dimat)%d(1:6)
+	!	write(6,*)'iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat',iobs,j_dfrom,j_dnkeep,j_disup,j_dnextobs,j_divmat
+	!	write(6,*)j_o(j_divmat)%d(1:6)
 	save
  
  
@@ -7468,9 +7467,9 @@ subroutine j_getobswup(iobs,ivdata)
 			!		write(6,*)'ivobsw ',j_oname(1:j_loname)
  
 			ibaup=0
-		endif !if(isup)   7457
+		endif !if(isup)   7456
 		!	write(6,*)'wup imat,ivkeep,isup,nsub,ibau ',imat,ivkeep,isup,nsub,ibaup
-	endif !if(iobs.eq.1)   7447
+	endif !if(iobs.eq.1)   7446
 	if(isup)then
 		if(iobs.eq.nextobs)then
 			j_v(j_o(ivkeepup)%i2(1:nkeepup))=j_o(imatup)%d(ibaup+1:ibaup+ nkeepup)
@@ -7480,10 +7479,10 @@ subroutine j_getobswup(iobs,ivdata)
 			nup=nup+1
 		else !if(iobs.eq.j_dnextobs)then
 			j_v( ivobsw)=j_v( ivobsw)+1
-		endif !if(iobs.eq.nextobs)   7475
+		endif !if(iobs.eq.nextobs)   7474
 		j_v(ivobsup)=nup
  
-	endif !if(isup)   7474
+	endif !if(isup)   7473
  
 	j_v( j_o(ivkeep)%i2(1:nkeep))= &
 		j_o(imat)%d(iba+1:iba+ nkeep)
@@ -7496,15 +7495,15 @@ end subroutine j_getobswup!subroutine j_getobs(iobs)
  
 function j_nobsdata(ivdata) !number of obs in data
 	integer, intent(in):: ivdata
-	if(ivdata.le.0.or.ivdata.gt.j_namedv)then
+	if(ivdata.le.0.or.ivdata.gt.j_named)then
 		write(6,*)'j* illegal argument ',ivdata,' for nobbsdata'
 		j_err=.true.;return
-	endif !if(ivdata.le.0.or.ivdata.gt.j_namedv)   7499
+	endif !if(ivdata.le.0.or.ivdata.gt.j_named)   7498
 	if(j_otype(ivdata).ne.j_ipdata)then
 		call j_printname(' ',ivdata, ' is not data object')
 		j_err=.true.
 		return
-	endif !if(j_otype(ivdata).ne.j_ipdata)   7503
+	endif !if(j_otype(ivdata).ne.j_ipdata)   7502
 	j_nobsdata=j_o( j_o(ivdata)%i(1))%i(1)
 	return
 end function j_nobsdata !function j_nobsdata(ivdata)
@@ -7526,15 +7525,15 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 	!	write(6,*)'getdots,i1,i2,n',i1,i2,n
  
 	n=0
-	if(i1.gt.j_namedv)then
+	if(i1.gt.j_named)then
 		write(6,*)'**illegal ...';j_err=.true.;return
-	end if !if(i1.gt.j_namedv)   7529
+	end if !if(i1.gt.j_named)   7528
 	call j_getline(j_ivnames,i1,name1,le1)
 	if(name1(1:le1).eq.name2)then
 		!write(6,*)'n=-1'
 		n=0
 		return
-	endif !if(name1(1:le1).eq.name2)   7533
+	endif !if(name1(1:le1).eq.name2)   7532
  
 	!	call j_getline(j_ivnames,i2,name2,le2)
 	ibu=1
@@ -7547,7 +7546,7 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 	do ial=ial0,le1
 		if(ial.gt.le2)then
 			write(6,*)'**illegal ...';j_err=.true.;return
-		endif !if(ial.gt.le2)   7548
+		endif !if(ial.gt.le2)   7547
  
 		if(name1(ial:ial).eq.name2(ial:ial).and.(name1(ial:ial).lt.'0'.or. &
 			name1(ial:ial).gt.'9'))cycle !bypass initial letters
@@ -7555,7 +7554,7 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 			name2(ial:ial).lt.'0'.or.name2(ial:ial).gt.'9'))goto 99 !then letter
  
 		exit
-	enddo !ial=ial0,le1   7547
+	enddo !ial=ial0,le1   7546
  
 	!	write(6,*)'ial ',ial
  
@@ -7564,27 +7563,27 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 		do ilo=ial,le1
 			if(name1(ilo:ilo).ge.'0'.and.name1(ilo:ilo).le.'9')cycle
 			exit
-		enddo !ilo=ial,le1   7564
+		enddo !ilo=ial,le1   7563
 		ilop1=ilo-1
-	endif !if(ial.le.le1)   7563
+	endif !if(ial.le.le1)   7562
  
  
 	if(ial.le.le2)then
 		do ilo=ial,le2
 			if(name2(ilo:ilo).ge.'0'.and.name2(ilo:ilo).le.'9')cycle
 			exit
-		enddo !ilo=ial,le2   7573
+		enddo !ilo=ial,le2   7572
 		ilop2=ilo-1
-	endif !if(ial.le.le2)   7572
+	endif !if(ial.le.le2)   7571
 	if(ilop1.gt.le1)then
 		write(6,*)'illegal ... '
 		j_err=.true.
 		return
-	endif !if(ilop1.gt.le1)   7579
+	endif !if(ilop1.gt.le1)   7578
 	if(name1(ial:ilop1).eq.name2(ial:ilop2))then
 		ial0=ilop1+1
 		goto 17
-	endif !if(name1(ial:ilop1).eq.name2(ial:ilop2))   7584
+	endif !if(name1(ial:ilop1).eq.name2(ial:ilop2))   7583
  
 	if(ilop1.lt.le1.and.ilop2.lt.le2)then
 		if(name1(ilop1+1:le1).ne.name2(ilop2+1:le2))then
@@ -7592,13 +7591,13 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 				name2(ilop2:le2)
 			j_err=.true.
 			return
-		endif !if(name1(ilop1+1:le1).ne.name2(ilop2+1:le2))   7590
+		endif !if(name1(ilop1+1:le1).ne.name2(ilop2+1:le2))   7589
 	elseif(ilop1.lt.le1.or.ilop2.lt.le2)then
 		write(6,*)'illegal ... '
 		j_err=.true.
 		return
  
-	endif !if(ilop1.lt.le1.and.ilop2.lt.le2)   7589
+	endif !if(ilop1.lt.le1.and.ilop2.lt.le2)   7588
  
  
 77	read(name1(ial:ilop1),'(i4)',err=88)ii1
@@ -7619,7 +7618,7 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 		write(6,*)'trying to generate ',nn,' in ... ',nmaxtot,' allowed'
 		j_err=.true.
 		return
-	endif !if(nn.gt.nmaxtot)   7618
+	endif !if(nn.gt.nmaxtot)   7617
 	!list(1)=i1
  
 	!	write(6,*)'<567>',ii1,ii2
@@ -7629,7 +7628,7 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 		write(num,'(i4)')ili
 		do lu=1,4
 			if(num(lu:lu).ne.' ')exit
-		enddo !lu=1,4   7630
+		enddo !lu=1,4   7629
 		!write(6,*)'<47',lu,num
 		n=n+1
 		call testdots(n)
@@ -7637,14 +7636,14 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 			name=name1(1:ial-1)//num(lu:4)//name1(ilop1+1:le1)
 		else !if(ilop1.lt.le1)then
 			name=name1(1:ial-1)//num(lu:4)
-		endif !if(ilop1.lt.le1)   7636
+		endif !if(ilop1.lt.le1)   7635
 		lena=len_trim(name)
 		!write(6,*)'name(1:lena) ',name(1:lena)
 		iv=j_object(name(1:lena))
 		if(iv.le.0)iv=j_getobject(0,name(1:lena),j_ipreal)
 		j_dotlist(n)=iv
 		!write(6,*)'<577>ili,n,list(n)',ili,n,list(n)
-	enddo !ili=ii1+istep,ii2-istep,istep   7628
+	enddo !ili=ii1+istep,ii2-istep,istep   7627
 	n=n+1
 	call testdots(n)
 	i2=j_object(name2)
@@ -7659,20 +7658,20 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 		write(6,*)'*dots for letters must be equal size  ',name1(1:le1),'...',name2(1:le2)
 		j_err=.true.
 		return
-	endif !99 if(le1.ne.le2)   7658
+	endif !99 if(le1.ne.le2)   7657
  
 	if(ial.lt.le1)then
 		if(name1(ial+1:le1).ne.name2(ial+1:le1))then
 			write(6,*)'end ',name1(ial+1:le1),' differs from ',name2(ial+1:le1)
 			j_err=.true. ;return
-		endif !if(name1(ial+1:le1).ne.name2(ial+1:le1))   7665
-	endif !if(ial.lt.le1)   7664
+		endif !if(name1(ial+1:le1).ne.name2(ial+1:le1))   7664
+	endif !if(ial.lt.le1)   7663
 	if(.not.(name1(ial:ial).ge.'A'.and.name2(ial:ial).le.'Z'.or.&
 			name1(ial:ial).ge.'a'.and.name2(ial:ial).le.'z'))then
 		write(6,*)'if letters change in ... they mus be either between A and Z or between a and z'
 		j_err=.true.
 		return
-	endif !if(.not.(name1(ial:ial).ge.'A'.and.name2(ial:ial).le.'Z'.   7670
+	endif !if(.not.(name1(ial:ial).ge.'A'.and.name2(ial:ial).le.'Z'.   7669
 	istep=1
 	if(name1(ial:ial).gt.name2(ial:ial))istep=-1
  
@@ -7685,7 +7684,7 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 			name=name1(1:ial-1)//char(i)//name1(ial+1:le1)
 		else
 			name=name1(1:ial-1)//char(i)
-		endif !if(ial.lt.le1)   7684
+		endif !if(ial.lt.le1)   7683
 		iv=j_object(name(1:le1))
 		!	write(6,*)'name(1:le1) ',name(1:le1)
 		if(iv.le.0)iv=j_getobject(0,name(1:le1),j_ipreal)
@@ -7693,7 +7692,7 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 		j_dotlist(n)=iv
 		!	write(6,*)'n,name,iv',n,name(1:le1),iv
  
-	enddo !i=ichar(name1(ial:ial))+istep,ichar(name2(ial:ial))-istep,   7682
+	enddo !i=ichar(name1(ial:ial))+istep,ichar(name2(ial:ial))-istep,   7681
 	n=n+1
 	iv=j_object(name2(1:le1))
 	iv=j_getobject(0,name2(1:le1),j_ipreal)
@@ -7713,7 +7712,7 @@ subroutine j_getdots(i1,name2,n) ! get varaible list from ... , if(new) can gene
 			j_dotlist(1:nmax)=templist
 			deallocate(templist)
  
-		endif !if(nn.gt.size(j_dotlist))   7706
+		endif !if(nn.gt.size(j_dotlist))   7705
  
 	end subroutine
 end subroutine j_getdots !subroutine j_getdots(i1,i2,list,n,nmax)
@@ -7759,8 +7758,8 @@ subroutine j_tracecheck(iv)
 		if(j_o(j_ivtracestatus)%d(ii).gt.0)then
 			j_ntraced=j_ntraced+1
 			call j_puti(j_traceii,j_ntraced,ii)
-		endif !if(j_o(j_ivtracestatus)%d(ii).gt.0)   7759
-	endif !if(ii.gt.0)   7758
+		endif !if(j_o(j_ivtracestatus)%d(ii).gt.0)   7758
+	endif !if(ii.gt.0)   7757
 	!write(6,*)'ntraced ',ntraced
 	return
 end subroutine j_tracecheck !subroutine j_tracecheck(iv)
@@ -7797,7 +7796,7 @@ subroutine j_nextop(inp,icur,last,oper,noper,ipos,ipos1,ioper)
 		if(icur.ge.last)return
 		icur=icur+1
 		goto 77
-	end if !77 if(inp(icur:icur).le.' ')   7796
+	end if !77 if(inp(icur:icur).le.' ')   7795
 	i=icur
 	!20140618 (,  ,) virheet
 	!if(inp(i:i)=='('.and.inp(i+1:i+1)==','.or.inp(i:i)==','.and.inp(i+1:i+1)==')') then
@@ -7818,13 +7817,13 @@ subroutine j_nextop(inp,icur,last,oper,noper,ipos,ipos1,ioper)
 			write(6,*)'*no closing ]'
 			j_err=.true.
 			return
-		endif !if(iclos.le.0)   7817
+		endif !if(iclos.le.0)   7816
 		i=iclos+i+1
 		ipos1=i-1
 		!write(6,*)'nyt:',inp(i:last),'i=',i,' last=',last
 		if(i.gt.last)goto 70
 		goto 100
-	endif !if(inp(i:i).eq.'[')   7814
+	endif !if(inp(i:i).eq.'[')   7813
  
 	!20141210 oli: if(inp(i:i).eq.'?')then; isq=i;i=i+1;goto 100; end if
  
@@ -7837,19 +7836,19 @@ subroutine j_nextop(inp,icur,last,oper,noper,ipos,ipos1,ioper)
 			if(inp(j:j).eq."'")goto 17
 			!    write(6,*)inp(j:j),ichar(inp(j:j)),ichar('¤'),iachar(inp(j:j)),iachar('¤')
 			if(inp(j:j).eq.'~'.OR.inp(j:j).eq.'|')inp(j:j)="'" ! ´´´´`´´ <<<||||||||||
-		enddo !j=i+1,last   7835
+		enddo !j=i+1,last   7834
 		goto 70  !termination
 17 i=j+1   !;goto 100
  !  write(6,*)'inp ',inp
  !  write(6,*)'i,last',i,last
 		if(i.gt.last)goto 70   ! no ope found
 		ipos1=j
-	endif !if(inp(i:i).eq."'")   7831
+	endif !if(inp(i:i).eq."'")   7830
 	!write(6,*)'icur,ipos1,i,j',icur,ipos1,i,j
 	if(inp(i:i).le.' ')then
 		i=i+1
 		goto 100
-	endif !if(inp(i:i).le.' ')   7849
+	endif !if(inp(i:i).le.' ')   7848
  
 	! special mark
 	if(inp(i:i).lt.'0'.or.(inp(i:i).gt.'9'.and.inp(i:i).lt.'A').or. &
@@ -7866,28 +7865,28 @@ subroutine j_nextop(inp,icur,last,oper,noper,ipos,ipos1,ioper)
 					if(i+1.gt.len(inp))then
 						!write(6,*)'<2245>',inp
 						return
-					endif !if(i+1.gt.len(inp))   7866
+					endif !if(i+1.gt.len(inp))   7865
 					if((inp(i-1:i-1).eq.'e'.or.inp(i-1:i-1).eq.'E').and. &
 						inp(i+1:i+1).ge.'0'.and.inp(i+1:i+1).le.'9'.and.&
 						((inp(i-2:i-2).ge.'0'.and.inp(i-2:i-2).le.'9').or.inp(i-2:i-2).eq.'.'))cycle
-				endif !if(i.ge.3.and.(oper(j)(1:le2).eq.'-'.or.oper(j)(1:le2).eq.   7865
+				endif !if(i.ge.3.and.(oper(j)(1:le2).eq.'-'.or.oper(j)(1:le2).eq.   7864
 				ipos=i
 				ioper=j
 				! to treat ==
 				if(ioper.eq.20)then
 					if(last.ge.i+1.and.inp(i+1:i+1).eq.'=')ioper=25
-				endif !if(ioper.eq.20)   7877
+				endif !if(ioper.eq.20)   7876
 				! if(ioper.eq.iops)write(6,*)'iops',i,i+le2-1,input
 				return
-			endif !if(inp(i:i+le2-1).eq.oper(j)(1:le2))   7863
-		enddo !j=1,noper   7858
+			endif !if(inp(i:i+le2-1).eq.oper(j)(1:le2))   7862
+		enddo !j=1,noper   7857
 		if(i.gt.ipos1+1)then
 			write(6,*)'**illegal special marks after:',inp(1:ipos1)
 			j_err=.true.
 			!write(6,*)'ipos1,i,icur',ipos1,i,icur
 			return
-		endif !if(i.gt.ipos1+1)   7884
-	endif !if(inp(i:i).lt.'0'.or.(inp(i:i).gt.'9'.and.inp(i:i).lt.'A'   7855
+		endif !if(i.gt.ipos1+1)   7883
+	endif !if(inp(i:i).lt.'0'.or.(inp(i:i).gt.'9'.and.inp(i:i).lt.'A'   7854
  
 	ipos1=i
 	i=i+1
@@ -7901,80 +7900,7 @@ subroutine j_nextop(inp,icur,last,oper,noper,ipos,ipos1,ioper)
 end subroutine j_nextop !subroutine j_nextop(inp,icur,last,oper,noper,ipos,ipos1,ioper)
  
  
-!20150812(arg1<->arg2) oli: subroutine deflist2(name,iv,list,ivout)  ! define a list object, and put list to it
-! ! subroutine j_deflist2(iv,name,list,ivout)  ! define a list object, and put list to it
-! module vmod
-! end module vmod
- 
-! module typemod
-! ipobj  ! & first objec ????
-! !typec
-! end module
- 
- 
-! ! character*(*), intent(in):: name
-! ! integer, intent(in):: iv
-! ! integer, intent(in):: list(0:*)  !starts from io
-! ! integer, intent(out):: ivout
- 
-! 20150812(arg1<->arg2) oli: 	call getv(name,iv,iplist,ivout) !call getv2(iplist,ivout(teku),ior,)
-! call deflist(iv, !call getv2(iplist,ivout(teku),ior,)
-! 20140522 virheenkäsittely
-! if(j_err) return
- 
-! ! call j_deflist(iv,name,ivout,nres=list(0))
-! ! write(6,*)'3773iv',iv,name,list(0)
-! ! if(j_err) return
-! o(ivout)%i(0)=list(0)
-! do i=1,list(0);o(ivout)%i(i)=list(i);end do
-! ! j_o(ivout)%i2(1:list(0))=list(1:list(0))
-! ! return
-! ! end subroutine j_deflist2 !subroutine j_deflist2(iv,name,list,ivout)
- 
- 
-!20150812(arg1<->arg2) oli: subroutine deflist(name,iv,list0,ivout)
-! subroutine j_deflist(iv,name,list0,ivout,list2) !allocates list object with size list0,
-! ! but put it as empty
- 
- 
-! !module vmod
-! !end module vmod
- 
-! !module typemod
-! !ipobj  ! & first objec ????
-! ! !typec
-! !end module
- 
- 
-! character*(*), intent(in):: name
-! integer, intent(in):: iv
-! integer, intent(in):: list0
-! integer, intent(out):: ivout
-! logical,intent(in),optional::list2
- 
-! !20150812(arg1<->arg2) oli: 	call getv(name,iv,iplist,ivout) !call getv2(iplist,ivout(teku),ior,)
-! call j_getobject(iv,name,j_iplist,ivout) !call getv2(iplist,ivout(teku),ior,)
-! !20140522 virheenkäsittely
- 
-! if(j_err) return
-! if(present(list2))then
-! if(list2)j_otype(ivout)=j_iplist2
-! endif !if(present(list2))then
-! allocate( j_o(ivout)%i2(1:list0))
-! allocate( j_o(ivout)%d(1:list0))
-! allocate( j_o(ivout)%i(1:13)
-! j_o(ivout)%i=0
-! j_o(ivout)%i2=0
-! j_o(ivout)%d=j_0
-! !o(ivout)%i(-1)=list0;
-! j_o(ivout)%i(1)=list0
-! j_o(ivout)%i(2)=1
-! j_o(ivout)%i(3)=list0
- 
-! return
-! end subroutine j_deflist !subroutine j_deflist(iv,name,list0,ivout,list2)
- 
-function j_deflistobjectinp(iv,name,inp)
+function j_deflistinp(iv,name,inp)
 	!makes a list from character variable inp which contains the names of objects separated with commas
 	character*(*), intent(in):: inp,name
 	integer, intent(in):: iv
@@ -8001,16 +7927,16 @@ function j_deflistobjectinp(iv,name,inp)
 		if(ipil.gt.lop)exit
 		ial=ipil+1
 		ipil=j_nextlim(inp,ial,lop,',')
-	enddo !while(.true.)   7994
+	enddo !while(.true.)   7920
  
 	!	call j_command(j_object_name(ivout,j_leno(ivout))//'=list('//inp//')',.true.)  !options are passed through
 	!write(6,*)'nv',nv,list
-	j_deflistobjectinp=j_deflistobject(iv,name,list0=nv,list=list(1:nv))
+	j_deflistinp=j_deflist(iv,name,list0=nv,list=list(1:nv))
 	!write(6,*)j_o(iv)%i(1),j_o(iv)%i2
 99	deallocate(list)
 
 	return
-end function j_deflistobjectinp !subroutine j_deflistobjectinp(iv,name,ivout,inp)
+end function j_deflistinp !subroutine j_deflistinp(iv,name,ivout,inp)
  
  
 !20150812(arg1<->arg2) oli: subroutine deflistopt(name,iv,list0,list,ivout)
@@ -8103,13 +8029,13 @@ logical function j_istrans(iv) ! is iv a transformation  !ei ehkä ole tar
  
 	integer, intent(in):: iv
  
-	if(iv.le.0.or.iv.gt.j_namedv)then
+	if(iv.le.0.or.iv.gt.j_named)then
 		j_istrans=.false.
-	else if(j_otype(iv).ne.j_iptrans)then !if(iv.le.0.or.iv.gt.j_namedv)then
+	else if(j_otype(iv).ne.j_iptrans)then !if(iv.le.0.or.iv.gt.j_named)then
 		j_istrans=.false.
-	else !if(iv.le.0.or.iv.gt.j_namedv)then
+	else !if(iv.le.0.or.iv.gt.j_named)then
 		j_istrans=.true.
-	endif !if(iv.le.0.or.iv.gt.j_namedv)   8106
+	endif !if(iv.le.0.or.iv.gt.j_named)   8032
 	return
 end function j_istrans !logical function j_istrans(iv)
  
@@ -8117,16 +8043,16 @@ integer function j_outputlist(ivtrans) !outputlist of transformation set ivtrans
  
 	integer,intent(in):: ivtrans
 	j_outputlist=0
-	if(ivtrans.le.0.or.ivtrans.gt.j_namedv)then
+	if(ivtrans.le.0.or.ivtrans.gt.j_named)then
 		write(6,*)'*j* outputlist, argument not object index ',ivtrans
 		j_err=.true.
 		return
-	endif !if(ivtrans.le.0.or.ivtrans.gt.j_namedv)   8120
+	endif !if(ivtrans.le.0.or.ivtrans.gt.j_named)   8046
 	if(j_otype(ivtrans).ne.j_iptrans)then
 		call j_printname('*Object ',ivtrans,' is not a transformation set')
 		j_err=.true.
 		return
-	endif !if(j_otype(ivtrans).ne.j_iptrans)   8125
+	endif !if(j_otype(ivtrans).ne.j_iptrans)   8051
 	j_outputlist=j_o(ivtrans)%i2(2)
  
 end function j_outputlist !integer function j_outputlist(ivtrans)
@@ -8166,7 +8092,7 @@ function j_lenlist(iob) ! length of list, -1 if not a list
 		j_lenlist=-1
 	else !if(j_otype(iob).ne.j_iplist)then
 		j_lenlist=j_o(iob)%i(1)
-	endif !if(j_otype(iob).ne.j_iplist)   8165
+	endif !if(j_otype(iob).ne.j_iplist)   8091
 	return
 end function j_lenlist !function j_lenlist(iob)
  
@@ -8178,7 +8104,7 @@ function j_inlist(i,list0,list)  ! is i in list NO=>0
 	!write(6,*)list(0)
 	do j_inlist=1,list0
 		if(i.eq.list(j_inlist))return
-	enddo !j_inlist=1,list0   8179
+	enddo !j_inlist=1,list0   8105
 	j_inlist=0
 	return
 end function j_inlist !function j_inlist(i,list0,list)
@@ -8236,27 +8162,27 @@ function j_inlistobject(i,ivlist) !is i in a list object ivlist
  
 	integer, intent(in):: i,ivlist
 	!	write(6,*)'i,ivlist ',iv,ivlist
-	if(ivlist.le.0.or.ivlist.gt.j_namedv)then
+	if(ivlist.le.0.or.ivlist.gt.j_named)then
  
 		write(6,*)'*j* illegal list j_inlistobject ',ivlist
 		j_err = .true.;return
-	else !if(ivlist.le.0.or.ivlist.gt.j_namedv)then
+	else !if(ivlist.le.0.or.ivlist.gt.j_named)then
  
 		if(j_otype(ivlist).ne.j_iplist.and.j_otype(ivlist).ne.j_ipilist)then
 			call j_getname(i,ivlist)
 			write(6,*)'*j* not a list ',j_oname2(1:j_loname2), ' trying ', j_oname(1:j_loname)
  
 			j_err=.true.;return
-		endif !if(j_otype(ivlist).ne.j_iplist.and.j_otype(ivlist).ne.j_ip   8245
-	endif !if(ivlist.le.0.or.ivlist.gt.j_namedv)   8239
+		endif !if(j_otype(ivlist).ne.j_iplist.and.j_otype(ivlist).ne.j_ip   8171
+	endif !if(ivlist.le.0.or.ivlist.gt.j_named)   8165
 	j_inlistobject=0
 	!	write(6,*)'j_o(ivlist)%i(1) ',i,j_o(ivlist)%i(1),j_o(ivlist)%i2, ' in ',j_inlistobject
 	do j=1,j_o(ivlist)%i(1)
 		if(i.eq.j_o(ivlist)%i2(j))then
 			j_inlistobject=j
 			return
-		endif !if(i.eq.j_o(ivlist)%i2(j))   8255
-	enddo !j=1,j_o(ivlist)%i(1)   8254
+		endif !if(i.eq.j_o(ivlist)%i2(j))   8181
+	enddo !j=1,j_o(ivlist)%i(1)   8180
  
 	return
 end function j_inlistobject !function j_inlistobject(i,ivlist)
@@ -8273,7 +8199,7 @@ function j_inlist1(i,list0,list) ! is i in list, length given in list0 , not in 
 	!write(6,*)list(0)
 	do j_inlist1=1,list0
 		if(i.eq.list(j_inlist1))return
-	enddo !j_inlist1=1,list0   8274
+	enddo !j_inlist1=1,list0   8200
 	j_inlist1=0
 	return
 end function j_inlist1 !function j_inlist1(i,list0,list)
@@ -8310,7 +8236,7 @@ function j_putlist(i,list) ! put i into allocated list, bound checking %%list
 		! allocate(list(0:2*iubound_))
 		! list(0:iubound_)=ivec2
 		! deallocate(ivec2)
-	end if !if(list(0).ge.iubound_)   8304
+	end if !if(list(0).ge.iubound_)   8230
 	list(0)=list(0)+1
 	list(list(0))=i
 	j_putlist=list(0)
@@ -8470,13 +8396,13 @@ subroutine j_putinput(iv,ivinl,ivoutl,ivarg) !put variable into inputlist if not
  
 	integer, intent(in):: iv,ivinl,ivoutl,ivarg
  
-	if(ivinl.le.0.or.iv.gt.j_namedv)return
+	if(ivinl.le.0.or.iv.gt.j_named)return
 	if(ivarg.ne.0)then
 		if(j_inlistobject(iv,ivarg).le.0)return
-	endif !if(ivarg.ne.0)   8474
+	endif !if(ivarg.ne.0)   8400
 	if(ivoutl.gt.0)then
 		if(j_inlistobject(iv,ivoutl).gt.0)return
-	endif !if(ivoutl.gt.0)   8477
+	endif !if(ivoutl.gt.0)   8403
 	!20140627   JL
 	!	if(o(ivnames)%ch( o(ivnames)%i(iv) ).eq.'$')return
 	if(j_o(j_ivnames)%ch( j_o(j_ivnames)%i(iv) ).eq.'$.or.iv.eq.ivresult')return
@@ -8489,10 +8415,10 @@ subroutine j_putoutput(iv,ivinl,ivoutl,ivarg) ! put varaible in the outputlist, 
 	integer, intent(in):: iv,ivinl,ivoutl,ivarg
  
 	!getline(ivnames,iv,vname,le)
-	if(ivoutl.le.0.or.iv.gt.j_namedv)return
+	if(ivoutl.le.0.or.iv.gt.j_named)return
 	if(ivarg.ne.0)then
 		if(j_inlistobject(iv,ivarg).le.0)return
-	endif !if(ivarg.ne.0)   8493
+	endif !if(ivarg.ne.0)   8419
 	!20140627  JL
 	!	if(o(ivnames)%ch( o(ivnames)%i(iv) ).ne.'$')ii=putlist2plus(iv,ivoutl)
 	if(j_o(j_ivnames)%ch( j_o(j_ivnames)%i(iv) ).ne.'$'.and.iv.ne.j_ivresult) &
@@ -8507,7 +8433,7 @@ subroutine j_xt(ivmat,ivkeep,iobs)  ! get all keep-variables for observation iob
  
 	do i=1,j_o(ivkeep)%i(1)
 		j_v(j_o(ivkeep)%i2(i))=j_o(ivmat)%d((iobs-1)*j_o(ivkeep)%i(1)+i)
-	enddo !i=1,j_o(ivkeep)%i(1)   8508
+	enddo !i=1,j_o(ivkeep)%i(1)   8434
 	return
 end subroutine j_xt !subroutine j_xt(ivmat,ivkeep,iobs)
  
@@ -8774,7 +8700,7 @@ function j_ipc(iv)  !is iv character, YES=>1 NO=>0
 		j_ipc=1
 	else !if(j_otype(iv).eq.j_ipchar)then
 		j_ipc=0
-	endif !if(j_otype(iv).eq.j_ipchar)   8773
+	endif !if(j_otype(iv).eq.j_ipchar)   8699
 	return
 end function j_ipc !function j_ipc(iv)
  
@@ -8788,8 +8714,8 @@ subroutine j_andlist(list1,list2,olist)
 		if(any(list1(i).eq.list2(1:list2(0)) ))then
 			iout=iout+1
 			olist(iout)=list1(i)
-		endif !if(any(list1(i).eq.list2(1:list2(0)) ))   8788
-	enddo !i=1,list1(0)   8787
+		endif !if(any(list1(i).eq.list2(1:list2(0)) ))   8714
+	enddo !i=1,list1(0)   8713
 	olist(0)=iout
 	return
 end subroutine j_andlist !subroutine j_andlist(list1,list2,olist)
@@ -8854,12 +8780,12 @@ subroutine j_stopj()
 			closed(nclosed)=j_nunits(i_)
 		else !if(act(1:lenact)=='READ') then
 			write(6,*)'write file ', j_tempchar2(1:len_trim(j_tempchar2)),' remains open'
-		endif !if(act(1:lenact)=='READ')   8850
-	enddo !i_=j_nused,1,-1   8844
+		endif !if(act(1:lenact)=='READ')   8776
+	enddo !i_=j_nused,1,-1   8770
 	!		write(6,*)j_nused,'+',j_nunits(j_nused+1:6)
 	do i_=1,nclosed
 		call j_closeunit(closed(i_))
-	enddo !i_=1,nclosed   8860
+	enddo !i_=1,nclosed   8786
 	! j_err=.false.
  
  
@@ -8879,18 +8805,19 @@ subroutine j_closeunit(nu_)   ! %%io
 	!write(6,*)j_nunits(1:j_nused)
 	!write(6,*)'<8647> closing ',nu
 	do i=1,j_nused
+		!	write(6,*)'j_nunits(i),nu',j_nunits(i),nu
 		if(j_nunits(i).eq.nu)then
 			nunitvar_=abs(j_unitchar(nu))
 			if(nunitvar_.ne.0)then
 				call j_putiounit(0,nunitvar_) !j_o(nunitvar_)%i(4)=0
 				j_unitchar(nu)=0
-			endif !if(nunitvar_.ne.0)   8884
+			endif !if(nunitvar_.ne.0)   8811
 			j_nunits(i)=j_nunits(j_nused)
 			j_nunits(j_nused)=nu
 			j_nused=j_nused-1
 			return
-		end if !if(j_nunits(i).eq.nu)   8882
-	end do !i=1,j_nused   8881
+		end if !if(j_nunits(i).eq.nu)   8809
+	end do !i=1,j_nused   8807
 99	write(6,*)'*j* closing illegal unit',nu
 	write(6,*)'open units ',j_nunits(1:j_nused)
 	j_err=.true.
@@ -8920,7 +8847,7 @@ function j_defchar(iv,name) !define a character constant
 			j_err=.true.
 			return
  
-		endif !if(le.le.0)   8917
+		endif !if(le.le.0)   8844
 		if(name(1:1).eq."'")then
 			j_defchar=j_object("'"//j_oname(1:j_loname)//name(2:le))
 			if(j_defchar.gt.0)return
@@ -8929,7 +8856,7 @@ function j_defchar(iv,name) !define a character constant
 			j_defchar=j_object("'"//j_oname(1:j_loname)//name(1:le)//"'")
 			if(j_defchar.gt.0)return
 			call j_getobjectnam("'"//j_oname(1:j_loname)//name(1:le)//"'",j_ipchar,j_defchar)
-		endif !if(name(1:1).eq."'")   8924
+		endif !if(name(1:1).eq."'")   8851
  
 	else
 		if(le.eq.0)then
@@ -8937,7 +8864,7 @@ function j_defchar(iv,name) !define a character constant
 			write(6,*)' defchar name empty'
 			j_err=.true.
 			return
-		endif !if(le.eq.0)   8935
+		endif !if(le.eq.0)   8862
 		if(name(1:1).eq."'")then
 			j_defchar=j_object(name)
 			if(j_defchar.gt.0)return
@@ -8946,11 +8873,11 @@ function j_defchar(iv,name) !define a character constant
 			j_defchar=j_object("'"//name//"'")
 			if(j_defchar.gt.0)return
 			call j_getobjectnam("'"//name//"'",j_ipchar,j_defchar)
-		endif !if(name(1:1).eq."'")   8941
+		endif !if(name(1:1).eq."'")   8868
  
  
  
-	endif !if(iv.gt.0)   8915
+	endif !if(iv.gt.0)   8842
  
  
 	! !	ivout=j_object3(iv,name,.true.)
@@ -8967,21 +8894,21 @@ function j_defchar(iv,name) !define a character constant
 	!20140522 virheenkäsittely
 	if(j_err) return
 	!	if(allocated(j_o(ivout)%i))return  !ivout was character constant
-	allocate( j_o(j_defchar)%i(1:10))
+	allocate( j_o(j_defchar)%i(1:11))
 	! do ii=j_o(j_ivnames)%i(ivout)-1,j_o(j_ivnames)%i(ivout+1)+1
 	! write(6,*)ii,j_o(j_ivnames)%ch(ii)
 	! enddo
 	j_o(j_defchar)%i(1)=j_o(j_ivnames)%i(j_defchar)+1
 	j_o(j_defchar)%i(2)=j_o(j_ivnames)%i(j_defchar+1)-2
 	!if(p)write(6,*)'<6669',j_o(j_defchar)%i(1:2)
-	j_o(j_defchar)%i(3:8)=0
+	j_o(j_defchar)%i(3:11)=0
 	! for character
  
 	!5 number of lines
 	!6 lines used
 	!7	last modified
 	!8 lines allocated
- 
+	! 11 line after end of para
 	! write(6,*)'ivout,h',o(ivout)%i
 	!call j_getchar(ivout,j_filename,lefi)
 	!write(6,*)'>34>',j_filename(1:lefi)
@@ -8997,7 +8924,7 @@ logical function j_ischarconst(iv)   ! %%char
 	j_ischarconst=.false.
 	if(j_otype(iv).eq.j_ipchar)then
 		if(j_o(iv)%i(3).eq.0)j_ischarconst=.true.
-	endif !if(j_otype(iv).eq.j_ipchar)   8998
+	endif !if(j_otype(iv).eq.j_ipchar)   8925
 	return
  
 end function !logical function j_ischarconst(iv)
@@ -9028,14 +8955,14 @@ function j_isconst(name)   !0 =is not, -1 looks like but is not
 	elseif(r.eq.j_0)then !if(r.eq.j_1)then
 		j_isconst=j_ivzero
 		return
-	endif !if(r.eq.j_1)   9024
+	endif !if(r.eq.j_1)   8951
 	!write(6,*)'v(nv+1:nv+nconstantv)',v(nv+1:nv+nconstantv)
 	do i=j_nv+1,j_nv+j_nconstantv
 		if(j_v(i).eq.r)then
 			j_isconst=i
 			return
-		endif !if(j_v(i).eq.r)   9034
-	enddo !i=j_nv+1,j_nv+j_nconstantv   9033
+		endif !if(j_v(i).eq.r)   8961
+	enddo !i=j_nv+1,j_nv+j_nconstantv   8960
  
 	j_nconstantv=j_nconstantv+1
 	j_isconst=j_nv+j_nconstantv
@@ -9078,14 +9005,14 @@ function j_getconst(name)   !makes a constant from coed
 	elseif(r.eq.j_0)then !if(r.eq.j_1)then
 		j_getconst=j_ivzero
 		return
-	endif !if(r.eq.j_1)   9074
+	endif !if(r.eq.j_1)   9001
 	!write(6,*)'v(nv+1:nv+nconstantv)',v(nv+1:nv+nconstantv)
 	do i=j_nv+1,j_nv+j_nconstantv
 		if(j_v(i).eq.r)then
 			j_getconst=i
 			return
-		endif !if(j_v(i).eq.r)   9084
-	enddo !i=j_nv+1,j_nv+j_nconstantv   9083
+		endif !if(j_v(i).eq.r)   9011
+	enddo !i=j_nv+1,j_nv+j_nconstantv   9010
  
  
  
@@ -9102,119 +9029,298 @@ function j_getconst(name)   !makes a constant from coed
 	return
 end function j_getconst !function j_getconst(name)
  
-function j_getkeep(ivdata)
+function j_getkeep(ivdata,point,len)
 	integer,intent(in)::ivdata
+	integer,dimension(:),intent(out),optional,pointer ::point
+	integer,optional,intent(out) ::len
 	if(j_otype(ivdata).ne.j_ipdata)then
 		call j_getname(ivdata)
 		write(6,*)j_oname(1:j_loname),' is not DATA'
 		j_err=.true.; return
-	endif !if(j_otype(ivdata).ne.j_ipdata)   9107
+	endif !if(j_otype(ivdata).ne.j_ipdata)   9036
 	j_getkeep=j_o(ivdata)%i(2)
 	if(j_otype(j_getkeep).ne.j_iplist)then
 		call j_getname(j_getkeep)
 		write(6,*)j_oname(1:j_loname),' is not LIST'
 		j_err=.true.; return
-	endif !if(j_otype(j_getkeep).ne.j_iplist)   9113
+	endif !if(j_otype(j_getkeep).ne.j_iplist)   9042
+	le=j_o(j_getkeep)%i(1)
+	if(present(point))point=>j_o(j_getkeep)%i2(1 : j_o(j_getkeep)%i(1))
+	if(present(len))len=le
+end function
+ 
+function j_gettablecoef(ivtable,point)
+	integer, intent(in)::ivtable
+	double precision,dimension(:),intent(inout),optional,pointer ::point
+	if(j_otype(ivtable).ne.j_iptable)then
+		call j_getname(ivtable)
+		write(6,*)'*j* gettablecoef:', j_oname(1:j_loname),' is not TABLE'
+		j_err=.true.;return
+	endif !if(j_otype(ivtable).ne.j_iptable)   9055
+	ivmatrix=j_o(ivtable)%i(6)
+ 
+ 
+ 
+	if(j_otype(ivmatrix).ne.j_ipmatrix)then
+		call j_getname(ivmatrix)
+		write(6,*)j_oname(1:j_loname), 'is not MATRIX but ',j_otypes(j_otype(ivmatrix))
+		j_err=.true.;return
+	endif !if(j_otype(ivmatrix).ne.j_ipmatrix)   9064
+ 
+	if(j_o(ivmatrix)%i(1).ne.j_o(ivtable)%i(1).or.j_o(ivmatrix)%i(2).ne.j_o(ivtable)%i(2))then
+		call j_getname(ivtable,ivmatrix)
+		write(6,*)j_oname(1:j_loname),' is ',j_o(ivtable)%i(1),' x ',j_o(ivtable)%i(2)
+		write(6,*)'but ',j_oname2(1:j_loname2),' is ',j_o(ivmatrix)%i(1),' x ',j_o(ivmatrix)%i(2)
+		j_err=.true.;return
+	endif !if(j_o(ivmatrix)%i(1).ne.j_o(ivtable)%i(1).or.j_o(ivmatrix   9070
+	if(present(point))point=>j_o(ivmatrix)%d(1:j_o(ivmatrix)%i(3))
+	j_gettablecoef=ivmatrix
+end function
+ 
+subroutine j_checkobject(ivobject,itype,named)
+	integer,intent(in):: ivobject,itype
+	logical,intent(in),optional::named
+	logical nam,nonnam
+	! j_nv=j_mxnamedv+j_mxtemporalv
+	!	j_mxv=j_nv+j_mxconstantv
+	!	write(6,*)'checkobj',ivobject,itype
+	if(ivobject.le.0.or.ivobject.gt.j_mxv)then
+		write(6,*)'*j_checkobject, illegal ivobject ',ivobject,' should be between 0 and ',j_mxv
+		j_err=.true.
+	endif !if(ivobject.le.0.or.ivobject.gt.j_mxv)   9087
+	if(itype.le.0.or.itype.gt.j_notypes)then
+		write(6,*)'*j_checkobject, illegal itype:',itype
+		j_err=.true.
+	endif !if(itype.le.0.or.itype.gt.j_notypes)   9091
+	if(j_err)return
+	nam=.false.
+	nonnam=.false.
+ 
+	if(present(named))then
+		nam=named
+		if(.not.nam)nonnam=.true.
+	endif !if(present(named))   9099
+	if(nam.and.ivobject.gt.j_named)then
+		write(6,*)'*j_checkobject, object ', ivobject, ' is not named  there are now ',j_named,' named objects'
+		j_err=.true.
+	elseif(nonnam.and.ivobject.le.j_named)then
+		call j_getname(ivobject)
+		write(6,*)j_oname(1:j_loname),' has name but checkobject is called with named=.false. '
+		j_err=.true.
+	endif !if(nam.and.ivobject.gt.j_named)   9103
+	if(j_otype(ivobject).ne. itype)then
+		call j_getname(ivobject)
+		write(6,*)'*checkobject ',j_oname(1:j_loname),' should be ',j_otypes(itype)(1:j_lotypes(itype)),&
+			' but it is ',j_otypes(j_otype(ivobject))(1:j_lotypes(j_otype(ivobject)))
+		if(j_otype(j_divdata).ne.j_ipdata)then
+			call j_printname('*Object ',j_divdata, ' given in data-> is not DATA')
+			j_err=.true.
+			write(6,*)'Available ', j_otypes(itype)(1:j_lotypes(itype)),' objects:'
+			!	ial=1
+			!j_tempchar2=' '
+			nn=0
+			do ii=1,j_named
+				if(j_otype(ii).eq.itype)then
+					!		write(6,*)'/'//j_vname(ii)//'/'
+					nn=nn+1
+					call j_getname(ii)
+					if(nn.lt.15)write(6,*)j_oname(1:j_loname)
+					if(nn.eq.16)write(6,*)'...'
+					!			j_tempchar2(ial:ial+23)=j_vname(ii)
+ 
+					!			ial=len_trim(j_tempchar2)+2
+				endif !if(j_otype(ii).eq.itype)   9123
+ 
+			enddo !ii=1,j_named   9122
+			write(6,*)'there are ',nn, ' objects of the correct type'
+			!	write(6,*)j_tempchar2(1:ial)
+			return
+		endif !if(j_otype(j_divdata).ne.j_ipdata)   9115
+		j_err=.true.
+	endif !if(j_otype(ivobject).ne. itype)   9111
+ 
+ 
+ 
+end subroutine
+ 
+ 
+function j_getsubdata(ivdata,needed)
+	integer,intent(in)::ivdata
+	logical,optional ::needed
+ 
+	!j_o(ivup)%i(3)=ivsub;j_o(ivsub)%i(5)=ivup
+	! ivkeepup=j_o(ivup)%i(2)
+	! nkeepup=j_o(ivkeepup)%i(1)
+	! ivobsup=j_o(ivup)%i(6)
+	! ivmatup=j_o(ivup)%i(1)
+	! ivnobswup=j_getobject(ivup,'%nobsw',j_ipreal)
+	! linknobswup=j_inlistobject(ivnobswup,ivkeepup)
+	call j_checkobject(ivdata,j_ipdata,named=.true.)
+	if(j_err)return
+ 
+	j_getsubdata=j_o(ivdata)%i(3)
+	if(present(needed).and.j_getsubdata.le.0)then
+		call j_getname(ivdata)
+		write(6,*)'*j_getsubdata ',j_oname(1:j_loname),' does not have subdata'
+		j_err=.true.
+	endif !if(present(needed).and.j_getsubdata.le.0)   9162
  
 end function
  
-function j_getmatrix(ivdata)
+logical function j_isupdata(iv,ivkeep,keep,nkeep,ivobs,ivnobsw,nobsup,point,nobssub)
+	! gets access to iv as updata
+	!  note there need not be subdata yet
+	integer,intent(in)::iv
+	integer,intent(out),optional :: ivkeep
+	integer,dimension(:),intent(out),optional,pointer ::keep
+	integer,intent(out),optional ::nkeep,ivobs,ivnobsw,nobsup
+	double precision,dimension(:),optional,intent(out),pointer ::point !point to the matrix
+	integer*8,optional :: nobssub
+ 
+ 
+	character*60 oname
+	!	write(6,*)'iv bef',iv
+	call j_checkobject(iv,j_ipdata,named=.true.);if(j_err)return
+	!write(6,*)'kjjj'
+	ivnobsw0=j_object('%nobsw',iv=iv,needed=.true.)
+	if(present(ivnobsw))ivnobsw=ivnobsw0
+	!write(6,*)'ivnobsw',ivnobsw0
+	if(j_err)return
+ 
+	if(present(ivobs))ivobs=j_o(iv)%i(6)
+ 
+	if(ivnobsw0.le.0)then
+		call j_getname0(ivdata,oname,loname)
+		write(6,*)oname(1:loname),' does not have %nobsw -variable'
+		j_err=.true.;return
+	endif !if(ivnobsw0.le.0)   9192
+	ivkeep0=j_getkeep(iv)
+	ivmatrix0=j_getmatrix(iv);if(j_err)return
+	if(present(ivkeep))ivkeep=ivkeep0
+ 
+	if(j_o(ivkeep0)%i2(1).ne.ivnobsw0)then
+		call j_getname0(iv,oname,loname)
+		write(6,*)'the first keep variable in ',oname(1:loname),' is not  %nobsw '
+		j_err=.true.;return
+	endif !if(j_o(ivkeep0)%i2(1).ne.ivnobsw0)   9201
+	nkeep0=j_o(ivkeep0)%i(1)
+	if(present(nkeep))nkeep=nkeep0
+	if(present(keep))keep=>j_o(ivkeep0)%i2(1:nkeep0)
+	nobsup0=j_o(ivmatrix0)%i(1)
+	if(present(nobsup))nobsup=nobsup0
+	if(present(point))point=>j_o(ivmatrix0)%d(1:nobsup0*nkeep0)
+	if(present(nobssub))then
+		nobssub=0
+		ibas=1
+		do i=1,nobsup0
+			nobssub=nobssub+j_o(ivmatrix0)%d(ibas)
+			ibas=ibas+nkeep0
+		enddo !i=1,nobsup0   9215
+ 
+	endif !if(present(nobssub))   9212
+ 
+ 
+ 
+end function j_isupdata
+ 
+function j_getupdata(ivdata,needed)
 	integer,intent(in)::ivdata
-	if(j_otype(ivdata).ne.j_ipdata)then
+	logical,optional ::needed
+ 
+	call j_checkobject(ivdata,j_ipdata,named=.true.)
+	if(j_err)return
+	j_getupdata=j_o(ivdata)%i(5)
+	if(present(needed).and.j_getupdata.le.0)then
 		call j_getname(ivdata)
-		write(6,*)j_oname(1:j_loname),' is not DATA'
-		j_err=.true.; return
-	endif !if(j_otype(ivdata).ne.j_ipdata)   9123
+		write(6,*)'*j_getupdata ',j_oname(1:j_loname),' does not have updata'
+		j_err=.true.
+	endif !if(present(needed).and.j_getupdata.le.0)   9233
+ 
+end function
+ 
+ 
+function j_getmatrix(ivdata,point)
+	integer,intent(in)::ivdata
+	double precision,dimension(:),intent(inout),optional,pointer ::point
+	call j_checkobject(ivdata,j_ipdata,named=.true.)
+	if(j_err)return
 	!	write(6,*)'7575 ',ivdata
 	j_getmatrix=j_o(ivdata)%i(1)
 	!	write(6,*)'75799 ',j_getmatrix
-	if(j_otype(j_getmatrix).ne.j_ipmatrix)then
-		call j_getname(j_getmatrix)
-		write(6,*)j_oname(1:j_loname),' is not MATRIX'
-		j_err=.true.; return
-	endif !if(j_otype(j_getmatrix).ne.j_ipmatrix)   9131
+	call j_checkobject(j_getmatrix,j_ipmatrix,named=.true.);if(j_err)return
+	if(present(point))point=>j_o(j_getmatrix)%d(1:j_o(j_getmatrix)%i(3))
  
 end function
  
-function j_getcases(ivdata)
+function j_getcases(ivdata,point,len)
 	integer,intent(in)::ivdata
-	if(j_otype(ivdata).ne.j_ipdata)then
-		call j_getname(ivdata)
-		write(6,*)j_oname(1:j_loname),' is not DATA'
-		j_err=.true.; return
-	endif !if(j_otype(ivdata).ne.j_ipdata)   9141
+	integer,dimension(:),optional,intent(inout),pointer ::point
+	integer,optional,intent(out)::len
+	call j_checkobject(ivdata,j_ipdata,named=.true.);if(j_err)return
+ 
 	j_getcases=j_o(ivdata)%i(10)
-	if(j_getcases.gt.0)then
-		if(j_otype(j_getcases).ne.j_iplist)then
-			call j_getname(j_getcases)
-			write(6,*)j_oname(1:j_loname),' is not LIST'
-			j_err=.true.; return
-		endif !if(j_otype(j_getcases).ne.j_iplist)   9148
-	endif !if(j_getcases.gt.0)   9147
+	if(j_getcases.le.0)return
+	call j_checkobject(j_getcases,j_iplist,named=.true.);if(j_err)return
+	le=j_o(j_getcases)%i(1)
+	if(present(point))point=>j_o(j_getcases)%i2(1 : le)
+	if(present(len))len=le
 end function
  
  
-function j_getinputvar(ivtrans)
-	integer,intent(in)::ivtrans
  
-	if(j_otype(ivtrans).ne.j_iptrans)then
-		call j_getname(ivtrans)
-		write(6,*)j_oname(1:j_loname),' is not TRANS'
-		j_err=.true.; return
-	endif !if(j_otype(ivtrans).ne.j_iptrans)   9160
+ 
+function j_getinputvar(ivtrans,point,len)
+	integer,intent(in)::ivtrans
+	integer,dimension(:),intent(inout),optional,pointer ::point
+	integer,optional,intent(out)::len
+	call j_checkobject(ivtans,j_iptrans,named=.true.);if(j_err)return
+ 
 	j_getinputvar=j_o(ivtrans)%i(1)
-	if(j_otype(j_getinputvar).ne.j_iplist)then
-		call j_getname(j_getinputvar)
-		write(6,*)j_oname(1:j_loname),' is not LIST'
-		j_err=.true.; return
-	endif !if(j_otype(j_getinputvar).ne.j_iplist)   9166
+	call j_checkobject(j_getinputvar,j_iplist,named=.true.);if(j_err)return
  
+	le=j_o(j_getinputvar)%i(1)
+	if(present(point))point=>j_o(j_getinputvar)%i2(1 : le)
+	if(present(len))len=le
 end function
  
-function j_getoutputvar(ivtrans)
+function j_getoutputvar(ivtrans,point,len)
 	integer,intent(in)::ivtrans
-	if(j_otype(ivtrans).ne.j_iptrans)then
-		call j_getname(ivtrans)
-		write(6,*)j_oname(1:j_loname),' is not TRANS'
-		j_err=.true.; return
-	endif !if(j_otype(ivtrans).ne.j_iptrans)   9176
-	j_getoutputvar=j_o(ivtrans)%i(2)
-	if(j_otype(j_getoutputvar).ne.j_iplist)then
-		call j_getname(j_getoutputvar)
-		write(6,*)j_oname(1:j_loname),' is not LIST'
-		j_err=.true.; return
-	endif !if(j_otype(j_getoutputvar).ne.j_iplist)   9182
+	integer,dimension(:),intent(inout),optional,pointer ::point
+	integer,optional,intent(out)::len
+	call j_checkobject(ivtans,j_iptrans,named=.true.);if(j_err)return
+ 
+	j_getoutputvar=j_o(ivtrans)%i(1)
+	call j_checkobject(j_getoutputvar,j_iplist,named=.true.);if(j_err)return
+ 
+	le=j_o(j_getoutputvar)%i(1)
+	if(present(point))point=>j_o(j_getoutputvar)%i2(1 : le)
+	if(present(len))len=le
 end function
  
-function j_gettablerow(ivtable)
+function j_gettablerow(ivtable,point,len)
 	integer,intent(in)::ivtable
-	if(j_otype(ivtable).ne.j_iptable)then
-		call j_getname(ivtable)
-		write(6,*)j_oname(1:j_loname),' is not TABLE'
-		j_err=.true.; return
-	endif !if(j_otype(ivtable).ne.j_iptable)   9191
+	integer,dimension(:),intent(inout),optional,pointer ::point
+	integer,optional,intent(out)::len
+	call j_checkobject(ivtable,j_iptable,named=.true.);if(j_err)return
 	j_gettablerow=j_o(ivtable)%i(4)
-	if(j_otype(j_gettablerow).ne.j_iplist)then
-		call j_getname(j_gettablerow)
-		write(6,*)j_oname(1:j_loname),' is not LIST'
-		j_err=.true.
-	endif !if(j_otype(j_gettablerow).ne.j_iplist)   9197
+	call j_checkobject(j_gettablerow,j_iplist,named=.true.);if(j_err)return
+	le=j_o(j_gettablerow)%i(1)
+	if(present(len))len=le
+	if(present(point))point=>j_o(j_gettablerow)%i2(1:le)
 	return
 end function
  
-function j_gettablecol(ivtable)
+function j_gettablecol(ivtable,point,len)
 	integer,intent(in)::ivtable
-	if(j_otype(ivtable).ne.j_iptable)then
-		call j_getname(ivtable)
-		write(6,*)j_oname(1:j_loname),' is not TABLE'
-		j_err=.true.; return
-	endif !if(j_otype(ivtable).ne.j_iptable)   9207
+	integer,dimension(:),intent(inout),optional,pointer ::point
+	integer,optional,intent(out)::len
+	call j_checkobject(ivtable,j_iptable,named=.true.);if(j_err)return
 	j_gettablecol=j_o(ivtable)%i(5)
-	if(j_otype(j_gettablecol).ne.j_iplist)then
-		call j_getname(j_gettablecol)
-		write(6,*)j_oname(1:j_loname),' is not LIST'
-		j_err=.true.
-	endif !if(j_otype(j_gettablecol).ne.j_iplist)   9213
+	call j_checkobject(j_gettablecol,j_iplist,named=.true.);if(j_err)return
+	le=j_o(j_gettablecol)%i(1)
+	if(present(len))len=le
+	if(present(point))point=>j_o(j_gettablecol)%i2(1:le)
+	return
 	return
 end function
  
@@ -9239,14 +9345,14 @@ function j_num2iv(r) !puts const into list of constants, if not there, and outpu
 	elseif(r.eq.j_0)then !if(r.eq.j_1)then
 		j_num2iv=j_ivzero
 		return
-	endif !if(r.eq.j_1)   9235
+	endif !if(r.eq.j_1)   9341
 	!write(6,*)'v(nv+1:nv+nconstantv)',v(nv+1:nv+nconstantv)
 	do i=j_nv+1,j_nv+j_nconstantv
 		if(j_v(i).eq.r)then
 			j_num2iv=i
 			return
-		endif !if(j_v(i).eq.r)   9245
-	enddo !i=j_nv+1,j_nv+j_nconstantv   9244
+		endif !if(j_v(i).eq.r)   9351
+	enddo !i=j_nv+1,j_nv+j_nconstantv   9350
 	if(j_nconstantv.ge.j_mxconstantv)then
 		!	allocate(vv(1:nv+2*mxconstantv) )
 		allocate(vv(1:j_nv+2*j_mxconstantv))
@@ -9270,7 +9376,7 @@ function j_num2iv(r) !puts const into list of constants, if not there, and outpu
 		! deallocate(vv)
 		j_mxconstantv=2*j_mxconstantv
 		!	write(6,*)'*doubling the number of constants into ',j_mxconstantv
-	endif !if(j_nconstantv.ge.j_mxconstantv)   9250
+	endif !if(j_nconstantv.ge.j_mxconstantv)   9356
 	j_nconstantv=j_nconstantv+1
 	j_v(j_nv+j_nconstantv)=r
 	! write(6,*)'const',nv+nconstantv,r
@@ -9296,7 +9402,7 @@ subroutine j_printuntil(nu,inp,le,tag) !print file until tag, but not it
 	if(inp(1:max(1,le)).ne.tag(1:let))then
 		write(6,*)inp(1:max(le,1))
 		goto 1
-	endif !if(inp(1:max(1,le)).ne.tag(1:let))   9296
+	endif !if(inp(1:max(1,le)).ne.tag(1:let))   9402
 	return
 99 write(6,*)'*printuntil: error reading'
 	j_err=.true.
@@ -9350,10 +9456,10 @@ subroutine j_isanyin(vector1,nvector1, vector2,nvector2, cvector1, cvector2)
 				if(vector1(it_)(1:le1).eq.vector2(i)(1:le2))then
 					write(6,*)'name ',vector1(it_)(1:le1),' in ', cvector1 ,' is already in ',cvector2
 					j_err = .true.
-				endif !if(vector1(it_)(1:le1).eq.vector2(i)(1:le2))   9350
-			endif !if(le1.eq.le2)   9348
-		enddo !i=1,nvector2   9346
-	enddo !it_ = 1, nvector1   9344
+				endif !if(vector1(it_)(1:le1).eq.vector2(i)(1:le2))   9456
+			endif !if(le1.eq.le2)   9454
+		enddo !i=1,nvector2   9452
+	enddo !it_ = 1, nvector1   9450
 	return
 end subroutine j_isanyin !subroutine j_isanyin(vector1,nvector1, vector2,nvector2, cvector1, cvector2)
  
@@ -9379,10 +9485,10 @@ function j_iopts(opt)  ! returns the index of option, but this is in j_utilities
 				io_ = j_isin(opt(1:le),o3_options,o3_noptions)
 				if(io_ > 0) then
 					j_iopts = j_nopts2+ io_ !  3000+io_
-				endif !if(io_ > 0)   9380
-			endif !if(io_ > 0)   9376
-		endif !if(io_ >0)   9372
-	endif !if(j_iopts==0)   9370
+				endif !if(io_ > 0)   9486
+			endif !if(io_ > 0)   9482
+		endif !if(io_ >0)   9478
+	endif !if(j_iopts==0)   9476
 	return
 end function !function j_iopts(opt)
  
@@ -9415,14 +9521,14 @@ subroutine j_getvalues(ix,value9,nval,iz,value2,nval2)
 			write(6,*)'**all observations rejected '
 			j_err=.true.
 			return
-		endif !if(ial.eq.j_dnobs8)   9414
+		endif !if(ial.eq.j_dnobs8)   9520
 		goto 700
-	endif !if(j_rejected)   9412
+	endif !if(j_rejected)   9518
  
 	value9(1)=j_v(ix);nval=1;ial=ial+1
 	if(iz.gt.0)then
 		value2(1)=j_v(iz);nval2=1
-	endif !if(iz.gt.0)   9423
+	endif !if(iz.gt.0)   9529
 	!write(6,*)'k,ial,nobs',k,ial,nobs
 	do i=ial,nobs
 		call j_getobs(i)
@@ -9440,8 +9546,8 @@ subroutine j_getvalues(ix,value9,nval,iz,value2,nval2)
 			if(any(value2(1:nval2).eq.j_v(iz)))goto 900
 			nval2=nval2+1;value2(nval2)=j_v(iz)
 900     continue
-		endif !if(iz.gt.0)   9439
-	enddo !i=ial,nobs   9427
+		endif !if(iz.gt.0)   9545
+	enddo !i=ial,nobs   9533
 	!	enddo !do k=1,jndatasetss
 	return
 end subroutine j_getvalues !subroutine j_getvalues(ix,value9,nval,iz,value2,nval2)
@@ -9462,7 +9568,7 @@ subroutine j_bitset(ifunc,irow,icol,val)
 		j_o(ifunc)%i2(ii)= ibset(j_o(ifunc)%i2(ii),ibit)
 	else !if(val.ne.0.)then
 		j_o(ifunc)%i2(ii)= ibclr(j_o(ifunc)%i2(ii),ibit)
-	endif !if(val.ne.0.)   9461
+	endif !if(val.ne.0.)   9567
 	return
 end subroutine j_bitset !subroutine j_bitset(ifunc,irow,icol,val)
  
@@ -9480,7 +9586,7 @@ subroutine j_putmatrix_s(ivmat,irow,icol,val)
 		j_v(j_o(ivmat)%i(irow))=val
 		return
  
-	endif !if(j_otype(ivmat).eq.j_iplist)   9479
+	endif !if(j_otype(ivmat).eq.j_iplist)   9585
 	if(j_otype(ivmat).eq.j_ipreal.and.irow.eq.1.and.icol.eq.1)then
 		j_v(ivmat)=val
 	else !if(j_otype(ivmat).eq.j_ipreal.and.irow.eq.1.and.icol.eq.1)then
@@ -9492,7 +9598,7 @@ subroutine j_putmatrix_s(ivmat,irow,icol,val)
 		! write(-j_o(ivmat)%i(4),rec=irow,err=90)j_o(ivmat)%r(1:j_o(ivmat)%i(2))
 		! j_o(ivmat)%i(6)=irow
  
-	endif !if(j_otype(ivmat).eq.j_ipreal.and.irow.eq.1.and.icol.eq.1)   9484
+	endif !if(j_otype(ivmat).eq.j_ipreal.and.irow.eq.1.and.icol.eq.1)   9590
 	return
 90 write(6,*)'*j* read/write error in j_putmatrix'
 	j_err=.true.
@@ -9529,15 +9635,15 @@ subroutine j_func(iob,io,func,minv,maxv,coef,coef2,reci)
 				write(6,*)'*too small argument ',j_v(irg)
 				j_err=.true.
 				return
-			endif !if(j_v(irg).lt.minv)   9528
-		endif !if(present(minv))   9527
+			endif !if(j_v(irg).lt.minv)   9634
+		endif !if(present(minv))   9633
 		if(present(maxv))then
 			if(val.gt.maxv)then
 				write(6,*)'*too larg argument ',j_v(irg)
 				j_err=.true.
 				return
-			endif !if(val.gt.maxv)   9535
-		endif !if(present(maxv))   9534
+			endif !if(val.gt.maxv)   9641
+		endif !if(present(maxv))   9640
 		if(present(coef))val=val*coef
 		if(present(reci))val=1.d0/val
  
@@ -9558,8 +9664,8 @@ subroutine j_func(iob,io,func,minv,maxv,coef,coef2,reci)
 				write(6,*)'*too small element ',val
 				j_err=.true.
 				return
-			endif !if(val.lt.minv)   9552
-		endif !if(present(minv))   9550
+			endif !if(val.lt.minv)   9658
+		endif !if(present(minv))   9656
 		if(present(maxv))then
 			val=maxval(j_o(irg)%d)
 			if(val.gt.maxv)then
@@ -9569,8 +9675,8 @@ subroutine j_func(iob,io,func,minv,maxv,coef,coef2,reci)
 				! write(6,*)'*row ',irow,' column ',icol,' too large value ',val
 				j_err=.true.
 				return
-			endif !if(val.gt.maxv)   9565
-		endif !if(present(maxv))   9563
+			endif !if(val.gt.maxv)   9671
+		endif !if(present(maxv))   9669
  
  
 		!as in j_defmatrix
@@ -9587,22 +9693,22 @@ subroutine j_func(iob,io,func,minv,maxv,coef,coef2,reci)
 				j_o(iout)%d=func(coef/j_o(irg)%d)
 			else !if(present(coef))then
 				j_o(iout)%d=func(1.d0/j_o(irg)%d)
-			endif !if(present(coef))   9586
+			endif !if(present(coef))   9692
 		else !if(present(reci))then
 			if(present(coef))then
 				j_o(iout)%d=func(coef*j_o(irg)%d)
 			else !if(present(coef))then
 				j_o(iout)%d=dsin(j_o(irg)%d(1:j_o(irg)%i(3)))
  
-			endif !if(present(coef))   9592
+			endif !if(present(coef))   9698
  
-		endif !if(present(reci))   9585
+		endif !if(present(reci))   9691
 		if(present(coef2))j_o(iout)%d=coef2*j_o(iout)%d
 		!		write(6,*)'irg',irg,iout,j_o(iout)%i,j_o(iout)%d
 	else !if(j_otype(irg).eq.j_ipreal)then
 		call j_printname('argument ',irg, ' is not scalar or matrix ')
 		j_err=.true.
-	endif !if(j_otype(irg).eq.j_ipreal)   9525
+	endif !if(j_otype(irg).eq.j_ipreal)   9631
 end subroutine !subroutine j_func(iob,io,func,minv,maxv,coef,coef2,reci)
  
 subroutine j_funci(iob,io,ifunc)   !integer function
@@ -9634,7 +9740,7 @@ subroutine j_funci(iob,io,ifunc)   !integer function
 		write(6,*)'*argument is not real or matrix'
 		j_err=.true.
  
-	endif !if(j_otype(irg).eq.j_ipreal)   9617
+	endif !if(j_otype(irg).eq.j_ipreal)   9723
 	return
  
  
@@ -9671,7 +9777,7 @@ subroutine j_func2(iob,io,func)   !integer function
 		write(6,*)'*argument is not real or matrix'
 		j_err=.true.
  
-	endif !if(j_otype(irg).eq.j_ipreal)   9652
+	endif !if(j_otype(irg).eq.j_ipreal)   9758
 	return
  
  
@@ -9777,7 +9883,7 @@ subroutine j_putmatrix(ivmat,irow,icol,val)
 		! write(-j_o(ivmat)%i(4),rec=irow,err=90)j_o(ivmat)%r(1:j_o(ivmat)%i(2))
 		! j_o(ivmat)%i(6)=irow
  
-	endif !if(j_otype(ivmat).eq.j_ipreal.and.irow.eq.1.and.icol.eq.1)   9769
+	endif !if(j_otype(ivmat).eq.j_ipreal.and.irow.eq.1.and.icol.eq.1)   9875
 	return
 	! 90 write(6,*)'*j* read/write error in j_putmatrix'
 	! j_err=.true.
@@ -9807,7 +9913,7 @@ subroutine j_putmatrix8(ivmat,irow,icol,val)
 		! write(-j_o(ivmat)%i(4),rec=irow,err=90)j_o(ivmat)%r(1:j_o(ivmat)%i(2))
 		! j_o(ivmat)%i(6)=irow
  
-	endif !if(j_otype(ivmat).eq.j_ipreal.and.irow.eq.j_18.and.icol.eq   9795
+	endif !if(j_otype(ivmat).eq.j_ipreal.and.irow.eq.j_18.and.icol.eq   9901
 	return
 	! 90 write(6,*)'*j* read/write error in j_putmatrix'
 	! j_err=.true.
@@ -9830,12 +9936,12 @@ double precision function j_getmatel(ivmat,irow,icol) !function
 			write(6,*)'*j* trying to get elem ',irow,icol,'from ',j_o(ivmat)%i(1:2),' matrix ',j_oname(1:j_loname)
 			j_err=.true.
 			return
-		endif !if(irow.le.0.or.irow.gt.j_o(ivmat)%i(1).or.icol.le.0.or.ic   9828
+		endif !if(irow.le.0.or.irow.gt.j_o(ivmat)%i(1).or.icol.le.0.or.ic   9934
 		j_getmatel=j_o(ivmat)%d((irow-1)*j_o(ivmat)%i(2)+icol)
  
 	else !if(j_otype(ivmat).eq.j_ipmatrix)then
 		call j_printname('*j* not a MATRIX',ivamt,' ')
-	endif !if(j_otype(ivmat).eq.j_ipmatrix)   9827
+	endif !if(j_otype(ivmat).eq.j_ipmatrix)   9933
  
  
 	! else
@@ -9863,7 +9969,7 @@ subroutine j_asschar2(ivin,ivout) !! assign character constant to charvariable ?
 		call j_del(ivout)
 		!link to first char, linkt to last char, link to charconst, unit in files
 		allocate( j_o(ivout)%i(1:8)) ! 4))
-	endif !if(j_otype(ivout).ne.j_ipchar)   9862
+	endif !if(j_otype(ivout).ne.j_ipchar)   9968
 	j_o(ivout)%i(1:2)=j_o(ivin)%i(1:2)
 	j_o(ivout)%i(3)=ivin   !  ; o(ivin)%i(3)=ivout character constant
 	j_o(ivout)%i(4:8)=0
@@ -9924,7 +10030,7 @@ subroutine j_sit() !sit -prompt
 		j_stop=.true.
 		write(6,*)'stop'
 		return
-	endif !if(j_inp(1:j_linp).eq.'end')   9923
+	endif !if(j_inp(1:j_linp).eq.'end')  10029
 	!	write(6,*)'<7337',j_inp(1:j_linp)
 	iiv=j_inciv(j_ninc)
 	!	write(6,*) '  after using  ', j_o(iiv)%i(6),' lines from ',j_vname(iiv)
@@ -9940,7 +10046,7 @@ subroutine j_sit() !sit -prompt
 		!if(recursion.gt.1)goto 900
 		j_err=.false.
 		goto 1
-	endif !if(j_err)   9937
+	endif !if(j_err)  10043
  
 	j_njump=0
 	!	write(6,*)'<7e7e74994',j_o(j_ivcursor)%i(0:20)
@@ -9955,7 +10061,7 @@ subroutine j_sit() !sit -prompt
 		if(.not.j_remain)return
 		!		if(recursion.gt.1)goto 900
 		j_err=.false.
-	endif !if(j_err)   9951
+	endif !if(j_err)  10057
  
  
 	!write(6,*)'<44>',recursion
@@ -9997,7 +10103,7 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 		inprint0=inprint
 	else
 		inprint0=j_v(j_ivprintinput)
-	endif !if(present(inprint))   9996
+	endif !if(present(inprint))  10102
  
 	lip=len(prompt)-1
 	!	write(6,*)'lip ',lip,' /',inpup(1:lip),'/'
@@ -10007,10 +10113,10 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 	if(present(nul0t))then
  
 		if(j_ninc.eq.nul0t)return
-	endif !if(present(nul0t))  10007
+	endif !if(present(nul0t))  10113
 1	j_linp=0
 
-2	call initinput(prompt) !if we come here with j_linp>0  then continuation lines are mixed up
+2	call initinput() !if we come here with j_linp>0  then continuation lines are mixed up
 
 	if(j_err)return
  
@@ -10025,7 +10131,7 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 		write(6,*)j_inpr(1:j_linpr)
 		goto  3
  
-	endif !if(j_inpr(1:1).eq.'!'.or.j_inpr(1:1).eq.'*'.and..not.j_byp  10024
+	endif !if(j_inpr(1:1).eq.'!'.or.j_inpr(1:1).eq.'*'.and..not.j_byp  10130
  
  4	continue
 	!if(j_ninc.eq.1.and..not.j_remain)return
@@ -10039,8 +10145,8 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 			call shortcut(iii)
 			if(j_err)return
 			!write(6,*)'<6646inpt',j_inpr(1:j_linpr)
-		endif !if(iii.gt.0)  10037
-	endif !if(j_inpr(1:1).ne.';')  10034
+		endif !if(iii.gt.0)  10143
+	endif !if(j_inpr(1:1).ne.';')  10140
  
  
 	!	if(j_linpr.le.0)goto 161
@@ -10053,17 +10159,17 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 	if(j_ispause.and.j_inpr(1:j_linpr).eq.'e')then
 		j_ispause=.false.
 		goto 1
-	endif !if(j_ispause.and.j_inpr(1:j_linpr).eq.'e')  10053
+	endif !if(j_ispause.and.j_inpr(1:j_linpr).eq.'e')  10159
  
 	if(j_inpr(1:6).eq.';pause')then
 		if(j_linpr.eq.6)then
 			pauseprompt=';pause>'
 		else
 			pauseprompt=j_inpr(8:j_linpr)
-		endif !if(j_linpr.eq.6)  10059
+		endif !if(j_linpr.eq.6)  10165
 		j_ispause=.true.
 		goto 1
-	endif !if(j_inpr(1:6).eq.';pause')  10058
+	endif !if(j_inpr(1:6).eq.';pause')  10164
  
 	if(j_inpr(1:6).eq.';where')then
 		write(6,*)'% ;where'
@@ -10072,9 +10178,9 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 			iii=j_inciv(i)
 			call j_getname( iii)
 			write(6,*)'file ',j_oname(1:j_loname),' line ',j_o(iii)%i(6)
-		enddo !i=j_ninc,2,-1  10071
+		enddo !i=j_ninc,2,-1  10177
 		goto 1
-	endif !if(j_inpr(1:6).eq.';where')  10068
+	endif !if(j_inpr(1:6).eq.';where')  10174
 	!
 	!write(6,*)'<344befinpr',j_inpr(1:j_linpr)
 	call sumdif()
@@ -10101,7 +10207,7 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 		call liste(edited)   !get liste elements @lis(ele)
 		!	write(6,*)'list2 ',j_inpr(1:j_linpr)
 		if(j_err)return
-	endif !if(.not.j_bypa(j_niifs) )  10095
+	endif !if(.not.j_bypa(j_niifs) )  10201
  
  
 	call j_puttext(j_ivinput2,j_inpr(1:j_linpr))
@@ -10114,7 +10220,7 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 		if(j_err)return
 		!	if(done)write(6,*)'<75775'
 		if(done)goto 1
-	endif !if(.not.j_bypa(j_niifs))  10111
+	endif !if(.not.j_bypa(j_niifs))  10217
  
 	!	write(6,*)1,linp,'/',inp(1:linp)
 	if(j_inpr(1:1).eq.';'.and.j_inpr(j_linpr:j_linpr).eq.':')goto 2
@@ -10125,7 +10231,12 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 			index(j_inpr(1:j_linpr),';incl').gt.0))then
 		write(6,*)'*****;goto and ;incl must be used after ;if( '
 		j_err=.true.;	return
-	endif !if(j_inpr(1:3).eq.'if('.and.(index(j_inpr(1:j_linpr),';got  10124
+	endif !if(j_inpr(1:3).eq.'if('.and.(index(j_inpr(1:j_linpr),';got  10230
+ 
+	if(j_inpr(1:j_linpr).eq.'cls'.and..not.(j_inpara.or.j_inpara2))then
+		call system('cls')
+		goto 1
+	endif !if(j_inpr(1:j_linpr).eq.'cls'.and..not.(j_inpara.or.j_inpa  10236
  
 	if(j_inpr(1:1).eq.';')then  !input programming
 		!	write(6,*)'<88888 ',j_inp(1:6)
@@ -10140,13 +10251,13 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
  
 			goto 700 !nothing to add
  
-		endif !if(j_inpr(1:j_linpr).eq.';enddo'.or.j_inpr(1:j_linpr).eq.'  10134
+		endif !if(j_inpr(1:j_linpr).eq.';enddo'.or.j_inpr(1:j_linpr).eq.'  10245
 		if(inprint0.gt.0)then    !printline(inprint))then
 			!		if(doublesp)write(6,*)' '
 			!		write(6,*)'% '//j_inpr(1:j_linpr)
  
 			write(6,*)inpup(1:lip)//j_inpr(1:j_linpr)
-		endif !if(inprint0.gt.0)  10144
+		endif !if(inprint0.gt.0)  10255
 		!	if(j_inp(1:j_linp).eq.';enddo')write(6,*)'j_niifs ',j_niifs,' j_ndo ',j_ndo, 'j_niifsindo ',&
 		!	j_niifsindo(j_ndo),' dostart ',j_dostart(j_ndo),'j_niifs,',j_niifs,' j_bypa(j_niifs) ', &
 		!	j_bypa(j_niifs)
@@ -10177,7 +10288,7 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 				return
 			else
 				j_dapu=j_val(j_inpr(5:i-1))
-			endif !if(i.gt.j_linpr)  10174
+			endif !if(i.gt.j_linpr)  10285
 			if(j_err)return
 			j_yes=j_dapu.eq.j_0
 			if(j_inpr(i+1:j_linpr).eq.';then')then
@@ -10192,9 +10303,9 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 					!write(6,*)'<59inpr',j_inpr(1:j_linpr)
 					inpuif=.true.
 					goto 4
-				endif !if(j_yes)  10187
+				endif !if(j_yes)  10298
  
-			endif !if(j_inpr(i+1:j_linpr).eq.';then')  10183
+			endif !if(j_inpr(i+1:j_linpr).eq.';then')  10294
  
 			!	endif !if(j_inpr(1:4 ).eq.';if(')   8837
  
@@ -10229,13 +10340,13 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 			if(j_err)return
 			!	write(6,*)'cbbc'
 			goto 3
-		endif !if(j_inpr(1:6).eq.';incl(')  10153
+		endif !if(j_inpr(1:6).eq.';incl(')  10264
 		if(.not.inpuif)then
 			write(6,*)'illegal input programming line'
 			j_err=.true. ;return
-		endif !if(.not.inpuif)  10233
+		endif !if(.not.inpuif)  10344
  
-	endif !if(j_inpr(1:1).eq.';')  10130
+	endif !if(j_inpr(1:1).eq.';')  10241
  
  
 	!	if(j_bypa(j_niifs))write(6,*)'bypassniifs ',j_niifs
@@ -10253,33 +10364,33 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
 	if(any(j_inp(j_linp:j_linp).eq.(/'>',',','+','*','(','/','=','-'/)))then
 		if(j_linp.gt.2)then
 			if(j_inp(j_linp-1:j_linp).eq.'>>')j_linp=j_linp-2
-		endif !if(j_linp.gt.2)  10254
+		endif !if(j_linp.gt.2)  10365
 		!	write(6,*)'<cont ',j_inp(1:j_linp)
 		if((j_linp.gt.1.and.j_inp(1:j_linp).ne.'//').or.j_inp(1:1).ne.'/')goto 3
-	endif !if(any(j_inp(j_linp:j_linp).eq.(/'>',',','+','*','(','/','  10253
+	endif !if(any(j_inp(j_linp:j_linp).eq.(/'>',',','+','*','(','/','  10364
 	!
 	if(j_ispause)then
 		if(j_inp(1:j_linp).eq.'e'.or.j_inp(1:j_linp).eq.'/')then
 			j_ispause=.false.
 			goto 1
-		endif !if(j_inp(1:j_linp).eq.'e'.or.j_inp(1:j_linp).eq.'/')  10262
+		endif !if(j_inp(1:j_linp).eq.'e'.or.j_inp(1:j_linp).eq.'/')  10373
 		call j_command(j_inp(1:j_linp))
 		j_err=.false.
 		goto 1
  
-	endif !if(j_ispause)  10261
+	endif !if(j_ispause)  10372
 	j_incline2=j_incline()
-	if(j_ninc.gt.1.and.inprint0.gt.0)then !printline(inprint))then
+	if(j_ninc.gt.1.and.inprint0.gt.0.and.prompt.ne.' ')then !printline(inprint))then
 		!	if(j_ndo.gt.0)write(6,*)'iido ',j_iido(1:7,1)
 		if(doublesp)write(6,*)' '
 		!	write(6,*)'doublesp ',doublesp
 		!	write(6,*)'# '//j_inp(1:j_linp)
 		write(6,*)prompt//j_inp(1:j_linp)
-	endif !if(j_ninc.gt.1.and.inprint0.gt.0)  10272
+	endif !if(j_ninc.gt.1.and.inprint0.gt.0.and.prompt.ne.' ')  10383
 	if(j_inp(1:j_linp).eq.'end')then
 		j_stop=.true.;return
  
-	endif !if(j_inp(1:j_linp).eq.'end')  10279
+	endif !if(j_inp(1:j_linp).eq.'end')  10390
 	!
 	!if(j_ninc.gt.1)write(6,*)'<88'//j_inp(1:j_linp)
 	!	if(j_inp(1:j_linp).eq.'/'.and..not.j_inpara2)j_inpara=.false.
@@ -10295,14 +10406,14 @@ subroutine j_getinput(prompt,inprint,nul0t,single)  ! gets next input line
  
 end subroutine j_getinput
  
-subroutine initinput(prompt)
-	character*(*) prompt
+subroutine initinput()
+	!	character*(*) prompt
 	!	integer lenp
 	if(j_linp.gt.0)then
 		write(6,*)'was expecting continuation for input: ',j_inp(1:j_linp)
 		j_err=.true.
  
-	endif !if(j_linp.gt.0)  10301
+	endif !if(j_linp.gt.0)  10412
 	!		j_linp=0  !output collected to j_inp
  
 	!write(6,*)'getinput <1506> nul(0)',j_nul(0:j_ninc),nu!   oinp, lineobuf ',nul(0), oinp, lineobuf
@@ -10312,7 +10423,7 @@ subroutine initinput(prompt)
 	j_o(j_ivinput1)%i(0)=0 !cleaned
 	j_o(j_ivinput2)%i(0)=0 !interpreted
  
-	lenp=len(prompt)
+	!	lenp=len(prompt)
 	!	write(6,*)'<73474tas',lenp,prompt
 	!if(p)write(6,*)'<487',j_ninc
  
@@ -10339,7 +10450,7 @@ subroutine getinpr(pauseprompt)
 		write(6,'(a,$)')pauseprompt(1:len_trim(pauseprompt))
 	else
 		jninc=j_ninc
-	endif !if(j_ispause)  10337
+	endif !if(j_ispause)  10448
  
 	do while(j_linpr.le.0)
 		! if(j_ispause)then
@@ -10365,7 +10476,7 @@ subroutine getinpr(pauseprompt)
 			if(j_linpr.eq.0)then
 				write(6,'(a,$)')pauseprompt
 				goto 500
-			endif !if(j_linpr.eq.0)  10365
+			endif !if(j_linpr.eq.0)  10476
  
 			! endif !if(j_linpr.eq.0)   9305
  
@@ -10379,7 +10490,7 @@ subroutine getinpr(pauseprompt)
 				j_stop=.true.
 				!		write(6,*)'dhhd'
 				return
-			endif !if(j_inpr(1:j_linpr).eq.'end')  10377
+			endif !if(j_inpr(1:j_linpr).eq.'end')  10488
 			if(j_err)return
  
 			j_printed=.true.
@@ -10397,7 +10508,7 @@ subroutine getinpr(pauseprompt)
 				j_o(iiv)%i(6)=0
 				if(inprint0.gt.0)write(6,*)'<end of txt>'
 				call goto90()
-			endif !if(iline.gt.j_o(iiv)%i(5))  10396
+			endif !if(iline.gt.j_o(iiv)%i(5))  10507
  
 			! write(6,*)'233 ',j_nul,'iv ',j_inc iv, 'line ',j_incline,' iiv',iiv
 			! write(6,*)'<7787',j_inciv
@@ -10417,9 +10528,9 @@ subroutine getinpr(pauseprompt)
 			!   if(inp(1:1).eq.'/')write(6,*)'got/,icurl',icurl(nul(0))
 			!		frombuf=.true.
  
-		endif !if(jninc.eq.1)  10349
+		endif !if(jninc.eq.1)  10460
 		!**********************************
-	end do !while(j_linpr.le.0)  10344
+	end do !while(j_linpr.le.0)  10455
  
 end subroutine getinpr
  
@@ -10450,11 +10561,11 @@ subroutine printstar(done)
 				write(6,*)'Maxlines=',maxlines,' illegal!'
 				j_err=.true.
 				return
-			endif !if(maxlines.le.0)  10449
+			endif !if(maxlines.le.0)  10560
 			j_yes=ial2.le.j_linpr-1  !there is somthing after * in the name
 			!		write(6,*)'j_yes,ial2 ',j_yes,ial2
 			nf=0
-			do iv=1,j_namedv
+			do iv=1,j_named
 				call j_getname(iv)
 				if(j_inpr(ial:ist-1).ne.j_oname(1:ist-ial))cycle
 				if(j_yes)then
@@ -10462,7 +10573,7 @@ subroutine printstar(done)
 					!		write(6,*)'j_linpr,ist,le1,ist+1',j_linpr,ist,le1,ist+1
 					if(j_loname.le.le1)cycle
 					if(j_inpr(ist+1:ist+le1).ne.j_oname(j_loname-le1+1:j_loname))cycle
-				endif !if(j_yes)  10460
+				endif !if(j_yes)  10571
 				if(ial.eq.2)then
 					!				write(6,*)'<391',iv
 					call j_print(iv,'*','*',maxlines,j_v(j_ivdebug).ne.j_0)
@@ -10470,9 +10581,9 @@ subroutine printstar(done)
 					if(j_err)return
 				else
 					write(6,*)'  ',j_oname(1:j_loname)
-				endif !if(ial.eq.2)  10466
+				endif !if(ial.eq.2)  10577
 				nf=nf+1
-			enddo !iv=1,j_namedv  10457
+			enddo !iv=1,j_named  10568
 			write(6,'(15x,i4,a)')nf,' objects found '
 			!	write(6,*)' '
 			if(nf.eq.0)write(6,*)'no matching object names found'
@@ -10488,34 +10599,34 @@ subroutine printstar(done)
 			else
 				write(6,*)'line should end with ) or );'
 				j_err=.true. ;return
-			endif !if(j_inpr(j_linpr:j_linpr).eq.')')  10482
+			endif !if(j_inpr(j_linpr:j_linpr).eq.')')  10593
 			j_yes2=ial2.le.linpr  !is there ending
 			!	write(6,*)'j_yes2 ',j_yes2
 			!	write(6,*)'<44>',j_inpr(1:ie-1)
-			ivlist=j_deflistobject(0,j_inpr(1:ie-1),nres=20)
+			ivlist=j_deflist(0,j_inpr(1:ie-1),nres=20)
 			le1=ist-ie-7  !ist-1-ie-6+1
 			!		if(j_yes2)write(6,*)j_oname(j_loname-le1:j_loname)
 			!	write(6,*)'<55>',j_inpr(ie+6:ist-1),le1,'ial2 ',ial2,j_yes2
 			!	if(ist+1.le.j_linpr)write(6,*)'aft',j_inpr(ist+1:j_linpr)
 			!		write(6,*)'vcvc',j_inpr(ie+7:ist-1),' le1 ',le1
-			do iv=1,j_namedv
+			do iv=1,j_named
 				call j_getname(iv)
  
 				if(j_inpr(ie+7:ist-1).ne.j_oname(1:le1))cycle
 				if(j_yes2)then
 					if(j_loname-le1.le.0)cycle
 					if(j_inpr(ist+1:linpr).ne.j_oname(j_loname-le1+1:j_loname))cycle
-				endif !if(j_yes2)  10505
+				endif !if(j_yes2)  10616
 				iper=j_putlistobject(ivlist,single=iv)
  
-			enddo !iv=1,j_namedv  10501
+			enddo !iv=1,j_named  10612
 			if(j_yes)call j_printlist(6,ivlist)
  
  
-		endif !if(j_inpr(j_linpr:j_linpr).eq.';'.and.ie.eq.0)  10444
+		endif !if(j_inpr(j_linpr:j_linpr).eq.';'.and.ie.eq.0)  10555
  
 		done=.true.
-	endif !if(ist.gt.0.and.(j_inpr(j_linpr:j_linpr).eq.';'.or.ie.gt.1  10439
+	endif !if(ist.gt.0.and.(j_inpr(j_linpr:j_linpr).eq.';'.or.ie.gt.1  10550
  
  
 end subroutine
@@ -10530,14 +10641,14 @@ subroutine sumdif()
 		!	if(isum.gt.0)write(6,*)'<8out',j_inpr(1:j_linpr),j_linpr
 		if(j_err)return
 		goto 192
-	endif !if(isum.gt.0)  10527
+	endif !if(isum.gt.0)  10638
 193	isum=index(j_inpr(1:j_linpr),';dif(')
 	if(isum.gt.0)then
 		call j_getsum(j_inpr,j_linpr,.false.)
 		!	if(isum.gt.0)write(6,*)'<8out',j_inpr(1:j_linpr),j_linpr
 		if(j_err)return
 		goto 193
-	endif !if(isum.gt.0)  10535
+	endif !if(isum.gt.0)  10646
  
  
 end subroutine
@@ -10574,7 +10685,7 @@ subroutine shortcut(iii)
 				j_inpr(ihi:ihi)="'"
 				iaa=ihi+1
 				ihi=j_nextlim(j_inpr,iaa,j_linpr,'~')
-			end do !while (ihi.le.j_linpr)  10573
+			end do !while (ihi.le.j_linpr)  10684
 			! ial=1
 			!** key shortcut
 			!			edited=.true.
@@ -10590,13 +10701,13 @@ subroutine shortcut(iii)
  
 			j_linp=0
 			return
-		endif !if(j_o(iii)%i(3).ne.iii)  10567
+		endif !if(j_o(iii)%i(3).ne.iii)  10678
 		!if(reacom(nul(0)).and.inprint.gt.1)write(6,*)'->',inp(ial:linp)
 	else
 		write(6,*)'<',j_inpr(1:j_linpr)
 		write(6,*)'JLP22 did not understand'
 		j_err=.true.;return
-	endif !if(j_otype(iii).eq.j_ipchar)  10566
+	endif !if(j_otype(iii).eq.j_ipchar)  10677
  
  
 end subroutine
@@ -10621,7 +10732,7 @@ subroutine liste(edited)
 		if(j_inpr(lef:lef).ne.'(')then
 			iald=lef+1
 			goto 8800
-		endif !if(j_inpr(lef:lef).ne.'(')  10621
+		endif !if(j_inpr(lef:lef).ne.'(')  10732
  
 		i=j_object(j_inpr(ilie+1:lef-1))
  
@@ -10630,7 +10741,7 @@ subroutine liste(edited)
 			write(6,*)j_inpr(ilie+1:lef-1), ' after @ is not an object '
 			goto 900
 			! write(16,*)'lef,iald,linp,',lef,iald,linp,inp(1:linp)
-		endif !if(i.le.0)  10629
+		endif !if(i.le.0)  10740
 		!20140519 oli: if(otype(i).ne.iplist)then
 		islist=j_otype(i).eq.j_iplist
 		!	write(6,*)'islist',islist
@@ -10638,19 +10749,19 @@ subroutine liste(edited)
 			call j_printname('**not list or text object: ',i, ' ')
 			!!   write(6,*)'#input:',inp(1:linp7)
 			goto 900
-		endif !if(.not.islist.and.j_otype(i).ne.j_iptext)  10637
+		endif !if(.not.islist.and.j_otype(i).ne.j_iptext)  10748
 		nexr=j_nextrp(j_inpr,lef,j_linpr)
 		if(nexr.gt.j_linpr.or.nexr.eq.lef+1)then
 			write(6,*)'**no legal matching ) after ',j_inpr(1:lef)
 			! write(6,*)'#input:',inp(1:linp)
 			goto 900
-		endif !if(nexr.gt.j_linpr.or.nexr.eq.lef+1)  10643
+		endif !if(nexr.gt.j_linpr.or.nexr.eq.lef+1)  10754
 		!write(6,*)'<234>',j_inp(lef+1:nexr-1)
 		inde=j_val(j_inpr(lef+1:nexr-1))
 		if(j_err)then
 			write(6,*)'error in ',j_inpr(lef+1:nexr-1)
 			goto 900
-		endif !if(j_err)  10650
+		endif !if(j_err)  10761
 		!write(6,*)'input: ',inp(1:linp)
 		!return
 		! end if
@@ -10661,7 +10772,7 @@ subroutine liste(edited)
 				call j_printname('**not legal index for ',i,' ')
 				write(6,*)'#index: ',j_inpr(lef+1:nexr-1),'=',inde,' should be between 1 and ', j_o(i)%i(1)
 				goto 900
-			endif !if(inde.le.0.or.inde.gt.j_o(i)%i(1))  10659
+			endif !if(inde.le.0.or.inde.gt.j_o(i)%i(1))  10770
 			!	write(6,*)'i,inde,j_o(i)%i2(inde)',i,inde,j_o(i)%i2(inde)
 			call j_getname(j_o(i)%i2(inde))
 			!		write(6,*)'ilie,nexr,j_linpr,j_oname(1:j_loname)',ilie,nexr,j_linpr,j_oname(1:j_loname)
@@ -10675,10 +10786,10 @@ subroutine liste(edited)
 							nh=0
 						else
 							nh=1
-						endif !if(nh.eq.1)  10674
-					endif !if(j_inpr(j:j).eq."'")  10673
-				enddo !j=1,ilie  10672
-			endif !if(j_oname(1:1).eq."'")  10670
+						endif !if(nh.eq.1)  10785
+					endif !if(j_inpr(j:j).eq."'")  10784
+				enddo !j=1,ilie  10783
+			endif !if(j_oname(1:1).eq."'")  10781
 			if(nh.eq.0)then
 				call j_repl(j_inpr,ilie,nexr,j_linpr,j_oname,j_loname)
  
@@ -10688,7 +10799,7 @@ subroutine liste(edited)
 				call j_repl(j_inpr,ilie,nexr,j_linpr,j_oname(2:),j_loname-2)
 				lesn=j_loname-2
  
-			endif !if(nh.eq.0)  10682
+			endif !if(nh.eq.0)  10793
 			!		else
 			! if(inde.le.0.or.inde.gt.j_o(i)%i(0))then
 			! write(6,*)'#index: ',j_inp(lef+1:nexr-1),'=',inde,' should be between 1 and ', j_o(i)%i(0)
@@ -10696,7 +10807,7 @@ subroutine liste(edited)
 			! endif !if(inde.le.0.or.inde.gt.j_o(i)%i(0))   9374
 			! call j_getline(i,inde,j_tempchar,lesn)
 			! call j_repl(j_inpr,ilie,nexr,j_linpr,j_tempchar,lesn)
-		endif !if(islist)  10658
+		endif !if(islist)  10769
  
 		! write(16,*)'after',inp(1:linp)
 		! @a(1)  ->z
@@ -10709,7 +10820,7 @@ subroutine liste(edited)
 		! write(16,*)'iald,ilie,lesn,linp,nexr',iald,ilie,lesn,linp,nexr,inp(1:linp)
 8800		ilie=j_nextlim(j_inpr,iald,j_linpr,'@',inhipsu=.true.)
 		!if(iald.lt.j_linp)goto 8800
-	end do !while(ilie.lt.j_linpr)  10615
+	end do !while(ilie.lt.j_linpr)  10726
 	return
  900 j_err=.true.	 !write(6,*)'% ',j_inpr(1:j_linpr)
 	return
@@ -10871,7 +10982,7 @@ subroutine expandlist(inp,linp,edited)  !@
 		write(6,*)inp(ilie+1:lop-1),' is not a list'
 		j_err=.true.
 		return
-	endif !if(itype.eq.0.or.j_otype(iv).ne.j_iplist)  10870
+	endif !if(itype.eq.0.or.j_otype(iv).ne.j_iplist)  10981
 	le2=0
 	!write(6,*)'<6346346>nele',j_o(iv)%i(0)
 	do j=1,j_o(iv)%i(1)
@@ -10880,15 +10991,15 @@ subroutine expandlist(inp,linp,edited)  !@
 			write(6,*)'*j* size of j_tempchar should be increased'
 			j_err=.true.
 			return
-		endif !if(j_err)  10879
+		endif !if(j_err)  10990
  
 		le2=le2+lena
 		if(j.lt.j_o(iv)%i(1))then
 			j_tempchar(le2+1:le2+1)=','
 			le2=le2+1
-		endif !if(j.lt.j_o(iv)%i(1))  10886
+		endif !if(j.lt.j_o(iv)%i(1))  10997
 		!	write(6,*)'<466464',j,le2,j_tempchar(1:le2)
-	enddo !j=1,j_o(iv)%i(1)  10877
+	enddo !j=1,j_o(iv)%i(1)  10988
 	!write(6,*)'<443>ilie,linp,j_linp,le2,inp,tempchar',ilie,linp,j_linp,le2,inp(1:linp)
 	write(6,*)j_tempchar(1:le2)
 	call j_repl(inp,ilie,lop-1,linp,j_tempchar,le2)
@@ -10916,12 +11027,12 @@ subroutine j_insert(line,leline0,leline,line2,leline2)
  
 		j_err=.true.
 		return
-	endif !if(leline+leline2.gt.len(line))  10914
+	endif !if(leline+leline2.gt.len(line))  11025
  
 	leline3=leline+leline2
 	do j=0,leline2-1
 		line(leline3-j:leline3-j)=line(leline-j:leline-j)
-	enddo !j=0,leline2-1  10922
+	enddo !j=0,leline2-1  11033
 	line(leline0+1:leline0+leline2)=line2(1:leline2)
 	leline=leline3
  
@@ -10945,7 +11056,7 @@ subroutine inputinterpret2(inp,linp,edited) ! interpreting "
 		if(ido2.le.ido+1)then
 			write(*,*)'**no proper " sequence in:'// &
 				inp(iald:linp);goto 90
-		end if !if(ido2.le.ido+1)  10945
+		end if !if(ido2.le.ido+1)  11056
 		iva=j_object(inp(ido+1:ido2-1))
 		if(iva.gt.0)then
 			!       subroutine jrepl(jono1,i1,i2,linp,jono2,le2)
@@ -10961,7 +11072,7 @@ subroutine inputinterpret2(inp,linp,edited) ! interpreting "
 				if(lopvak.ge.ido2-1)then
  
 					write(*,*)'**no proper [] sequence in ',inp(ido+1:ido2-1);j_err=.true.;return
-				endif !if(lopvak.ge.ido2-1)  10961
+				endif !if(lopvak.ge.ido2-1)  11072
 				!	write(6,*)'<6832>',inp(lopvak+1:ido2-1)
 				value=j_val(inp(lopvak+1:ido2-1)) ;if(j_err)goto 90
 				write(valuec,'('//inp(ido+2:lopvak-1)//')',err=1356)value
@@ -10978,15 +11089,15 @@ subroutine inputinterpret2(inp,linp,edited) ! interpreting "
 				!	write(6,*)inp(1:linp)
 				call j_reps2(inp,ido,ido2,linp,value)
 				!	write(6,*)inp(1:linp)
-			endif !if(inp(ido+1:ido+1).eq.'[')  10959
+			endif !if(inp(ido+1:ido+1).eq.'[')  11070
 			!write(6,*)'replace:',inp(ido+1:ido2-1)
 			!write(6,*)'aft,ido,ido2,linp,',ido,ido2,linp,':',inp(1:linp)
-		endif !if(iva.gt.0)  10950
+		endif !if(iva.gt.0)  11061
 		!write(6,*)'after:',inp(ial:linp),ido+1,index(inp(iald:linp),'"')
 		iald=ido+1  ! could get better using difference between current and previous linp
 		edited=.true.
 		if(iald.lt.linp)goto 88
-	endif !if(ido.ge.iald)  10940
+	endif !if(ido.ge.iald)  11051
 	return
 	!20140618 <1685> siirretty kohdasta <1648> --alkaa
 90 write(6,*)'*interpreting:','"'//j_inpr(1:j_linpr)//'"'
@@ -11003,7 +11114,7 @@ subroutine ienddo()
 	if(j_ndo.le.0)then
 		write(6,*)'** ;enddo without ;do'
 		j_err=.true.;return
-	endif !if(j_ndo.le.0)  11003
+	endif !if(j_ndo.le.0)  11114
 	if(j_niifs.ne.j_niifsindo(j_ndo))then
  
 		write(6,*)'** ;enddo cannot be before ;endif in ;if();then structure'
@@ -11012,7 +11123,7 @@ subroutine ienddo()
 		!		write(6,*)j_niifsindo(j_ndo),j_niifs.ne.j_niifsindo(j_ndo)
 		j_err=.true. ;return
  
-	endif !if(j_niifs.ne.j_niifsindo(j_ndo))  11007
+	endif !if(j_niifs.ne.j_niifsindo(j_ndo))  11118
 	if(.not.j_bypa(j_niifs))then
 		!	write(6,*)'1ndo ä',j_iido(1,j_ndo),j_iido(3,j_ndo)
 		j_iido(1,j_ndo)=j_iido(1,j_ndo)+j_iido(3,j_ndo)
@@ -11042,10 +11153,10 @@ subroutine ienddo()
 			!	write(6,*)'ndo46', j_v(j_iido(4,j_ndo)),	j_o( j_inciv(j_ninc))%i(6)
 			return
  
-		endif !if(j_iido(1,j_ndo).gt.j_iido(2,j_ndo).and.j_iido(3,j_ndo).  11021
+		endif !if(j_iido(1,j_ndo).gt.j_iido(2,j_ndo).and.j_iido(3,j_ndo).  11132
 	else
 		j_ndo=j_ndo-1
-	endif !if(.not.j_bypa(j_niifs))  11016
+	endif !if(.not.j_bypa(j_niifs))  11127
 end subroutine
  
 subroutine getif(iszero)
@@ -11081,13 +11192,13 @@ subroutine ielseif()
  
 		j_err=.true.;return
 		!return;
-	endif !if(j_inp(8:8).ne.'(')  11079
+	endif !if(j_inp(8:8).ne.'(')  11190
 	ir=j_nextrp(j_inpr,8,j_linpr)
 	if(ir.gt.j_linpr)then
 		write(6,*)'**illegal ;elseif('
 		j_err=.true.;return
 		!return
-	end if !if(ir.gt.j_linpr)  11086
+	end if !if(ir.gt.j_linpr)  11197
  
 	if(j_inpr(ir+1:j_linpr).eq.';then')then
 		!	write(6,*)'<457',j_inp(9:ir-1)
@@ -11097,7 +11208,7 @@ subroutine ielseif()
 			write(6,*)'**;elseif( without ;if'
 			j_err=.true.;return
 			!return
-		endif !if(j_niifs.le.0)  11096
+		endif !if(j_niifs.le.0)  11207
 		j_bypa(j_niifs)=yes.eq.0..or.j_bypa(j_niifs-1).or.j_ifdone(j_niifs)
 		j_ifdone(j_niifs)=.not.j_bypa(j_niifs).or.j_ifdone(j_niifs)
 		!**
@@ -11108,7 +11219,7 @@ subroutine ielseif()
 	else !if(j_inp(ir+1:j_linp).eq.';then')then
 		write(6,*)'**illegal ;elseif();then'
 		j_err=.true. ;return
-	endif !if(j_inpr(ir+1:j_linpr).eq.';then')  11092
+	endif !if(j_inpr(ir+1:j_linpr).eq.';then')  11203
  
  
 end subroutine ielseif
@@ -11129,7 +11240,7 @@ subroutine ielse()
 		write(6,*)'**  ;endif without ;if();then'
 		j_err=.true.;return
 		!return
-	endif !if(j_niifs.lt.0)  11128
+	endif !if(j_niifs.lt.0)  11239
  
 	!	if(inprint.ge.2)write(6,*)'<123>',j_inp(1:j_linp)
 	return
@@ -11169,10 +11280,10 @@ subroutine getreturn(done,doublesp,inpup)
 			if(j_inpr(j_linpr-5:j_linpr-5).eq.'R')then
 				call goto90()
 				return
-			endif !if(j_inpr(j_linpr-5:j_linpr-5).eq.'R')  11169
+			endif !if(j_inpr(j_linpr-5:j_linpr-5).eq.'R')  11280
  
-		endif !if(j_inpr(1:4).eq.";if(".and.(j_inpr(j_linpr-7:j_linpr)=='  11159
-	endif !if(j_linpr.gt.12)  11158
+		endif !if(j_inpr(1:4).eq.";if(".and.(j_inpr(j_linpr-7:j_linpr)=='  11270
+	endif !if(j_linpr.gt.12)  11269
  
 	if(j_inpr(1:j_linpr).eq.';return'.or.done.or.j_inpr(1:j_linpr).eq.';Return'.or.ifret)then
  
@@ -11180,16 +11291,16 @@ subroutine getreturn(done,doublesp,inpup)
 			if(doublesp)write(6,*)' '
 			!		write(6,*)'% '//j_inpr(1:j_linpr)
 			write(6,*)inpup//j_inpr(1:j_linpr)
-		endif !if(.not.ifret)  11179
+		endif !if(.not.ifret)  11290
 		if(j_inpara)then
 			write(6,*)'*cannot ;return while in paragraph'
 			j_err=.true.;return
-		endif !if(j_inpara)  11184
+		endif !if(j_inpara)  11295
 		if(j_inpara2)then
 			!		write(6,*)j_inpr(1:j_linpr), ' done ',done,' ifret ',ifret
 			write(6,*)'*cannot ;return while in text or txt paragraph'
 			j_err=.true.;return
-		endif !if(j_inpara2)  11188
+		endif !if(j_inpara2)  11299
 		!		write(6,*)' '
 		!	write(6,*)'<73@j_ninc',j_ninc,'j_inciv',j_inciv,' ret ',j_increturn,' nulline ',j_incline
 		!	write(6,*)'incret',j_ninc,j_increturn( j_ninc)
@@ -11204,11 +11315,11 @@ subroutine getreturn(done,doublesp,inpup)
 			!			j_increturn( j_ninc,j_ninc2)=0
 			!		write(6,*)'zeroinc,j_ninc2 reduced',j_ninc,j_ninc2(j_ninc),'j_inpr(1:j_linpr).eq.;return',j_inpr(1:j_linpr).eq.';return'
 			return
-		endif !if(j_ninc2(j_ninc).gt.0)  11198
+		endif !if(j_ninc2(j_ninc).gt.0)  11309
  
 		call goto90()
 		!		done=.true.
-	endif !if(j_inpr(1:j_linpr).eq.';return'.or.done.or.j_inpr(1:j_li  11177
+	endif !if(j_inpr(1:j_linpr).eq.';return'.or.done.or.j_inpr(1:j_li  11288
  
  
 end subroutine getreturn
@@ -11222,7 +11333,7 @@ subroutine inputinterpret(inpr,linpr,inp,linp,contline) ! interpretin utf
  
 		if(inpr(i0:i0).eq."'")then
 			nq=mod(nq+1,2)
-		endif !if(inpr(i0:i0).eq."'")  11223
+		endif !if(inpr(i0:i0).eq."'")  11334
 		if(inpr(i0:i0).eq.'!'.and.nq.eq.0)exit
 		linp=linp+1
  
@@ -11234,13 +11345,13 @@ subroutine inputinterpret(inpr,linpr,inp,linp,contline) ! interpretin utf
 					inpr(i0:i0)=j_ocode(jj)
 					!	any
 					exit
-				endif !if(inpr(i0:i0).eq.j_utf8(jj))  11233
-			enddo !jj=1,j_nutf8  11232
-		endif !if(nu.ne.5.and.nu.gt.0)  11231
+				endif !if(inpr(i0:i0).eq.j_utf8(jj))  11344
+			enddo !jj=1,j_nutf8  11343
+		endif !if(nu.ne.5.and.nu.gt.0)  11342
  
 		inp(linp:linp)=inpr(i0:i0)
  
-	enddo !i0=1,linpr  11220
+	enddo !i0=1,linpr  11331
 	!write(6,*) 'interpret,putting from inpr /',inpr(1:linpr)
 	!write(6,*)'> to inp: ',inp(1:linp)
  
@@ -11249,7 +11360,7 @@ subroutine inputinterpret(inpr,linpr,inp,linp,contline) ! interpretin utf
  
 		call j_fromutf8(inp(1:linp))
  
-	endif !if(nu.ne.5.and.nu.gt.0)  11248
+	endif !if(nu.ne.5.and.nu.gt.0)  11359
 	!write(6,*)'<87 put inp toinpu1, inp ',inp(1:linp)
  
 	return
@@ -11293,17 +11404,17 @@ subroutine debugi(tag)
 	do j=1,j_o(j_ivinput0)%i(0)
 		!write(6,*)j,o(iob)%i(j),o(iob)%i(j+1)-1
 		write(6,*)(j_o(j_ivinput0)%ch(k),k=j_o(j_ivinput0)%i(j),j_o(j_ivinput0)%i(j+1)-1 )
-	end do !j=1,j_o(j_ivinput0)%i(0)  11293
+	end do !j=1,j_o(j_ivinput0)%i(0)  11404
 	write(6,*)'input1 ',j_o(j_ivinput1)%i(0)
 	do j=1,j_o(j_ivinput0)%i(0)
 		!write(6,*)j,o(iob)%i(j),o(iob)%i(j+1)-1
 		write(6,*)(j_o(j_ivinput1)%ch(k),k=j_o(j_ivinput1)%i(j),j_o(j_ivinput1)%i(j+1)-1 )
-	end do !j=1,j_o(j_ivinput0)%i(0)  11298
+	end do !j=1,j_o(j_ivinput0)%i(0)  11409
 	write(6,*)'input2 ',j_o(j_ivinput2)%i(0)
 	do j=1,j_o(j_ivinput2)%i(0)
 		!write(6,*)j,o(iob)%i(j),o(iob)%i(j+1)-1
 		write(6,*)(j_o(j_ivinput2)%ch(k),k=j_o(j_ivinput2)%i(j),j_o(j_ivinput2)%i(j+1)-1 )
-	end do !j=1,j_o(j_ivinput2)%i(0)  11303
+	end do !j=1,j_o(j_ivinput2)%i(0)  11414
  
 end subroutine !subroutine debugi(tag)
  
@@ -11453,15 +11564,15 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 			ifrom2=ifrom+index(line(ifrom1:),")")+4
  
 			if(ifrom2.lt.ifrom1)goto 99
-		endif !if(line(ifrom+6:ifrom+6).eq."'")  11445
-	endif !if(ifrom.gt.0)  11443
+		endif !if(line(ifrom+6:ifrom+6).eq."'")  11556
+	endif !if(ifrom.gt.0)  11554
  
 	if(index(line,'form->').gt.0)then
 		write(6,*)'form-> in not option in ;incl you probably mean from->'// &
 			' but you must anyhow correct it'
 		j_err=.true.
 		return
-	endif !if(index(line,'form->').gt.0)  11459
+	endif !if(index(line,'form->').gt.0)  11570
  
 	wait=index(line,'wait->').gt.0
 	ileft=index(line,'(')
@@ -11472,7 +11583,7 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 		write(6,*)'illegal syntax ',line
 		j_err=.true.
 		return
-	endif !if(iright.le.0)  11471
+	endif !if(iright.le.0)  11582
 	!write(6,*)'<333>',ileft,iright,lafi,line(ileft+1:lafi-1)
  
 	!get file
@@ -11489,7 +11600,7 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 			if(j_otype(ifi).ne.j_ipchar)then
 				write(6,*)'illegal argument in ;incl'
 				j_err=.true.;return
-			endif !if(j_otype(ifi).ne.j_ipchar)  11489
+			endif !if(j_otype(ifi).ne.j_ipchar)  11600
 			!		write(6,*)'<77>',j_o(ifi)%i
 			if(j_o(ifi)%i(3).ne.0)ifi=j_o(ifi)%i(3)    !charcter variable
  
@@ -11504,14 +11615,14 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 			ifi=j_defchar(0,j_filename(1:leno))
 			if(j_err)return
  
-		endif !if(ifi.gt.0)  11486
+		endif !if(ifi.gt.0)  11597
 		!	p=.true.
 		if(p)then
 			write(6,*)'<7e77e',ifi,j_otype(ifi)
 			call j_getname(ifi)
 			write(6,*)j_oname(1:j_loname)
 			write(6,*)'ibef ',j_o(ifi)%i
-		endif !if(p)  11509
+		endif !if(p)  11620
  
 		call j_readtext(ifi)  !does not read if not needed
 		if(j_err)return
@@ -11531,7 +11642,7 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 			j_o(ifi)%i2(il)=le
 			!			write(6,*)'aft',il,j_o(ifi)%txt(il)(1:j_o(ifi)%i2(il))
  
-		enddo !il=1,j_o(ifi)%i(5)  11525
+		enddo !il=1,j_o(ifi)%i(5)  11636
  
 		if(j_err)return
 		call j_getname(ifi)
@@ -11541,14 +11652,14 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 			j_o(ifi)%i(5)=j_o(ifi)%i(5)+1
 			j_o(ifi)%txt( j_o(ifi)%i(5))=';return'
 			j_o(ifi)%i2(j_o(ifi)%i(5))=7
-		endif !if(j_o(ifi)%txt( j_o(ifi)%i(5))(1:7).ne.';return')  11540
+		endif !if(j_o(ifi)%txt( j_o(ifi)%i(5))(1:7).ne.';return')  11651
 	else !if(ipil.gt.0.or..not.ifrom.gt.0)then
 		if(j_inciv(j_ninc+1).eq.0)then
 			write(6,*)';incl without file, but there is no previous file'
 			j_err=.true.;return
-		endif !if(j_inciv(j_ninc+1).eq.0)  11546
+		endif !if(j_inciv(j_ninc+1).eq.0)  11657
  
-	endif !if(ipil.gt.0.or..not.ifrom.gt.0)  11479
+	endif !if(ipil.gt.0.or..not.ifrom.gt.0)  11590
  
 700	continue
 !	write(6,*)'<55% ',j_ninc,j_inciv,'  ifi ',ifi
@@ -11563,7 +11674,7 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 		j_err=.true.
 		return
  
-	endif !if(ifi.eq.99999)  11558
+	endif !if(ifi.eq.99999)  11669
 	iiv=j_inciv(j_ninc)
 	if(iiv.eq.ifi)then
  
@@ -11582,16 +11693,16 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
  
 				else
 					exit
-				endif !if(j_dapu.eq.j_0)  11576
+				endif !if(j_dapu.eq.j_0)  11687
  
-			endif !if(j_increturn(j_ninc,ic).eq.j_o(iiv)%i(6))  11573
+			endif !if(j_increturn(j_ninc,ic).eq.j_o(iiv)%i(6))  11684
  
-		enddo !ic=1,j_ninc2(j_ninc)  11572
+		enddo !ic=1,j_ninc2(j_ninc)  11683
 		if(j_ninc2(j_ninc).ge.j_mxinc2)then
 			call j_getname(ifi)
 			write(6,*)'maximum number of jumps j_mxinc2=', j_mxinc2, ' reached in an include file ',j_oname(1:j_loname)
 			j_err=.true. ;return
-		endif !if(j_ninc2(j_ninc).ge.j_mxinc2)  11590
+		endif !if(j_ninc2(j_ninc).ge.j_mxinc2)  11701
 		j_ninc2(j_ninc)=j_ninc2(j_ninc)+1
 		!		write(6,*)'newinc2',j_ninc,j_ninc2(j_ninc),' line ',line
  
@@ -11607,7 +11718,7 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 			write(6,*)'maximum nesting of ,incl ',j_mxinc,' reached'
 			j_err=.true.
 			return
-		endif !if(j_ninc.ge.j_mxinc)  11606
+		endif !if(j_ninc.ge.j_mxinc)  11717
 		j_ninc=j_ninc+1
  
 		j_ninc2(j_ninc)=0
@@ -11616,7 +11727,7 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 		!	j_increturn(j_ninc,j_ninc2)=0
 		!	write(6,*)'zeroinchere inc',j_ninc,j_ninc2(j_ninc)
 		contold=.false.
-	endif !if(iiv.eq.ifi)  11568
+	endif !if(iiv.eq.ifi)  11679
  
  
  
@@ -11655,9 +11766,9 @@ subroutine j_incl(line) !  ;incl(  )  ;goto(
 				j_o(j_inciv(j_ninc))%i(6)=ili  !j_incline(j_ninc)=ili
 				write(6,*)'%',j_o(ifi)%txt(ili)
 				return
-			endif !if(line(ifrom1:ifrom2)//':'.eq.j_o(ifi)%txt(ili)(2:ifrom2-  11653
+			endif !if(line(ifrom1:ifrom2)//':'.eq.j_o(ifi)%txt(ili)(2:ifrom2-  11764
 			cycle
-		enddo !ili=1,j_o(ifi)%i(5)  11645
+		enddo !ili=1,j_o(ifi)%i(5)  11756
 172 	write(6,*)'label ;'//line(ifrom1:ifrom2)//': not found'
 		!call j_closeunit(nu)
 		j_err=.true.
@@ -11682,7 +11793,7 @@ subroutine j_inpugoto(doublesp,inpup)  !;goto
 		write(6,*)';goto not legal at command level'
 		j_err=.true.
 		return
-	endif !if(j_ninc.le.1)  11681
+	endif !if(j_ninc.le.1)  11792
 	!nu=j_nul(j_ninc)
 	!rewind(nu)
 	!j_incline(j_ninc)=0
@@ -11692,7 +11803,7 @@ subroutine j_inpugoto(doublesp,inpup)  !;goto
 	else
 		ifrom1=7
 		ifrom2=j_linpr-1
-	endif !if(j_inpr(7:7).eq."'".or.j_inpr(7:7).eq."~")  11689
+	endif !if(j_inpr(7:7).eq."'".or.j_inpr(7:7).eq."~")  11800
 	ihere=0
 	ipil=j_nextlim(j_inpr,ifrom1,ifrom2,',')
 	!	write(6,*)j_inpr(1:j_linpr)
@@ -11706,7 +11817,7 @@ subroutine j_inpugoto(doublesp,inpup)  !;goto
 		if(ival.le.0)then
 			write(6,*)'illegal value ',ival,' obtained from ',j_inpr(ipre:ifrom2+1)
 			j_err=.true.  ;return
-		endif !if(ival.le.0)  11706
+		endif !if(ival.le.0)  11817
  
 		ic=1
 		ipil1=ifrom1
@@ -11715,23 +11826,23 @@ subroutine j_inpugoto(doublesp,inpup)  !;goto
 			if(ic.eq.ival)then
 				ifrom1=ipil1+1
 				ifrom2=ipil-1
-			endif !if(ic.eq.ival)  11715
+			endif !if(ic.eq.ival)  11826
 			ipil1=ipil
 			ipil=j_nextlim(j_inpr,ipil+1,ipre,',')
 			!	write(6,*)'ipilhere ',ipil,ipre
 			if(ipil.gt.ipre)then
  
-			endif !if(ipil.gt.ipre)  11722
+			endif !if(ipil.gt.ipre)  11833
 			ic=ic+1
  
 			!			write(6,*)'ic ',ic
-		enddo !while(ipil.le.ipre)  11713
-	endif !if(ipil.lt.ifrom2)  11700
+		enddo !while(ipil.le.ipre)  11824
+	endif !if(ipil.lt.ifrom2)  11811
  
 	if(ival.ge.ic.and.ihere.ne.0)then
 		write(6,*)'there are not ',ival,' addresses in ',j_inpr(ifrom1:ifrom2),'ic',ic
 		j_err=.true.;return
-	endif !if(ival.ge.ic.and.ihere.ne.0)  11731
+	endif !if(ival.ge.ic.and.ihere.ne.0)  11842
  
 	iiv=j_inciv( j_ninc)
  
@@ -11752,9 +11863,9 @@ subroutine j_inpugoto(doublesp,inpup)  !;goto
 			!		write(6,*)'% ',j_txtp(2:ifrom2-ifrom1+3)
 			j_o(j_inciv(j_ninc))%i(6)=ili  !j_incj_inpr(j_ninc)=ili
 			return
-		endif !if(j_inpr(ifrom1:ifrom2)//':'.eq.j_txtp(2:ifrom2-ifrom1+3)  11748
+		endif !if(j_inpr(ifrom1:ifrom2)//':'.eq.j_txtp(2:ifrom2-ifrom1+3)  11859
  
-	enddo liloop !oop:	do ili=1,j_o(iiv)%i(5)  11738
+	enddo liloop !oop:	do ili=1,j_o(iiv)%i(5)  11849
 172 	write(6,*)'adress ;'//j_inpr(ifrom1:ifrom2)//': not found'
 		!call j_closeunit(nu)
 	j_err=.true.
@@ -11774,7 +11885,7 @@ subroutine j_bypassinc(nu)
 		le=len_trim(j_o(nu)%txt(il))
 		!			write(6,*)j_o(nu(id))%txt(j_o( j_inciv(j_ninc))%i(6))
 		write(6,*)'bypass>',j_o(nu)%txt(il)(1:le)
-	enddo !while(j_o(nu)%txt(il)(1:1).ne.'/')  11769
+	enddo !while(j_o(nu)%txt(il)(1:1).ne.'/')  11880
 	!	write(6,*)'bypass>/'
 99	j_o( ivinc)%i(6)=il
 !	write(6,*)'last',il
@@ -11825,13 +11936,13 @@ double precision function j_val(text) !subroutine compute the numeric value of a
 		! j_val=j_1
 		! !	write(6,*)j_1
 		! return
-	endif !if(le.le.0)  11820
+	endif !if(le.le.0)  11931
 	iv=j_isconst(text)
 	!	write(6,*)'iv ',iv
 	if(iv.gt.0)then
 		j_val=j_v(iv)
 		return
-	endif !if(iv.gt.0)  11831
+	endif !if(iv.gt.0)  11942
 	iv=j_object(text)
 	!write(6,*)'iv2 ',iv
 	!	i2=min(2,le)
@@ -11839,9 +11950,9 @@ double precision function j_val(text) !subroutine compute the numeric value of a
 		if(j_otype(iv).eq.j_ipreal)then
 			j_val=j_v(iv)
 		else !if(j_otype(iv).eq.j_ipreal)then
-			write(6,*)text,' is not REAL but ',j_objecttypes(j_otype(iv))
+			write(6,*)text,' is not REAL but ',j_otypes(j_otype(iv))
 			j_err=.true.
-		endif !if(j_otype(iv).eq.j_ipreal)  11839
+		endif !if(j_otype(iv).eq.j_ipreal)  11950
 		return
 		! elseif(iv.le.0.and.(text(1:1).eq.'-'.or.text(1:1).eq.'+').and.&
 		! (text(i2:i2).eq.'.'.or.(text(i2:i2).ge.'0'.and.text(i2:i2).le.'9')))then
@@ -11856,7 +11967,7 @@ double precision function j_val(text) !subroutine compute the numeric value of a
 		! j_val=j_v(iv)
 		! return
 		! endif !if(iv.gt.0)  10520
-	endif !if(iv.gt.0)  11838
+	endif !if(iv.gt.0)  11949
 	!	write(6,*)'inter'
 	call j_parser(text,j_ivvalc)
  
@@ -11878,7 +11989,7 @@ integer function j_tex2iv(text,isplus) !subroutine compute the numeric value of 
 		write(6,*)'*j* j_tex2iv called with null string'
 		j_err=.true.
 		return
-	endif !if(le.le.0)  11877
+	endif !if(le.le.0)  11988
 	i1=1
 	if(text(1:1).eq.'-')then
 		i1=2
@@ -11887,17 +11998,17 @@ integer function j_tex2iv(text,isplus) !subroutine compute the numeric value of 
 			write(6,*)' - sign is not number'
 			j_err=.true.
 			return
-		endif !if(i2.eq.le)  11886
+		endif !if(i2.eq.le)  11997
 	elseif(text(1:1).eq.'+')then
 		i1=2
 		isplus=1
 	else
 		isplus=1
-	endif !if(text(1:1).eq.'-')  11883
+	endif !if(text(1:1).eq.'-')  11994
 	if(text(i1:i1).eq."'")then
 		j_tex2iv=j_defchar(0,text(i1:le))
 		return
-	endif !if(text(i1:i1).eq."'")  11897
+	endif !if(text(i1:i1).eq."'")  12008
 	j_tex2iv=j_object(text(i1:le))
 	if(j_tex2iv.gt.0)return
  
@@ -11908,7 +12019,7 @@ integer function j_tex2iv(text,isplus) !subroutine compute the numeric value of 
 		j_tex2iv=j_num2iv(j_dapu)
 		!write(6,*)'here ',text(i1+1:le-1),j_dapu,j_tex2iv
 		return
-	endif !if(text(i1:i1).eq.'(')  11904
+	endif !if(text(i1:i1).eq.'(')  12015
  
 	j_tex2iv=j_getobject(0,text(i1:le),j_ipreal,silent=.true.)
 	if(.not.j_err)return
@@ -11931,11 +12042,11 @@ double precision function j_iv2val(iv)
 		if(le.le.0)then
 			write(6,*)'* j_iv2val called with empty char'
 			j_err=.true.
-		endif !if(le.le.0)  11931
+		endif !if(le.le.0)  12042
 		j_iv2val=j_val(j_tempchar3(1:le))
 	else
 		j_iv2val=j_inf
-	endif !if(j_otype(iv).eq.j_ipreal)  11927
+	endif !if(j_otype(iv).eq.j_ipreal)  12038
 	return
 end function j_iv2val !real function j_val(text)
  
@@ -12002,7 +12113,7 @@ subroutine j_getdos(inp,linp,iargs,nargs)!  ;do !enddo
 		!	write(6,*)'il',il,inp(1:il)
 		j_err=.true.
 		return
-	endif !if(il.gt.linp.or.inp(1:4).ne.';do(')  12000
+	endif !if(il.gt.linp.or.inp(1:4).ne.';do(')  12111
 	!	ial=il+1
 	call j_parser('list2'//inp(il:linp),j_ivcursori)
 	if(j_err)return
@@ -12016,19 +12127,19 @@ subroutine j_getdos(inp,linp,iargs,nargs)!  ;do !enddo
 		j_err=.true.
 		write(6,*)'illegal number of arguments ',nargs
 		return
-	endif !if(nargs.lt.3.or.nargs.gt.4)  12015
+	endif !if(nargs.lt.3.or.nargs.gt.4)  12126
 	iargs(1)=j_o(j_ivresult)%i2(1)
-	if(iargs(1).gt.j_namedv)then
+	if(iargs(1).gt.j_named)then
 		write(6,*)'**first argument must be variable'
 		j_err=.true. ;return
-	endif !if(iargs(1).gt.j_namedv)  12021
+	endif !if(iargs(1).gt.j_named)  12132
 	do i=2,nargs
 		iargs(i)=j_v(j_o(j_ivresult)%i2(i))
 		if(dble(iargs(i)).ne.j_v(j_o(j_ivresult)%i2(i)))then
 			write(6,*)'argument ',i,' not an integer'
 			j_err=.true. ;return
-		endif !if(dble(iargs(i)).ne.j_v(j_o(j_ivresult)%i2(i)))  12027
-	enddo !i=2,nargs  12025
+		endif !if(dble(iargs(i)).ne.j_v(j_o(j_ivresult)%i2(i)))  12138
+	enddo !i=2,nargs  12136
  
  
 	if(j_ndo.ge.j_mxndo)then
@@ -12037,7 +12148,7 @@ subroutine j_getdos(inp,linp,iargs,nargs)!  ;do !enddo
 		j_err=.true.
 		j_ndo=0
 		return
-	endif !if(j_ndo.ge.j_mxndo)  12034
+	endif !if(j_ndo.ge.j_mxndo)  12145
  
  
 	17 ilow=iargs(2); iup=iargs(3)
@@ -12045,14 +12156,14 @@ subroutine j_getdos(inp,linp,iargs,nargs)!  ;do !enddo
 		istep=1
 	else !if(nargs.le.3)then
 		istep=iargs(4)
-	endif !if(nargs.le.3)  12044
+	endif !if(nargs.le.3)  12155
  
 	if(istep.eq.0)then
 		write(6,*)'**illegal ;do loop with low,up,step:',ilow,iup,istep
 		j_err=.true.
  
 		return
-	endif !if(istep.eq.0)  12050
+	endif !if(istep.eq.0)  12161
  
 	nstep=(iup-ilow+istep)/istep
  
@@ -12067,7 +12178,7 @@ subroutine j_getdos(inp,linp,iargs,nargs)!  ;do !enddo
 			write(6,*)';do(',j_oname(1:j_loname),',',ilow,',',iup,')'
 		else
 			write(6,*)';do(',j_oname(1:j_loname),',',ilow,',',iup,',',istep,')'
-		endif !if(nargs.eq.3)  12066
+		endif !if(nargs.eq.3)  12177
 		j_err=.true.
 		;return
 		ifi=j_inciv(j_ninc)  !incl file
@@ -12081,12 +12192,12 @@ subroutine j_getdos(inp,linp,iargs,nargs)!  ;do !enddo
 			elseif(j_o(ifi)%txt(ili)(1:6).eq.';enddo'.or.j_o(ifi)%txt(ili)(1:5).eq.';endo')then !if(j_o(ifi)%txt(ili)(1:4).eq.';do(')then
 				if(nde.eq.0)exit
 				nde=nde-1
-			endif !if(j_o(ifi)%txt(ili)(1:4).eq.';do(')  12079
-		enddo !ili=j_o(ifi)%i(6)+1,j_o(ifi)%i(5)  12077
+			endif !if(j_o(ifi)%txt(ili)(1:4).eq.';do(')  12190
+		enddo !ili=j_o(ifi)%i(6)+1,j_o(ifi)%i(5)  12188
 		if(nde.gt.0)then
 			write(6,*)';do starting at line ',j_o(ifi)%i(6)+1,' never ends'
 			j_err=.true.;return
-		endif !if(nde.gt.0)  12086
+		endif !if(nde.gt.0)  12197
 		j_o(ifi)%i(6)=ili
  
  
@@ -12102,14 +12213,14 @@ subroutine j_getdos(inp,linp,iargs,nargs)!  ;do !enddo
 		! if(ndotemp.gt.0)goto 567
 		!	write(6,*)'getdosreturn ',inp(1:30)
 		return
-	endif !if(nstep.le.0)  12061
+	endif !if(nstep.le.0)  12172
 	do jdo=1,j_ndo
 		call j_getname(iargs(1))
 		if(j_iido(4,jdo).eq.iargs(1))then
 			write(6,*)';do(  ',jdo,' had the same index variable ',j_oname(1:j_loname),' as current ;do( ',j_ndo+1
 			j_err=.true.
-		endif !if(j_iido(4,jdo).eq.iargs(1))  12108
-	enddo !jdo=1,j_ndo  12106
+		endif !if(j_iido(4,jdo).eq.iargs(1))  12219
+	enddo !jdo=1,j_ndo  12217
 	if(j_err)return
 	j_ndo=j_ndo+1
  
@@ -12269,7 +12380,7 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
 	else !if(plus)then
 		oper='-'
 		ial00=index(inp,';dif(')
-	endif !if(plus)  12266
+	endif !if(plus)  12377
 	!write(6,*)plus,'ial00',ial00,linp,inp(1:linp)
 	! do i=1,linp
 	! write(6,*)i,ichar(inp(i:i))
@@ -12285,11 +12396,11 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
  
  
 		if(inp(li(nargs):li(nargs)).eq.')')exit
-	enddo !nargs=1,4  12281
+	enddo !nargs=1,4  12392
 	if(nargs.lt.3)then
 		write(6,*)';sum should have at least three arguments'
 		j_err=.true.;return
-	endif !if(nargs.lt.3)  12289
+	endif !if(nargs.lt.3)  12400
  
 	last=li(nargs)
 	!	write(6,*)'<45last,nargs,li',last,nargs,li,inp(last+1:last+1),ial0,ial
@@ -12297,7 +12408,7 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
 		write(6,*)';sum() should be follofed by (...)'
 		j_err=.true.
 		return
-	endif !if(inp(last+1:last+1).ne.'(')  12296
+	endif !if(inp(last+1:last+1).ne.'(')  12407
  
 	!write(6,*)'let ',inp(ial:ial)
 	if(j_isletter(inp(ial0+1:ial0+1)))then
@@ -12309,7 +12420,7 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
 		write(6,*)';sum(,first argument must be a variable'
 		j_err=.true.
 		return
-	endif !if(j_isletter(inp(ial0+1:ial0+1)))  12303
+	endif !if(j_isletter(inp(ial0+1:ial0+1)))  12414
 	! call j_printname('eka ',iv,' ')
 	do j=2,nargs
 		!write(6,*)'<55>',inp(li(j-1)+1:li(j)-1)
@@ -12319,7 +12430,7 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
 				write(6,*)';sum argument '//inp(li(j-1)+1:li(j)-1)//' is not variable or constant'
 				j_err=.true.
 				return
-			endif !if(iv2.le.0)  12318
+			endif !if(iv2.le.0)  12429
 		else !if(j_isletter(inp(li(j-1)+1:li(j)-1)))then
  
 			iv2=j_isconst(inp(li(j-1)+1:li(j)-1))
@@ -12328,11 +12439,11 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
 				write(6,*)';sum argument '//inp(li(j-1)+1:li(j)-1)//' is not variable or constant'
 				j_err=.true.
 				return
-			endif !if(iv2.le.0)  12327
+			endif !if(iv2.le.0)  12438
  
-		endif !if(j_isletter(inp(li(j-1)+1:li(j)-1)))  12316
+		endif !if(j_isletter(inp(li(j-1)+1:li(j)-1)))  12427
 		iargs(j)=j_v(iv2)
-	enddo !j=2,nargs  12314
+	enddo !j=2,nargs  12425
 	istep=1
 	if(nargs.gt.3)istep=iargs(4)
 	if(istep.eq.0.or. (istep.gt.0.and.iargs(3).lt.iargs(2)).or.&
@@ -12340,7 +12451,7 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
 		write(6,*)';sum illegal arguments ',inp(ial:last)
 		j_err=.true.
 		return
-	endif !if(istep.eq.0.or. (istep.gt.0.and.iargs(3).lt.iargs(2)).  12338
+	endif !if(istep.eq.0.or. (istep.gt.0.and.iargs(3).lt.iargs(2)).  12449
 	lop=j_nextrp(inp,last+1,linp)
 	!write(6,*)'<44lop',lop,inp(lop:lop)
  
@@ -12362,10 +12473,10 @@ subroutine j_getsum(inp,linp,plus)   ! ;sum  ;dif
 		if(i.lt.iargs(3))then
 			j_tempchar(lenf+1:lenf+1)=oper
 			lenf=lenf+1
-		endif !if(i.lt.iargs(3))  12362
+		endif !if(i.lt.iargs(3))  12473
 		j_tempchar2(lu+1:lu+lenf)=j_tempchar(1:lenf)
 		lu=lu+lenf
-	enddo !i=iargs(2),iargs(3),istep  12350
+	enddo !i=iargs(2),iargs(3),istep  12461
  
  
 	!write(6,*)'lu',lu,lop,ial00,j_tempchar(1:lu),'?',inp(lop+1:linp),'?'
@@ -12398,7 +12509,7 @@ function j_option_name(iopt,le)
 		j_option_name='*illegal option*'
 		write(6,*)'*j* illegal value for iopt in options ',iopt
 		j_err=.true.
-	endif !if(iopt.gt.0.and.iopt.le.j_noptions_)  12389
+	endif !if(iopt.gt.0.and.iopt.le.j_noptions_)  12500
 	return
 end function j_option_name !function j_option_name(iopt,le)
  
@@ -12421,7 +12532,7 @@ function j_function_name(ifunc,le)
 		j_function_name='*illegal function *'
 		!write(6,*)'*j* illegal value for ifunc in function ',ifunc
 		j_err=.true.
-	endif !if(ifunc.gt.0.and.ifunc.le.j_nfunctions_)  12412
+	endif !if(ifunc.gt.0.and.ifunc.le.j_nfunctions_)  12523
 	return
 end function j_function_name !function j_function_name(ifunc,le)
  
@@ -12431,7 +12542,7 @@ function j_objecttype_index(objecttype)
 	character*16, intent(in):: objecttype
  
 	le=len_trim(objecttype)
-	j_objecttype_index=j_isin(objecttype(1:le),j_objecttypes,j_nobjecttypes_)
+	j_objecttype_index=j_isin(objecttype(1:le),j_otypes,j_notypes)
 	!###TESTAUS###
 	!write(6,*)'jcompil <3557> i=isin(...): input(icur:ipos1)', input(icur:ipos1)
 	!20141219 if(i==0)
@@ -12447,10 +12558,10 @@ function j_objecttype_index(objecttype)
 				io_ = j_isin(objecttype(1:le),o3_objecttypes,o3_nobjecttypes)
 				if(io_ > 0) then
 					j_objecttype_index = j_nobjecttypes2+ io_ !  3000+io_
-				endif !if(io_ > 0)  12448
-			endif !if(io_ > 0)  12444
-		endif !if(io_ >0)  12440
-	endif !if(j_objecttype_index==0)  12438
+				endif !if(io_ > 0)  12559
+			endif !if(io_ > 0)  12555
+		endif !if(io_ >0)  12551
+	endif !if(j_objecttype_index==0)  12549
 end function j_objecttype_index !function j_objecttype_index(objecttype)
  
  
@@ -12464,7 +12575,7 @@ function j_objecttype_name(ipobjecttype,le)
  
  
 	if(ipobjecttype.gt.0.and.ipobjecttype.le.j_nobjecttypes)then
-		j_objecttype_name=j_objecttypes(ipobjecttype)
+		j_objecttype_name=j_otypes(ipobjecttype)
 	elseif(ipobjecttype.le.j_nobjecttypes1)then !if(ipobjecttype.gt.0.and.ipobjecttype.le.j_nobjecttypes)then
 		j_objecttype_name=o1_objecttypes(ipobjecttype-j_nobjecttypes)
 	elseif(ipobjecttype.le.j_nobjecttypes2)then !if(ipobjecttype.gt.0.and.ipobjecttype.le.j_nobjecttypes)then
@@ -12476,7 +12587,7 @@ function j_objecttype_name(ipobjecttype,le)
 		j_objecttype_name='*illegal objecttype'
 		j_err=.true.
  
-	endif !if(ipobjecttype.gt.0.and.ipobjecttype.le.j_nobjecttypes)  12466
+	endif !if(ipobjecttype.gt.0.and.ipobjecttype.le.j_nobjecttypes)  12577
 	return
 end function j_objecttype_name !function j_objecttype_name(ipobjecttype,le)
  
@@ -12508,7 +12619,7 @@ function j_chr_integer(ival,le,left,fill,le2) !the purpose is to make a general 
 		j_chr_integer='?????'
 		j_err=.true.
 		return
-	endif !if(le.lt.lenout)  12506
+	endif !if(le.lt.lenout)  12617
 	if(left)then
 		j_chr_integer=j_chrchr(i1:len_)
 		le2=le-i1+1
@@ -12518,10 +12629,10 @@ function j_chr_integer(ival,le,left,fill,le2) !the purpose is to make a general 
 		else !if(fill)then
  
  
-		endif !if(fill)  12516
+		endif !if(fill)  12627
  
  
-	endif !if(left)  12512
+	endif !if(left)  12623
  
 end function j_chr_integer !function j_chr_integer(ival,le,left,fill,le2)
  
@@ -12562,16 +12673,16 @@ function lenobjects(iv)
  
 	!	 nv=mxnamedv+mxtemporalv
 	!	mxv=nv+mxconstantv
-	if(iv.gt.0.and.iv.le.j_namedv)then
+	if(iv.gt.0.and.iv.le.j_named)then
 		lenobjects=j_o(j_ivnames)%i(iv+1)-j_o(j_ivnames)%i(iv)
-	elseif(iv.gt.j_mxnamedv.and.iv.le.j_nv)then !if(iv.gt.0.and.iv.le.j_namedv)then
+	elseif(iv.gt.j_mxnamedv.and.iv.le.j_nv)then !if(iv.gt.0.and.iv.le.j_named)then
 		lenobjects=8
-	elseif(iv.gt.j_nv.and.iv.le.j_mxv)then !if(iv.gt.0.and.iv.le.j_namedv)then
+	elseif(iv.gt.j_nv.and.iv.le.j_mxv)then !if(iv.gt.0.and.iv.le.j_named)then
 		lenobjects=8
-	else !if(iv.gt.0.and.iv.le.j_namedv)then
+	else !if(iv.gt.0.and.iv.le.j_named)then
 		write(6,*)'*j* lenobject, illegal arument ',iv
 		j_err=.true.
-	endif !if(iv.gt.0.and.iv.le.j_namedv)  12565
+	endif !if(iv.gt.0.and.iv.le.j_named)  12676
 end function lenobjects !function lenobjects(iv)
  
  
@@ -12586,7 +12697,7 @@ function j_object_name(iv,le)
 	!	character(len=le) objecttype_name
 	integer len,i_,itemp,ibas_
 	!write(6,*)'iv,le,namedv',iv,le,namedv
-	if(iv.gt.0.and.iv.le.j_namedv)then
+	if(iv.gt.0.and.iv.le.j_named)then
 		len=j_o(j_ivnames)%i(iv+1)-j_o(j_ivnames)%i(iv)
 		!	write(6,*)'len',len
 		!	if(len.ne.le)then
@@ -12597,21 +12708,21 @@ function j_object_name(iv,le)
  
 		do i_=1,min(len,le)
 			j_object_name0(i_:i_)=j_o(j_ivnames)%ch(ibas_+i_)
-		enddo !i_=1,min(len,le)  12598
+		enddo !i_=1,min(len,le)  12709
 		if(len.lt.le)j_object_name0(len+1:le)=' '
  
-	elseif(iv.gt.j_mxnamedv.and.iv.le.j_nv)then !if(iv.gt.0.and.iv.le.j_namedv)then
+	elseif(iv.gt.j_mxnamedv.and.iv.le.j_nv)then !if(iv.gt.0.and.iv.le.j_named)then
 		itemp=iv-j_mxnamedv
 		j_object_name0='$$Temp'
 		j_object_name0(8:8)=char(48+mod(itemp,10))
 		itemp=itemp/10
 		j_object_name0(7:7)=char(48+mod(itemp,10))
-	elseif(iv.gt.j_nv.and.iv.le.j_mxv)then !if(iv.gt.0.and.iv.le.j_namedv)then
+	elseif(iv.gt.j_nv.and.iv.le.j_mxv)then !if(iv.gt.0.and.iv.le.j_named)then
 		j_object_name0 = 'constant' !lenobject=7
-	else !if(iv.gt.0.and.iv.le.j_namedv)then
+	else !if(iv.gt.0.and.iv.le.j_named)then
 		!	write(6,*)'*j* lenobject, illegal arument ',iv
 		j_object_name0 = '*j* wrong object index'
-	endif !if(iv.gt.0.and.iv.le.j_namedv)  12589
+	endif !if(iv.gt.0.and.iv.le.j_named)  12700
 	j_object_name = j_object_name0
 	return
 end function j_object_name !function j_object_name(iv,le)
@@ -12637,7 +12748,7 @@ real function j_eqf(iv1,iv2)
 	else !if(j_otype(iv1)==j_ipreal.and.j_otype(iv2)==j_ipreal) then
 		write(6,*)'illegal component types in .eq.'
 		j_err = .true.
-	endif !if(j_otype(iv1)==j_ipreal.and.j_otype(iv2)==j_ipreal)  12631
+	endif !if(j_otype(iv1)==j_ipreal.and.j_otype(iv2)==j_ipreal)  12742
 	return
 end function j_eqf !real function j_eqf(iv1,iv2)
  
@@ -12658,7 +12769,7 @@ subroutine j_printname(text1,iv,text2,iv2) !print variable name with text
 		j_err=.true.
  
 		return
-	endif !if(iv.le.0.or.iv.gt.j_nv)  12656
+	endif !if(iv.le.0.or.iv.gt.j_nv)  12767
  
 	if(present(iv2))then
 		call j_getname(iv,iv2)
@@ -12668,7 +12779,7 @@ subroutine j_printname(text1,iv,text2,iv2) !print variable name with text
 		call j_getname(iv)
 		write(n6,*)text1,j_oname(1:j_loname),text2
  
-	endif !if(present(iv2))  12663
+	endif !if(present(iv2))  12774
 	j_err=jerr
 	return
 end subroutine j_printname !subroutine j_printname(text1,iv,text2,iv2)
@@ -12722,7 +12833,7 @@ subroutine j_checki(ivec,iel)
 		call move_alloc( from=ivec2, to=ivec )
 		!	ivec(lbound_:iubound_)=ivec2
 		!	deallocate(ivec2)
-	end if !if(iubound.lt.iel)  12711
+	end if !if(iubound.lt.iel)  12822
  
 end subroutine j_checki !subroutine j_puti(ivec,iel,ival)
  
@@ -12774,7 +12885,7 @@ subroutine j_checkd(dvec,iel,lenn)
 		!	deallocate(ivec2
 	else
 		if(present(lenn))lenn=iubound
-	end if !if(iubound.lt.iel)  12759
+	end if !if(iubound.lt.iel)  12870
  
 end subroutine j_checkd !subroutine j_puti(ivec,iel,ival)
  
@@ -12803,7 +12914,7 @@ subroutine j_checkr(dvec,iel,lenn)
 	else
 		if(present(lenn))lenn=iubound
 		!	deallocate(ivec2)
-	end if !if(iubound.lt.iel)  12788
+	end if !if(iubound.lt.iel)  12899
  
 end subroutine j_checkr !subroutine j_puti(ivec,iel,ival)
 ! logical,dimension(:), intent(inout), pointer::ivec  ! HHir. 8.3/2011    =>null()
@@ -12836,10 +12947,10 @@ subroutine j_putim(ivec,iel1,iel2,ival)
 	ub2=ubound(ivec,dim=2)
 	if(ub1.lt.iel1)then
 		allo=.true.;new1=2*ub1;new2=ub2
-	end if !if(ub1.lt.iel1)  12837
+	end if !if(ub1.lt.iel1)  12948
 	if(ub2.lt.iel2)then
 		allo=.true.;new2=2*ub2
-	end if !if(ub2.lt.iel2)  12840
+	end if !if(ub2.lt.iel2)  12951
 	if(allo)then
 		lb1=lbound(ivec,dim=1) ; lb2=lbound(ivec,dim=2)
 		allocate(ivec2(lb1:ub1,lb2:ub2))
@@ -12851,7 +12962,7 @@ subroutine j_putim(ivec,iel1,iel2,ival)
 		! ivec=0
 		! ivec(lb1:ub1,lb2:ub1)=ivec2
 		! deallocate(ivec2)
-	end if !if(allo)  12843
+	end if !if(allo)  12954
 	ivec(iel1,iel2)=ival
 end subroutine !subroutine j_putim(ivec,iel1,iel2,ival)
  
@@ -12908,7 +13019,7 @@ subroutine j_putr(rvec,iel,val,lenn)
 		call j_checkr(rvec,iel,lenn)
 	else
 		call j_checkr(rvec,iel)
-	endif !if(present(lenn))  12907
+	endif !if(present(lenn))  13018
 	! real,dimension(:), allocatable::rvec2
 	! iubound_=ubound(rvec,dim=1)
 	! if(iubound_.lt.iel)then
@@ -12934,7 +13045,7 @@ subroutine j_putd(rvec,iel,val,lenn)
 		call j_checkd(rvec,iel,lenn)
 	else
 		call j_checkd(rvec,iel)
-	endif !if(present(lenn))  12933
+	endif !if(present(lenn))  13044
 	! double precision,dimension(:), allocatable::rvec2
 	! iubound_=ubound(rvec,dim=1)
 	! if(iubound_.lt.iel)then
@@ -12962,11 +13073,11 @@ end function !integer function j_leno(iv)
 ! implicit none
 ! integer, intent(in)::iv
 ! j_lentitles=1
-! if(iv.le.j_namedv)then
+! if(iv.le.j_named)then
 ! if(j_otitle(iv).gt.0)then
 ! j_lentitles=j_o(j_otitle(iv))%i(2)-j_o(j_otitle(iv))%i(1)+1
 ! endif !if(j_otitle(iv).gt.0)then
-! endif !if(iv.le.j_namedv)then
+! endif !if(iv.le.j_named)then
 ! end function j_lentitles !integer function j_lentitles(iv)
  
 ! function object_title(iv,le)    ! %%title character function alternative for gettitle
@@ -12977,7 +13088,7 @@ end function !integer function j_leno(iv)
  
 ! integer len,i_,itemp,ibas
  
-! if(iv.gt.0.and.iv.le.j_namedv)then
+! if(iv.gt.0.and.iv.le.j_named)then
 ! if(j_otitle(iv).gt.0)then
 ! ibas=j_o(j_otitle(iv))%i(1)-1
 ! do i_=1,j_lentitles(iv)
@@ -12987,9 +13098,9 @@ end function !integer function j_leno(iv)
 ! else !if(j_otitle(iv).gt.0)then
 ! object_title=' '
 ! endif !if(j_otitle(iv).gt.0)then
-! else !if(iv.gt.0.and.iv.le.j_namedv)then
+! else !if(iv.gt.0.and.iv.le.j_named)then
 ! object_title=' '
-! endif !if(iv.gt.0.and.iv.le.j_namedv)then
+! endif !if(iv.gt.0.and.iv.le.j_named)then
  
 ! return
 ! end function object_title !function object_title(iv,le)
@@ -13014,9 +13125,9 @@ real function j_valuesspl(ifunc,arg) !compute the value of a smoothing %%spline
 		valuef=1.7e37
 		if(nwarn.gt.mxwarn)then
 			j_err=.true. ;nwarn=0
-		end if !if(nwarn.gt.mxwarn)  13015
+		end if !if(nwarn.gt.mxwarn)  13126
 		return
-	end if !if(argd.lt.j_o(ifunc)%d(1).or.argd.gt.j_o(ifunc)%d(nob2))  13010
+	end if !if(argd.lt.j_o(ifunc)%d(1).or.argd.gt.j_o(ifunc)%d(nob2))  13121
 	!C       L       (I/O)   L contains an integer such that:
 	!C                       X(L).le.T and T.lt.X(L+1) if T is within
 	!C                       the range X(1).le.T and T.lt.X(N). If
@@ -13065,7 +13176,7 @@ integer function j_ibittest(ifunc,irow,icol)
 		j_ibittest=1
 	else !if(btest(j_o(ifunc)%i2(ii),ibit))then
 		j_ibittest=0
-	endif !if(btest(j_o(ifunc)%i2(ii),ibit))  13064
+	endif !if(btest(j_o(ifunc)%i2(ii),ibit))  13175
 	return
 end function j_ibittest !integer function j_ibittest(ifunc,irow,icol)
  
@@ -13076,10 +13187,10 @@ integer function j_lentrim(inp)   !like len-trim but returns zero aslo when line
 	if(le.le.0)then
 		j_lentrim=0
 		return
-	endif !if(le.le.0)  13076
+	endif !if(le.le.0)  13187
 	do j_lentrim=le,1,-1
 		if(ichar(inp(j_lentrim:j_lentrim)).gt.32)return
-	enddo !j_lentrim=le,1,-1  13080
+	enddo !j_lentrim=le,1,-1  13191
 	j_lentrim=0
 	return
 end function j_lentrim !integer function j_lentrim(inp)
@@ -13135,17 +13246,17 @@ integer function j_iounit(iv)
 	if(iv.eq.j_ivdollar)then
 		j_iounit=0
 		return
-	endif !if(iv.eq.j_ivdollar)  13135
+	endif !if(iv.eq.j_ivdollar)  13246
 	if (j_otype(iv).ne.j_ipchar)then
 		call j_printname('*j* object ',iv,' is not of character type, it cannot be associate with a file')
 		j_err=.true.;j_iounit=0
 		return
-	end if !if (j_otype(iv).ne.j_ipchar)  13139
+	end if !if (j_otype(iv).ne.j_ipchar)  13250
 	if(j_o(iv)%i(3).ne.0)then    !charcter variable
 		j_iounit=j_o(j_o(iv)%i(3))%i(4)
 	else !if(j_o(iv)%i(3).ne.0)then
 		j_iounit=j_o(iv)%i(4)
-	endif !if(j_o(iv)%i(3).ne.0)  13144
+	endif !if(j_o(iv)%i(3).ne.0)  13255
 	return
 end function j_iounit !integer function j_iounit(iv)
  
@@ -13177,12 +13288,12 @@ subroutine j_putiounit(nu,iv)
 		call j_printname('*j* object ',iv,' is not of character type, it cannot be associate with a file')
 		j_err=.true.
 		return
-	end if !if (j_otype(iv).ne.j_ipchar)  13176
+	end if !if (j_otype(iv).ne.j_ipchar)  13287
 	if(j_o(iv)%i(3).ne.0)then
 		j_o(j_o(iv)%i(3))%i(4)=nu
 	else !if(j_o(iv)%i(3).ne.0)then
 		j_o(iv)%i(4)=nu
-	endif !if(j_o(iv)%i(3).ne.0)  13181
+	endif !if(j_o(iv)%i(3).ne.0)  13292
 	return
 end subroutine j_putiounit !subroutine j_putiounit(nu,iv)
  
@@ -13301,27 +13412,27 @@ subroutine j_copy(iob,io)   !makes a copy of an object j-function
  
 			if(allocated(j_o(irg)%r))then
 				allocate(j_o(iout)%r( lbound(j_o(irg)%r,1):ubound(j_o(irg)%r,1) ));j_o(iout)%r=j_o(irg)%r
-			end if !if(allocated(j_o(irg)%r))  13302
+			end if !if(allocated(j_o(irg)%r))  13413
 			if(allocated(j_o(irg)%i))then
 				allocate(j_o(iout)%i( lbound(j_o(irg)%i,1):ubound(j_o(irg)%i,1)));j_o(iout)%i=j_o(irg)%i
-			end if !if(allocated(j_o(irg)%i))  13305
+			end if !if(allocated(j_o(irg)%i))  13416
 			if(allocated(j_o(irg)%i2))then
 				allocate(j_o(iout)%i2( lbound(j_o(irg)%i2,1):ubound(j_o(irg)%i2,1)));j_o(iout)%i2=j_o(irg)%i2
-			end if !if(allocated(j_o(irg)%i2))  13308
+			end if !if(allocated(j_o(irg)%i2))  13419
 			if(allocated(j_o(irg)%d))then
 				allocate(j_o(iout)%d( lbound(j_o(irg)%d,1):ubound(j_o(irg)%d,1)));j_o(iout)%d=j_o(irg)%d
-			end if !if(allocated(j_o(irg)%d))  13311
+			end if !if(allocated(j_o(irg)%d))  13422
 			if(allocated(j_o(irg)%ch))then
 				allocate(j_o(iout)%ch( lbound(j_o(irg)%ch,1):ubound(j_o(irg)%ch,1)));j_o(iout)%ch=j_o(irg)%ch
-			end if !if(allocated(j_o(irg)%ch))  13314
+			end if !if(allocated(j_o(irg)%ch))  13425
 			j_otype(iout)=j_otype(irg)
  
 		else !if(j_otype(irg).ne.j_ipreal)then
 			j_v(iout)=j_v(irg)
  
-		endif !if(j_otype(irg).ne.j_ipreal)  13300
+		endif !if(j_otype(irg).ne.j_ipreal)  13411
  
-	endif !if(irg.ne.iout)  13296
+	endif !if(irg.ne.iout)  13407
 	!io=io+narg+3
 	return
 end subroutine j_copy !subroutine j_copy(iob,io)
@@ -13341,25 +13452,25 @@ subroutine j_copy2(irg,iout)   !makes a copy of an object utility function
 			j_o(iout)%i(3)=irg   !links to char constant
 			j_otype(iout)=j_ipchar
 			return
-		endif !if(j_otype(irg).eq.j_ipchar)  13338
+		endif !if(j_otype(irg).eq.j_ipchar)  13449
 		!20141219 oli: if(otype(irg).ne.0)then
 		if(j_otype(irg).ne.j_ipreal)then
  
 			if(allocated(j_o(irg)%r))then
 				allocate(j_o(iout)%r( lbound(j_o(irg)%r,1):ubound(j_o(irg)%r,1) ));j_o(iout)%r=j_o(irg)%r
-			end if !if(allocated(j_o(irg)%r))  13348
+			end if !if(allocated(j_o(irg)%r))  13459
 			if(allocated(j_o(irg)%i))then
 				allocate(j_o(iout)%i( lbound(j_o(irg)%i,1):ubound(j_o(irg)%i,1)));j_o(iout)%i=j_o(irg)%i
-			end if !if(allocated(j_o(irg)%i))  13351
+			end if !if(allocated(j_o(irg)%i))  13462
 			if(allocated(j_o(irg)%i2))then
 				allocate(j_o(iout)%i2( lbound(j_o(irg)%i2,1):ubound(j_o(irg)%i2,1)));j_o(iout)%i2=j_o(irg)%i2
-			end if !if(allocated(j_o(irg)%i2))  13354
+			end if !if(allocated(j_o(irg)%i2))  13465
 			if(allocated(j_o(irg)%d))then
 				allocate(j_o(iout)%d( lbound(j_o(irg)%d,1):ubound(j_o(irg)%d,1)));j_o(iout)%d=j_o(irg)%d
-			end if !if(allocated(j_o(irg)%d))  13357
+			end if !if(allocated(j_o(irg)%d))  13468
 			if(allocated(j_o(irg)%ch))then
 				allocate(j_o(iout)%ch( lbound(j_o(irg)%ch,1):ubound(j_o(irg)%ch,1)));j_o(iout)%ch=j_o(irg)%ch
-			end if !if(allocated(j_o(irg)%ch))  13360
+			end if !if(allocated(j_o(irg)%ch))  13471
 			j_otype(iout)=j_otype(irg)
  
 		else !if(j_otype(irg).ne.j_ipreal)then
@@ -13367,9 +13478,9 @@ subroutine j_copy2(irg,iout)   !makes a copy of an object utility function
 			!	write(6,*)j_oname(1:j_loname),' ',j_oname2(1:j_loname2)
 			j_v(iout)=j_v(irg)
  
-		endif !if(j_otype(irg).ne.j_ipreal)  13346
+		endif !if(j_otype(irg).ne.j_ipreal)  13457
  
-	endif !if(irg.ne.iout)  13334
+	endif !if(irg.ne.iout)  13445
 	!io=io+narg+3
 	return
 end subroutine j_copy2 !subroutine j_copy2(irg,iout)
@@ -13408,7 +13519,7 @@ subroutine j_getobsiv(iobs,iomat,ivkeep,iviobs) !,iotrans,iviobs)  !getobs used 
 	else !if(j_o(iomat)%i(4).eq.j_matreg)then
 		write(6,*)'*j* illegal matrix type in getobsiv'
 		j_err=.true.
-	endif !if(j_o(iomat)%i(4).eq.j_matreg)  13390
+	endif !if(j_o(iomat)%i(4).eq.j_matreg)  13501
 	if(iviobs.gt.0)j_v(iviobs)=iobs
 	!	if(iotrans.gt.0)call dotrans(iotrans,1)
  
@@ -13461,10 +13572,10 @@ integer function j_iprintout(iob,idef)
 			j_iprintout=j_v( j_o(iob)%i( j_linkoption(iob,io,j_mprint)+1 ) )
 		else !if(j_o(iob)%i( j_linkoption(iob,io,j_mprint) ).gt.0)then
 			j_iprintout=idef
-		endif !if(j_o(iob)%i( j_linkoption(iob,io,j_mprint) ).gt.0)  13460
+		endif !if(j_o(iob)%i( j_linkoption(iob,io,j_mprint) ).gt.0)  13571
 	else !if(j_linkoption(iob,io,j_mprint).gt.0)then
 		j_iprintout=j_v(j_ivprintoutput)
-	endif !if(j_linkoption(iob,io,j_mprint).gt.0)  13459
+	endif !if(j_linkoption(iob,io,j_mprint).gt.0)  13570
 	return
 end function !integer function j_iprintout(iob,idef)
  
@@ -13486,14 +13597,14 @@ subroutine j_objargs(iob,io) !checking if arguments are named objects %%function
 	!end module vmod
  
 	do i=1,j_o(iob)%i(io+1)
-		if(j_o(iob)%i(io+i+1).gt.j_namedv)then
+		if(j_o(iob)%i(io+i+1).gt.j_named)then
 			write(6,*)'*arguments should be named objects'
 			j_err=.true.
 			exit
  
  
-		endif !if(j_o(iob)%i(io+i+1).gt.j_namedv)  13489
-	enddo !i=1,j_o(iob)%i(io+1)  13488
+		endif !if(j_o(iob)%i(io+i+1).gt.j_named)  13600
+	enddo !i=1,j_o(iob)%i(io+1)  13599
 	return
 end subroutine !subroutine j_objargs(iob,io)
  
@@ -13509,7 +13620,7 @@ recursive subroutine j_quick_sort(array, order)
  
 	do i_ = 1, size(array)
 		order(i_) = i_
-	enddo !i_ = 1, size(array)  13510
+	enddo !i_ = 1, size(array)  13621
  
 	call qsort(1, size(array))
  
@@ -13535,12 +13646,12 @@ recursive subroutine j_quick_sort(array, order)
 				do
 					i_ = i_ + 1
 					if (array(i_) >= refval_) exit
-				enddo !  13535
+				enddo !  13646
 				! search from the end of the search range for element <= value_
 				do
 					jj= jj - 1
 					if (array(jj) <= refval_) exit
-				enddo !  13540
+				enddo !  13651
  
 				if (i_ < jj) then
 					! Swap
@@ -13555,12 +13666,12 @@ recursive subroutine j_quick_sort(array, order)
 					exit
 				else !if (i_ < jj) then
 					exit
-				endif !if (i_ < jj)  13545
-			enddo !  13533
+				endif !if (i_ < jj)  13656
+			enddo !  13644
  
 			if (il < jj) call qsort(il, jj)
 			if (i_ < ir) call qsort(i_, ir)
-		end if !if (ir < il + maxsort)  13525
+		end if !if (ir < il + maxsort)  13636
  
 	end subroutine qsort !recursive subroutine qsort(il, ir)
  
@@ -13579,9 +13690,9 @@ recursive subroutine j_quick_sort(array, order)
 					itmp_ = order(i_)
 					order(i_) = order(jj)
 					order(jj) = itmp_
-				endif !if (array(i_) > array(jj))  13574
-			enddo !jj = i_+1, ir  13573
-		enddo !i_ = il, ir - 1  13572
+				endif !if (array(i_) > array(jj))  13685
+			enddo !jj = i_+1, ir  13684
+		enddo !i_ = il, ir - 1  13683
  
 	end subroutine swapsort !subroutine swapsort(il, ir)
  
@@ -13655,10 +13766,10 @@ subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
 		do  k=1,lkm
 			pien(k)=1.7e37
 			suur(k)=-1.7e37
-		end do ! k=1,lkm  13655
+		end do ! k=1,lkm  13766
 		return
  
-	endif !if(mets.eq.-2)  13640
+	endif !if(mets.eq.-2)  13751
 	if(mets.eq.-1)then  !finalization
  
  
@@ -13674,7 +13785,7 @@ subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
 			apu(1:napu)=apu2
 			deallocate(apu2)
 			napu=2*napu
-		endif !if(illu+lkm+1.gt.napu)  13669
+		endif !if(illu+lkm+1.gt.napu)  13780
  
 		apu(illu)=nm
 		illu=illu+1
@@ -13701,7 +13812,7 @@ subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
 				suw=suw+paino
 				su=su+paino*apu(ilpu+k)
 				ilpu=ilpu+lkm+1
-			end do !j=1,nmets  13699
+			end do !j=1,nmets  13810
 			bias2(k)=su/suw
 			! !     else
 			! bias2(k)=-9999.
@@ -13717,7 +13828,7 @@ subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
 			! t0(k)=0.d0
 			! st(k)=0.d0
  
-		end do !k=1,lkm  13682
+		end do !k=1,lkm  13793
  
 		deallocate(ta,sm,t0,st,apu)
 		! illu=1
@@ -13726,7 +13837,7 @@ subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
 		! s2out=s2
 		! s2=0.d0
 		return
-	end if !if(mets.eq.-1)  13662
+	end if !if(mets.eq.-1)  13773
  
 	if(mets.ne.metsv.and.metsv.ne.-1)then
 		!     if(nmets.le.mxmets)then
@@ -13738,14 +13849,14 @@ subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
 			apu(1:napu)=apu2
 			deallocate(apu2)
 			napu=2*napu
-		endif !if(illu+lkm+1.gt.napu)  13733
+		endif !if(illu+lkm+1.gt.napu)  13844
 		apu(illu)=nm
 		illu=illu+1
 		do k=1,lkm
 			apu(illu)=sm(k)/nm
 			illu=illu+1
  
-		end do !k=1,lkm  13744
+		end do !k=1,lkm  13855
 		!    end if
  
 		do  k=1,lkm
@@ -13753,7 +13864,7 @@ subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
 			ta(k)=ta(k)+sm(k)**2/nm
 			st(k)=st(k)+sm(k)
 			sm(k)=0.d0
-		end do ! k=1,lkm  13751
+		end do ! k=1,lkm  13862
  
 		s2=s2+nm**2
 		n=n+nm
@@ -13772,7 +13883,7 @@ subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
 		! suur(k)=-1.7e37
 		! end do
  
-	end if !if(mets.ne.metsv.and.metsv.ne.-1)  13731
+	end if !if(mets.ne.metsv.and.metsv.ne.-1)  13842
  
 	nm=nm+1
 	do k=1,lkm
@@ -13780,7 +13891,7 @@ subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
 		sm(k)=sm(k)+y(k)
 		pien(k)=amin1(pien(k),y(k))
 		suur(k)=amax1(suur(k),y(k))
-	end do !k=1,lkm  13778
+	end do !k=1,lkm  13889
 	metsv=mets
 	return
 end subroutine !subroutine j_dbw(mets,y,lkm,n,nmets,bias,sd,sb,sw,pien,suur, &
@@ -13810,7 +13921,7 @@ double precision function j_interplane(xi0,x1,xi2,yi0,y1,yi2,zi0,z1,zi2,xa,ya)
 		z0=zi2
 		! z1=zi1
 		z2=zi0
-	endif !if(yi0.ne.y1)  13793
+	endif !if(yi0.ne.y1)  13904
  
 	!write(6,*)x0,x1,x2,y0,y1,y2,z0,z1,z2,xa,ya
 	!write(6,*)y1-y0,((x2-x0)*(y1-y0)+(x1-x0)*(y2-y0))
@@ -13878,8 +13989,8 @@ subroutine eigen_(matin,n,ndim2,values)
 	do i=1,n
 		do j=i,n
 			a(i,j)=matin(i,j)   !j_o(arg(1))%r((i-1)*n+j)
-		end do !j=i,n  13879
-	end do !i=1,n  13878
+		end do !j=i,n  13990
+	end do !i=1,n  13989
 	uplo='U'
 	jobz='V'
 	NB = ILAENV( 1, 'DSYTRD', UPLO, N, -1, -1, -1 )
@@ -13903,7 +14014,7 @@ subroutine eigen_(matin,n,ndim2,values)
 	ELSE IF( ANRM.GT.RMAX ) THEN !IF( ANRM.GT.ZERO .AND. ANRM.LT.RMIN ) THEN
 		ISCALE = 1
 		SIGMA = RMAX / ANRM
-	END IF !IF( ANRM.GT.ZERO .AND. ANRM.LT.RMIN )  13900
+	END IF !IF( ANRM.GT.ZERO .AND. ANRM.LT.RMIN )  14011
 	IF( ISCALE.EQ.1 ) &
 		CALL DLASCL( UPLO, 0, 0, ONE, SIGMA, N, N, A, LDA, INFO )
 	! *
@@ -13936,9 +14047,9 @@ subroutine eigen_(matin,n,ndim2,values)
 			IMAX = N
 		ELSE !IF( INFO.EQ.0 ) THEN
 			IMAX = INFO - 1
-		END IF !IF( INFO.EQ.0 )  13935
+		END IF !IF( INFO.EQ.0 )  14046
 		CALL DSCAL( IMAX, ONE / SIGMA, W, 1 )
-	END IF !IF( ISCALE.EQ.1 )  13934
+	END IF !IF( ISCALE.EQ.1 )  14045
 	! C	call j_defmatrix(ivout,'%matrix',n,n,j_matreg,.false.,ivmat)
 	! C	do i=1,n
 	! C		do j=1,n
@@ -14106,7 +14217,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				call j_getinput('tr> ',inprint,single=.true.)
 				if(j_err)return
 				!				write(21,*)j_linp,j_inp(1:j_linp)
-			endif !if(istext)  14099
+			endif !if(istext)  14210
 			!		write(6,*)'<466464 getinputhere ',j_inp(1:j_linp)
  
 			call j_parent(j_inp,j_linp) !call j_parent(input(1:lopw))  !check parenthesis
@@ -14123,8 +14234,8 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					write(6,*)'*there cannot be two : in the same line'
 					j_err=.true.
 					return
-				endif !if(ikp2.le.j_linp.and.ihipsu.eq.0)  14122
-			endif !if(ikp.gt.0)  14120
+				endif !if(ikp2.le.j_linp.and.ihipsu.eq.0)  14233
+			endif !if(ikp.gt.0)  14231
  
 			if(ikp.gt.0.and..not.(ihipsu.gt.0.and.ihipsu.lt.ikp))then
 				ila=j_isin(j_inp(1:ikp-1),label,nlabel)
@@ -14132,7 +14243,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					if(ilabel(ila).ne.0)then
 						write(6,*)'label ',winput(i:ikp),' already defined'
 						j_err=.true.;goto 999
-					endif !if(ilabel(ila).ne.0)  14132
+					endif !if(ilabel(ila).ne.0)  14243
  
 				else !if(ila.gt.0)then
 					nlabel=nlabel+1
@@ -14144,18 +14255,18 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					!		ivlabel(nlabel)=iv
  
 					!	write(6,*)'label ',label(nlabel),' line ',nline
-				endif !if(ila.gt.0)  14131
+				endif !if(ila.gt.0)  14242
  
  
  
-			endif !if(ikp.gt.0.and..not.(ihipsu.gt.0.and.ihipsu.lt.ikp))  14129
+			endif !if(ikp.gt.0.and..not.(ihipsu.gt.0.and.ihipsu.lt.ikp))  14240
  
 			!	write(6,*)'<456>',j_inp(1:1)
  
 			if(j_inp(1:1).ne.'/')goto 1234 !continue getting source
 			j_inpara=.false.
 			!		write(6,*)'tas'
-		endif !if(j_ninc.gt.1)  14094
+		endif !if(j_ninc.gt.1)  14205
  
  
 		!start
@@ -14168,12 +14279,15 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			if(allocated(used))deallocate(used)
 			allocate(used(1:j_o(ivarg)%i(1)))
 			used=.false.
-		endif !if(isarg)  14162
+		endif !if(isarg)  14273
 		nline2=100000
 	else !if(input.eq.'trans')then
 		!		write(6,*)'<65',lop,input
  
- 
+		! if(j_inp(1:j_linp).eq.'return')then
+		! write(6,*)'return without ; is legal only within transformation'
+		! j_err=.true.;return
+		! endif
 		oneline=.true.
 		nline=1
 		nline2=1
@@ -14181,7 +14295,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			ip6=3
 		else
 			ip6=6
-		endif !if(j_ninc.eq.1)  14180
+		endif !if(j_ninc.eq.1)  14294
 		lopw=lop
 		!	if(input(lop:lop).eq.';')lopw=lopw-1
  
@@ -14201,12 +14315,12 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 		if(winput(1:3).eq.'do('.or.winput(1:5).eq.'enddo'.or.winput(1:5).eq.'goto('.or. &
 			winput(max(lop-4,1):lopw).eq.')then'.or.winput(1:lop).eq.'else'.or. &
 			winput(1:7).eq.'elseif('.or.winput(1:5).eq.'endif'.or.winput(1:6).eq.'while(' &
-				.or.winput(1:lop).eq.'endwhile')then
+				.or.winput(1:lop).eq.'endwhile'.or.winput(1:lop).eq.'return')then
 			write(6,*)'illegal at command level'
 			j_err=.true.;goto 999
-		endif !if(winput(1:3).eq.'do('.or.winput(1:5).eq.'enddo'.or.winpu  14201
+		endif !if(winput(1:3).eq.'do('.or.winput(1:5).eq.'enddo'.or.winpu  14315
  
-	endif !if(input.eq.'trans')  14069
+	endif !if(input.eq.'trans')  14180
  
  
 	if(winput(1:1).eq.',')then
@@ -14214,7 +14328,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 		j_err=.true.
 		return
  
-	endif !if(winput(1:1).eq.',')  14212
+	endif !if(winput(1:1).eq.',')  14326
 	isdo=.false.;isif=.false.;iselse=.false.;isifthen=.false.;isif2=.false.
 	nchildopt=0
 	issetel=.false.
@@ -14233,12 +14347,12 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				else !if(teku(nteku).lt.0)then
 					nteku=nteku+1
 					call teku(nteku,-1)
-				endif !if(j_o(ivteku)%i(nteku).lt.0)  14231
-			endif !if(nteku.gt.0)  14230
+				endif !if(j_o(ivteku)%i(nteku).lt.0)  14345
+			endif !if(nteku.gt.0)  14344
  
 			if(isder2)then
 				call endder(0)
-			endif !if(isder2)  14239
+			endif !if(isder2)  14353
  
 			!	if(.not.oneline)write(6,*)'<7w777>befget oneline ',oneline
 			if(.not.oneline)then
@@ -14251,8 +14365,8 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 					!			write(6,*)'*778',iline,j_linp,j_inp(1:j_linp)
 					!			j_o(j_inciv( j_ninc))%i(6)
-				endif !if(j_ninc.eq.1)  14245
-			endif !if(.not.oneline)  14244
+				endif !if(j_ninc.eq.1)  14359
+			endif !if(.not.oneline)  14358
  
 			!write(6,*)'<545454oneline',oneline,j_linp,j_inp(1:j_linp)
 			call j_parent(j_inp,j_linp) !call j_
@@ -14269,12 +14383,12 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 				write(6,*)j_inp(1:j_linp)
 				j_err=.true. ;return
-			endif !if(j_ninc.eq.1.and.ikp.gt.0.and..not.(ihipsu.gt.0.and.ihip  14267
+			endif !if(j_ninc.eq.1.and.ikp.gt.0.and..not.(ihipsu.gt.0.and.ihip  14381
 			if(ivsource.ne.0)then
  
 				if(j_ninc.eq.1)call j_puttext(ivsource,j_inp(1:j_linp))
 				call j_putoi2(ivsource,j_o(ivsource)%i(0),nteku)
-			endif !if(ivsource.ne.0)  14273
+			endif !if(ivsource.ne.0)  14387
 			!		else
 			!		call j_getline(ivsource,iline,j_inp,j_linp)
 			!		ikp=index(j_inp(1:j_linp),':')
@@ -14302,7 +14416,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					!		teku(nteku)=ivo
 					!		write(6,*)'<777',nteku,ivarg, 'isder2 TRUE'
 					call j_putoutput(j_o(ivteku)%i(nteku),ivinl,ivoutl,ivarg)
-				enddo !ina=1,nder  14297
+				enddo !ina=1,nder  14411
  
 				!			isder=.false.
 				isder2=.true.
@@ -14317,7 +14431,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					j_err=.true.
 					goto 999
  
-				endif !if(oneline)  14315
+				endif !if(oneline)  14429
 				!look the output from the next line
 				call j_getline(ivsource,iline+1,j_inpr2,linpr2)
  
@@ -14329,11 +14443,11 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				if(ilo.gt.linpr2)then
 					write(6,*)'der() should be followed by func='
 					j_err=.true. ;return
-				endif !if(ilo.gt.linpr2)  14329
+				endif !if(ilo.gt.linpr2)  14443
 				!		write(6,*)'<98? ',j_inpr2(ifst:ilo-1)
 				ivfunc=j_getobject(0,j_inpr2(ifst:ilo-1),j_ipreal)
 				if(j_err)return
-			endif !if(isder)  14290
+			endif !if(isder)  14404
  
  
 			! if(j_p2)write(6,*)' '
@@ -14351,18 +14465,18 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				if(ndo.gt.0)then
 					write(6,*)'there were ',ndo,' open do()'
 					j_err=.true.;goto 999
-				endif !if(ndo.gt.0)  14351
+				endif !if(ndo.gt.0)  14465
 				if(nifthen.gt.0)then
 					write(6,*)'there were ',ndo,' open if()then'
 					j_err=.true.;goto 999
-				endif !if(nifthen.gt.0)  14355
+				endif !if(nifthen.gt.0)  14469
  
 				if(isarg)then
 					do ii=1,j_o(ivarg)%i(1)
 						if(.not.used(ii))call j_printname('*wrn*, object ',j_o(ivarg)%i2(ii), &
 							' was in arg-list but was not used')
-					end do !ii=1,j_o(ivarg)%i(1)  14361
-				endif !if(isarg)  14360
+					end do !ii=1,j_o(ivarg)%i(1)  14475
+				endif !if(isarg)  14474
 				!		write(6,*)'<66ngotos',ngotos,ila,i
 				!	write(6,'(20i5/)')teku(1:nteku)
  
@@ -14403,14 +14517,14 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					call teku(nteku+2+nlabel,ilabel(nlabel))  !last first
 					if(nlabel.gt.1)j_o(ivteku)%i(nteku+3:nteku+1+nlabel)=ilabel(1:nlabel-1)
 					!	call teku(nteku+3:nteku+2+nlabel,ilabel(1:nlabel))
-				endif !if(nlabel.gt.0)  14401
+				endif !if(nlabel.gt.0)  14515
 				! endif !if(ngo2.gt.0)  13210
 				! endif !if(j_o(ivteku)%i(gotos(i)).eq.j_fgoto2)  13187
 				! enddo !i=1,ngotos  13184
 				! !		write(6,*)'exit'
 				exit
  
-			endif !if(j_inp(1:j_linp).eq.'/')  14348
+			endif !if(j_inp(1:j_linp).eq.'/')  14462
  
  
 			! if then structures:
@@ -14434,7 +14548,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					write(6,*)'line ',iline
 					j_err=.true.;goto 999
  
-				endif !if(nifthen.le.0)  14432
+				endif !if(nifthen.le.0)  14546
  
 				!is goto label needed
 				!	write(6,*)'endif ',nifthen,nifgoto(nifthen),iselse(nifthen),ioifthen(1:nifthen)
@@ -14443,7 +14557,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				do j=1,nifgoto(nifthen)
 					!		write(6,*)'into',ioifgoto(nifthen,j)+1,nteku+1
 					call teku(ioifgoto(nifthen,j)+1,nteku+1)   !goto adrress after doing sections
-				enddo !j=1,nifgoto(nifthen)  14443
+				enddo !j=1,nifgoto(nifthen)  14557
 				!		io=j_o(iob)%i(io+1)  !condition not satisfied
 				if(ioifthen(nifthen).gt.0)call teku(ioifthen(nifthen)+1,nteku+1)
 				if(j_p2)write(6,*)'after endif neku and teku',nteku
@@ -14476,7 +14590,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					write(6,*)'line ',iline
 					j_err=.true.
 					return
-				endif !if(nifthen.le.0)  14474
+				endif !if(nifthen.le.0)  14588
 				call teku(nteku+1,j_fgoto)  !bloop+7 )   !goto  nteku+2 reserved for
 				call teku(nteku+2,0)  !no arguments
 				!	write(6,*)'goto',nteku+1,j_fbloop+7
@@ -14496,7 +14610,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 				ioifthen(nifthen)=0  !there is no if8 to be updted at the end
 				cycle
-			endif !if(j_inp(1:j_linp).eq.'endif')  14431
+			endif !if(j_inp(1:j_linp).eq.'endif')  14545
  
  
 			if(j_linp.gt.lenwinput)then
@@ -14504,7 +14618,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				j_err=.true.;return
  
  
-			endif !if(j_linp.gt.lenwinput)  14502
+			endif !if(j_linp.gt.lenwinput)  14616
 			winput(1:j_linp)=j_inp(1:j_linp)
 			!		write(6,*)'goto9',winput(1:j_linp)
 			lopw=j_linp
@@ -14533,7 +14647,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				lopw=lopw-ikp
 				winput(1:lopw)=winput2(1:lopw)
 				!isgoto=j_inp(1:5).eq.'goto('
-			endif !if(ikp.gt.0.and..not.(ihipsu.gt.0.and.ihipsu.lt.ikp))  14514
+			endif !if(ikp.gt.0.and..not.(ihipsu.gt.0.and.ihipsu.lt.ikp))  14628
 			! isgoto=.false.
 			! if(j_inp(1:5).eq.'goto(')isgoto=.true.
 			!	isgoto=winput(1:5).eq.'goto('
@@ -14547,24 +14661,41 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 			!write(6,*)'tassa'
  
-		endif !if(.not.oneline)  14228
+		endif !if(.not.oneline)  14342
 		!	write(6,*)'tassapas',winput(1:lopw),oneline
 		!write(6,*)'isgototas ',isgoto
 		! let us treat all thos command which can be done without further interpretation
 		if(j_nextlim(winput(1:lopw),1,lopw,'=').gt.lopw.and.winput(lopw:lopw).eq.';'.and.&
 				winput(1:1).ne.'{')then
  
-			if(winput(lopw-1:lopw-1).eq.';')then
-				winput='printresult2('//winput(1:lopw-2)//')'  !13+1-2
+			if(winput(1:3).eq.'if(')then
+				lopw1=lopw-1
+				if(winput(lopw1:lopw1).eq.';')lopw1=lopw-2
+				lo=j_nextrp(winput,3,lopw)
+				!	iobj=j_getobject(0,winput(lo+1:lopw1),0,useold=.true.,silent=.true.)
+				!	if(iobj.gt.0)then
+				lopw2=lopw1+13
+				winput(lo+1:lopw2)='printresult('//winput(lo+1:lopw1)//')'
+				lopw=lopw2
  
+				!	write(6,*)'%%%%',winput(1:lopw)//'#'
 			else
-				winput='printresult('//winput(1:lopw-1)//')'  !12+1-1
  
-			endif !if(winput(lopw-1:lopw-1).eq.';')  14557
-			lopw=lopw+12
+				if(winput(lopw-1:lopw-1).eq.';')then
+					winput='printresult2('//winput(1:lopw-2)//')'  !13+1-2
+ 
+				else
+					winput='printresult('//winput(1:lopw-1)//')'  !12+1-1
+ 
+				endif !if(winput(lopw-1:lopw-1).eq.';')  14684
+				lopw=lopw+12
+ 
+			endif !if(winput(1:3).eq.'if(')  14671
 			!		write(6,*)'<515>',winput(1:lopw)
-		endif !if(j_nextlim(winput(1:lopw),1,lopw,'=').gt.lopw.and.winput  14554
+		endif !if(j_nextlim(winput(1:lopw),1,lopw,'=').gt.lopw.and.winput  14668
 		!	write(6,*)'<555 ',winput(1:lopw)
+ 
+ 
  
 		printout=winput(lopw:lopw).eq.';'
 		if(printout)lopw=lopw-1
@@ -14574,7 +14705,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			write(6,*)'*illegal ; -line'
 			j_err=.true.
 			return
-		endif !if(lopw.lt.1)  14573
+		endif !if(lopw.lt.1)  14704
 		if(j_p)write(6,*)'**PRINTOUT',printout,printout2,winput(1:lopw)
 		!	nnset=0  !node where setelem
 		ira=index(winput(1:lopw),'ran')
@@ -14593,13 +14724,13 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 							write(6,*)'random numbers can be put only to whole matrices '
 							j_err=.true.
 							return
-						endif !if(index(winput(1:ias),'-').gt.0.or.index(winput(1:ias),'A  14591
-					endif !if(ias.gt.0)  14590
+						endif !if(index(winput(1:ias),'-').gt.0.or.index(winput(1:ias),'A  14722
+					endif !if(ias.gt.0)  14721
  
  
-				endif !if(winput(ira:ipi).eq.'ran'.or.winput(ira:ipi).eq.'rann'.o  14587
-			endif !if(ipi.le.lopw)  14585
-		endif !if(ira.gt.0.and..not.(j_isletter(winput(ira1:ira1)).or.( w  14582
+				endif !if(winput(ira:ipi).eq.'ran'.or.winput(ira:ipi).eq.'rann'.o  14718
+			endif !if(ipi.le.lopw)  14716
+		endif !if(ira.gt.0.and..not.(j_isletter(winput(ira1:ira1)).or.( w  14713
 		!		write(6,*)'<6565winput',winput(1:lopw)
 		isif=.false.
 		isifthen=.false.
@@ -14617,13 +14748,15 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 		if(j_err)goto 999
 		if(j_p2)write(6,*)'<line after options> ', winput(1:lopw)
 		if(winput(1:3).eq.'if('.or.winput(1:7).eq.'elseif(')then
+			!	write(6,*)'kdfjfj'
 			isif=.true.
 			lo=j_nextrp(winput,3,lopw)
 			if(lo.gt.lopw)then
 				write(6,*)'unbalanced parenthesis in if('
 				j_err=.true.;goto 999
  
-			endif !if(lo.gt.lopw)  14622
+			endif !if(lo.gt.lopw)  14754
+ 
  
  
 			if(winput(lopw-4 :lopw).eq.')then'.or.winput(1:7).eq.'elseif(')then
@@ -14631,7 +14764,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					write(6,*)'if...then not allowed at command level'
 					j_err=.true.;goto 999
  
-				endif !if(oneline)  14630
+				endif !if(oneline)  14763
  
 				!	isif=.false.
 				isifthen=.true.
@@ -14648,7 +14781,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 						write(6,*)'no previous if( )then'
 						write(6,*)j_inp(1:j_linp),'   line ',iline
 						j_err=.true.;goto 999
-					endif !if(nifthen.le.0)  14647
+					endif !if(nifthen.le.0)  14780
 					if(winput(lopw-4 :lopw).eq.')then')lopw=lopw-4  !if then
 					!	call tekut(teku,nteku
 					!	subroutine else()
@@ -14668,9 +14801,10 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					if(j_p2)write(6,*)'aftelse nteku',nteku,' putto',ioifthen(nifthen)+1
 					if(j_p2)write(6,'(20i5/)')j_o(ivteku)%i(1:nteku)
  
-				endif !if(winput(1:3).eq.'if(')  14638
+				endif !if(winput(1:3).eq.'if(')  14771
 			else !if(winput(lopw-4 :lopw).eq.')then'.or.winput(1:7).eq.'elseif(')then
  
+				!		write(6,*)'tasny',winput(1:lopw),lopw,lo,winput(lo+1:lopw)
 				lopw2=lopw-lo
 				winput2(1:lopw2)=winput(lo+1:lopw)
 				lopw=lo
@@ -14678,7 +14812,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				!	if(j_p)write(6,*)'ISGOTO',isgoto
 				!				write(6,*)'<294 start if().....',winput2(1:lopw2),lopw2
  
-			endif !if(winput(lopw-4 :lopw).eq.')then'.or.winput(1:7).eq.'else  14629
+			endif !if(winput(lopw-4 :lopw).eq.')then'.or.winput(1:7).eq.'else  14762
  
  
  
@@ -14693,7 +14827,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			if(ndo.le.0)then
 				write(6,*)'there are no open do() at enddo at line ',iline
 				j_err=.true.;goto 999
-			endif !if(ndo.le.0)  14693
+			endif !if(ndo.le.0)  14827
 			!ntek=ntekuf(4)
 			call teku(nteku+1,j_fbloop+15)
 			call teku(nteku+2,iodo(ndo))   !one argument the io of the corrersponding do
@@ -14703,7 +14837,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			dosec(ndosec,2)=nteku
 			cycle
  
-		endif !if(winput(1:3).eq.'if('.or.winput(1:7).eq.'elseif(')  14619
+		endif !if(winput(1:3).eq.'if('.or.winput(1:7).eq.'elseif(')  14750
 		!		write(6,*)'<her ',j_nextlim(winput(1:lopw),1,lopw,'='),lopw,winput(1:lopw)
 		isif2=.false.
 		!	this is done twice if there is if()...    or if()    then  or elseif()
@@ -14713,13 +14847,13 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			!			write(6,*)'<100>'
 			!if(isif2)call getif2()
 			goto 888
-		endif !100		if(winput(1:lopw).eq.'return')  14710
+		endif !100		if(winput(1:lopw).eq.'return')  14844
 		iass=j_nextlim(winput,1,lopw,'=')
 		iass0=0
 		if(iass.eq.lopw.or.iass.eq.1)then
 			write(6,*)'command cannot start or end with ='
 			j_err=.true.;goto 999
-		endif !if(iass.eq.lopw.or.iass.eq.1)  14719
+		endif !if(iass.eq.lopw.or.iass.eq.1)  14853
 		if(iass.lt.lopw)iass0=iass
 		if(j_p2.and.isif2)write(6,*)'<6363iass,iass0',iass,iass0,lopw
 		if(iass.gt.lopw)then
@@ -14728,7 +14862,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			iass=7
 			iass0=7
 			lopw=lopw+7
-		endif !if(iass.gt.lopw)  14725
+		endif !if(iass.gt.lopw)  14859
 		!	write(6,*)
 		winput='list2('//winput(1:iass-1)//')=list2('//winput(iass+1:lopw)//')'
 		lopw=lopw+14
@@ -14742,8 +14876,8 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				write(6,*)'<line after options> ', winput(1:lopw)
 			else !if(lopw.lt.lopw0)then
 				write(6,*)'<no optionss>'
-			endif !if(lopw.lt.lopw0)  14741
-		endif !if(j_p2)  14740
+			endif !if(lopw.lt.lopw0)  14875
+		endif !if(j_p2)  14874
 		!write(6,*)'<line after options> ',lopw, winput(1:lopw)
 		call polishall(winput,lopw)
 		if(j_err)goto 999
@@ -14772,12 +14906,12 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 						write(6,*)'**option can be followed only with options'
 						j_err=.true.;return
  
-					endif !if(node(isist).ne.1.and.node(isist).ne.8)  14771
+					endif !if(node(isist).ne.1.and.node(isist).ne.8)  14905
 					isist=sister(isist)
-				enddo !while(isist.ne.0)  14770
-			endif !if(node(in).eq.1.or.node(in).eq.8)  14767
+				enddo !while(isist.ne.0)  14904
+			endif !if(node(in).eq.1.or.node(in).eq.8)  14901
  
-		enddo !in=1,nn  14757
+		enddo !in=1,nn  14891
  
 		if(j_err)goto 999
  
@@ -14797,11 +14931,11 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				elseif(ivo.gt.j_nv)then
 					write(6,*)'*constant cannot be output'
 					j_err=.true.;goto 999
-				endif !if(ivo.le.j_locked)  14794
+				endif !if(ivo.le.j_locked)  14928
 				if(isinout)call j_putoutput(ivo,ivinl,ivoutl,ivarg)
-			end if !if(ivo.ne.j_ivresult.and.ivo.gt.0)  14791
+			end if !if(ivo.ne.j_ivresult.and.ivo.gt.0)  14925
 			ini=sister(ini)
-		enddo !while(ini.gt.0)  14789
+		enddo !while(ini.gt.0)  14923
  
 		nin=0
  
@@ -14811,11 +14945,11 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				!		write(6,*)'ini,ivo,',ini,ivo
 				nin=nin+1
 				inlist(nin)=ivo
-				if(ivo.le.j_namedv.and.isinout.and.node(mother(ini)).ne.j_fpause)&
+				if(ivo.le.j_named.and.isinout.and.node(mother(ini)).ne.j_fpause)&
 					call j_putinput(ivo,ivinl,ivoutl,ivarg)
-			endif !if(ivo.gt.0)  14810
+			endif !if(ivo.gt.0)  14944
  
-		enddo !ini=child(sister(2)),nn  14808
+		enddo !ini=child(sister(2)),nn  14942
  
 		ntekuv=nteku
 		noption=0
@@ -14839,12 +14973,12 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			write(6,'(a,(20i5/))')'<gtasfo>',j_o(ivteku)%i(1:nteku)
 			write(6,*)'noption,noption2',noption,noption2,iass0,nteku,ntekuv
  
-		end if !if(j_p2)  14836
+		end if !if(j_p2)  14970
 		if(isdo)then
 			call getdo()
 			if(j_err)goto 999
 			cycle mainloop
-		endif !if(isdo)  14843
+		endif !if(isdo)  14977
 		!write(6,*)'p3**',j_p3
 		if(j_p3)write(6,*)'<777i ,iass0,nargo,nteku,ntekuv',iass0,nargo,nteku,ntekuv
 		if(nteku.eq.ntekuv)then
@@ -14865,7 +14999,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					if(nin.le.0)then
 						write(6,*)'*syntax error, input list empty'
 						j_err=.true.;return
-					endif !if(nin.le.0)  14865
+					endif !if(nin.le.0)  14999
 					call teku(nteku+nin,inlist(nin))
 					if(nin.gt.1)j_o(ivteku)%i(nteku+1:nteku+nin-1)=inlist(1:nin-1)
  
@@ -14879,11 +15013,11 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					! narin=j_o(iob)%i(io+1)
  
  
-				endif !if(nin.eq.1.and.nin.eq.nout)  14852
+				endif !if(nin.eq.1.and.nin.eq.nout)  14986
 			else !if(iass0.gt.0)then
 				outlist(1:nin)=inlist(1:nin)  !to print correctly
 				nout=nin
-			endif !if(iass0.gt.0)  14851
+			endif !if(iass0.gt.0)  14985
 		elseif(nout.eq.1)then !  .and..not.isgoto)then !if(nteku.eq.ntekuv)then
 			call teku(nteku,outlist(1))
 			! nteku position has the temporal
@@ -14894,19 +15028,19 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			! argout=>j_o(iob)%i(io+3+narin:io+2+narin+narout)
 			! ion=io+narin+narout+3
  
-		endif !if(nteku.eq.ntekuv)  14850
+		endif !if(nteku.eq.ntekuv)  14984
 		do iop=1,noption
 			ilo=optionloc(iop)
 			!		if(j_p.and.ilo+j_o(ivteku)%i(ilo+2)+3.eq.61)stop 'here'
 			call teku(ilo+j_o(ivteku)%i(ilo+2)+3,nodetoteku( optionmother(iop)))
 			if(j_p2)write(6,*)' optionloc ', ilo, 'teku ',ilo+j_o(ivteku)%i(ilo+2)+3,j_o(ivteku)%i(ilo+j_o(ivteku)%i(ilo+2)+3)
 			optionlocout(iop)=optionloc(iop)
-		enddo !iop=1,noption  14898
+		enddo !iop=1,noption  15032
 		if(j_p2.and.noption.gt.0)write(6,'(a,(20i5/))')'<finopt>',j_o(ivteku)%i(1:nteku)
 		do iop=1,noption2
 			ilo=optionloc2(iop)
 			call teku(ilo+4,nodetoteku( optionmother2(iop)))
-		enddo !iop=1,noption2  14906
+		enddo !iop=1,noption2  15040
 		if(j_p2.and.noption2.gt.0)write(6,'(a,(20i5/))')'<finopt2>',j_o(ivteku)%i(1:nteku)
 		if(nin.eq.nout.and.nin.eq.1.and.nteku.gt.ntekuv)then ! .and..not.isgoto)then
 			if(j_p3)write(6,*)'NIN,nout,nteku,ntekuv',nin,nout,nteku,ntekuv !,' ISGOTO ',isgotoisgoto
@@ -14915,10 +15049,10 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			if(.not.(nin.eq.1.and.nout.gt.1.or.nout.eq.1.or.nin.eq.nout))then
 				write(6,*)'illegal assignment nin, nout ',nin,nout
 				j_err=.true.;goto 999
-			endif !if(.not.(nin.eq.1.and.nout.gt.1.or.nout.eq.1.or.nin.eq.nou  14915
+			endif !if(.not.(nin.eq.1.and.nout.gt.1.or.nout.eq.1.or.nin.eq.nou  15049
  
  
-		endif !if(nin.eq.nout.and.nin.eq.1.and.nteku.gt.ntekuv)  14911
+		endif !if(nin.eq.nout.and.nin.eq.1.and.nteku.gt.ntekuv)  15045
  
 		if(node3.eq.j_fsetelem)then
 			!iout=j_o(iob)%i(io+2+narg)
@@ -14926,7 +15060,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			nar=j_o(ivteku)%i(li+1)
 			call teku( li+2+nar,-(node(child(sister(2))))  )  !inlist(nin)
 			if(j_p)write(6,*)'setelem li,nar,li+2+nar',li,nar,li+2+nar
-		endif !if(node3.eq.j_fsetelem)  14923
+		endif !if(node3.eq.j_fsetelem)  15057
 		if(printout)then
 			if(j_p2)write(6,*)'node(3:4)',node3,node4,j_fsetelem,'j_fbio+ip6',j_fbio,ip6
 			!ntek=ntekuf(4)
@@ -14954,7 +15088,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				call teku(nteku,j_ivresult)
 				if(j_p3)write(6,*)'<444result ',nteku
 				!			write(6,*)'prinnytas,ntekuivres ',nteku,'isgoto ',isgoto,winput(1:lopw)
-			endif !if(node3.eq.j_fsetelem)  14938
+			endif !if(node3.eq.j_fsetelem)  15072
  
 			! if(nin.eq.nout)then
 			! nout2=0
@@ -14974,7 +15108,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			! enddo
 			! endif
  
-		endif !if(printout)  14930
+		endif !if(printout)  15064
 		if(j_p)write(6,*)'bef888 '
 888	  continue
 		if(j_p)write(6,*)'*isif ifuif,isif2,',isif, ifuif,isif2
@@ -15034,7 +15168,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				isif2=.true.
 				if(j_p)write(6,*)'goto100 tas ',winput2(1:lopw2),' isif2',isif2 !,' isgoto ',isgoto
 				goto 100
-			endif !if(isifthen)  14998
+			endif !if(isifthen)  15132
 		elseif(isif2)then !if(isif)then
 			!	write(6,*)'<555isif2**************** ifuif',ifuif,nteku+1,j_inp(1:j_linp)
 			!	write(6,'(20i5)')teku(1:nteku)
@@ -15046,10 +15180,10 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			isif2=.false.
  
  
-		endif !if(isif)  14981
+		endif !if(isif)  15115
 		if(oneline)exit mainloop
 		!	if(oneline)exit
-	enddo mainloop !nloop:	do iline=1,nline2  14223
+	enddo mainloop !nloop:	do iline=1,nline2  14337
  
 	!ntek=ntekuf(2)
 	call teku(nteku+1,0)
@@ -15061,7 +15195,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 		write(6,'(20i5/)')j_o(ivteku)%i(1:nteku+1)
  
 		if(nlabel.gt.0)write(6,*) 'labelpart ',j_o(ivteku)%i(nteku+2:nteku+nlabel+3)
-	endif !if(j_p3)  15059
+	endif !if(j_p3)  15193
 999	if(j_err)then
 !write(6,*)'line ',iline
 
@@ -15069,7 +15203,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 		nteku=0
 		call teku(1,0)
 		call teku(0,0)
-	endif !999	if(j_err)  15065
+	endif !999	if(j_err)  15199
 	! if(minval(teku(1:nteku+1)).lt.0)then
 	! write(6,*)'syntax errror, vector '
 	! write(6,'(20i5/)')teku(1:nteku+1)
@@ -15094,11 +15228,11 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					deallocate(j_o(it)%d)
 				else !if(size(j_o(it)%d).lt.nder)then
 					cycle
-				endif !if(size(j_o(it)%d).lt.nder)  15093
-			endif !if(allocated(j_o(it)%d))  15092
+				endif !if(size(j_o(it)%d).lt.nder)  15227
+			endif !if(allocated(j_o(it)%d))  15226
 			!	write(6,*)'<888999it',it,nder
 			allocate(j_o(it)%d(1:2*nder)) !make a reserve
-		enddo !it=j_mxnamedv+j_mxtemporalv0+1,itemporalv+1  15091
+		enddo !it=j_mxnamedv+j_mxtemporalv0+1,itemporalv+1  15225
 		isder=.false.
 		isder2=.false.
 		!		write(6,*)'isder2 valse here'
@@ -15119,7 +15253,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			j_o(ivteku)%i(0)=max(i0,ipos)
 			deallocate(tempteku)
 			ntekumax=2*ntekumax
-		endif !if(ipos.gt.ntekumax)  15110
+		endif !if(ipos.gt.ntekumax)  15244
 		j_o(ivteku)%i(ipos)=ival
  
  
@@ -15139,11 +15273,11 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			write(6,*)'do() illegal number of arguments'
 			j_err=.true.
 			return
-		endif !if(j_o(ivteku)%i(niin+1).eq.3)  15132
-		if(j_o(ivteku)%i(niin+2).gt.j_namedv)then
+		endif !if(j_o(ivteku)%i(niin+1).eq.3)  15266
+		if(j_o(ivteku)%i(niin+2).gt.j_named)then
 			write(6,*)'do() first argument must be named variable'
 			j_err=.true.;return
-		endif !if(j_o(ivteku)%i(niin+2).gt.j_namedv)  15143
+		endif !if(j_o(ivteku)%i(niin+2).gt.j_named)  15277
 		nteku=nteku+2    !the outputvariable is not needed
  
 		ndo=ndo+1
@@ -15285,7 +15419,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			goto 17
 		elseif(winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')then !if(winput(ial:ial).eq.'.')then
 			goto 2
-		endif !if(winput(ial:ial).eq.'.')  15281
+		endif !if(winput(ial:ial).eq.'.')  15415
 		ial=2
  
  
@@ -15312,28 +15446,28 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 						if(winput(ial:ial).ne.','.and.winput(ial:ial).ne.')')then
 							write(6,*)"*illegal continuation after '", winput(ial:lopw)
 							j_err=.true.;return
-						endif !if(winput(ial:ial).ne.','.and.winput(ial:ial).ne.')')  15312
-					endif !if(ial.lt.lopw)  15311
+						endif !if(winput(ial:ial).ne.','.and.winput(ial:ial).ne.')')  15446
+					endif !if(ial.lt.lopw)  15445
  
-				endif !if(.not.hipsu)  15301
+				endif !if(.not.hipsu)  15435
 				hipsu=.not.hipsu
  
 				if(ial.gt.lopw)return
 				cycle
-			endif !if(winput(ial:ial).eq."'")  15300
+			endif !if(winput(ial:ial).eq."'")  15434
 			if(hipsu)then
 				ial=ial+1
 				if(ial.gt.lopw)return
 				cycle
-			endif !if(hipsu)  15324
+			endif !if(hipsu)  15458
 			if(winput(ial:ial+2).eq.'...')then
 				ial=ial+3
 				if(ial.gt.lopw)then
 					write(6,*)'input cannot end with ...'
 					j_err=.true.;return
-				endif !if(ial.gt.lopw)  15331
+				endif !if(ial.gt.lopw)  15465
 				cycle
-			endif !if(winput(ial:ial+2).eq.'...')  15329
+			endif !if(winput(ial:ial+2).eq.'...')  15463
 			if(winput(ial:ial).eq."[")haka=.true.
 			if(winput(ial:ial).eq."]")haka=.false.
 			if(winput(ial:ial).lt.'0'.or.winput(ial:ial).gt.'9')namenum=.false.
@@ -15343,16 +15477,16 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			if(ial.gt.lopw)return
  
  
-		enddo !while (.not.j_isnumber(winput(ial-1:ial+1)).or.hipsu.or.ha  15298
+		enddo !while (.not.j_isnumber(winput(ial-1:ial+1)).or.hipsu.or.ha  15432
  
 		if(j_isletter(winput(ial-1:ial-1)).and.winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')then
 			ial=ial+1
 			do while (winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')
 				ial=ial+1
 				if(ial.gt.lopw)return
-			enddo !while (winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')  15350
+			enddo !while (winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')  15484
 			goto 1
-		endif !if(j_isletter(winput(ial-1:ial-1)).and.winput(ial:ial).ge.  15348
+		endif !if(j_isletter(winput(ial-1:ial-1)).and.winput(ial:ial).ge.  15482
 		!	namenum=.false.
 		ial0=ial
 		if(j_p)write(6,*)'ial here',ial,winput(ial0:ial0)
@@ -15365,8 +15499,8 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			elseif(winput(ial-2:ial-2).eq.'('.or.winput(ial-2:ial-2).eq.'='.or.& !if(ial1.eq.1)then
 					winput(ial-2:ial-2).eq.',')then
 				ial0=ial1
-			endif !if(ial1.eq.1)  15363
-		endif !if(winput(ial1:ial1).eq.'+'.or.winput(ial1:ial1).eq.'-')  15362
+			endif !if(ial1.eq.1)  15497
+		endif !if(winput(ial1:ial1).eq.'+'.or.winput(ial1:ial1).eq.'-')  15496
 		! ial1=ial1-1
 		! ine=j_nextlim(winput,ial1-1,ial1-1,',(=')
 		! if(j_p)write(6,*)'<72 ,ial1,ine,ine.eq.ial1-1',ial1,ine,ine.eq.ial1-1
@@ -15383,7 +15517,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 			ial=ial+1
 			if(ial.gt.lopw)goto 3
-		enddo !while (winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')  15382
+		enddo !while (winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')  15516
  
 		if(winput(ial:ial).eq.'e'.or. &
 				winput(ial:ial).eq.'E'.or.winput(ial:ial).eq.'d'.or.winput(ial:ial).eq.'D')then
@@ -15394,9 +15528,9 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			do while (winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')
 				ial=ial+1
 				if(ial.gt.lopw)goto 3
-			enddo !while (winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')  15394
+			enddo !while (winput(ial:ial).ge.'0'.and.winput(ial:ial).le.'9')  15528
 			if(ial.eq.iala)goto 99
-		endif !if(winput(ial:ial).eq.'e'.o  15388
+		endif !if(winput(ial:ial).eq.'e'.o  15522
 		lis=0
 17		if(winput(ial:ial).eq.'.')then
 			iip=j_nextlim(winput,ial+1,ial+5,'.')
@@ -15410,16 +15544,16 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					if(ial.eq.1)then
 						ial=iip+1
 						goto 1
-					endif !if(ial.eq.1)  15410
+					endif !if(ial.eq.1)  15544
 					lis=iip-ial  !-1 -(ial+1) +2=iip-1-ial-1+2
 					goto 31
-				endif !if(ilo.gt.0)  15409
-			endif !if(iip.gt.0)  15405
+				endif !if(ilo.gt.0)  15543
+			endif !if(iip.gt.0)  15539
  
 			if(waspiste)goto 99
 			!	write(6,*)'continuenumber,ial',ial,winput(ial:ial)
 			goto 2 !continue number
-		endif !17		if(winput(ial:ial).eq.'.')  15401
+		endif !17		if(winput(ial:ial).eq.'.')  15535
 3		continue  !test number element ial is first which does not belong to number
 		!number must be followed by some delimiter
 		if(j_p)write(6,*)'<587 ial,winput',ial,winput(ial:ial)
@@ -15443,7 +15577,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			if(abs(ii2-ii1).gt.40)then
 				write(6,*)'only 40 constants can be generated with ...'
 				j_err=.true.;return
-			endif !if(abs(ii2-ii1).gt.40)  15443
+			endif !if(abs(ii2-ii1).gt.40)  15577
 			istep=1
 			if(ii2.lt.ii1)istep=-1
 			if(lopw.gt.ial1)j_tempchar(1:lopw-ial1)=winput(ial1+1:lopw)
@@ -15468,18 +15602,18 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					iial=iial+lec
 					!		 write(6,*)winput(1:iial),'/##'
  
-				endif !if(iij.eq.1)  15453
+				endif !if(iij.eq.1)  15587
 				if(iij.ne.ii2)then
 					iial=iial+1
 					winput(iial:iial)=','
 					!		write(6,*)winput(1:iial),'/##&&'
-				endif !if(iij.ne.ii2)  15472
-			enddo !iij=ii1,ii2,istep  15452
+				endif !if(iij.ne.ii2)  15606
+			enddo !iij=ii1,ii2,istep  15586
 			if(lopw.le.ial1)then
 				lopw=iial
 				!	write(6,*)'tas:',winput(1:lopw)
 				return
-			endif !if(lopw.le.ial1)  15478
+			endif !if(lopw.le.ial1)  15612
 			winput(iial+1:iial+lopw-ial0)=j_tempchar(1:lopw-ial0)
  
 			lopw=iial+lopw-ial1
@@ -15488,7 +15622,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			!	write(6,*)'taspa:',ial,lopw,winput(1:lopw)
 			if(ial.gt.lopw)return
 			goto 1
-		endif !if(idots.gt.0)  15432
+		endif !if(idots.gt.0)  15566
  
  
  
@@ -15522,7 +15656,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			call j_repse(winput,ial0,ial1,lopw,iii,ial) !ial uusi aslku
  
 			if(j_p)write(6,*)ialnew,winput(1:ial-1)//'#'//winput(ial:lopw)
-		endif !if(iii.eq.j_ivone)  15497
+		endif !if(iii.eq.j_ivone)  15631
 		if(j_p)write(6,*)'<3636 ial,ialnew,lis,lopw',ial,ial+lis+1,lis,lopw
 		ial=ial+lis+1
 		if(ial.gt.lopw)return
@@ -15542,7 +15676,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 		do while(ial.lt.lopw)
 			do jii=ial-1,1,-1
 				if(winput(jii:jii).eq.','.or.winput(jii:jii).eq.'(')goto 178
-			enddo !jii=ial-1,1,-1  15543
+			enddo !jii=ial-1,1,-1  15677
 			write(6,*)'illegal ->',ial,lopw,winput(1:lopw)
 			j_err=.true.;return
 178				iopt=j_isin(winput(jii+1:ial-1),j_options,j_noptions)
@@ -15556,10 +15690,10 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				elseif(winput(jii+1:ial-1).eq.'result')then
 					write(6,*)'transformation tr can provide object Ob by tr(Ob), see manual '
  
-				endif !if(winput(jii+1:ial-1).eq.'input')  15552
+				endif !if(winput(jii+1:ial-1).eq.'input')  15686
 				j_err=.true.
 				return
-			endif !if(iopt.le.0)  15550
+			endif !if(iopt.le.0)  15684
 			chii=j_chi5(iopt,1)
 			lec=len_trim(chii)
  
@@ -15582,7 +15716,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				if(iper.lt.loo)then
 					write(6,*) 'illegal option ',j_options(iopt)
 					j_err=.true.;return
-				endif !if(iper.lt.loo)  15582
+				endif !if(iper.lt.loo)  15716
 				ir=j_nextrp(winput,lop,lopw)
 				winput=winput(1:jii)//'setoption('//chii(1:lec)//','//&
 					winput(ial+2:ir)//')'//winput(ir+1:lopw)
@@ -15591,10 +15725,10 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				winput=winput(1:jii)//'setoption('//chii(1:lec)//','//&
 					winput(ial+2:lop-1)//')'//winput(lop:lopw)
  
-			endif !if(winput(ial+2:ial+2).eq.'(')  15567
+			endif !if(winput(ial+2:ial+2).eq.'(')  15701
 			lopw=len_trim(winput)
 			ial=j_nextword(winput,jii+10+lec,lopw,'->')
-		enddo !while(ial.lt.lopw)  15542
+		enddo !while(ial.lt.lopw)  15676
 		!write(6,*)'<222>',lope, winput(1:lopw)
  
 	end subroutine !subroutine getoptions()
@@ -15653,7 +15787,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			!	if(j_p)write(6,*)'<666STARTing node******** ',nn+1,win(ial2:ial1),'%',win(ial:ir-1),'#',ir,win(ir:ir)
 			if(ial.eq.le)then
 				if(win(le-1:le).eq.'()')exit
-			endif !if(ial.eq.le)  15654
+			endif !if(ial.eq.le)  15788
 			! inde=index(win(ial:le),'()')
 			! if(inde.gt.0)write(6,*)'ial,le,inde()',ia,le,inde
  
@@ -15661,12 +15795,12 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			if(nn.gt.maxnode)then
 				write(6,*)'*j* increase maxnode'
 				j_err=.true.;return
-			endif !if(nn.gt.maxnode)  15661
+			endif !if(nn.gt.maxnode)  15795
 			!	write(6,*)'startnode ',nn,' ial,le ',ial,le
 			ir1=ir-1
 			ir9=ir
 			if(ir.gt.le)ir9=ir1
- 
+			iv=0
 			!*************** new level
 			!new level
 			if(win(ir9:ir9).eq.'(')then  !at the end this is not true but we do not refer outsdie win
@@ -15688,8 +15822,8 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 						j_err=.true.
 						return
-					endif !if(node(mother(nn)).eq.4)  15682
-				endif !if(iv.eq.1)  15681
+					endif !if(node(mother(nn)).eq.4)  15816
+				endif !if(iv.eq.1)  15815
 				!		if(nn.eq.10)write(6,*)'tasmutsiee*********%%%%%%%%%%%%',mothers(level+1),&
 				!		'level ',level,levels(nn)
  
@@ -15701,7 +15835,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					sister(lastchild(mutsi))=nn
 					brother(nn)=lastchild(mutsi)
 					!			if(nn.eq.10)write(6,*)'tasbro7474747ther10ee*********%%%%%%%%%%%%'
-				endif !if(nchild(mutsi).eq.0)  15698
+				endif !if(nchild(mutsi).eq.0)  15832
 				nchild(mutsi)=nchild(mutsi)+1
 				lastchild(mutsi)=nn
  
@@ -15713,6 +15847,8 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
  
 				!	levels(nn)=level
+ 
+				!			write(6,*)'ivhere',iv
 				if(iv.gt.0)then !functions are stored with positive value
  
 					node(nn)=iv
@@ -15731,7 +15867,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					if(win(ial:ial).ge.'0'.and.win(ial:ial).le.'9')then
 						write(6,*)'( at loc ',ir9,' cannot be preceded by a constant'
 						j_err=.true.;return
-					endif !if(win(ial:ial).ge.'0'.and.win(ial:ial).le.'9')  15731
+					endif !if(win(ial:ial).ge.'0'.and.win(ial:ial).le.'9')  15867
 					!	write(6,*)'djjdjdj'
  
 					if(ir1.ge.ial)then
@@ -15740,12 +15876,14 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 								win(ial-1:ial-1).ne.'('))then
 							!goto(igo,ad1,ad2) igo is not address others are
 							call getiv(win(ial:ir1),iv,.true.)
+							if(j_p)write(6,*)'getivhere ',iv
 							! call j_getname(iv)
 							! write(6,*)'ivgototas',j_oname(1:j_loname)
  
 						else
 							call getiv(win(ial:ir1),iv,.false.)
-						endif !if(isgotonew.and.(win(ial-1:ial-1).eq.'('.and.win(ir1+1:ir  15739
+							if(j_p)write(6,*)'getivhere2 ',iv
+						endif !if(isgotonew.and.(win(ial-1:ial-1).eq.'('.and.win(ir1+1:ir  15875
  
 						!	iv=j_object(win(ial:ir1)) !is it kno object
  
@@ -15760,13 +15898,13 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 						child(nn)=nn+1
 						nchild(nn)=1
-						if(iv.eq.1)nchildopt(nn)=1
+						!			if(iv.eq.1)nchildopt(nn)=1
 						lastchild(nn)=nn+1
 						nn=nn+1
 						if(nn.gt.maxnode)then
 							write(6,*)'*j* increase maxnode'
 							j_err=.true.;return
-						endif !if(nn.gt.maxnode)  15766
+						endif !if(nn.gt.maxnode)  15904
 						levels(nn)=level
 						node(nn)=-iv
 						!		islabel(nn)=j_intloc(ivlabel,nlabel,iv).gt.0
@@ -15776,17 +15914,17 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 						!				if(nn.eq.10)write(6,*)'mude%%%%%level',mothers(level+1)
 						if(j_p)write(6,*)'***MAKING NODE ',nn,node(nn), ' mutsi ',mother(nn),nchild(nn)
 						if(j_p)write(6,*)'WWWIIN',win(ial:ial+2)
-					endif !if(ir1.ge.ial)  15737
+					endif !if(ir1.ge.ial)  15873
 					if(j_p.and.iv.eq.0)write(6,*)'ZERO,nn',nn
  
  
-				endif !if(iv.gt.0)  15716
+				endif !if(iv.gt.0)  15852
 				ial=ir+1
 				if(ial.gt.le)then
 					write(6,*)'illegal syntax at the end (1)'
 					j_err=.true.
 					return
-				endif !if(ial.gt.le)  15785
+				endif !if(ial.gt.le)  15923
  
 				if(j_p)write(6,*)'<333>',win(1:le), 'looking',win(1:ir+1)
  
@@ -15796,11 +15934,11 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					child(nn)=0
 					lastchild(mother(nn))=nn
 					level=level-1
-				endif !if(win(ir+1:ir+1).eq.')')  15793
+				endif !if(win(ir+1:ir+1).eq.')')  15931
 				if(j_p2)write(6,*)'cyclehere,IV',iv
 				!if(iv.eq.0)nn=nn-1
 				cycle
-			endif !if(win(ir9:ir9).eq.'(')  15672
+			endif !if(win(ir9:ir9).eq.'(')  15806
 			!! ***************************************end ( and new level
  
 			!not : if(win(ir9:ir9).eq.'(')  nex limiter was , or )  in any casenew child for mother
@@ -15810,7 +15948,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				write(6,*)win(1:min(le,ir9+1))
 				j_err=.true.
 				return
-			endif !if(win(ir9:min(le,ir9+1)).eq.',,')  15808
+			endif !if(win(ir9:min(le,ir9+1)).eq.',,')  15946
  
 			isat=win(ial:ial).eq.'@'
 			if(j_p)write(6,*)'TASSA OLLAAN, node ial, ir1',nn,ial,ir1,win(ial:ir1),win(1:lopw)
@@ -15822,7 +15960,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				ial=ial+1
 				level=level-1
 				cycle
-			endif !if(ial.gt.ir1)  15818
+			endif !if(ial.gt.ir1)  15956
 			ilist=0
 			nlist=0
 			if(ir1.ge.ial)then
@@ -15848,18 +15986,18 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 						if(iv.le.0)then
 							write(6,*)win(ial+1:iir),' is not an object'
 							j_err=.true.;return
-						endif !if(iv.le.0)  15848
+						endif !if(iv.le.0)  15986
 						if(j_otype(iv).ne.j_iplist)then
 							call j_printname('* ',iv,' is not a list')
 							j_err=.true.;return
-						endif !if(j_otype(iv).ne.j_iplist)  15852
+						endif !if(j_otype(iv).ne.j_iplist)  15990
 						nlist=j_o(iv)%i(1)
 						if(.not.allocated(j_dotlist))then
 							allocate(j_dotlist(1:max(100,nlist)))
 						elseif(size(j_dotlist).lt.nlist)then
 							deallocate(j_dotlist)
 							allocate(j_dotlist(1:nlist))
-						endif !if(.not.allocated(j_dotlist))  15857
+						endif !if(.not.allocated(j_dotlist))  15995
  
 						j_dotlist(1:nlist)=j_o(iv)%i2(1:nlist)
 						if(j_p)write(6,*)'<7377@list',j_dotlist(1:nlist)
@@ -15876,17 +16014,19 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 							!goto(igo,ad1,ad2) igo is not address others are
 							call getiv(win(ial:iir),iv,.true.)
+							if(j_p)write(6,*)'getivhere3 ',iv
 							!				call j_getname(iv)
 							!		write(6,*)'gotoivhere ',win(ial:iir),iv,j_inp(1:j_linp),'j_yes',j_yes
 							!		if(j_yes
  
 						else
 							call getiv(win(ial:iir),iv,.false.)
-						endif !if(isgotonew.and.(j_yes.o  15873
+							if(j_p)write(6,*)'getivhere4 ',iv
+						endif !if(isgotonew.and.(j_yes.o  16011
 						!	call getiv(win(ial:iir),iv,isgotonew)
 						if(j_err.or.nexist)return
 						ilist=0
-					endif !if(isat)  15845
+					endif !if(isat)  15983
  
 					! if(isgoto2.and.ila.gt.0.and.idots.gt.0)then
 					! write(6,*)'dots .. does not work with labels (yet)'
@@ -15897,7 +16037,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					if(j_p)write(6,*)win(ial+1:iir),' ivtas ',iv,win(ial:iir)
  
  
-				endif !if(win(ial:ial).ge.'0'.and.win(ial:ial).le.'9')  15830
+				endif !if(win(ial:ial).ge.'0'.and.win(ial:ial).le.'9')  15968
  
  
  
@@ -15923,7 +16063,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					!			write(6,*)'nlist ',nlist
 					if(j_err)write(6,*)win(max(1,ir1-15):ir1)
 					!write(6,*)'<43iv,iv2,nlist',iv,iv2,nlist
-				endif !if(idots.gt.0)  15907
+				endif !if(idots.gt.0)  16047
 				!if(iv.le.0)call j_getobject(0,win(ial:ir1),j_ipreal,iv)
  
 				!			endif
@@ -15947,7 +16087,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 						brother(nn)=lastchild(mutsi)
  
 						!				if(nn.eq.10)write(6,*)'tasbrother10&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-					endif !if(nchild(mutsi).eq.0)  15943
+					endif !if(nchild(mutsi).eq.0)  16083
 					nchild(mutsi)=nchild(mutsi)+1
 					lastchild(mutsi)=nn
  
@@ -15957,21 +16097,21 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 						nn=nn+1
 						levels(nn)=level
 						!				write(6,*)'startnode2 ',nn
-					endif !if(ilist.le.nlist)  15955
+					endif !if(ilist.le.nlist)  16095
  
-				enddo !while(ilist.le.nlist)  15931
+				enddo !while(ilist.le.nlist)  16071
  
 				if(ir.lt.le)then
 					do while(win(ir:ir).eq.')')
 						level=level-1
 						ir=ir+1
 						if(ir.gt.le)exit
-					enddo !while(win(ir:ir).eq.')')  15965
-				endif !if(ir.lt.le)  15964
-			endif !if(ir1.ge.ial)  15828
+					enddo !while(win(ir:ir).eq.')')  16105
+				endif !if(ir.lt.le)  16104
+			endif !if(ir1.ge.ial)  15966
 			ial=ir+1
 			if(ial.gt.le)exit
-		enddo !while(ial.le.le)  15645
+		enddo !while(ial.le.le)  15779
 		if(j_p2)write(6,*)'beftas'
 		if(j_p3)call printparse(win)
  
@@ -16002,10 +16142,10 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				sister(nn2)=sister(inode)
 				brother(sister(inode))=nn2
 				inode=inode+2
-			endif !if(node(inode).ne.0)  15985
+			endif !if(node(inode).ne.0)  16125
  
  
-		enddo !while (inode.le.nn)  15982
+		enddo !while (inode.le.nn)  16122
 		nn=nn2
 		return
  
@@ -16020,16 +16160,16 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			write(6,*)'**nothing to be done with ',inp
 			j_err=.true.
 			return
-		endif !if(oneline.and.inp.eq.input.or..not.oneline.and.inp.eq.j_i  16019
+		endif !if(oneline.and.inp.eq.input.or..not.oneline.and.inp.eq.j_i  16159
  
 		if(isgoto)then
 			iv=j_isin(inp,label,nlabel)
 			if(iv.le.0)then
 				write(6,*)inp,' is not an address'
 				j_err=.true.
-			endif !if(iv.le.0)  16027
+			endif !if(iv.le.0)  16167
 			return
-		endif !if(isgoto)  16025
+		endif !if(isgoto)  16165
 		iv=j_object(inp)
  
 		if(iv.gt.0.and.iv.le.j_predefined)return
@@ -16039,7 +16179,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			j_err=.true.
 			return
  
-		endif !if(iv.eq.0.and.oneline.and.(inp//';'.eq.input.or.inp//';'.  16036
+		endif !if(iv.eq.0.and.oneline.and.(inp//';'.eq.input.or.inp//';'.  16176
 		lenp=len(inp)
 		if(j_p)write(6,*)'<65 getiv israg,iv ',isarg,iv, 'isgoto ',isgoto
  
@@ -16047,6 +16187,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 		!		endif
 		if(isarg.and.iv.gt.0)then
+			if(j_p.and.iv.le.j_predefined)write(6,*)'predveinediv',iv
 			if(iv.le.j_predefined)return
 			if(j_otype(iv).eq.j_ipchar)return
 			ia=j_inlistobject(iv,ivarg)
@@ -16060,7 +16201,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 			else !if(ia.le.0)then
 				used(ia)=.true.
-			endif !if(ia.le.0)  16055
+			endif !if(ia.le.0)  16196
 		elseif(iv.le.0)then !if(isarg.and.iv.gt.0)then
 			!	write(6,*)'<6336:',inp
 			if(inp(1:1).eq."'")then
@@ -16075,9 +16216,9 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					iv=j_getobject(0,j_varname1(1:letr)//inp,j_ipreal)
 				else
 					iv=j_getobject(0,inp,j_ipreal)
-				endif !if(isarg)  16073
-			endif !if(inp(1:1).eq."'")  16066
-		endif !if(isarg.and.iv.gt.0)  16049
+				endif !if(isarg)  16214
+			endif !if(inp(1:1).eq."'")  16207
+		endif !if(isarg.and.iv.gt.0)  16189
  
 		if(j_p2)write(6,*)'getiv ','/'//inp//'/',iv,' lenp ',lenp
 		return
@@ -16097,8 +16238,8 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			else !if(node(i).gt.0)then
 				call j_getname(-node(i))
 				write(6,*)i,node(i),j_oname(1:j_loname)
-			endif !if(node(i).gt.0)  16093
-		enddo !i=1,nn  16092
+			endif !if(node(i).gt.0)  16234
+		enddo !i=1,nn  16233
  
 		write(6,'(a,20i6/20i6)')'nodes  ',(j,j=1,nn)
 		write(6,'(a,20i6/20i6)')'nodes  ',node(1:nn)
@@ -16140,7 +16281,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			if(node(inode).eq.1)call initcodenode(inode,nteku,icode,icodenode)
  
 			if(j_p2)write(6,*)'1 moving down to inode ',inode,' innode ',node(inode),' nteku ',nteku
-		enddo !while(lastchild(inode).gt.0)  16137
+		enddo !while(lastchild(inode).gt.0)  16278
  
 		if(node(inode).gt.0)then !function wihtout arguments, cannot be setoption
 			!ntek=ntekuf(3)
@@ -16156,7 +16297,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			nteku=nteku+3
 			node(inode)=-itemporal
  
-		endif !if(node(inode).gt.0)  16145
+		endif !if(node(inode).gt.0)  16286
  
 		!		if(node(inode).eq.0)write(6,*)' taspanol',inode
  
@@ -16165,7 +16306,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			if(j_p2)write(6,*)'2 moving left to node',inode,' innode ',node(inode),' nteku ',nteku
 			if(node(inode).eq.1)call initcodenode(inode,nteku,icode,icodenode)
 			goto 100
-		endif !if(brother(inode).ne.0)  16163
+		endif !if(brother(inode).ne.0)  16304
  
  
  
@@ -16178,7 +16319,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 			call teku(nteku+1,0)
 			return
-		endif !if(inode.eq.1.or.inode.lt.0)  16174
+		endif !if(inode.eq.1.or.inode.lt.0)  16315
  
 200	if(node(inode).eq.1)then
 			ic=child(inode)
@@ -16189,7 +16330,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				if(nargo.gt.1.or.nargo.eq.0)then
 					write(6,*)'codeoption ',j_options(-node(ic)),' can have only one argument'
 					j_err=.true.;return
-				endif !if(nargo.gt.1.or.nargo.eq.0)  16189
+				endif !if(nargo.gt.1.or.nargo.eq.0)  16330
 				!setcodeopt, iopt, jumpadress,outputof code, io of the function
 				!icode link to setocode
 				!	write(6,*)'icode ',icode
@@ -16209,7 +16350,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					call teku(nteku,0)
 					call teku(icode+2,nteku+1)
  
-				endif !if(nteku.eq.icode+4)  16202
+				endif !if(nteku.eq.icode+4)  16343
 				!		if(j_p)write(6,*)'<3883codenode,nteku,icode',nteku,icode,j_o(ivteku)%i(icode:icode+3),itemporal
 				icodenode=0
 			else !if(inode.eq.icodenode)then
@@ -16229,12 +16370,12 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					nteku=nteku+1
 					call teku(nteku,-node(ic))
  
-				enddo !ii=1,nargo  16227
+				enddo !ii=1,nargo  16368
 				nteku=nteku+1 !space for mother
  
  
  
-			endif !if(inode.eq.icodenode)  16187
+			endif !if(inode.eq.icodenode)  16328
 		elseif(node(inode).eq.0)then !if(node(inode).eq.1)then
 			node(inode)=node(child(inode))  !-teku(nteku)
 			if(brother(inode).ne.0)then
@@ -16246,7 +16387,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				inode=mother(inode)
 				if(j_p2)write(6,*)'4 ZERONODE moving UP to node',inode,' innode ',node(inode),' nteku ',nteku
  
-			endif !if(brother(inode).ne.0)  16240
+			endif !if(brother(inode).ne.0)  16381
  
 			goto 100
 		elseif(node(inode).gt.0)then !if(node(inode).eq.1)then
@@ -16260,7 +16401,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				do ii=1,nargo
 					inlist(ii)=-node(inode2)
 					inode2=sister(inode2)
-				enddo !ii=1,nargo  16260
+				enddo !ii=1,nargo  16401
 			elseif(mother(inode).eq.1)then !if(mother(inode).eq.1.and.brother(inode).ne.0)then
 				!  list2(inputs)
 				nout=nargo
@@ -16271,9 +16412,9 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 						write(6,*)'*Constant cannot be output'
 						j_err=.true.;return
  
-					endif !if(outlist(ii).gt.j_nv)  16270
+					endif !if(outlist(ii).gt.j_nv)  16411
 					inode2=sister(inode2)
-				enddo !ii=1,nargo  16268
+				enddo !ii=1,nargo  16409
  
  
 			else !if(mother(inode).eq.1.and.brother(inode).ne.0)then
@@ -16304,7 +16445,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 					!	endif !if(node(inode).eq.j_fgoto.and.narg.gt.1.and.ii.lt.nargo)  15059
 					inode2=sister(inode2)
  
-				enddo !ii=1,nargo  16292
+				enddo !ii=1,nargo  16433
 				!	if(node(inode).ne.j_fgoto.or.nargo.gt.1)then
 				!	if(nargo.ge.1)then
 				itemporal=itemporal+1
@@ -16318,11 +16459,11 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 				node(inode)=-itemporal
 				if(j_p)write(6,*)'<555,ino,nteku,teku,nargo,',ino,nteku,j_o(ivteku)%i(max(ino,1):nteku),' nargo',nargo
-			endif !if(mother(inode).eq.1.and.brother(inode).ne.0)  16256
+			endif !if(mother(inode).eq.1.and.brother(inode).ne.0)  16397
 		else !if(node(inode).eq.1)then
 			!	write(6,*)'HUPSISTA'
  
-		endif !200	if(node(inode).eq.1)  16183
+		endif !200	if(node(inode).eq.1)  16324
 		if(brother(inode).ne.0)then
 			inode=brother(inode)
 			if(j_p2)write(6,*)'5 moving LEFT to node',inode,' innode ',node(inode),' nteku ',nteku
@@ -16339,9 +16480,9 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				!ntek=ntekuf(1)
 				call teku(nteku+1,0)
 				return
-			endif !if(inode.eq.1.or.inode.lt.0)  16334
+			endif !if(inode.eq.1.or.inode.lt.0)  16475
 			goto 200
-		endif !if(brother(inode).ne.0)  16326
+		endif !if(brother(inode).ne.0)  16467
 		return
 99	write(6,*)'function ',node(inode),' ',j_functions(node(inode)),'needs ',j_minarg_(node(inode)),' arguments'
 	!	write(6,*)j_functions(node(inode),' ',j_functions(node(inode)),'needs ',j_minarg_(node(inode)),' arguments'
@@ -16370,7 +16511,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			if(j_p2)write(6,*)'<it was codeoption',j_o(ivteku)%i(nteku+1:nteku+3), 'icodenode ',icodenode
 			nteku=nteku+4
  
-		endif !if(j_codeoption_(-node(ic)))  16360
+		endif !if(j_codeoption_(-node(ic)))  16501
  
 	end subroutine !subroutine initcodenode(inode,teku,nteku,icode,icodenode)
  
@@ -16410,7 +16551,7 @@ subroutine polishall(win,lopw)
 	!	p=j_v(j_ivdebug).ge.200.d0
 	do i=1,noper
 		lec0(i)=len_trim(operin(i))
-	enddo !i=1,noper  16411
+	enddo !i=1,noper  16552
 	!	p=.true.
 	!	write(6,*)' '
  
@@ -16427,7 +16568,7 @@ subroutine polishall(win,lopw)
  
 			ial=ich+3
 			goto 10
-		endif !if((iop.eq.4.or.iop.eq.5).and.ich.gt.0.and.win(ich+1:ich+1  16426
+		endif !if((iop.eq.4.or.iop.eq.5).and.ich.gt.0.and.win(ich+1:ich+1  16567
  
 		kier=0
 		do while(ich.gt.0)
@@ -16443,15 +16584,15 @@ subroutine polishall(win,lopw)
 				if(win(i:i).eq."'")then
 					hipsu2=.not.hipsu2
 					cycle
-				endif !if(win(i:i).eq."'")  16443
+				endif !if(win(i:i).eq."'")  16584
 				if(win(i:i).eq.']'.and..not.hipsu2)then
 					haka2=.true.
 					cycle
-				endif !if(win(i:i).eq.']'.and..not.hipsu2)  16447
+				endif !if(win(i:i).eq.']'.and..not.hipsu2)  16588
 				if(win(i:i).eq.'['.and..not.hipsu2)then
 					haka2=.false.
 					cycle
-				endif !if(win(i:i).eq.'['.and..not.hipsu2)  16451
+				endif !if(win(i:i).eq.'['.and..not.hipsu2)  16592
 				if(haka2.or.hipsu2)cycle
 				if(win(i:i).eq.')')nr=nr+1
 				if(win(i:i).eq.'(')nl=nl+1
@@ -16467,11 +16608,11 @@ subroutine polishall(win,lopw)
 						if(j_p.and.win(i-lec0(iop2)+1:i).eq.operin(iop2)(1:lec0(iop2))) &
 							write(6,*)'<567 ',win(i-lec0(iop2)+1:i)
 						if(win(i-lec0(iop2)+1:i).eq.operin(iop2)(1:lec0(iop2)))exit ichloop
-					enddo !iop2=iop+1,noper  16464
+					enddo !iop2=iop+1,noper  16605
  
-				endif !if(nl.eq.nr)  16462
+				endif !if(nl.eq.nr)  16603
  
-			enddo ichloop !loop:do i=ich-1,1,-1  16442
+			enddo ichloop !loop:do i=ich-1,1,-1  16583
 			i=i+1
 			!if(j_p)write(6,*)ch(1:lec),' i',i,' ',win(1:i),'  ',win(i+1:lopw)
 			nr=0 !number of )
@@ -16486,15 +16627,15 @@ subroutine polishall(win,lopw)
 				if(win(j:j).eq."'")then
 					hipsu2=.not.hipsu2
 					cycle
-				endif !if(win(j:j).eq."'")  16486
+				endif !if(win(j:j).eq."'")  16627
 				if(win(j:j).eq.'['.and..not.hipsu2)then
 					haka2=.true.
 					cycle
-				endif !if(win(j:j).eq.'['.and..not.hipsu2)  16490
+				endif !if(win(j:j).eq.'['.and..not.hipsu2)  16631
 				if(win(i:i).eq.']'.and..not.hipsu2)then
 					haka2=.false.
 					cycle
-				endif !if(win(i:i).eq.']'.and..not.hipsu2)  16494
+				endif !if(win(i:i).eq.']'.and..not.hipsu2)  16635
 				if(haka2.or.hipsu2)cycle
  
 				if(win(j:j).eq.')')nr=nr+1
@@ -16516,12 +16657,12 @@ subroutine polishall(win,lopw)
 						!if(j+lec0(iop2)-1.gt.0)cycle
 						!	if(j_p)write(6,*)win(j:j+lec0(iop2)-1),'=?= ',operin(iop2)(1:lec0(iop2)),' found'
 						if(win(j:j+lec0(iop2)-1).eq.operin(iop2)(1:lec0(iop2)))exit jloop
-					enddo !iop2=iop,noper  16514
+					enddo !iop2=iop,noper  16655
  
-				endif !if(nl.eq.nr)  16510
+				endif !if(nl.eq.nr)  16651
 				!		if(((win(j:j).eq.','.or.win(j:j).eq.'+'.or.win(j:j).eq.'-'.or.&
 				!		win(j:j).eq.'*').and.nl.eq.nr).or.nr.gt.nl)exit
-			enddo jloop !op:	do j=ich+lec,lopw  16484
+			enddo jloop !op:	do j=ich+lec,lopw  16625
 			j=j-1
 			!if(j_p)write(6,*)'j',j,win(j:lopw)
  
@@ -16547,7 +16688,7 @@ subroutine polishall(win,lopw)
 				! write(6,*)'%'//ch2(1:lec2)//'&'//win(j1:lopw)
 				!write(6,*) 'kuis',win(i:ich1),'%',win(ich2:j),'#', win(j1:lopw)
  
-			endif !if(ich1.ge.i)  16539
+			endif !if(ich1.ge.i)  16680
 			lopw=len_trim(j_tempchar7)
 			win=j_tempchar7
 20				ich=jindex(win(1:lopw),ial,ch(1:lec))
@@ -16556,14 +16697,14 @@ subroutine polishall(win,lopw)
 				if((iop.eq.4.or.iop.eq.5).and.win(ich+1:ich+1).eq.'.')then
 					ial=ich+3
 					goto 20
-				endif !if((iop.eq.4.or.iop.eq.5).and.win(ich+1:ich+1).eq.'.')  16556
-			endif !if(ich.gt.0)  16555
+				endif !if((iop.eq.4.or.iop.eq.5).and.win(ich+1:ich+1).eq.'.')  16697
+			endif !if(ich.gt.0)  16696
 			!	ich=index(win(1:lopw),ch(1:lec))
 			!	if(j_p)write(6,*)'<555ich',ich,ch2,'  ',win(1:lopw)
-		enddo !while(ich.gt.0)  16433
+		enddo !while(ich.gt.0)  16574
  
  
-	enddo !iop=1,noper  16417
+	enddo !iop=1,noper  16558
 	!remove extra parenthsis  function j_nextlim(inp,ial,lop,limit)
 	return
 	nl=0
@@ -16575,8 +16716,8 @@ subroutine polishall(win,lopw)
 		elseif(win(i:i).eq.')')then !if(win(i:i).eq.'(')then
 			nr=nr+1
 			rights(nr)=i
-		endif !if(win(i:i).eq.'(')  16572
-	enddo !i=1,lopw  16571
+		endif !if(win(i:i).eq.'(')  16713
+	enddo !i=1,lopw  16712
 	!	ndone=0
 	if(nr.le.0)return
 	nremove=0
@@ -16586,7 +16727,7 @@ subroutine polishall(win,lopw)
 		win(1:1)=' '
 		win(lopw:lopw)=' '
 		ir0=2
-	endif !if(lefts(1).eq.1.and.rights(nr).eq.lopw)  16584
+	endif !if(lefts(1).eq.1.and.rights(nr).eq.lopw)  16725
 	!DIV((MINUS(5302,5303)),5301)
 	do i=ir0,nr
 		if(win(lefts(i)-1:lefts(i)-1).eq.'('.and.win(rights(i)+1:rights(i)+1).eq.')')then
@@ -16599,8 +16740,8 @@ subroutine polishall(win,lopw)
 			nremove=nremove+1
 			win(lefts(i):lefts(i))=' '
 			win(rights(i)-1:rights(i)-1)=' '
-		endif !if(win(lefts(i)-1:lefts(i)-1).eq.'('.and.win(rights(i)+1:r  16592
-	enddo !i=ir0,nr  16591
+		endif !if(win(lefts(i)-1:lefts(i)-1).eq.'('.and.win(rights(i)+1:r  16733
+	enddo !i=ir0,nr  16732
 	if(nremove.gt.0)then
 		nn=0
 		do ii=1,lopw
@@ -16609,13 +16750,13 @@ subroutine polishall(win,lopw)
 				if(nn.gt.maxnode)then
 					write(6,*)'*j* increase maxnode'
 					j_err=.true.;return
-				endif !if(nn.gt.maxnode)  16609
+				endif !if(nn.gt.maxnode)  16750
 				win(nn:nn)=win(ii:ii)
-			endif !if(win(ii:ii).ne.' ')  16607
-		enddo !ii=1,lopw  16606
+			endif !if(win(ii:ii).ne.' ')  16748
+		enddo !ii=1,lopw  16747
 		lopw=nn
 		if(j_p)write(6,*)'removed ', nremove, ' pairs of unnecessary parenthesis'
-	endif !if(nremove.gt.0)  16604
+	endif !if(nremove.gt.0)  16745
 	return
  
  
@@ -16635,30 +16776,31 @@ integer function jindex(line,ial,word)
 	if(lew.gt.le)then
 		jindex=0
 		return
-	endif !if(lew.gt.le)  16635
+	endif !if(lew.gt.le)  16776
 	do i=ial,le-lew+1
 		if(line(i:i).eq."'")then
 			in=.not.in
 			cycle
-		endif !if(line(i:i).eq."'")  16640
+		endif !if(line(i:i).eq."'")  16781
 		if(line(i:i).eq.'['.and..not.in)then
 			inhaka=.true.
 			cycle
-		endif !if(line(i:i).eq.'['.and..not.in)  16644
+		endif !if(line(i:i).eq.'['.and..not.in)  16785
 		if(line(i:i).eq.']'.and..not.in)then
 			inhaka=.false.
 			cycle
-		endif !if(line(i:i).eq.']'.and..not.in)  16648
+		endif !if(line(i:i).eq.']'.and..not.in)  16789
 		if(inhaka.or.in)cycle
 		!	if(.not.in.and..not.inhaka)then
 		if(line(i:i+lew-1).eq.word)then
 			jindex=i
 			return
-		endif !if(line(i:i+lew-1).eq.word)  16654
+		endif !if(line(i:i+lew-1).eq.word)  16795
 		!	endif !if(.not.in.and..not.inhaka)  16559
-	enddo !i=ial,le-lew+1  16639
+	enddo !i=ial,le-lew+1  16780
 	jindex=0
 end function !integer function jindex(line,ial,word)
+ 
 integer function j_linkoption(iob,io,mopt,clear,link)
 	integer,intent(in)::iob,io,mopt
 	logical,optional,intent(in)::clear,link
@@ -16672,14 +16814,14 @@ integer function j_linkoption(iob,io,mopt,clear,link)
 	if(j_nopt.eq.0)then
 		j_linkoption=-1
 		return
-	endif !if(j_nopt.eq.0)  16672
+	endif !if(j_nopt.eq.0)  16814
  
 	optionmoptio(1)=mopt
 	optionmoptio(2)=io
 	!	write(6,*)'optiontot',optiontot,j_optiontot(1),' io',io
 	do loc=1,j_nopt
 		if(j_optiontot(loc).eq.optiontot)goto 60
-	enddo !loc=1,j_nopt  16680
+	enddo !loc=1,j_nopt  16822
 	loc=0
 60	continue
 !	loc=findloc( j_optiontot(1:j_nopt),optiontot,dim=1)
@@ -16696,28 +16838,28 @@ integer function j_linkoption(iob,io,mopt,clear,link)
 			j_err=.true.
 			j_linkoption=-1
 			return
-		endif !if(j_optioniob(loc).ne.iob)  16692
+		endif !if(j_optioniob(loc).ne.iob)  16834
 		if(j_o(iob)%i(j_optionlink(loc)).eq.0.and..not.present(link))then
 			j_linkoption=0
 		else !if(j_o(iob)%i(j_optionlink(loc)).eq.0)then
 			j_linkoption=j_optionlink(loc)
-		endif !if(j_o(iob)%i(j_optionlink(loc)).eq.0.and..not.present(lin  16700
+		endif !if(j_o(iob)%i(j_optionlink(loc)).eq.0.and..not.present(lin  16842
 		!	write(6,*)'PRSENT CLEAR',present(clear)
 		if(present(clear))then
 			if(loc.lt.j_nopt)then
 				j_optioniob(loc)=j_optioniob(j_nopt)
 				j_optiontot(loc)=j_optiontot(j_nopt)
 				j_optionlink(loc)=j_optionlink(j_nopt)
-			endif !if(loc.lt.j_nopt)  16707
+			endif !if(loc.lt.j_nopt)  16849
  
 			j_nopt=j_nopt-1
 			!	write(6,*)'option ',mopt,'lcleard'
-		endif !if(present(clear))  16706
+		endif !if(present(clear))  16848
 		!		write(6,*)'linkoptio',j_linkoption
 	else !if(loc.gt.0)then
 		j_linkoption=-1
  
-	endif !if(loc.gt.0)  16690
+	endif !if(loc.gt.0)  16832
 	return
  
 end function !integer function j_linkoption(iob,io,mopt,clear)
@@ -16736,18 +16878,18 @@ integer function j_codelink(iob,io,jmcode)
 	if(jmcode.le.0.or.jmcode.gt.j_noptions)then
 		write(6,*)'*j* illegal argument in j_codelink'
 		j_err=.true.;return
-	endif !if(jmcode.le.0.or.jmcode.gt.j_noptions)  16736
+	endif !if(jmcode.le.0.or.jmcode.gt.j_noptions)  16878
 	!	write(6,*)'j_nopt2',j_nopt2,jmcode,io,j_optioniob2(1),j_optionmoptio2(1:2,1),j_optionlink2(1)
 	if(j_nopt2.eq.0)then
 		j_codelink=0
 		return
-	endif !if(j_nopt2.eq.0)  16741
+	endif !if(j_nopt2.eq.0)  16883
  
 	optionmoptio(1)=jmcode
 	optionmoptio(2)=io
 	do loc=1,j_nopt2
 		if(j_optiontot2(loc).eq.optiontot)goto 60
-	enddo !loc=1,j_nopt2  16748
+	enddo !loc=1,j_nopt2  16890
 	loc=0
 60	continue
 !	loc=findloc( j_optiontot2(1:j_nopt2),optiontot,dim=1)
@@ -16759,18 +16901,18 @@ integer function j_codelink(iob,io,jmcode)
 			j_err=.true.
 			j_codelink=0
 			return
-		endif !if(j_optioniob2(loc).ne.iob)  16755
+		endif !if(j_optioniob2(loc).ne.iob)  16897
 		j_codelink=j_optionlink2(loc)
 		if(loc.lt.j_nopt2)then
 			j_optioniob2(loc)=j_optioniob2(j_nopt2)
 			j_optiontot2(loc)=j_optiontot2(j_nopt2)
 			j_optionlink2(loc)=j_optionlink2(j_nopt2)
-		endif !if(loc.lt.j_nopt2)  16764
+		endif !if(loc.lt.j_nopt2)  16906
 		j_nopt2=j_nopt2-1
 	else !if(loc.gt.0)then
 		j_codelink=0
  
-	endif !if(loc.gt.0)  16754
+	endif !if(loc.gt.0)  16896
 	!	write(6,*)'<88 nopt2,out',j_nopt2
 	!		write(6,*)'codelink',j_codelink
 end function !integer function j_codelink(iob,io,jmcode)
@@ -16780,7 +16922,7 @@ double precision function j_codevalue(iob,link)
 	if(link.le.0.or.link.gt.j_o(iob)%i(0))then
 		write(6,*)'*j* illegal link in j_codevalue ',link,' i(0) ',j_o(iob)%i(0)
 		j_err=.true.;return
-	endif !if(link.le.0.or.link.gt.j_o(iob)%i(0))  16780
+	endif !if(link.le.0.or.link.gt.j_o(iob)%i(0))  16922
 	! iofilter=j_linkopt2(j_mfilter)
 	! dofilter=iofilter.ne.0
 	! ivfilter=j_o(iob)%i(j_linkopt2(j_mfilter)-1)
@@ -16800,8 +16942,8 @@ end function !double precision function j_codevalue(iob,link)
  
  
  
-function j_deflistobject(iv,name,list0,list,listold,nres,&
-		expand,ivin,ilist)
+function j_deflist(iv,name,list0,list,listold,nres,&
+		expand,ivin,ilist,ncol,point)
  
 	! list0 number of elements and list list(1:list0)
 	! listold list(0:
@@ -16817,6 +16959,8 @@ function j_deflistobject(iv,name,list0,list,listold,nres,&
 	logical,optional, intent(in):: expand
 	integer,optional, intent(in):: ivin
 	logical,optional,intent(in)::ilist !make ilist object
+	integer,optional,intent(in)::ncol
+	integer,dimension(:),optional,intent(out),pointer::point
 	logical::expan,isilist
 	!iout=iv
 	iplist=j_iplist
@@ -16833,8 +16977,8 @@ function j_deflistobject(iv,name,list0,list,listold,nres,&
 				if(list0.gt.1)goto 99
 				inlist=list(1)
 				list00=j_o(listold(1))%i(1)
-			endif !if(j_otype(list(1)).eq.iplist)  16832
-		endif !if(expan)  16831
+			endif !if(j_otype(list(1)).eq.iplist)  16976
+		endif !if(expan)  16975
 	elseif(present(listold))then !if(present(list0))then
  
 		if(expan.and.j_otype(listold(2)).eq.iplist)then
@@ -16845,10 +16989,10 @@ function j_deflistobject(iv,name,list0,list,listold,nres,&
 		else !if(expan.and.j_otype(listold(2)).eq.iplist)then
 			expan=.false.
 			list00=listold(1)
-		endif !if(expan.and.j_otype(listold(2)).eq.iplist)  16840
+		endif !if(expan.and.j_otype(listold(2)).eq.iplist)  16984
 	elseif(present(ivin))then !if(present(list0))then
 		list00=j_o(ivin)%i(1)
-	endif !if(present(list0))  16829
+	endif !if(present(list0))  16973
 	ntot=list00
  
 	if(present(nres))ntot=ntot+nres
@@ -16863,18 +17007,36 @@ function j_deflistobject(iv,name,list0,list,listold,nres,&
 		call j_del(ivout)
 	else !if(name.eq.' ')then
 		ivout=j_getobject(iv,name,iplist)
-	endif !if(name.eq.' ')  16861
+	endif !if(name.eq.' ')  17005
 	!	write(6,*)'<636',ivout
 	! endif
  
 	allocate(j_o(ivout)%i(1:4))
+ 
 	!j_o(iout)%i=0
 	j_o(ivout)%i(1)=list00
-	j_o(ivout)%i(2)=1
+ 
+	if(present(ncol))then
+		if(ncol.le.0)then
+			write(6,*)'*j* ncol has illegal value ',ncol
+			j_err=.true.
+		endif !if(ncol.le.0)  17020
+		nrow=list00/ncol
+		if(nrow*ncol.ne.list00)then
+			write(6,*)'*j* deflist, ncol has illegal value ',ncol, ' which is ignored'
+			j_o(ivout)%i(2)=1
+		else
+			j_o(ivout)%i(2)=ncol
+		endif !if(nrow*ncol.ne.list00)  17025
+	else
+		j_o(ivout)%i(2)=1
+	endif !if(present(ncol))  17019
+ 
 	j_o(ivout)%i(3)=list00
 	j_o(ivout)%i(4)=ntot
  
 	allocate(j_o(ivout)%i2(1:ntot))
+	if(present(point))point=>j_o(ivout)%i2(1:ntot)
 	if(expan)then
 		j_o(ivout)%i2(1:list00)=j_o(inlist)%i2(1:list00)
  
@@ -16889,19 +17051,19 @@ function j_deflistobject(iv,name,list0,list,listold,nres,&
 		j_o(ivout)%i2(1:list00)=j_o(ivin)%i2(1:list00)
 	else
 		j_o(ivout)%i2(1:ntot)=j_0
-	endif !if(expan)  16878
+	endif !if(expan)  17040
 	!		j_o(ivout)%i2=0
 	if(iplist.eq.j_iplist)then
 		allocate(j_o(ivout)%d(1:ntot))
 		j_o(ivout)%d=j_0
-	endif !if(iplist.eq.j_iplist)  16894
+	endif !if(iplist.eq.j_iplist)  17056
 	j_otype(ivout)=iplist
-	j_deflistobject=ivout
+	j_deflist=ivout
 	return
 99		write(6,*)'cannot mix lists and with single objects in defing list objects'
 	j_err=.true.
  
-end function !subroutine j_deflistobject(iv,name,ivout,list0,list,listold,nres,expand,ivin)
+end function !subroutine j_deflist(iv,name,ivout,list0,list,listold,nres,expand,ivin)
  
 function j_putlistobject(ivlist,single,list0,list,ivin,ignored,append)		 ! put i into %%list object, size increased if needed
 	integer,intent(in)::ivlist
@@ -16926,18 +17088,38 @@ function j_putlistobject(ivlist,single,list0,list,ivin,ignored,append)		 ! put i
 		isappend=append
 		if(.not.isappend)isprepend=.true.
  
-	endif !if(present(append))  16925
+	endif !if(present(append))  17087
 	ignore=.false.
 	if(present(ignored))ignore=ignored
 	nadd=0
 	j_putlistobject=0
 	if(ivlist.le.0.or.ivlist.gt.j_mxv)then
 		write(6,*)'*j* j_putlistobject, illegal ivlist ',ivlist
+		if(present(ivin))then
+			call j_getname(ivin)
+			write(6,*)'ivin= ',j_oname(1:j_loname)
+		endif !if(present(ivin))  17098
+		if(present(single))then
+			write(6,*)'single=',single
+		endif !if(present(single))  17102
+		if(present(list0))then
+			write(6,*)'list0=',list0
+		endif !if(present(list0))  17105
+		if(present(list))then
+			write(6,*)'list=',list
+		endif !if(present(list))  17108
+		if(present(ignored))then
+			write(6,*)'ignored=',ignored
+		endif !if(present(ignored))  17111
+		if(present(append))then
+			write(6,*)'append=',append
+		endif !if(present(append))  17114
+ 
 		j_err=.true.;return
 	elseif(j_otype(ivlist).ne.j_iplist.and.j_otype(ivlist).ne.j_ipilist)then
 		call j_printname('j_putlistobject  ',ivlist,' is not LIST or ILIST')
 		j_err=.true.;return
-	endif !if(ivlist.le.0.or.ivlist.gt.j_mxv)  16934
+	endif !if(ivlist.le.0.or.ivlist.gt.j_mxv)  17096
  
  
 	islist=.false.
@@ -16949,19 +17131,19 @@ function j_putlistobject(ivlist,single,list0,list,ivin,ignored,append)		 ! put i
 		list00=j_o(ivin)%i(1)
 		listin=>j_o(ivin)%i2(1:list00)
 		islist=.true.
-	endif !if(present(list0))  16944
+	endif !if(present(list0))  17126
 	if(present(single))then
 		if(.not.isappend)then
 			j_putlistobject=j_inlistobject(single,ivlist)
 			if(.not.islist.and.j_putlistobject.gt.0)return
-		endif !if(.not.isappend)  16954
+		endif !if(.not.isappend)  17136
 		if(ignore)then
 			if(.not.j_isdollar(single))nadd=nadd+1
 		else !if(ignore)then
 			nadd=nadd+1
  
-		endif !if(ignore)  16958
-	endif !if(present(single))  16953
+		endif !if(ignore)  17140
+	endif !if(present(single))  17135
 	if(isprepend)nadd=1
 	if(islist)then
 		allocate(netput(1:nadd+list00))
@@ -16974,14 +17156,14 @@ function j_putlistobject(ivlist,single,list0,list,ivin,ignored,append)		 ! put i
 					if(.not.j_isdollar(listin(i)))then
 						nadd=nadd+1
 						netput(nadd)=listin(i)
-					endif !if(.not.j_isdollar(listin(i)))  16974
+					endif !if(.not.j_isdollar(listin(i)))  17156
 				else !if(ignore)then
 					nadd=nadd+1
 					netput(nadd)=listin(i)
-				endif !if(ignore)  16973
-			endif !if(k.eq.0)  16972
-		enddo !i=1,list00  16970
-	endif !if(islist)  16966
+				endif !if(ignore)  17155
+			endif !if(k.eq.0)  17154
+		enddo !i=1,list00  17152
+	endif !if(islist)  17148
 	nold=j_o(ivlist)%i(1)
 	if(nadd+nold.gt.j_o(ivlist)%i(4))then
 		nuus=max(2*nold,nold+2*nadd)
@@ -16995,7 +17177,7 @@ function j_putlistobject(ivlist,single,list0,list,ivin,ignored,append)		 ! put i
 		! j_o(ivlist)%i2(1:nold)=hh
 		! deallocate(hh)
 		j_o(ivlist)%i(4)=nuus
-	endif !if(nadd+nold.gt.j_o(ivlist)%i(4))  16986
+	endif !if(nadd+nold.gt.j_o(ivlist)%i(4))  17168
 	if(islist)then
 		j_o(ivlist)%i2(nold+1:nold+nadd)=netput(1:nadd)
 		deallocate(netput)
@@ -17005,7 +17187,7 @@ function j_putlistobject(ivlist,single,list0,list,ivin,ignored,append)		 ! put i
 	else !if(islist)then
 		j_o(ivlist)%i2(nold+1)=single
 		j_putlistobject=nold+1
-	endif !if(islist)  16999
+	endif !if(islist)  17181
 	j_o(ivlist)%i(1)=nold+nadd
 	j_o(ivlist)%i(3)=j_o(ivlist)%i(1)
  
@@ -17024,7 +17206,7 @@ subroutine j_printoptions()
 			write(6,*)ii,j_oname(1:j_loname),'  ',j_options(j_optionmoptio(1,ii)),&
 				' option function ',j_o(iobi)%i(ioo), ' is not legal'
 			j_err=.true.
-		endif !if(j_o(iobi)%i(ioo).gt.j_nfunctions)  17023
+		endif !if(j_o(iobi)%i(ioo).gt.j_nfunctions)  17205
 		if(j_o(iobi)%i(ioo).gt.j_nfunctions)then
 			write(6,*)ii,j_oname(1:j_loname),'  ',j_options(j_optionmoptio(1,ii)),&
 				' option function ',j_o(iobi)%i(ioo), ' is not legal'
@@ -17032,7 +17214,7 @@ subroutine j_printoptions()
 		else
 			write(6,*)ii,j_oname(1:j_loname),'  ',j_options(j_optionmoptio(1,ii)),&
 				j_functions(j_o(iobi)%i(ioo)),ioo  !,' link ',j_optionlink(ii)
-		endif !if(j_o(iobi)%i(ioo).gt.j_nfunctions)  17028
+		endif !if(j_o(iobi)%i(ioo).gt.j_nfunctions)  17210
  
 		ivsource=j_o(iobi)%i2(11)
  
@@ -17048,13 +17230,13 @@ subroutine j_printoptions()
 					write(6,*)'line ',i-1,': ',j_filename(1:le) !,j_o(ivsource)%i2(i),io-1
 					!	call j_printtext(ivsource,i-1)
 					cycle loop
-				endif !if(j_o(ivsource)%i2(i).ge.ioo-2)  17046
-			enddo !i=1,j_o(ivsource)%i(0)  17044
+				endif !if(j_o(ivsource)%i2(i).ge.ioo-2)  17228
+			enddo !i=1,j_o(ivsource)%i(0)  17226
 			!write(6,*)'* ask J. Lappi where is the error line'
  
-		endif !if(ivsource.ne.0)  17040
+		endif !if(ivsource.ne.0)  17222
  
-	enddo loop !p:		do ii=1,j_nopt  17019
+	enddo loop !p:		do ii=1,j_nopt  17201
  
  
 end subroutine !subroutine j_printoptions()
@@ -17069,14 +17251,14 @@ subroutine j_printlist(nu,iv,head)
 		j_err=.true.
 		return
  
-	endif !if(j_otype(iv).ne.j_iplist)  17067
+	endif !if(j_otype(iv).ne.j_iplist)  17249
  
 	head_=.true.
 	if(present(head))head_=head
 	if(head_)then
 		write(nu,*)' '
 		write(nu,*)j_oname(1:j_loname),' is list with ', j_o(iv)%i(1), ' elements:' ! ,size(o(iv)%i)
-	endif !if(head_)  17076
+	endif !if(head_)  17258
 	nel= j_o(iv)%i(1)
 	lenc = 0
 	lenct=len(j_cline)
@@ -17086,10 +17268,10 @@ subroutine j_printlist(nu,iv,head)
 		if(lenc+j_loname+1.gt.lenct)then
 			write(nu,'(1x,a)')j_cline(1:lenc)
 			lenc=0
-		endif !if(lenc+j_loname+1.gt.lenct)  17086
+		endif !if(lenc+j_loname+1.gt.lenct)  17268
 		j_cline(lenc+1:lenc+j_loname+1) =j_oname(1:j_loname)//' '
 		lenc=lenc+j_loname+1
-	enddo !i_=1,nel  17083
+	enddo !i_=1,nel  17265
 	write(nu,'(1x,a)')j_cline(1:lenc)
 end subroutine !subroutine j_printlist(nu,iv,head)
  
@@ -17103,11 +17285,11 @@ subroutine j_printlist0(nu,list0,list)
 	do i_=1,nel
 		iel = list(i_)
 		temp=.false.
-		if(iel.gt.j_mxnamedv.and.iel.le.j_nv)then !if(iv.le.j_namedv)then
+		if(iel.gt.j_mxnamedv.and.iel.le.j_nv)then !if(iv.le.j_named)then
 			write(chr,'(i6)')iel
 			do j=1,4
 				if(chr(j:j).ne.' ')exit
-			enddo !j=1,4  17108
+			enddo !j=1,4  17290
 			ipit=11-j
 			temp=.true.
 			!		write(6,*)'iv',iv
@@ -17115,24 +17297,24 @@ subroutine j_printlist0(nu,list0,list)
 			!	j_loname=len_trim(j_oname)
 		else
 			ipit=j_o(j_ivnames)%i(iel+1)-j_o(j_ivnames)%i(iel)
-		endif !if(iel.gt.j_mxnamedv.and.iel.le.j_nv)  17106
+		endif !if(iel.gt.j_mxnamedv.and.iel.le.j_nv)  17288
 		if (j_lencline+ipit>80) then
 			write(nu,'(1x,a)')j_cline(1:j_lencline)
 			j_lencline=0
-		endif !if (j_lencline+ipit>80)  17119
+		endif !if (j_lencline+ipit>80)  17301
 		if(temp)then
 			j_cline(j_lencline+1:j_lencline+ipit)='TEMP'//chr(j:6)
 		else
 			call j_getline2(j_ivnames,iel,j_cline(j_lencline+1:j_lencline+ipit),le)
 			if(j_err)return
-		endif !if(temp)  17123
+		endif !if(temp)  17305
 		j_lencline = j_lencline+ipit
 		if (j_lencline<80) then
 			j_lencline = j_lencline+1
 			j_cline(j_lencline:j_lencline)=' '
-		endif !if (j_lencline<80)  17130
+		endif !if (j_lencline<80)  17312
  
-	enddo !i_=1,nel  17103
+	enddo !i_=1,nel  17285
 	write(nu,'(1x,a)')j_cline(1:j_lencline)
 end subroutine !subroutine j_printlist0(nu,list0,list)
  
@@ -17161,7 +17343,7 @@ subroutine j_parent(inp,le)
 			cycle
 		else
 			if(hipsu)cycle
-		endif !if(inp(i:i).eq."'")  17158
+		endif !if(inp(i:i).eq."'")  17340
 		select case(inp(i:i))
 		case ("'") !select case(inp(i:i))
 		hipsu=.not.hipsu
@@ -17175,8 +17357,8 @@ subroutine j_parent(inp,le)
 			if(inp(i+1:i+1).eq.',')then
 				write(6,*)'left parenthesis cannot be followed with comma'
 				j_err=.true. ;return
-			endif !if(inp(i+1:i+1).eq.',')  17175
-		endif !if(.not.(haka.or.hipsu))  17173
+			endif !if(inp(i+1:i+1).eq.',')  17357
+		endif !if(.not.(haka.or.hipsu))  17355
  
 		case(')') !select case(inp(i:i))
 		if(.not.(haka.or.hipsu))then
@@ -17187,7 +17369,7 @@ subroutine j_parent(inp,le)
 				write(6,*)'right parenthesis at ',i,'cannot be followed with letter, input:'
 				write(6,*)inp(1:le)
 				j_err=.true.;return
-			endif !if(j_isletter(inp(i1:i1)).and.inp(max(le-4,1):le).ne.')the  17184
+			endif !if(j_isletter(inp(i1:i1)).and.inp(max(le-4,1):le).ne.')the  17366
 			if(inp(i1:i1).ge.'0'.and.inp(i1:i1).le.'9'.or.(inp(i1:i1).eq.'.'.and.inp(i2:i2).ge.'0' &
 					.and.inp(i2:i2).le.'9'))then
  
@@ -17196,15 +17378,15 @@ subroutine j_parent(inp,le)
 				j_err=.true.;return
  
  
-			endif !if(inp(i1:i1).ge.'0'.and.inp(i1:i1).le.'9'.or.(inp(i1:i1).  17191
+			endif !if(inp(i1:i1).ge.'0'.and.inp(i1:i1).le.'9'.or.(inp(i1:i1).  17373
 			if(nright.gt.nleft)then
 				write(6,*)nleft,' ( ',nright,' ) at:'! more ) than ( ,nleft=',nleft,' nright=',nright
 				write(6,*)inp(1:i)
 				write(6,*)' '
 				!write(6,*)'at character ',i ,' more ) than ( ,nleft=',nleft,' nright=',nright
 				j_err=.true.;return
-			endif !if(nright.gt.nleft)  17200
-		endif !if(.not.(haka.or.hipsu))  17182
+			endif !if(nright.gt.nleft)  17382
+		endif !if(.not.(haka.or.hipsu))  17364
 		case('=') !select case(inp(i:i))
 		if(.not.(haka.or.hipsu))then
 			neq=neq+1
@@ -17212,15 +17394,15 @@ subroutine j_parent(inp,le)
 				write(6,*)'there can be only one ='
 				j_err=.true.;return
  
-			endif !if(neq.gt.1)  17211
+			endif !if(neq.gt.1)  17393
 			if(nleft.ne.nright)then
 				write(6,*)nleft,' ( ',nright,' ) nonbalanced parenthesis at:'
 				write(6,*)inp(1:i)
 				write(6,*)' '
 				!	write(6,*)'at  = more ( than ), nleft=',nleft,' nright=',nright
 				j_err=.true. ;return
-			endif !if(nleft.ne.nright)  17216
-		endif !if(.not.(haka.or.hipsu))  17209
+			endif !if(nleft.ne.nright)  17398
+		endif !if(.not.(haka.or.hipsu))  17391
  
 		case('{')  ! ½ default !select case(inp(i:i))
 		if(nleft2.eq.0)then
@@ -17230,7 +17412,7 @@ subroutine j_parent(inp,le)
 			else
 				j_tempchar(1:i+6)=inp(1:i-1)//'ilist('
 				le2=i+5
-			endif !if(i.eq.1)  17227
+			endif !if(i.eq.1)  17409
  
  
 		else
@@ -17238,7 +17420,7 @@ subroutine j_parent(inp,le)
 			j_tempchar(le2+1:le2+lis)=inp(iv+1:i-1)//'ilist('
 			le2=le2+lis
  
-		endif !if(nleft2.eq.0)  17226
+		endif !if(nleft2.eq.0)  17408
 		iv=i
 		!		 write(6,*)'he1:',i,iv,j_tempchar(1:le2)
 		nleft2=nleft2+1
@@ -17251,7 +17433,7 @@ subroutine j_parent(inp,le)
 			write(6,*)inp(1:i)
 			write(6,*)' '
 			j_err=.true.
-		endif !if(nright2.gt.nleft2)  17249
+		endif !if(nright2.gt.nleft2)  17431
 		lis=i-iv
 		j_tempchar(le2+1:le2+lis)=inp(iv+1:i-1)//')'
 		!	 write(6,*)'hui:',le2,i,iv,lis,inp(iv+1:i-1)//')'
@@ -17260,11 +17442,11 @@ subroutine j_parent(inp,le)
 		!	  write(6,*)'he2:',i,iv,j_tempchar(1:le2)
 		!	if(hipsu.and.inp(i:i).eq.'~')inp(i:i)="'"
 		end select !select case(inp(i:i))
-	enddo !i=1,le  17155
+	enddo !i=1,le  17337
 	if(hipsu)then
 		write(6,*)'apostrophe started at ',li, ' never ends '
 		j_err=.true.;return
-	endif !if(hipsu)  17264
+	endif !if(hipsu)  17446
 	if(nleft.ne.nright)then
 		write(6,*)'*unbalanced parenthesis ',nleft,' ( ',nright, ' )  at location ', i,':'
 		!	write(6,*)inp(1:i)
@@ -17272,7 +17454,7 @@ subroutine j_parent(inp,le)
 		!write(6,*)inp(1:le)
 		!	write(6,*)' '
 		j_err=.true. ;return
-	endif !if(nleft.ne.nright)  17268
+	endif !if(nleft.ne.nright)  17450
 	if(nleft2.ne.0)then
 		if(nleft2.ne.nright2)then
 			write(6,*)'*unbalanced parenthesis ',nleft2,' { ',nright2, ' }'
@@ -17285,12 +17467,12 @@ subroutine j_parent(inp,le)
 				j_tempchar(le2+1:le2+lis)=inp(iv+1:le)
 				!		 write(6,*)'hef:',j_tempchar(1:le2)
 				le2=le2+lis
-			endif !if(iv.lt.le)  17283
+			endif !if(iv.lt.le)  17465
 			le=le2
 			inp(1:le)=j_tempchar(1:le)
 			!		write(6,*)'pate:',inp(1:le)
-		endif !if(nleft2.ne.nright2)  17277
-	endif !if(nleft2.ne.0)  17276
+		endif !if(nleft2.ne.nright2)  17459
+	endif !if(nleft2.ne.0)  17458
  
  
 	return
@@ -17312,12 +17494,12 @@ logical function j_writevar(nu,narg,arg,ivform)
 				j_err=.true.
 				j_writevar=.true.
  
-			endif !if(j_otype(arg(iar)).ne.j_ipmatrix)  17309
+			endif !if(j_otype(arg(iar)).ne.j_ipmatrix)  17491
 			return
  
-		endif !if(j_otype(arg(iar)).ne.j_ipchar.and.j_otype(arg(iar)).ne.  17307
+		endif !if(j_otype(arg(iar)).ne.j_ipchar.and.j_otype(arg(iar)).ne.  17489
 		if(j_otype(arg(iar)).eq.j_ipreal)nar=nar+1
-	enddo !iar=1,narg  17306
+	enddo !iar=1,narg  17488
 	if(j_err)return
 	j_writevar=.true.
 	if(nar.eq.narg)then
@@ -17325,9 +17507,9 @@ logical function j_writevar(nu,narg,arg,ivform)
 			write(nu,*)real(j_v(arg))
 		else
 			write(nu,*)j_v(arg)
-		endif !if(ivform.eq.j_ivdollar)  17324
+		endif !if(ivform.eq.j_ivdollar)  17506
 		return
-	endif !if(nar.eq.narg)  17323
+	endif !if(nar.eq.narg)  17505
  
  
 	ial=1
@@ -17339,8 +17521,8 @@ logical function j_writevar(nu,narg,arg,ivform)
 		else !if(j_otype(arg(iar)).eq.j_ipchar)then
 			j_tempchar2(ial:ial+9)=j_chr10(j_v(arg(iar)))
 			ial=ial+10
-		endif !if(j_otype(arg(iar)).eq.j_ipchar)  17336
-	enddo !iar=1,narg  17335
+		endif !if(j_otype(arg(iar)).eq.j_ipchar)  17518
+	enddo !iar=1,narg  17517
 	write(nu,'(a)')j_tempchar2(1:ial-1)
 	return
  
@@ -17357,9 +17539,9 @@ logical function j_printvar(nu,narg,arg)
 			j_err=.true.
 			return
  
-		endif !if(arg(iar).gt.j_mxv)  17355
+		endif !if(arg(iar).gt.j_mxv)  17537
 		if(j_otype(arg(iar)).ne.j_ipchar.and.j_otype(arg(iar)).ne.j_ipreal)return
-	enddo !iar=1,narg  17354
+	enddo !iar=1,narg  17536
 	j_printvar=.true.
  
 	j_tempchar2=' '
@@ -17373,29 +17555,29 @@ logical function j_printvar(nu,narg,arg)
 			write(6,*)'uliu',arg(1:narg)
 			j_err=.true.;return
  
-		endif !if(arg(iar).gt.j_mxv)  17372
+		endif !if(arg(iar).gt.j_mxv)  17554
 		if(j_otype(arg(iar)).eq.j_ipchar)then
 			call j_getchar(arg(iar),j_tempchar2(ial:),le)
 			ial=ial+le
 			ic=iar
 		else !if(j_otype(arg(iar)).eq.j_ipchar)then
 			if(iar-1.ne.ic)then
-				if(arg(iar).le.j_namedv)then
+				if(arg(iar).le.j_named)then
 					j_tempchar2(ial:ial+23)=j_vname(arg(iar))
 					le=len_trim(j_tempchar2(ial:ial+23))
 					ial=ial+le+1
 					j_tempchar2(ial-1:ial-1)='='
  
-				else !if(arg(iar).le.j_namedv)then
+				else !if(arg(iar).le.j_named)then
  
 					j_tempchar2(ial:ial)='='
 					ial=ial+1
-				endif !if(arg(iar).le.j_namedv)  17383
-			endif !if(iar-1.ne.ic)  17382
+				endif !if(arg(iar).le.j_named)  17565
+			endif !if(iar-1.ne.ic)  17564
 			j_tempchar2(ial:ial+9)=j_chr10(j_v(arg(iar)))
 			ial=ial+12
-		endif !if(j_otype(arg(iar)).eq.j_ipchar)  17377
-	enddo !iar=1,narg  17369
+		endif !if(j_otype(arg(iar)).eq.j_ipchar)  17559
+	enddo !iar=1,narg  17551
 	write(nu,'(a)')j_tempchar2(1:ial)
 	write(nu,*)' '
 	return
@@ -17414,7 +17596,7 @@ subroutine j_readtext(iv)
 	if(j_otype(iv).ne.j_ipchar)then
 		write(6,*)'*j* object ',ivin,' is not CHAR'
 		j_err=.true.;return
-	endif !if(j_otype(iv).ne.j_ipchar)  17414
+	endif !if(j_otype(iv).ne.j_ipchar)  17596
  
  
 	!buff(10)	Last modification time   %i(5) number of lines i(6) last modified
@@ -17431,19 +17613,19 @@ subroutine j_readtext(iv)
 	if(.not.j_yes)then
 		write(6,*)'file ',j_filename(1:le),' does not exist'
 		j_err=.true.;return
-	endif !if(.not.j_yes)  17431
+	endif !if(.not.j_yes)  17613
  
 	if(j_yes2)then
 		write(6,*)'file ',j_filename(1:le),' was open, it is closed first'
 		call j_closeunit(nu)
-	endif !if(j_yes2)  17436
+	endif !if(j_yes2)  17618
  
 	CALL STAT(j_filename(1:le),BUFF,STATUS)
 	if(STATUS.ne.0)then
 		write(6,*)'cannot open file ',j_filename(1:le),' STATUS=',STATUS
 		j_err=.true.;return
-	endif !if(STATUS.ne.0)  17442
-	!	if(p)write(6,*)'perk',buff(10),j_o(iv)%i(7),iv,allocated(j_o(iv)%txt),&
+	endif !if(STATUS.ne.0)  17624
+	!	if(j_p)write(6,*)'perk',buff(10),j_o(iv)%i(7),iv,allocated(j_o(iv)%txt),&
 	!	allocated(j_o(iv)%i),allocated(j_o(iv)%i2)
 	!	write(6,*)'buf10',buff(10),j_o(iv)%i(7),' return ',buff(10).eq.j_o(iv)%i(7)
 	if(buff(10).eq.j_o(iv)%i(7))return
@@ -17456,22 +17638,22 @@ subroutine j_readtext(iv)
 		if(size(j_temptxt).lt.nlin)then
 			deallocate(j_temptxt)
 			allocate(j_temptxt(1:nlin))
-		endif !if(size(j_temptxt).lt.nlin)  17456
+		endif !if(size(j_temptxt).lt.nlin)  17638
 	else !if(allocated(j_temptxt))then
 		allocate(j_temptxt(1:nlin))
-	endif !if(allocated(j_temptxt))  17455
+	endif !if(allocated(j_temptxt))  17637
 	if(allocated(lenb))then
 		if(size(lenb).lt.nlin)then
 			deallocate(lenb)
 			allocate(lenb(1:nlin))
-		endif !if(size(lenb).lt.nlin)  17464
+		endif !if(size(lenb).lt.nlin)  17646
 	else !if(allocated(lenb))then
 		allocate(lenb(1:nlin))
-	endif !if(allocated(lenb))  17463
+	endif !if(allocated(lenb))  17645
 	ntrunc=0
 	ntrunc2=0
 	il=0
-	!if(p)WRITE(6,*)'nlin,leb',nlin,leb
+	!if(j_p)WRITE(6,*)'nlin,leb',nlin,leb
 	do while(.true.)
 		read(j_incnu,'(a)',end=99,err=90)j_tempchar
 		leb=j_lentrim(j_tempchar)
@@ -17488,14 +17670,14 @@ subroutine j_readtext(iv)
 				write(6,*)'line ',il+1, ' is ' , leb, ' characters long'
 				write(6,*) j_tempchar(1:leb)
 				ntrunc2=ntrunc2+1
-			endif !if(ico.gt.160)  17487
-		endif !if(leb.gt.160)  17479
+			endif !if(ico.gt.160)  17669
+		endif !if(leb.gt.160)  17661
  
 		il=il+1
 		j_temptxt(il)=j_tempchar(1:max(leb,1))
 		lenb(il)=min(leb,160)
-		!	if(p)WRITE(6,*)'leb,il',leb,il
-	enddo !while(.true.)  17475
+		!	if(j_p)WRITE(6,*)'leb,il',leb,il
+	enddo !while(.true.)  17657
 99		close(j_incnu)
 !	write(6,*)'ilines ',il,j_incnu
 	if(ntrunc2.gt.0)then
@@ -17504,12 +17686,12 @@ subroutine j_readtext(iv)
 		j_err=.true.
 		return
  
-	endif !if(ntrunc2.gt.0)  17501
+	endif !if(ntrunc2.gt.0)  17683
 	if(il.le.0)then
 		write(6,*)'file ',j_filename(1:le),' was empty'
 		j_err=.true.
 		return
-	endif !if(il.le.0)  17508
+	endif !if(il.le.0)  17690
 	if(allocated(j_o(iv)%txt))deallocate(j_o(iv)%txt)
 	if(allocated(j_o(iv)%i2))deallocate(j_o(iv)%i2)
 	allocate(j_o(iv)%txt(1:il+1))   !one line reserve
@@ -17533,99 +17715,144 @@ subroutine j_readtext(iv)
  
 end subroutine !subroutine j_readtext(iv)
  
-subroutine j_getin(iob,io,nu,ivform)  !get in-> file
-	integer,intent(in)::iob,io
-	integer,intent(out)::nu,ivform
-	logical ::p=.false.
-	!	p=j_v(j_ivdebug).ne.j_0
-	j_incin=.false.
-	li=j_linkoption(iob,io,j_min)
-	!	write(6,*)'<777)',li
-	if(li.lt.0)then
-		nu=0;return
-	endif !if(li.lt.0)  17544
- 
-	lif=j_linkoption(iob,io,j_mform)
-	ivform=j_ivdollar
-	if(lif.gt.0)then
-		if(j_o(iob)%i(lif).ne.1)then
-			write(6,*)'form needs one argument'
-			j_err=.true.;return
-		endif !if(j_o(iob)%i(lif).ne.1)  17551
-		ivform=j_o(iob)%i(lif+1)
-		!	write(6,*)'<4545subin ifortm',ivform
-	endif !if(lif.gt.0)  17550
- 
- 
-	if(li.eq.0)then !if(j_ninc.eq.1)then
-		if(j_ninc.eq.1)then
-			nu=5
-		else
-			j_incin=.true.
-			nu=j_inciv(j_ninc)
-		endif !if(j_ninc.eq.1)  17561
-	else !if(j_ninc.eq.1)then
-		if(j_o(iob)%i(li).gt.1)then
-			write(6,*)'only on in-> file allowed, use newdata to merge datas'
-			j_err=.true.
-			return
-		endif !if(j_o(iob)%i(li).gt.1)  17568
-		ifi=j_o(iob)%i(li+1)
-		!	write(6,*)'<88bef getfile,ifi,ivform',ifi,ivform
-		if(ivform.ne.j_ivdollar)then
-			!	write(6,*)'<53535'
-			call j_getfile(nu,'r',ivfile=ifi,ivform=ivform)
-			!	write(6,*)'<464664 '
-		else !if(ivform.ne.j_ivdollar)then
-			call j_getfile(nu,'r',ivfile=ifi)
-		endif !if(ivform.ne.j_ivdollar)  17575
-	endif !if(li.eq.0)  17560
-	! j_linkoption(iob,io,j_min)=0
-	! j_linkoption(iob,io,j_mform)=0
-	return
-end subroutine !subroutine j_getin(iob,io,nu,ivform)
- 
-subroutine j_getsubin(iob,io,nu,ivform)
-	integer,intent(in)::iob,io
-	integer,intent(out)::nu,ivform
- 
-	j_incin=.false.
- 
-	li=j_linkoption(iob,io,j_msubin)
-	if(li.lt.0)then
-		write(6,*)'subin-> is misssing'
-		j_err=.true.;return
-	endif !if(li.lt.0)  17595
- 
-	lif=j_linkoption(iob,io,j_msubform)
-	!	write(6,*)'<646subinlinkform',lif
-	ivform=j_ivdollar
-	if(lif.gt.0)then
-		if(j_o(iob)%i(lif).ne.1)then
-			write(6,*)'subform needs one argument'
-			j_err=.true.;return
-		endif !if(j_o(iob)%i(lif).ne.1)  17604
-		ivform=j_o(iob)%i(lif+1)
-	endif !if(lif.gt.0)  17603
- 
+function j_lenpara()
+	j_lenpara=0
 	if(j_ninc.eq.1)then
-		nu=5
+		write(6,*)'lenpara: not in paragraph'
+		j_err=.true.;return
+	endif !if(j_ninc.eq.1)  17720
+	iiv=j_inciv( j_ninc)
+	iline=j_o(iiv)%i(6)
  
-	elseif(j_o(iob)%i(li).eq.0)then !if(j_ninc.eq.1)then
-		j_incin=.true.
-		nu=j_inciv(j_ninc)
-	else !if(j_ninc.eq.1)then
-		ifi=j_o(iob)%i(li+1)
-		if(ivform.ne.j_ivdollar)then
-			call j_getfile(nu,'r',ivfile=ifi,ivform=ivform)
-		else !if(ivform.ne.j_ivdollar)then
-			call j_getfile(nu,'r',ivfile=ifi)
-		endif !if(ivform.ne.j_ivdollar)  17619
-	endif !if(j_ninc.eq.1)  17611
-	!j_linkoption(iob,io,j_msubin)=0
-	!j_linkoption(iob,io,j_msubform)=0
+1 call j_getinput(' ')
+	if(j_err)return
+	if(j_inp(1:j_linp).ne.'/')then
+		j_lenpara=j_lenpara+1
+		goto 1
+	endif !if(j_inp(1:j_linp).ne.'/')  17729
+	j_o(iiv)%i(6)=iline
+ 
+endfunction j_lenpara
+ 
+subroutine j_exitpara()
+	if(j_ninc.eq.1)then
+		write(6,*)'lenpara: not in paragraph'
+		j_err=.true.;return
+	endif !if(j_ninc.eq.1)  17738
+	iiv=j_inciv( j_ninc)
+	j_o(iiv)%i(6)=j_o(iiv)%i(11)
+	if(j_o(iiv)%i(6).le.0.or.j_o(iiv)%i(6).gt.j_o(iiv)%i(5))then
+		write(6,*)'exitpara, paragraph not properly set'
+		j_err=.true.
+	endif !if(j_o(iiv)%i(6).le.0.or.j_o(iiv)%i(6).gt.j_o(iiv)%i(5))  17744
+ 
+ 
+end subroutine
+ 
+function j_getin(iob,io,inclines,needed,ivform,lines)  !get in-> file
+	integer,intent(in)::iob,io
+	integer*8,intent(out)::inclines
+	!	integer,intent(out)::exit
+	logical,optional,intent(in)::needed
+	integer,intent(out),optional::ivform
+	integer,intent(out),optional::lines
+ 
+	logical ::p=.false.
+	logical need
+	character*1 ch
+ 
+	!	p=j_v(j_ivdebug).ne.j_0
+	!write(6,*)'mmm',present(ivform)
+	j_incin=.false.
+	inclines=0
+	call j_getoption(iob,io,j_min,-1,1,j_ipchar,.false.,narg,j_optarg0)
+	!write(6,*)'getinnarg ',narg,iob,io
+	if(narg.lt.0)then
+		j_getin=-1;return
+	endif !if(narg.lt.0)  17770
+	if(j_err)return
+	if(narg.eq.0)then
+		j_getin=0
+		if(j_ninc.eq.1)then
+			write(6,*)'in-> is allowed only in ;incl files'
+			j_err=.true.;return
+			j_incin=.true.
+		endif !if(j_ninc.eq.1)  17776
+		iiv=j_inciv( j_ninc)
+		iline=j_o(iiv)%i(6)
+		call j_getinput(' ')
+ 
+		do while(j_inp(1:j_linp).ne.'/')
+			inclines=inclines+1
+ 
+			call j_getinput(' ')
+			if(j_err)return
+		enddo !while(j_inp(1:j_linp).ne.'/')  17785
+		j_o(iiv)%i(11)=j_o(iiv)%i(6)+1 !go after para
+		j_o(iiv)%i(6)=iline
+ 
+		return
+ 
+	elseif(narg.lt.0)then
+		j_getin=narg
+		need=.false.
+		if(present(needed))need=needed
+		if(need)then
+			write(6,*)'in-> is needed'
+			j_err=.true.;return
+		endif !if(need)  17800
+		return
+	endif !if(narg.eq.0)  17774
+	ifi=j_optarg0(1)
+	!	write(6,*)'ifi',ifi
+	ivform0=j_ivdollar
+	if(present(ivform))then
+		call j_getoption(iob,io,j_mform,-1,1,j_ipchar,.true.,narg,j_optarg0)
+		if(j_err)return
+		if(narg.gt.0)ivform0=j_optarg0(1)
+		ivform=ivform0
+		!	write(6,*)'ivf',ivform
+	endif !if(present(ivform))  17809
+ 
+	if(ivform0.ne.j_ivdollar)then
+		!	write(6,*)'<53535'
+		call j_getfile(nu,'r',ivfile=ifi,ivform=ivform0)
+	else
+ 
+		call j_getfile(nu,'r',ivfile=ifi)
+	endif !if(ivform0.ne.j_ivdollar)  17817
+	if(j_err)return
+	if(present(lines))then
+		lines=0
+		if(ivform0.eq.j_ivb)then
+			do while(.true.)
+				read(nu,end=700,err=600)aa
+				lines=lines+1
+			enddo !while(.true.)  17828
+		elseif(ivform0.eq.j_ivb2)then
+			do while(.true.)
+				read(nu,end=700,err=600)aa
+				lines=lines+1
+			enddo !while(.true.)  17833
+		else
+			do while(.true.)
+				read(nu,*,end=700,err=600)ch
+				lines=lines+1
+			enddo !while(.true.)  17838
+ 
+		endif !if(ivform0.eq.j_ivb)  17827
+ 
+ 
+	endif !if(present(lines))  17825
+ 
+	j_getin=nu
 	return
-end subroutine !subroutine j_getsubin(iob,nu,ivform)
+700 rewind(nu)
+	return
+600 write(6,*)'error in reading in-> after reading ',lines
+end function !subroutine j_getin(iob,io,nu,ivform)
+ 
+ 
  
 integer function j_filesize(ifile,filename,time)
 	! buff(1)	Device ID
@@ -17655,14 +17882,14 @@ integer function j_filesize(ifile,filename,time)
 	else !if(present(ifile))then
 		write(6,*)'*j* j_filesize, either filename or ifile must be present'
 		j_err=.true.;return
-	endif !if(present(ifile))  17650
+	endif !if(present(ifile))  17877
 	if(STATUS.ne.0)then
 		j_filesize=0
 		if(present(time))time=0
 	else !if(STATUS.ne.0)then
 		j_filesize=buff(8)
 		if(present(time))time=buff(10)
-	endif !if(STATUS.ne.0)  17659
+	endif !if(STATUS.ne.0)  17886
  
  
 	return
@@ -17678,12 +17905,12 @@ subroutine j_cleanstart(text,le) ! remove blanks, tabs etc , le is the length of
 			if(j.gt.1)then
 				text(1:le-j+1)=text(j:le)
 				le=le-j+1
-			endif !if(j.gt.1)  17678
+			endif !if(j.gt.1)  17905
 			return
 		else !if(text(j:j).eq.';'.or.text(j:j).eq.'/')then
 			return
-		end if !if(text(j:j).eq.';'.or.text(j:j).eq.'/')  17677
-	enddo !j=1,le  17675
+		end if !if(text(j:j).eq.';'.or.text(j:j).eq.'/')  17904
+	enddo !j=1,le  17902
 end subroutine !subroutine j_cleanstart(text,le)
  
 subroutine j_range(xmin,xmax,xmin2,xmax2)
@@ -17723,13 +17950,13 @@ recursive subroutine j_showfig(ivfig,asis)
 	else
 		terminal='qt'
 		let=2
-	endif !if(j_otype(j_ivterminal).eq.j_ipchar)  17721
+	endif !if(j_otype(j_ivterminal).eq.j_ipchar)  17948
 	if(j_otype(j_ivwindow).eq.j_ipchar)then
 		call j_getchar(j_ivwindow,window,lew)
 	else
 		window='700,700'
 		lew=7
-	endif !if(j_otype(j_ivwindow).eq.j_ipchar)  17727
+	endif !if(j_otype(j_ivwindow).eq.j_ipchar)  17954
 	!	write(6,*)'showfig,ivfigas, ',ivfig,asis
 	!	j_otype(ivfig),
 	if(j_otype(ivfig).eq.j_ipchar)then
@@ -17760,13 +17987,13 @@ recursive subroutine j_showfig(ivfig,asis)
 			write(nu,'(a)')'unset xtics'
 			write(nu,'(a)')'unset raxis'
 			write(nu,'(a)')'unset rtics'
-		endif !if(j_gpaxes.eq.0)  17757
+		endif !if(j_gpaxes.eq.0)  17984
 		write(nu,*)'set terminal ',terminal(1:let),' size ',window(1:lew), ' enhanced'
 		! enddo
 		write(nu,*)'set encoding utf8'
 		do ili=1,j_gpbas
 			write(nu,'(a)')j_o(ivfig)%txt(ili)(1:j_o(ivfig)%i2(ili))
-		enddo !ili=1,j_gpbas  17767
+		enddo !ili=1,j_gpbas  17994
 		xmin=j_o(ivfig)%d(1)
 		if(xmin.gt.1.e20)xmin=j_o(ivfig)%d(1)
 		nl=(j_o(ivfig)%i(3)+1)/2  !used plot lines
@@ -17778,9 +18005,9 @@ recursive subroutine j_showfig(ivfig,asis)
 				write(nu,'(a)')j_o(ivfig)%txt(ili)(1:j_o(ivfig)%i2(ili))//'\'
 			else !if(ili.lt.j_gpbas+nl)then
 				if(j_o(ivfig)%i2(ili).gt.0)	write(nu,'(a)')j_o(ivfig)%txt(ili)(1:j_o(ivfig)%i2(ili))
-			endif !if(ili.lt.j_gpbas+nl)  17777
+			endif !if(ili.lt.j_gpbas+nl)  18004
  
-		enddo !ili=j_gpbas+1,j_gpbas+nl  17776
+		enddo !ili=j_gpbas+1,j_gpbas+nl  18003
 		nres=(j_o(ivfig)%i(4)+1)/2  !reserved plot lines
 		nc=0
 		nc2=0
@@ -17789,16 +18016,16 @@ recursive subroutine j_showfig(ivfig,asis)
 			if(j_o(ivfig)%txt(ili)(1:10).ne.'set label ')then
 				write(nu,'(a)')j_o(ivfig)%txt(ili)(1:j_o(ivfig)%i2(ili))
 				nc=nc+1
-			endif !if(j_o(ivfig)%txt(ili)(1:10).ne.'set label ')  17789
-		enddo !ili=j_gpbas+nres+1,j_o(ivfig)%i(1)  17787
+			endif !if(j_o(ivfig)%txt(ili)(1:10).ne.'set label ')  18016
+		enddo !ili=j_gpbas+nres+1,j_o(ivfig)%i(1)  18014
  
 		if(nc.ne.nc2)then
 			do ili=j_gpbas+nres+1,j_o(ivfig)%i(1)
 				if(j_o(ivfig)%txt(ili)(1:10).eq.'set label ')&
 					write(nu,'(a)')j_o(ivfig)%txt(ili)(1:j_o(ivfig)%i2(ili))
-			enddo !ili=j_gpbas+nres+1,j_o(ivfig)%i(1)  17796
+			enddo !ili=j_gpbas+nres+1,j_o(ivfig)%i(1)  18023
  
-		endif !if(nc.ne.nc2)  17795
+		endif !if(nc.ne.nc2)  18022
 		write(nu,'(a)')'replot'
  
 		!	write(nu,'(a)')'e'
@@ -17806,7 +18033,7 @@ recursive subroutine j_showfig(ivfig,asis)
 		!if(append)write(nu,*)'unset multiplot'
 		call j_closeunit(nu)
  
-	endif !if(j_otype(ivfig).eq.j_ipchar)  17735
+	endif !if(j_otype(ivfig).eq.j_ipchar)  17962
 	!	if(old) call execute_command_line('gnuplot exit')
 	!	write(6,*)'<djjd',j_filename(1:le)
 	call execute_command_line('gnuplot --persist '//j_filename(1:le), wait=.false.)
@@ -17829,12 +18056,12 @@ function j_font(label,le)
  
 				j_font=i
 				return
-			endif !if(label(i:i).eq.']')  17828
+			endif !if(label(i:i).eq.']')  18055
  
-		enddo !i=le-1,1,-1  17827
+		enddo !i=le-1,1,-1  18054
 		write(6,*)'label ',label(1:le), ' does not have matching ]'
 		j_err=.true.
-	endif !if(label(le:le).eq.'[')  17826
+	endif !if(label(le:le).eq.'[')  18053
 	j_font=0
 	return
  
@@ -17896,10 +18123,10 @@ subroutine j_gpplot(text,add)
 		do i=j_o(j_gpiout)%i(1),j_gpbas+nlres+1,-1
 			j_o(j_gpiout)%txt(i+nlres)=j_o(j_gpiout)%txt(i)
 			j_o(j_gpiout)%i2(i+nlres)=j_o(j_gpiout)%i2(i)
-		enddo !i=j_o(j_gpiout)%i(1),j_gpbas+nlres+1,-1  17896
+		enddo !i=j_o(j_gpiout)%i(1),j_gpbas+nlres+1,-1  18123
 		j_o(j_gpiout)%i2(j_gpbas+nlres+1:j_gpbas+2*nlres)=0
 		j_o(j_gpiout)%i(4)=2*j_o(j_gpiout)%i(4)
-	endif !if(iplot.gt.j_o(j_gpiout)%i(4))  17892
+	endif !if(iplot.gt.j_o(j_gpiout)%i(4))  18119
 	ipt=index(text,' pt ')
 	i2=j_o(j_gpiout)%i2(nl)
 	j_o(j_gpiout)%txt(nl)(i2+1:i2+le)=text(1:le)
@@ -17914,17 +18141,17 @@ subroutine j_gpplot(text,add)
 			if(imark.eq.0)then
 				j_o(j_gpiout)%i(11)=j_o(j_gpiout)%i(11)+1
 				imark=j_o(j_gpiout)%i(11)
-			endif !if(imark.eq.0)  17914
+			endif !if(imark.eq.0)  18141
 			ii1=mod(imark,10)
 			j_o(j_gpiout)%txt(nl)(i2+ipt+6:i2+ipt+6)=char(ii1+48)
 			ii2=imark-ii1
 			if(ii2.ne.0)then
 				ii2=imark/10
 				j_o(j_gpiout)%txt(nl)(i2+ipt+5:i2+ipt+5)=char(ii2+48)
-			endif !if(ii2.ne.0)  17921
+			endif !if(ii2.ne.0)  18148
  
-		endif !if(j_otype(j_gpmark).eq.j_ipchar)  17908
-	endif !if(ipt.gt.0)  17907
+		endif !if(j_otype(j_gpmark).eq.j_ipchar)  18135
+	endif !if(ipt.gt.0)  18134
 	nlres=(j_o(j_gpiout)%i(4)+1)/2  !reserved lines
 	if(iplot.eq.1)j_o(j_gpiout)%i(1)=j_gpbas+nlres
  
@@ -17948,7 +18175,7 @@ subroutine j_putfigbreak(nu)
 		j_o(j_gpiout)%txt(line)=' '
 		j_o(j_gpiout)%i2(line)=1
 		j_o(j_gpiout)%i(1)=line
-	endif !if(present(nu))  17943
+	endif !if(present(nu))  18170
  
 end subroutine
  
@@ -17967,10 +18194,10 @@ subroutine j_putfigxy(x,y,se,nu)
 		else !if(present(se))then
 			write(j_o(j_gpiout)%txt(line),*)real(x),real(y)
  
-		endif !if(present(se))  17965
+		endif !if(present(se))  18192
 		j_o(j_gpiout)%i2(line)=j_lentrim(j_o(j_gpiout)%txt(line))
 		j_o(j_gpiout)%i(1)=line
-	endif !if(present(nu))  17959
+	endif !if(present(nu))  18186
  
 	j_o(j_gpiout)%d(7)=min(j_o(j_gpiout)%d(7),x)
 	j_o(j_gpiout)%d(8)=max(j_o(j_gpiout)%d(8),x)
@@ -17987,7 +18214,7 @@ subroutine j_pause(prompt,do)
 		write(6,1000)prompt
 	else !if(present(prompt))then
 		write(6,1000)'<ret>'
-	endif !78		if(present(prompt))  17986
+	endif !78		if(present(prompt))  18213
 	j_ispause=.true.
 	!j_cline=' '
 	read(5,'(a)')j_cline
@@ -18003,23 +18230,23 @@ subroutine j_pause(prompt,do)
 		j_linpr=lec
 		call printstar(j_yes)
 		goto 78
-	endif !if(index(j_cline(1:lec),'=;list(').gt.0)  18001
+	endif !if(index(j_cline(1:lec),'=;list(').gt.0)  18228
  
  
 	if(j_cline(1:lec).eq.'e'.or.j_cline(1:lec).eq.'end'.or.j_cline(1:lec).eq.'/')then
 		!			if(j_ninc.eq.1)goto 90
 		write(6,*)'err return from pause'
 		j_err=.true.;goto 90
-	endif !if(j_cline(1:lec).eq.'e'.or.j_cline(1:lec).eq.'end'.or.j_c  18009
+	endif !if(j_cline(1:lec).eq.'e'.or.j_cline(1:lec).eq.'end'.or.j_c  18236
 	if(present(do))then
 		write(6,*)'cline ',j_cline(1:lec)
 		call j_command(j_cline(1:lec))
 		if(j_err)then
 			j_err=.false.
 			write(6,*)'try again, <ret> to continue e => error return'
-		endif !if(j_err)  18017
+		endif !if(j_err)  18244
 		goto 78
-	endif !if(present(do))  18014
+	endif !if(present(do))  18241
 90	j_ispause=.false.
 	!	write(6,*)'pause,end ',j_recursion
 end subroutine !subroutine j_pause(prompt,do)
@@ -18028,7 +18255,7 @@ integer function j_intloc(ivec,lenvec,i)
 	integer,intent(in) ::lenvec,i
 	do j_intloc=1,lenvec
 		if(i.eq.ivec(j_intloc))return
-	enddo !j_intloc=1,lenvec  18029
+	enddo !j_intloc=1,lenvec  18256
 	j_intloc=0
 end function
  
@@ -18039,7 +18266,7 @@ integer function j_incline() !what was the last incline
 	else
 		j_incline=-1
  
-	endif !if(j_ninc.gt.1)  18036
+	endif !if(j_ninc.gt.1)  18263
  
  
 end function
@@ -18051,22 +18278,56 @@ subroutine j_inclinegoto(line)
 		write(6,*)'*j* trying to go to incl-line ',line,  'but max is ',j_o(iiv)%i(5)
 		j_err=.true.
 		return
-	endif !if(line.gt.j_o(iiv)%i(5).or.line.le.0)  18050
+	endif !if(line.gt.j_o(iiv)%i(5).or.line.le.0)  18277
 	j_o(iiv)%i(6)=line-1 !so getinput get correct line
  
 end subroutine
  
-! subroutine j_mergelist(list,n)
-! integer,dimension(*),list
-! integer n
-! n2=0
-! eka:		do i=1,n
-! do j=1,n2
-! if(list(i).eq.list(j))cycle eka
-! enddo !j=1,n2  16421
-! n2=n2+1
-! list(n2)=list(i)
-! enddo eka !:		do i=1,n  16420
-! n=n2
+double precision function j_stemsplineval(ifunc,darg)
+	integer,intent(in)::ifunc
+	double precision ::darg
  
-! end subroutine
+	!npo2= %i(2)
+ 
+ 
+	npo=j_o(ifunc)%i(1)  !h(2)=npo2
+	npo2=j_o(ifunc)%i(2)
+ 
+	if(darg.gt.j_0)then
+		arg=100.*darg
+		if(arg.ge.j_o(ifunc)%r(npo+npo2))then
+			if(darg.gt.60.d0)then
+				write(6,*)'**value(stemspline,height), height must be in metres, was ',darg
+				j_err=.true.
+			endif !if(darg.gt.60.d0)  18299
+			if(arg.le.j_o(ifunc)%r(npo+npo2)+1.)then
+				j_stemsplineval=j_o(ifunc)%r(npo2)
+			else !if(arg.le.j_o(ifunc)%d(npo+npo2)+1.)then
+				j_stemsplineval=j_0
+			endif !if(arg.le.j_o(ifunc)%r(npo+npo2)+1.)  18303
+		else !if(arg.ge.j_o(ifunc)%d(npo+npo2))then
+			j_stemsplineval=spld(arg,npo2,j_o(ifunc)%r(npo+1:),  j_o(ifunc)%r(1+2*npo:))
+		endif !if(arg.ge.j_o(ifunc)%r(npo+npo2))  18298
+ 
+	else
+ 
+		!		case(j_ipstemspline) !select case(j_otype(irg)) valuex
+ 
+		arg=-darg
+ 
+		if(arg.le.0.4)then
+			j_stemsplineval=0.01*j_o(ifunc)%r(npo+npo2)
+		else !if(arg.le.0.4)then
+			j_stemsplineval=0.01*splh(arg,j_o(ifunc)%i(2),j_o(ifunc)%r, j_o(ifunc)%r(1+npo:),  j_o(ifunc)%r(1+2*npo:))
+			if(j_err)then
+				write(6,*)'there were', npo2,' points in the curve'
+				write(6,*)'you asked height of diameter:',arg
+				write(6,*)'heights of knots (m):', 0.01*j_o(irg)%r(1+npo:npo2+npo)
+				write(6,*)'diams of knots (cm) :', j_o(irg)%r(1:npo2)
+ 
+			endif !if(j_err)  18322
+		endif !if(arg.le.0.4)  18318
+ 
+	endif !if(darg.gt.j_0)  18296
+ 
+end function

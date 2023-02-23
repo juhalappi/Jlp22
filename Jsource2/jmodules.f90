@@ -85,7 +85,7 @@ module jmod
 	integer, parameter :: j_nffig=6 !
 	integer, parameter :: j_nfspli=6 !
 	integer, parameter :: j_nfbit=7 !
-	integer, parameter :: j_nfmisc=6 !
+	integer, parameter :: j_nfmisc=7 !
  
 	integer, parameter :: j_fbspec=0   !basis
 	integer, parameter :: j_fbobj=j_fbspec+j_nfspec
@@ -250,7 +250,7 @@ module jmod
 		!! Linear programming
 		'problem','jlp','weights','unit','schedcum','schedw','weight','partweights','partunit','partschedcum', &
 		'partschedw','partweight','priceunit', 'weightschedcum','priceschedcum','priceschedw', &
-		'weightschedw','integerschedw','xkf', 'jlpz','jlpcoef', & ! 21 (Note)
+		'weightschedw','integerschedw','piecewise', 'jlpz','jlpcoef', & ! 21 (Note)
  
 		!! Simulator
 		'simulatorfree','nextfree','branchfree','simulatefree','cutfree','loadtreesfree', & ! 6
@@ -265,7 +265,7 @@ module jmod
 		'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
 		!! Misc. utility functions
-		'value','properties','cpu','secnds','where','batch'/ !6
+		'value','properties','cpu','secnds','where','batch','system'/ !6
  
 	integer,dimension(j_nfunctions_) :: j_minarg_ ! = (/ &  !!!%function
 	data j_minarg_/ 1,1,1,1,1,1,1,2,&
@@ -320,7 +320,7 @@ module jmod
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix',  & !19
  
-		0,1,1,0,0,0,1,0,0,0,0,1,&
+		0,0,1,2,0,0,1,0,0,0,0,1,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
 		!linkdata2,splitdata
  
@@ -328,7 +328,7 @@ module jmod
 		! 'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
 		! 'varcomp', 'classify', 'class', & !13
  
-		0,0,0,4*1,0,11*1,0,1,&
+		0,0,0,4*1,0,10*1,2,0,1,&
 		! 'problem','jlp','weights','unit','schedcum','schedw','weight','partweights','partunit','partschedcum', &
 		! 'partschedw','partweight','priceunit', 'weightschedcum','priceschedcum','priceschedw', &
 		! 'weightschedw','integerschedw','xkf','jlp2','jlpcoef',  & ! 21  (Note)
@@ -345,8 +345,8 @@ module jmod
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
-		6*0/
-	! 'value','properties','cpu','seconds','where','batch'/ !6
+		6*0,1/
+	! 'value','properties','cpu','seconds','where','batch','misc'/ !6
  
  
 	integer, dimension(j_nfunctions_):: j_maxarg_  !=  & !!%%function
@@ -402,7 +402,7 @@ module jmod
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix', & !19
  
-		0,1,0,0,0,1,0,1,0,0,1,&
+		0,1,0,99,0,1,0,1,0,0,1,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
 		!linkdata2,splitdata
 		0,1,1,1,1,1,2,1,1,2,  1,0,1,&
@@ -426,8 +426,8 @@ module jmod
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
-		6*0/
-	! 'value','properties','cpu','seconds','where','batch'/ !6
+		6*0,1/
+	! 'value','properties','cpu','seconds','where','batch','system'/ !6
  
  
  
@@ -462,50 +462,50 @@ module jmod
 	parameter (j_noptions_=216) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
-		'extra','subextra','mean', 'min','max',& ! 1-10
-		'sd','var','warm','volsd','rhs','rhs2','w','obs', 'subobs','problem',& !11-20 MIXED UP
-		'from','subdata','nobsw','subread','keep','subkeep','submaketrans','rmse','rows','subin', & !21-30
-		'subform','filter','print','sum','duplicate','loglike','mask','maxrounds','test','debug', & !31-40
+		'extraup','extra','mean', 'min','max',& ! 1-10
+		'sd','var','warm','volsd','rhs','rhs2','w','obs', 'obsup','problem',& !11-20 MIXED UP
+		'from','dataup','nobsw','readup','keep','keepup','maketransup','rmse','rows','inupfree', & !21-30
+		'formupfree','filterup','print','sum','duplicate','loglike','mask','maxrounds','test','debug', & !31-40
 		'default','classlink','x','maxlines','q','obsw','nobswcum','xrange','yrange','mark',& !41-50
-		'keepperiod','nobs','append','variance','oldsubobs','noint','periods','period','unitdata','unitdataobs', & !51-60
+		'keepperiod','nobs','append','variance','oldupobs','noint','periods','period','unitdata','unitdataobs', & !51-60
 		'any','oldobsw','refac','tole','utiltrans','class','key','sparse','row','show',& ! 61-70
-		'style','color','func','title','z','out', 'zrange','reject', 'subfilter','subreject',& ! 71-80
+		'style','color','func','title','z','out', 'zrange','rejectup', 'filter','reject',& ! 71-80
 		'se','matrix','treevars','plotvars','buffersize','maxtrees','report','modeldf', 'classes','degree',& !81-90
 		'minvariance','dummy','sym','minobs','wish','origo','r','colmin','integer','y',&  !91-100
 		'points','dx','dy','dz','arg','nonlintrans','corr','corrb','until','angle', &  !101-110
-		'model','functions','area','notareavars','subtrans','repeatdomains','options','normal','err','stemcurves',& !111-120
+		'model','functions','area','notareavars','transup','repeatdomains','options','normal','err','stemcurves',& !111-120
 		'relheight','weight','position','exit','iterations','histogram','freq','sort','label','continue','axes','index', & !121-130
 		'column','source','diag','width','level','errexit','xlegend','ylegend', & !131-140
 		'local','tab','par','wait','file','memory','zmatrix','break', 'content','chi2',&         !141-150
 		'expand','exist','slow','initial','eof','object','fastrounds','fast%','finterval','cov', & !151-160
-		'sdmean','parmin','parmax','step','dpar','rfhead','rfcode','subrfhead','subrfcode','subnobs',& !161-
+		'sdmean','parmin','parmax','step','dpar','rfhead','rfcodefree','rfheafree','rfcode','nobsup',& !161-
 		'stop','rfvars','first','last','echo','list','delete','ext','got','do','set','xlabel', & !171-179
 		'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
 		'tailtofirst','tailtolast','cumulative','time','missing','clean','factgroup','dpivot','int','pullout',&
 		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist',&
-		'nrowtot','showdomain','knn','newup'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfsubhead=170
+		'nrowtot','showdomain','knn','newup'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
-	parameter (j_mextra=8,j_msubextra=9)
+	parameter (j_mextraup=8,j_mextra=9)
 	parameter (j_mmean=10,j_mmin=11,j_mmax=12,j_msd=13,j_mvar=14,j_mwarm=15)
-	parameter (j_mvolsd=16,j_mrhs=17,j_mrhs2=18,j_mw=19,j_mobs=20,j_msubobs=21)   !mobs was mxdata
+	parameter (j_mvolsd=16,j_mrhs=17,j_mrhs2=18,j_mw=19,j_mobs=20,j_mobsup=21)   !mobs was mxdata
 	parameter (j_mproblem=22,j_mfrom=23)
-	parameter (j_msubdata=24,j_mnobsw=25,j_msubread=26,j_mkeep=27,j_msubkeep=28,j_msubmaketrans=29)
-	parameter (j_mrmse=30,j_mrows=31,j_msubin=32,j_msubform=33,j_mfilter=34,j_mprint=35)
+	parameter (j_mdataup=24,j_mnobsw=25,j_mreadup=26,j_mkeep=27,j_mkeepup=28,j_mmaketransup=29)
+	parameter (j_mrmse=30,j_mrows=31,j_mupinfree=32,j_mupformfree=33,j_mupfilterfree=34,j_mprint=35)
 	parameter (j_msum=36,j_mduplicate=37,j_mloglike=38,j_mmask=39,j_mmaxrounds=40)
 	parameter (j_mtest=41,j_mdebug=42,j_mdefault=43)
 	parameter (j_mclasslink=44,j_mx=45,j_mmaxlines=46,j_mq=47,j_mobsw=48,j_mnobswcum=49)
 	parameter (j_mxrange=50,j_myrange=51,j_mmark=52,j_mkeepperiod=53,j_mnobs=54,j_mappend=55)
-	parameter (j_mvariance=56,j_moldsubobs=57,j_mnoint=58,j_mperiods=59,j_mperiod=60,j_munitdata=61)
+	parameter (j_mvariance=56,j_moldupobs=57,j_mnoint=58,j_mperiods=59,j_mperiod=60,j_munitdata=61)
 	parameter (j_munitdataobs=62,j_many=63,j_moldobsw=64,j_mrefac=65,j_mtole=66,j_mutiltrans=67)
 	parameter (j_mclass=68,j_mkey=69,j_msparse=70,j_mrow=71,j_mshow=72,j_mstyle=73,j_mcolor=74,j_mfunc=75,j_mtitle=76)
-	parameter (j_mz=77,j_mout=78,j_mzrange=79,j_mreject=80,j_msubfilter=81,j_msubreject=82,j_mse=83,j_mmatrix=84)
+	parameter (j_mz=77,j_mout=78,j_mzrange=79,j_mrejectup=80,j_mfilter=81,j_mreject=82,j_mse=83,j_mmatrix=84)
 	parameter (j_mtreevars=85,j_mplotvars=86,j_mbuffersize=87,j_mmaxtrees=88,j_mreport=89)
 	parameter (j_mmodeldf=90,j_mclasses=91,j_mdegree=92,j_mminvariance=93,j_mdummy=94,j_msym=95,j_mminobs=96)
 	parameter (j_mwish=97,j_morigo=98,j_mr=99,j_mcolmin=100,j_minteger=101,j_my=102,j_mpoints=103)
 	parameter (j_mdx=104,j_mdy=105,j_mdz=106,j_marg=107,j_mnonlintrans=108,j_mcorr=109,j_mcorrb=110,j_muntil=111,j_mangle=112)
-	parameter (j_mmodel=113,j_mfunctions=114,j_marea=115,j_mnotareavars=116,j_msubtrans=117,j_mrepeatdomains=118)
+	parameter (j_mmodel=113,j_mfunctions=114,j_marea=115,j_mnotareavars=116,j_mtransup=117,j_mrepeatdomains=118)
 	parameter (j_moptions=119,j_mnormal=120,j_merr=121,j_mstemcurves=122,j_mrelheight=123,j_mweight=124,j_mposition=125)
 	parameter (j_mexit=126,j_miterations=127,j_mhistogram=128,j_mfreq=129,j_msort=130,j_mlabel=131,j_mcontinue=132)
 	parameter (j_maxes=133,j_mindex=134,j_mcolumn=135,j_msource=136,j_mdiag=137,j_mwidth=138)
@@ -513,8 +513,8 @@ module jmod
 	parameter (j_mmemory=148,j_mzmatrix=149,j_mbreak=150,j_mcontent=151,j_mchi2=152)
 	parameter (j_mexpand=153,j_mexist=154,j_mslow=155,j_minitial=156,j_meof=157,j_mobject=158)
 	parameter (j_mfastrounds=159,j_mfastp=160,j_mfinterval=161,j_mcov=162,j_msdmean=163)
-	parameter (j_mparmin=164,j_mparmax=165,j_mstep=166,j_mdpar=167,j_mrfhead=168,j_mrfcode=169,j_msubrfhead=170,j_msubrfcode=171)
-	parameter (j_msubnobs=172,j_mstop=173,j_mrfvars=174,j_mfirst=175,j_mlast=176,j_mecho=177,j_mlist=178,j_mdelete=179,j_mext=180)
+	parameter (j_mparmin=164,j_mparmax=165,j_mstep=166,j_mdpar=167,j_mrfhead=168,j_muprfcode=169,j_muprfhead=170,j_mrfcode=171)
+	parameter (j_mupnobs=172,j_mstop=173,j_mrfvars=174,j_mfirst=175,j_mlast=176,j_mecho=177,j_mlist=178,j_mdelete=179,j_mext=180)
 	parameter (j_mgot=181,j_mdo=182,j_mset=183,j_mxlabel=184,j_mylabel=185,j_mt=186,&
 		j_mcoef=187,j_msorted=188,j_msub=189,j_mdiscrete=190,j_mprolog=191,j_mepilog=192,j_munit=193)
 	parameter (j_mtailtofirst=194,j_mtailtolast=195,j_mcumulative=196,j_mtime=197,j_mmissing=198)
@@ -522,53 +522,58 @@ module jmod
 	parameter (j_mbasis=204,j_mcondition=205,j_mfastdif=206,j_mmarksize=207,j_mkeepopen=208)
 	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211,j_milist=212,j_mnrowtot=213,j_mshowdomain=214)
 	parameter (j_mknn=215,j_mnewup=216)
-	integer,parameter :: j_nnamedoptarg=58
+ 
+	integer,parameter :: j_nnamedoptarg=52
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
+ 
 	data j_namedoptarg / & !%%options which should have named objects as arguments
 		'read','in','form','data','maketrans','trans', &
 		'mean','min','max','sd','var', &
 		'rhs','rhs2',&
-		'obs','subobs','problem','from','subdata','nobsw','subread','keep','subkeep','submaketrans',&
-		'subin', &
-		'subform','duplicate','classlink','x','q','obsw','nobswcum','oldsubobs','period','unitdata',&
+		'obs','problem','from','dataup','nobsw','keep','maketransup',&
+		'duplicate','classlink','x','q','obsw','nobswcum','oldupobs','period','unitdata',&
 		'unitdataobs','oldobsw','class','title','z','out','matrix','treevars','plotvars','report','dummy',&
-		'y','arg','area','notareavars','subtrans','stemcurves','relheight',&
+		'y','arg','area','notareavars','stemcurves','relheight',&
 		'local','file','zmatrix','eof','list','ext' &
 		/
  
  
-	integer,parameter :: j_nnewvar=37
+	integer,parameter :: j_nnewvar=34
 	character*(j_lenoption), dimension(j_nnewvar)::j_newvar
 	data j_newvar / &  !can %%option arguments be generated if they do not exist
-		'read','mean','min','max','sd','var','obs','subobs','subdata', &
-		'nobsw','subread','sum','x','obsw','nobswcum','oldsubobs','periods', &
+		'read','mean','min','max','sd','var','obs','up', &
+		'nobsw','sum','x','obsw','nobswcum','periods', &
 		'period','unitdata','unitdataobs','oldobsw','func','out','matrix','treevars','plotvars','report', &
 		'dummy','r','y','arg','normal','iterations','local','eof','keep','list'&
 		/
  
 	!object types
-	integer, parameter :: j_nobjecttypes_ = 25 !!!objecttypes
+	integer, parameter :: j_notypes= 25 !!!objecttypes
  
-	character*(j_lenobjecttype), dimension (1:j_nobjecttypes_)::j_objecttypes !=(/ &
-	data j_objecttypes/ & !%%objecttypes
+	character*(j_lenobjecttype), dimension (1:j_notypes)::j_otypes !=(/ &
+	data j_otypes/ & !%%objecttypes
 		'REAL','CHAR','free','LIST','MATRIX','MATRIXS','TRANS','TABLE','LISTI','TXT', & !1-10
-		'STEMSPLINE','TEXT','DATA','PROB','FIG','SMOOTH','free','REGR','BITMATRIX','free',& !11-20
+		'STEMSPLINE','TEXT','DATA','PROB','FIG','SMOOTH','free','REGR','BITMATRIX','PIECEWISE',& !11-20
 		'free','free','free','LAASPOLY','TAUTSPLINE'/
+ 
+	integer, dimension (1:j_notypes)::j_lotypes
  
  
  
 	parameter (j_ncodeoptions_=10) ! code!!options
 	!	character*(j_lenoption), j_codeoptions(j_ncodeoptions_)  ! code!!options
-	!	data j_codeoptions/'filter','reject','subfilter','subreject','variance','weight','func',&
+	!	data j_codeoptions/'filter','reject','filter','rejectup','variance','weight','func',&
 	!	'stop'/
 	integer,dimension(j_ncodeoptions_)::j_codeoptions
-	data j_codeoptions/j_mfilter,j_mreject,j_msubfilter,j_msubreject,j_mvariance,j_mweight,j_mfunc,&
+	data j_codeoptions/j_mfilter,j_mreject,j_mfilter,j_mrejectup,j_mvariance,j_mweight,j_mfunc,&
 		j_mstop,j_mloglike,j_mfastp/
  
 	!end motule !!module j_mod
  
 	!module errmod   ! includes only j_err
 	logical :: j_err=.false.
+ 
+	integer j_ierr
 	!end motule !!module errmod
  
 	!module j_globalsmod  ! global variables which also own users can access
@@ -583,16 +588,16 @@ module jmod
 	!d=data(read->[,in->][,form->][,nobs->][,maketrans->] [,readfirst->][,trans->]
 	![,keep->][,obs->]
 	![,filter->][,reject->]
-	![,subdata->][,subread->]
-	![,subin->][,subform->][,submaketrans->] [,subkeep->][,subobs->]
+	![,updata->][,upread->]
+	![,upin->][,upform->][,upmaketrans->] [,upkeep->][,upobs->]
 	![,nobsw->][,nobswcum->][,obsw->] [,duplicate->]
-	![,oldsubobs->][,oldobsw->] [,buffersize->][,par->]
+	![,oldupobs->][,oldobsw->] [,buffersize->][,par->]
  
 	integer :: j_leno1_title  !=index(o1_title,' ')
 	integer :: 	j_leno2_title !=index(o2_title,' ')
 	integer 	j_leno3_title ! =index(o3_title,' ')
  
-	!	integer,parameter :: j_maxjlpxvars=800 !!!jlp max number of x-variables in jlpproblem
+	!	integer,parameter :: j_maxjlpvarx=800 !!!jlp max number of x-variables in jlpproblem
  
 	!global variables related to data function	%%data
 	!these can be used when reading data with own format
@@ -675,7 +680,7 @@ module jmod
 	!parameter (j_ipbits=17) !bitstore
 	parameter (j_ipregr=18)
 	parameter (j_ipbitmatrix=19)
-	!parameter (j_ipstemdata=20)
+	parameter (j_ippiecewise=20)
 	!parameter (j_ipstemmodel=21)
 	! parameter (j_ipstemcurves=22)
 	parameter (j_iptraceset=23)
@@ -712,39 +717,12 @@ module jmod
 	!!end motule
  
  
-	! !module parmod: object indexes for useful global objects, can be obtained also using iv_object('name_of_object')
-	! some objects are intial at program start, some later when they are needed
-	!objects initilized in
-	! integer ivnames  ! ivnames=iv_object('Names')  text objct containing names of all named objects,
-	! integer ivpi    ! Pi=v(ivpi)=3.141592653
-	! integer ivresult !  output object when no explicit output is given, if output is real variable then
-	! !                v(ivresult) gets the value of output, otherwise o(ivresult) is the output object
-	! integer ivarg ! Arg  ?miten käytetään
-	! integer ivobsdef    ! ivnames=iv_object('Obs') default variable getting observation number in data, note that the nonstandard
-	! !  connection between iv... and the variable name
-	! integer ivrecord    ! v(ivrecord)  gets the record number when reading data, if records are rejected then
-	! !  v(ivrecord) and v(ivobs) are not equal
-	! integer ivsubrecord     ! v(ivsubrecord) get the record number of sub-level when reading hierarchical data
- 
-	! integer ivcursor ! ivnames=iv_object('$Cursor$')  transformation used to drive sit>- prompt, '$Cursor$' appears in error messages
-	! !                    otherwise user should not use it
-	! integer ivcursor2    ! ivnames=iv_object('Cursor2$') subtransformatio
-	! integer ivval       ! ivval=iv_object('$Val$') the transformation used to compute the value of " "-expression
-	! integer ivtempdata ! = list containg data-objects  ??
-	! integer ivlastdata     ! LastData =list containg last data  (used or defined ?)
-	! integer ivcurrentdata      ! ??
-	! integer ivdollar       ! $ = indicating default channel (screen) and '*' -format in write
-	! integer ivxstar ! x#  used in figure plotting
-	! integer ivbuffer     ! ivnames=object_iv('Names')
- 
- 
-	! integer ivselected  !tarkista
-	! integer ivprintinput !Printinput controls printing in ;incl default (given in j_init for v(ivprintinput)=2
+	!j_printinput=2
 	! integer ivprintoutput  !Printoutput controls printing in ;incl -files, default Printoutput=2
 	integer ::j_ivdeffig=0  !tarkista
  
 	integer ::p_ivstartedjlp=0  !??
-	integer p_ivpomatrix,p_ivpox,p_ivpoobj,p_ivpounit,p_ivpokey,p_ivpos,p_ivpoibaunit
+	integer p_ivpomatrix,p_ivpox,p_ivpoobj,p_ivpounit,p_ivpos,p_ivpoibaunit
 	!	integer j_ivone   ! v(ivone)=1  here ivone does not refer to a named variable but constant
 	!	integer j_ivzero   ! v(ivzero)=0
 	!!end motule parmod
@@ -755,7 +733,7 @@ module jmod
 	integer, dimension(:), allocatable:: j_otitle
 	! each intermediate result + constants
 	!integer, dimension(:),pointer::lvo   !link from v to o
-	integer j_namedv ! current namber of named objects
+	integer j_named ! current namber of named objects
 	integer j_mxnamedv !maximum number of named objects , setted in j_init, possibly read fron j.par
 	integer j_nv  ! mitä on ??
 	integer ::j_nconstantv=0  ! current number of constants
@@ -783,7 +761,7 @@ module jmod
 	integer,parameter :: j_ivinf=5 ! Obs  default variable getting observation number in data !!!note nonstandard
  
 	integer,parameter :: j_ivtolast=6 ! Record  gets the record number when reading data, if records are rejected then
-	integer,parameter :: j_ivninf=6
+	!integer,parameter :: j_ivninf=6
 	! !  v(ivrecord) and v(ivobs) are not equal
 	integer,parameter :: j_ivmaxnamed=7 ! Subrecord v(ivsubrecord) get the record number
 	!                                    of sub-level when reading hierarchical data
@@ -828,7 +806,7 @@ module jmod
 	! integer,parameter ::j_ivbn2=42
  
  
-	integer,parameter ::j_locked=44
+	integer,parameter ::j_locked=45
  
 	!the previsou objects cannot be changed in user trasformationa
 	! call j_getobject(0,'Black',j_ipreal,ivout_)
@@ -855,7 +833,7 @@ module jmod
 	! call j_getobject(0,'Orange',j_ipreal,ivout_)
 	! j_v(j_ivorange)=8.d0
 	integer,parameter :: j_ivfakematrix=44
-	integer,parameter ::j_ivblack=45
+	integer,parameter ::j_ivninf =45 !j_ivblack=45
 	integer,parameter ::j_ivred=46
 	integer,parameter ::j_ivgreen=47
 	integer,parameter ::j_ivblue=48
@@ -889,9 +867,12 @@ module jmod
 	integer,parameter ::j_ivbgaya=74
 	integer,parameter::j_ivcursori=75  !transformation used in input programming
 	integer,parameter::j_ivfastp=76
-	integer,parameter::j_predefined=76
+	integer,parameter::j_ivobs=77
+	integer,parameter::j_ivblack=78
+	integer,parameter::j_predefined=78
  
 	integer ::p_fastmakes
+ 
 	type j_basicobject  ! defines basic J-object types
 	real, dimension(:),allocatable ::r  ! real vector associated with each  object
 	integer, dimension(:),allocatable ::i ! integer vector associated w ith each object
@@ -908,23 +889,33 @@ module jmod
 	!j-objects:
 	type(j_basicobject),dimension(:),allocatable,target:: j_o
  
+	integer,dimension(:),pointer ::j_readv,j_keep
+	integer,dimension(:),pointer ::j_keepup
+	integer j_nkeepup
  
  
  
+	! type j_datatype  !these can be used when reading data with own functions
+	! !	integer, dimension(:), pointer :: keep
+	! integer,dimension(:),pointer::readv
+	double precision,dimension(:),allocatable::j_readvec,j_keepvec
+	real,dimension(:),allocatable::j_readvecsing
+	! end type j_datatype
  
-	type j_datatype  !these can be used when reading data with own functions
-	!	integer, dimension(:), pointer :: keep
-	integer,dimension(:),pointer::readv
-	double precision,dimension(:),allocatable::readvec
-	real,dimension(:),allocatable::readvecsing
-	end type j_datatype
+	! type(j_datatype),dimension(2)::j_d
  
-	type(j_datatype),dimension(2)::j_d
+	! type j_ipointer
+	! integer,dimension(:),pointer:: i
+	! end type
  
-	integer,dimension(2)::j_nread
-	logical,dimension(2)::j_eof
-	!!end motule
+	! type j_dpointer
+	! double precision,dimension(:),pointer:: d
+	! end type
  
+ 
+ 
+	integer ::j_nread
+	logical ::j_eof
 	double precision,dimension(100)::j_tempv
 	double precision ::j_dapu,j_dapu2  !for different purposes
 	character(len=:), pointer :: j_inprp
@@ -1036,9 +1027,11 @@ module jmod
 	integer,parameter::j_txtlen=160
 	character*160,dimension(:),allocatable::j_temptxt
 	double precision,dimension(:),allocatable::j_tempvector,j_tempvector2
+	real,dimension(:),allocatable::j_tempvectors
 	integer,dimension(:),allocatable::j_itempvector,j_itempvector2,j_itempvector3
-	!	integer,dimension(:,:),allocatable::j_itempvector2d
- 
+	!	integer,dimension(:,:),allocatable::j_itempvect or2d
+	double precision,dimension(:),pointer::j_tempdpoint
+	integer,dimension(:),pointer ::j_templist,j_templist2,j_templist3
 	!object-types
 	integer, dimension(:),allocatable ::j_otype
  
@@ -1064,15 +1057,18 @@ module jmod
 	!	integer j_ndatasets
  
 	!	integer j_levels,j_level
-	integer::j_divdata,j_dfilterlink,j_drejectlink,j_divtrans,j_divvars,j_dimat,j_divvars2
-	integer::j_dnobs
-	integer*8::j_dnobs8
+	integer::j_divdata,j_dfilterlink,j_drejectlink,j_divtrans,j_divvars,j_divmat,j_divvars2
+	integer::j_divdataup,j_dfilterlinkup,j_drejectlinkup,j_divtransup,j_divvarsup,j_divmatup,j_divvars2up
+	integer::j_dnobs,j_dnobsup,j_dsize,j_dsizeup
+	integer*8::j_dnobs8,j_dnobsup8,j_dsize8,j_dsizeup8
 	integer::j_dnkeep,j_divkeep,j_dimatup,j_divkeepup,j_dnkeepup,j_divnobsw
 	!integer::j_dnkeep,j_divkeep,j_dimatup,j_divkeepup,j_dnkeepup,j_divnobsw
 	integer::j_divobsup,j_divobsw,j_divobs,j_diob,j_dobsup
 	logical::j_disup,j_distrans,j_disreject,j_disfilter,j_disprint
 	integer*8::j_dfrom,j_duntil,j_diba,j_dibaup,j_dnextobs
 	integer ::j_dprint,j_depilog
+	integer,dimension(:),pointer::j_dkeep,j_dkeepup
+	double precision, dimension(:),pointer::j_dmatup,j_dmat
  
 	integer::j_dnup
 	integer,parameter:: j_dmaxlevels=20
@@ -1086,10 +1082,10 @@ module jmod
  
 	integer ::j_dlastdata
  
-	integer j_filterlink,j_subfilterlink,j_rejectlink,j_subrejectlink
+	integer j_filterlinkup,j_filterlink,j_rejectlink,j_rejectlinkup
 	integer j_iobdata
 	integer j_ivtransopt,j_ivtransoptafter
-	logical j_filter,j_reject,j_rejected,j_transopt,j_transoptafter,j_subfilter,j_subreject
+	logical j_filterup,j_reject,j_rejected,j_transopt,j_transoptafter,j_filter,j_rejectup
  
 	logical j_remain
 	logical j_stop
@@ -1177,7 +1173,10 @@ module jmod
 	!* savcom -> save commands for incl file
 	!* reacom  -> reading commands from file
 	!* search  -> searching for an address
-	!
+	double precision, dimension(:), pointer ::p_datamatup
+	double precision, dimension(:), pointer ::j_datamatup
+	integer, dimension(:), allocatable ::j_keepindex
+ 
 	logical j_reacom(j_mxinc)
 	!       logical ,reado1
 	! ldo0 uppermost loop done zero times
@@ -1304,15 +1303,16 @@ module jmod
 	double precision, dimension(:),pointer::p_vx   !,p_vxpack
 	real, dimension(:),pointer:: p_vxpack
 	integer p_ivvx
-	!	double precision, dimension(j_maxjlpxvars):: p_vxpack2    !fixed
+	!	double precision, dimension(j_maxjlpvarx):: p_vxpack2    !fixed
 	integer, dimension(:),pointer::p_ixpack
  
 	integer p_ivns,p_ivkeys,p_ivibaunit,p_ivvxpack,p_ivixpack
+	integer p_ivnsvar
  
-	!	integer, dimension(j_maxjlpxvars)::p_ixpack2
+	!	integer, dimension(j_maxjlpvarx)::p_ixpack2
 	! ix(irow)= 0, no x in the row
-	integer, dimension(:),pointer::p_ix,p_xrowcur
-	integer, dimension(:),pointer::p_xrow
+	integer, dimension(:),pointer::p_ix,p_rowcurx
+	integer, dimension(:),pointer::p_rowx
  
 	integer, dimension(:),pointer::p_show
 	integer ::p_nshow
@@ -1325,15 +1325,15 @@ module jmod
  
  
 	logical, dimension(:),pointer::p_ixcur,p_ixcur0
-	integer, dimension(:),pointer::p_xvars !x-varaibles in the problem
-	integer, dimension(:),pointer::p_xvarsarea ! the list of areavars
-	integer, dimension(:),allocatable::p_xvarsareatot ! the list of areavars including all
+	integer, dimension(:),pointer::p_varx !x-varaibles in the problem
+	integer, dimension(:),pointer::p_varxarea ! the list of areavars
+	integer, dimension(:),allocatable::p_varxareatot ! the list of areavars including all
 	!	integer, dimension(:),pointer::p_cvarl
 	!	double precision, dimension(:),allocatable::p_cvar
 	!	integer p_ivcvar
  
-	integer p_ivix,p_ivxrowcur,p_ivxrow,p_ivixcur,p_ivixcur0,p_ivxvars,p_ivxvarsarea
-	integer p_ivxvarsareatot   !,p_ivcvarl,p_ivcvar
+	integer p_ivix,p_ivrowcurx,p_ivrowx,p_ivixcur,p_ivixcur0,p_ivvarx,p_ivvarxarea
+	integer p_ivvarxareatot   !,p_ivcvarl,p_ivcvar
 	integer ::p_nimp,p_nimp2
 	!****** definition:
 	! nonexpanded problem: rows are as in the original problem definition,
@@ -1369,25 +1369,26 @@ module jmod
  
 	!double precision, dimension(:), pointer ::p_xmat  !x-data matrix
 	real, dimension(:), pointer ::p_xmat  !x-data matrix
-	double precision, dimension(:), pointer ::p_xdatmat
+	double precision, dimension(:), pointer ::p_datamatx
+	integer p_ivdatamatx
 	logical*1,dimension(:),allocatable::p_rejects
 	integer p_ivxmat,p_ivrejects
 	integer p_nunits,p_lx0,p_ndom,p_ivdomain,p_nrow,p_nrowtot  !p_nrow0= number of contraints
 	integer p_row0
 	integer p_ndiv
 	integer p_lopp
-	integer p_nxrow !number of rows with x-variables
-	integer p_nxrowcur !
+	integer p_nrowx !number of rows with x-variables
+	integer p_nrowcurx !
 	integer p_ndomv !number of integer variables needed to store all domainbits
 	integer p_ndomvars
  
 	integer, dimension(:),pointer::p_ixcurow,p_ixcubas
 	integer p_ivixcurow,p_ivixcubas
-	integer ::p_ido1,p_idostep,p_nxrow0
+	integer ::p_ido1,p_idostep,p_nrowx0
  
 	integer, dimension(:),pointer::p_nixcu
 	double precision, dimension(:),allocatable ::p_wdiv
-	integer, dimension(:),allocatable ::p_iunitdiv,p_isdiv
+	integer, dimension(:),allocatable ::p_unitdiv,p_isdiv
  
 	integer p_ivnixcu,p_ivwdiv,p_iviunitdiv,p_ivisdiv
 	integer p_lavec(1)
@@ -1469,14 +1470,14 @@ module jmod
 	!logical p_yes
  
  
-	!	xvars(-1:100) !xvar-variables of the problem
+	!	varx(-1:100) !xvar-variables of the problem
 	!	cvarl(-1:50) !cvar variables of the problem
 	!	zvarsl(-1:100) !zvars of the problem , nyt z-muuttujat ovat nimetönnä
 	!	zcoefl(-1:1),zcoef0l(-1:1)	! variables storing table for coefficients
 	! of zvariables and table for cofficient in the objective row
 	!	rhsl(-1:1),rhs2l(-1:1) ! variables for tables of lower and upper
 	! bounds in RHS
-	!	ix(0:la)		! indexes for xvars for each row (0 =objective row)
+	!	ix(0:la)		! indexes for varx for each row (0 =objective row)
  
 	! approximation
 	real, dimension(:),pointer::p_shpx  ! shadow prices of x-variables in each domain
@@ -1534,25 +1535,27 @@ module jmod
 	!integer ,dimension(:), pointer::p_nsetd=>null()
 	!	integer ,dimension(:), pointer::p_isetd=>null()
 	integer ,dimension(:), pointer::p_nvars  =>null()
-	integer ,dimension(:), pointer::p_termvars=>null()
-	integer ,dimension(:), pointer::p_xtermvars=>null()
+	integer ,dimension(:), pointer::p_termvar=>null()
+	integer ,dimension(:), pointer::p_xtermvar=>null()
 	integer ,dimension(:), pointer::p_coefvars=>null()
 	integer ,dimension(:), pointer::p_coefplus=>null()
 	integer  ,dimension(:), pointer::p_rowofterm=>null()
 	integer  ,dimension(:), pointer::p_nterminrow=>null()  !number of terms in row
-	integer, dimension(:), pointer ::p_irowxvars
+	integer, dimension(:), pointer ::p_irowvarx
 	double precision  ,dimension(:), pointer::p_coef=>null()
 	integer p_ivcoef
 	double precision    ,dimension(:), pointer:: p_xcoef
 	integer p_nxval
-	integer ,dimension(:), allocatable:: p_ibatemp,p_nxrowtemp   !,p_ixprow
+	integer ,dimension(:), allocatable:: p_ibatemp,p_nrowxtemp   !,p_ixprow
 	integer ::p_mxlws
 	double precision    ,dimension(:), pointer::p_coefz
  
-	integer p_ivnvars,p_ivtermvars,p_ivxtermvars,p_ivcoefvars,p_ivcoefplus,p_ivrowofterm,p_ivnterminrow,p_ivirowxvars,p_ivxcoef
+	integer p_ivnvars,p_ivtermvar,p_ivxtermvar,p_ivcoefvars,p_ivcoefplus,p_ivrowofterm,p_ivnterminrow,p_ivirowvarx,p_ivxcoef
 	integer p_ivibatemp,p_ivnrowtemp,p_ivcoefz
 	logical p_nonlin
 	integer p_nonlintrans
+ 
+	!	integer ,dimension(:), pointer::p_templist
  
  
 	!	double precision p_objfnonlin,p_objpr evnonlin
@@ -1570,72 +1573,92 @@ module jmod
 	integer p_pullout1,p_pullout2
  
 	real ::p_as,p_asv
-	logical ,dimension(:),allocatable:: p_isxvar ,p_isxval
+	logical ,dimension(:),allocatable:: p_isvarx ,p_istermx
 	integer ,dimension(:), pointer ::p_zvars,p_tables
 	integer::p_zvars0
-	integer ,dimension(:),pointer:: p_nxinrow,p_nxrow2
+	integer ,dimension(:),pointer:: p_ninrowx,p_nrowx2
 	!	integer ,dimension(:),pointer:: p_nzrow,p_nzrow2,p_ntablerow
 	integer ::p_ibasclass
  
-	!	integer p_ivisx,p_ivisxval,p_ivzvars,p_ivnxinrow,p_ivnxrow2,p_ivnzrow,p_ivnzrow2,p_ivntablerow
-	integer p_ivisx,p_ivisxval,p_ivzvars,p_ivnxinrow,p_ivnxrow2,p_ivntablerow
+	!	integer p_ivisx,p_ivisxval,p_ivzvars,p_ivnxinrow,p_ivnrowx2,p_ivnzrow,p_ivnzrow2,p_ivntablerow
+	integer p_ivisx,p_ivisxval,p_ivzvars,p_ivnxinrow,p_ivnrowx2,p_ivntablerow
  
 	!factories
 	logical p_fpresent
 	integer p_ntable,p_ntable0
 	integer p_nfactmax
+	integer p_nkeepx
 	integer p_nlog,p_ilog
-	integer p_knn
-	integer ,dimension(:),pointer:: p_log
+	integer p_knn,p_kntot,p_kntot2
+	integer ,dimension(:),pointer:: p_log,p_tablelog
 	integer p_nlogfact
-	integer ,dimension(:),pointer:: p_logfact
+	!	integer ,dimension(:),pointer:: p_logfact
 	integer p_logfactbas
 	double precision p_fopt
 	integer p_inebas
-	integer p_ivxpart
-	integer p_ivfpart
+	integer p_ivlogpart,p_ivfactpart,p_ivtabpart
+	integer ,dimension(:),pointer:: p_logpart,p_factpart,p_tabpart
 	integer p_optfact
-	integer p_ivtpart
-	integer p_ivtables,p_ivtables0,p_ivtablecoef  !,p_ivtableterm
+	integer p_ivtable,p_ivtabledata  !,p_ivtable0,p_ivtablecoef  !,p_ivtableterm
+	integer p_ivtablenlog
+	integer ,dimension(:),pointer:: p_tablenlog
+ 
+	integer p_ivtableneibas
+	integer ,dimension(:),pointer:: p_tableneibas
+ 
+	integer p_ivtableutil
+	integer ,dimension(:),pointer:: p_table,p_tabledata,p_tableutil
+ 
+	!	type(j_dpointer),dimension(:),allocatable::p_tableutilp
+ 
+ 
+	integer p_ivlogfact
+	integer ,dimension(:),pointer:: p_logfact
+ 
+	double precision, dimension(:),pointer :: p_tablecoefcur,p_tablecoeftot
+	integer p_ivtablecoefcur,p_ivtablecoeftot
 	integer p_ivlogfactterm
 	integer ,dimension(:),pointer:: p_logfactterm
 	double precision p_keyfval
 	integer p_keyfactbas
 	integer p_ndupmax,p_ndupmax1,p_logfactstep
-	integer p_ivtableterms
-	logical ,dimension(:),allocatable:: p_isfvar,p_isfval    !table or %2%
-	integer p_nfvar,p_nfval
+	!	integer p_ivtableterm
+	logical ,dimension(:),allocatable:: p_isvarf,p_istermf   !table or %2%
+	integer p_nvarf,p_ntermf
  
-	integer,dimension(:),allocatable::p_neig
-	double precision,dimension(:), allocatable:: p_neigu
+	integer,dimension(:),pointer::p_neig
+	!	integer p_nextneig
+	integer p_ivneig
+	double precision,dimension(:), pointer:: p_neigu
+	integer p_ivneigu
 	!	integer p_ivknn
 	double precision, dimension(:), allocatable::p_knutil	! alfa
 	integer, dimension(:), allocatable::p_knfact
  
 	!	integer,dimension(:),pointer ::p_factgroup
-	integer,dimension(:),pointer ::p_fact
-	integer,dimension(:),allocatable ::p_ibasfactgroup
-	integer ::p_nfactgroup,p_nfact
+	integer,dimension(:),pointer ::p_fact !,p_tablefact
+	!	integer,dimension(:),allocatable ::p_ibasfactgroup
+	integer ::p_nfact
 	integer ,dimension(:),pointer::p_fvarl2,p_nfact2
 	integer ,dimension(:),pointer::p_fvarl=>null()
 	!factories, prob-fac vars, final fvars, number of factvars
  
  
-	logical ,dimension(:),allocatable:: p_isfxval !Onko tehtävän muuttujaesiintymä tehdas-x-muuttuja
+	!logical ,dimension(:),allocatable:: p_isfxval !Onko tehtävän muuttujaesiintymä tehdas-x-muuttuja
 	!logical ,dimension(:),allocatable:: p_isfyval !Onko tehtävän muuttujaesiintymä tehdas-y-muuttuja
  
 	double precision, dimension(:), allocatable::p_coeffx	! alfa
  
 	integer:: p_ivutiltrans
-	integer, dimension(:),allocatable::p_irowfxvars ! i:nnen tehdas x-mjaesiintymän xk:n indeksi xk-listassa (ivxk)
+	integer, dimension(:),allocatable::p_irowfvarx ! i:nnen tehdas x-mjaesiintymän xk:n indeksi xk-listassa (ivxk)
 	integer, dimension(:),allocatable::p_irowffact	! i:nnen tehdas x-mjaesiintymän tehtaan indeksi factories-listassa (ivfact)
 	integer, dimension(:),allocatable::p_irowfkeep	! i:nnen tehdas x-mjaesiintymän xk:n indeksi datassa (ivxmat)
 	integer, dimension(:),allocatable::p_irowfyvars ! i:nnen tehdas y-mjaesiintymän ptl-listan indeksi v-vektorissa
 	integer, dimension(:),allocatable::p_irowfyfact	! i:nnen tehdas y-mjaesiintymän ptl-listan indeksi v-vektorissa
 	integer, dimension(:), allocatable::p_ibafx !j:nnen (alkup.) tehtävärivin tehdas-x-mjien alkukohta yo vektoreissa
 	!integer, dimension(:), allocatable::p_ibafy !j:nnen (alkup.) tehtävärivin tehdas-y-mjien alkukohta yo vektoreissa
-	!	integer p_ivxpart
-	integer,dimension(:),pointer::p_xpart,p_fpart,p_upart
+	!	integer p_ivxp art
+ 
 	integer, dimension(:),allocatable::p_logftable
 	logical,dimension(:),allocatable::p_logftablexkf,p_logftableuxkf
  
@@ -1658,11 +1681,11 @@ module jmod
  
 	logical, dimension(:),allocatable::p_ixcurfact ! tosi, jos j:nnellä lavennetulla rivillä on tehdas-x-mjia 20131106 lisäys: tai y-mjia
 	integer, dimension(:),allocatable::p_nfxinrow		! tehdas x-mjien lkm tehtävärivillä j (alkup. rivit)
-	integer, dimension(:),allocatable::p_nfxrow2 	! ei käytetä?
+	integer, dimension(:),allocatable::p_nfrowx2 	! ei käytetä?
 	integer, dimension(:),allocatable::p_nfyinrow		! tehdas y-mjien lkm tehtävärivillä j (alkup. rivit)
-	integer:: p_nfxrow,p_nfyrow
+	integer:: p_nfrowx,p_nfyrow
  
-	integer, dimension(:),allocatable::p_fxrow	! i:nnen lavennetun tehtävärivin, jolla tehdas-x-mjia, rivinro
+	integer, dimension(:),allocatable::p_frowx	! i:nnen lavennetun tehtävärivin, jolla tehdas-x-mjia, rivinro
 	integer, dimension(:),allocatable::p_fyrow ! i:nnen lavennetun tehtävärivin, jolla tehdas-y-mjia, rivinro
  
 	!  muuttuja-tehdas-taulukko: logfact(ixk,j) = xk-listan ixk:nnen mjan j:nnen tehtaan indeksi factories listalla
@@ -1673,7 +1696,8 @@ module jmod
 	! fyfactout(ixk,j) = xk-listan ixk:nnen mjan j:nnen tehtaan muunnoksen ouput iv
 	!integer, dimension(:,:),allocatable::p_fyfactout
 	! keyfact(unit,ixk) = yksikön xk-listan ixk:nnen mjan avaintehtaan indeksi factories listalla
-	integer, dimension(:),allocatable::p_keyfact
+	integer, dimension(:),pointer::p_keyfact
+	integer p_ivkeyfact
  
 	! lf: F-matriisin sarakkeiden indeksit, alussa kannassa olevat sarakkeet
 	!	integer ,dimension(:),allocatable::p_lf,p_lfi
@@ -1709,37 +1733,37 @@ module jmod
 	! %isxk : onko suoraan rivillä esiintyvä tehdas-xk-mja (true) vai yk:sta purettu (false)
 	! %irow : alkuperäinen tehtävärivi
 	! %ind : esiintymän indeksi coeffx-vektorissa (isfx = true) tai muunnoksen outpumjan indeksi v-vektorissa (isfx=false)
-	type p_logrv_type
-	logical isxk
-	integer irow
-	integer ind
-	end type p_logrv_type !type j_xkrv_type
+	! type p_logrv_type
+	! logical isxk
+	! integer irow
+	! integer ind
+	! end type p_logrv_type !type j_xkrv_type
  
-	type(p_logrv_type), dimension(:), allocatable :: p_logrv
-	! muuttuja-tehdas-taulukko: logfact(ixk,j) = xk-listan ixk:nnen mjan j:nnen tehtaan indeksi factories listalla
-	! logfact(ixk,j)%ifact : xk-listan ixk:nnen mjan j:nnen tehtaan indeksi factories listalla
-	! %i1xkrv: ptl-tehdas yhdistelmän 1. esiintymän indeksi xkrv-vektorissa
-	! %inxkrv : ptl-tehdas yhdistelmän viimeisen esiintymän indeksi xkrv-vektorissa
-	type p_logfsol_type
-	integer iunit
-	integer ixk
-	integer ifact
-	! xkf_sol%next: saman yksikön seuraava (mikä tahansa) tehdassrk
-	integer next
-	real xkf
-	end type p_logfsol_type !type j_xkfsol_type
+	! type(p_logrv_type), dimension(:), allocatable :: p_logrv
+	! ! muuttuja-tehdas-taulukko: logfact(ixk,j) = xk-listan ixk:nnen mjan j:nnen tehtaan indeksi factories listalla
+	! ! logfact(ixk,j)%ifact : xk-listan ixk:nnen mjan j:nnen tehtaan indeksi factories listalla
+	! ! %i1xkrv: ptl-tehdas yhdistelmän 1. esiintymän indeksi xkrv-vektorissa
+	! ! %inxkrv : ptl-tehdas yhdistelmän viimeisen esiintymän indeksi xkrv-vektorissa
+	! type p_logfsol_type
+	! integer iunit
+	! integer ixk
+	! integer ifact
+	! ! xkf_sol%next: saman yksikön seuraava (mikä tahansa) tehdassrk
+	! integer next
+	! real xkf
+	! end type p_logfsol_type !type j_xkfsol_type
  
-	type(p_logfsol_type), dimension(:), allocatable :: p_logfsol
+	! type(p_logfsol_type), dimension(:), allocatable :: p_logfsol
  
  
  
-	type p_logfact_type
-	integer ifact
-	integer i1xkrv
-	integer inxkrv
-	end type p_logfact_type !type j_logfact_type
+	! type p_logfact_type
+	! integer ifact
+	! integer i1xkrv
+	! integer inxkrv
+	! end type p_logfact_type !type j_logfact_type
  
-	type(p_logfact_type), dimension(:,:), allocatable :: p_loginfact
+	! type(p_logfact_type), dimension(:,:), allocatable :: p_loginfact
  
 	! aputaulukko lavennettujen rivien hakemiseen alkuperäisen rivin perusteella
 	! irow2curix(0,alkup_rivi) = #lavennetut rivit
@@ -1749,15 +1773,18 @@ module jmod
 	!	integer, dimension(:,:),allocatable :: p_irow2curix
  
 	! xkf-raportointi-funktiota varten
-	integer p_ivlog, p_ivfact,p_ivlogkeep
+	integer p_ivlog, p_ivfact,p_ivkeeplog
+	integer,dimension(:),pointer::p_keeplog
 	!	integer ::p_nxk
 	!	integer ::p_nxkf
-	integer,dimension(:),allocatable::p_nxkfrows
+	!integer,dimension(:),allocatable::p_nxkfrows
 	!	integer p_ivfactgroup
 	!integer,dimension(:),pointer::p_log
-	integer p_ivmatc, p_ivxdatmat, p_ivkeepc, p_ivkeepx, p_ivunit,p_ivunitvar
-	integer p_keepc
-	integer p_keepx
+	integer p_ivdatamatc, p_ivkeepc, p_ivkeepx, p_ivunit,p_ivunitvar
+	integer,dimension(:),pointer::p_keepc
+	double precision,dimension(:),pointer::p_datamatc
+	integer p_nkeepc
+	integer,dimension(:),pointer:: p_keepx
 	integer p_ivtrans, p_ivsubtrans !, j_p_ivtransc, j_p_ivtransx
 	integer p_lunits0, p_ibaunitbas, p_mxd, p_nrowz
  
@@ -1793,7 +1820,7 @@ module jmod
 	logical ::p_factnow=.false.  !are factories checked
 	logical p_isstop
 	logical p_cycling
-	logical p_subfilter_,p_subreject_,p_subfilre
+	logical p_filter_,p_rejectup_,p_upfilre,p_filre
 	logical p_zopt
 	integer p_listapu(1)
 	double precision p_apusum
@@ -1801,7 +1828,7 @@ module jmod
 	logical p_zmatrix, p_zobj, p_rhsopt, p_rhs2opt
 	integer p_ivzmatrix
 	integer p_ivzobj
-	double precision,dimension(:),allocatable:: p_xvars1,p_xvars2 !to delete redundant
+	double precision,dimension(:),allocatable:: p_varx1,p_varx2 !to delete redundant
 	double precision ::p_oldsol
 	integer ::p_ienterv=-1
 	integer ::p_nsame=0
@@ -1826,8 +1853,8 @@ module jmod
 	integer p_stoplink
 	integer p_fastplink
 	logical p_isfastp
- 
-	logical p_rejectnow_
+	logical p_reject
+	logical p_rejectnow
 	integer p_nkeys,p_nkeyf,p_ntote
 	integer p_nkeyfactw
 	double precision p_objilres
@@ -1873,14 +1900,14 @@ module jmod
  
 	!variables used earlier in contains-subroutines
 	integer p_ilzmax,p_ienter,p_leave,p_leavec,p_leaved,p_nrowxkfkey,p_nrowykfkey,p_ilrmax
-	integer p_iunitv,p_iunit,p_kierv,p_kier,p_newa,p_leavk,p_ia,p_iaft
+	integer p_unitv,p_unit,p_kierv,p_kier,p_newa,p_leavk,p_ia,p_iaft
 	integer p_rsame,p_ixk_,p_ifopt,p_id
  
 	integer p_ixk1_,p_ixk_lkf,p_if_,p_inf_,p_infopt,p_lcursamef,p_lcur0_unit,p_lcur_,p_nz,p_nfy
 	integer p_lz0,p_leaz,p_lead,p_iopt,p_lr0,p_lcur,p_lcursame,p_leavkf,p_leavkwf,p_lunit_,p_isecond
 	integer p_nrecover,p_pivot,p_idebug,p_ifail
-	integer p_refac,p_newc,p_muutosb,p_iunit_lkf,p_ikeepxk_
-	integer p_iunitrans,p_nnf,p_nnfiter,p_nnfold2,p_lcur0,p_ix0,p_j1,p_newd,p_nnfold
+	integer p_refac,p_newc,p_muutosb,p_unit_lkf,p_ikeepxk_
+	integer p_unitrans,p_nnf,p_nnfiter,p_nnfold2,p_lcur0,p_ix0,p_j1,p_newd,p_nnfold
 	!	integer p_irow,p_irow0,p_irow0bas,p_nset
 	integer p_noutsubtrans,p_irowinf !p_ncvar,
 	integer,dimension(:),pointer::p_icurint,p_icurbit
@@ -1901,8 +1928,8 @@ module jmod
 	logical p_isobjective
 	!	logical p_rz,p_doresid
  
-	integer p_pivot9,p_iunitprev,p_pivotold
-	integer p_iunit55
+	integer p_pivot9,p_unitprev,p_pivotold
+	integer p_unit55
 	integer p_icolold,p_icolnew,p_pivotcase
 	integer p_ivpivotcases,p_ivroute67
 	integer p_i1
@@ -2174,8 +2201,7 @@ module jmod
 			integer, intent(in):: ivdata
 		end function
  
-		! subroutine j_ibass2(ivmatrix,iobs1,iobs2,ibas1,ibas2)
-		! integer,intent(in)::ivmatrix,iobs1,iobs2
+		! subroutine j_ibass2(ivmatrix,iov bs1,iobs2
 		! integer,intent(out)::ibas1,ibas2
 		! end subroutine
  
@@ -2196,9 +2222,23 @@ module jmod
 		! integer function j_iounit(iv) !gets unit associate with iv
 		! integer,intent(in) ::iv
 		! end function !integer function j_iounit(iv)
-		subroutine j_getin(iob,io,nu,ivform)
+		function j_getin(iob,io,inclines,needed,ivform,lines)  !get in-> file
 			integer,intent(in)::iob,io
-			integer,intent(out)::nu,ivform
+			integer*8,intent(out)::inclines
+			!	integer,intent(out)::exit
+			logical,optional,intent(in)::needed
+			integer,intent(out),optional::ivform
+			integer,intent(out),optional::lines
+ 
+ 
+		end function
+ 
+		function j_lenpara()
+ 
+		end function j_lenpara
+ 
+		subroutine j_exitpara()
+ 
 		end subroutine
  
 		subroutine j_getsubin(iob,io,nu,ivform)
@@ -2414,24 +2454,26 @@ module jmod
  
 		!20150812(arg1<->arg2) oli: 		subroutine defdata(name,iv,ivmat,ivkeep,ivcases,ivprolog,ivmaketrans,ivtrans,&
  
-		integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot)
+		integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point)
 			integer, intent(in):: iv,itype
 			integer,intent(in) ::ndim1,ndim2
 			character*(*), intent(in):: name
 			logical,intent(in),optional:: single
 			logical,intent(in),optional:: nod
 			integer,intent(in),optional::rowtot
+			double precision,dimension(:),optional,intent(out),pointer::point
 		end function !subroutine j_defmatrix(iv,na
  
  
  
-		integer	function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot)
+		integer	function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point)
 			integer, intent(in):: iv,itype
 			integer*8,intent(in) ::ndim1,ndim2
 			character*(*), intent(in):: name
 			logical,intent(in),optional:: single
 			logical,intent(in),optional:: nod
 			integer*8,intent(in),optional ::rowtot
+			double precision,dimension(:),optional,intent(out),pointer::point
 		end function !subroutine j_defmatrix(iv,name,ndim1,ndim2,itype,expand,ivout)
  
 		subroutine j_putmatrix(ivmat,irow,icol,val)
@@ -2490,14 +2532,16 @@ module jmod
 			!j_dataobs=j_o(iv)%i(12)
 		end function !integer function j_dataobs(iv)
  
-		integer*8 function j_nrows(iv)
+		integer*8 function j_nrows(iv,mi,ma)
 			integer,intent(in)::iv
+			integer,optional,intent(in)::mi,ma
 		end function
 		integer*8 function j_nrowtot(iv)
 			integer,intent(in)::iv
 		end function
-		integer*8 function j_ncols(iv)
+		integer*8 function j_ncols(iv,mi,ma)
 			integer,intent(in)::iv
+			integer,optional,intent(in)::mi,ma
 		end function
  
 		integer*8 function j_nelem(iv)
@@ -2657,8 +2701,10 @@ module jmod
 		end subroutine !subroutine j_getchar(iv,buffer,le)
  
 		!mtja(name) ! get the index of variable with name, if not defined return 0
-		function j_object(name)
+		function j_object(name,iv,needed) ! %%object get the index of object with name, if not defined return 0
 			character*(*), intent(in) :: name
+			integer,intent(in),optional::iv
+			logical,intent(in),optional:: needed
 		end function !function j_object(name)
  
 		! !mtjach1(name,lename) : get the index of variable with name, if not defined return 0
@@ -3140,7 +3186,7 @@ module jmod
 			integer, intent(in):: iob,io, mopt
 		end function !function j_igetopt(iob,mopt)
  
-		logical function j_isopt(iob,io,mopt,default) ! %o
+		logical function j_isoption(iob,io,mopt,default) ! %o
 			integer, intent(in):: iob,io, mopt
 			logical, intent(in),optional:: default
 		end function !function j_igetopt(iob,mopt)
@@ -3235,7 +3281,7 @@ module jmod
 			integer, intent(in)::mopt
 		end function !integer function j_nargopt(iob,mopt)
  
-		function j_deflistobject(iv,name,list0,list,listold,nres,expand,ivin,ilist)
+		function j_deflist(iv,name,list0,list,listold,nres,expand,ivin,ilist,ncol,point)
 			integer, intent(in):: iv
 			character*(*), intent(in):: name
 			!			integer, intent(out):: ivout
@@ -3246,6 +3292,8 @@ module jmod
 			logical,optional,intent(in)::expand
 			integer,optional,intent(in)::ivin
 			logical,optional,intent(in)::ilist !make ilist object
+			integer,optional,intent(in)::ncol
+			integer,dimension(:),optional,intent(out),pointer::point
 		end function
  
 		! subroutine j_deflist(iv,name,list0,ivout,nres)
@@ -3273,13 +3321,13 @@ module jmod
 		! logical,intent(in),optional::list2
 		! end subroutine !subroutine j_deflist3(iv,name,list0,ivout)
  
-		function j_deflistobjectinp(iv,name,inp) !!!list
+		function j_deflistinp(iv,name,inp) !!!list
 			!makes a list from character variable inp which contains the names of objects separated with commas			character*(*), intent(in):: name
  
 			character*(*), intent(in):: inp,name
 			integer, intent(in):: iv
 			!		integer, intent(out):: ivout
-		end function j_deflistobjectinp
+		end function j_deflistinp
 		! !deflistopt(iv,name,list0,list,ivout) : allocates list object with size list0, and put list (strating from 1)!20150812(arg1<->arg2) oli:
 		! subroutine j_deflistopt(iv,name,list0,list,ivout)
 		! character*(*), intent(in):: name
@@ -3434,9 +3482,11 @@ module jmod
 		!ivoutputlistivtrans) : gives the outputlist; if there is no then return zero
  
  
-		subroutine j_getdataobject(iob,io,ivdata)  ! initilization for data-> option  %%data
+		subroutine j_getdataobject(iob,io,ivdata,pointmat,pointkeep,pointmatup,pointkeepup)  ! initilization for data-> option  %%data
 			integer,intent(in)::iob,io
 			integer,intent(in),optional::ivdata
+			double precision,dimension(:),optional,pointer::pointmat,pointmatup
+			integer,dimension(:),optional,pointer::pointkeep,pointkeepup
 			! logical,intent(in),optional::isup
 			! integer,intent(in),optional::level0
 		end subroutine
@@ -3543,33 +3593,80 @@ module jmod
 			!	logical, optional,intent(in)::silent
 		end function !function j_isconst(name)
  
-		function j_getkeep(ivdata)
+		function j_getkeep(ivdata,point,len)
 			integer,intent(in)::ivdata
+			integer,dimension(:),intent(out),optional,pointer ::point
+			integer,optional,intent(out)::len
 		end function
  
-		function j_getmatrix(ivdata)
+		function j_getmatrix(ivdata,point)
 			integer,intent(in)::ivdata
+			double precision,dimension(:),intent(inout),optional,pointer ::point
 		end function
  
-		function j_getcases(ivdata)
+		function j_getcases(ivdata,point,len)
 			integer,intent(in)::ivdata
+			integer,dimension(:),intent(inout),optional,pointer ::point
+			integer,optional,intent(out)::len
 		end function
  
-		function j_getinputvar(ivtrans)
+		logical function j_isupdata(iv,ivkeep,keep,nkeep,ivobs,ivnobsw,nobsup,point,nobssub)
+			! gets access to iv as updata
+			!  note there need not be subdata yet
+			integer,intent(in)::iv
+			integer,intent(out),optional :: ivkeep
+			integer,dimension(:),intent(inout),optional,pointer ::keep
+			integer,intent(out),optional ::nkeep,ivobs,ivnobsw,nobsup
+			double precision,dimension(:),pointer ::point !point to the matrix
+			integer*8,optional :: nobssub
+ 
+		end function j_isupdata
+ 
+ 
+ 
+		function j_getinputvar(ivtrans,point,len)
 			integer,intent(in)::ivtrans
+			integer,dimension(:),optional,intent(inout),pointer ::point
+			integer,optional,intent(out)::len
 		end function
  
-		function j_getoutputvar(ivtrans)
+		function j_getoutputvar(ivtrans,point,len)
 			integer,intent(in)::ivtrans
+			integer,dimension(:),optional,intent(inout),pointer ::point
+			integer,optional,intent(out)::len
 		end function
  
-		function j_gettablerow(ivtable)
+		function j_gettablerow(ivtable,point,len)
 			integer,intent(in)::ivtable
+			integer,dimension(:),optional,intent(inout),pointer ::point
+			integer,optional,intent(out)::len
 		end function
  
-		function j_gettablecol(ivtable)
+		function j_gettablecol(ivtable,point,len)
 			integer,intent(in)::ivtable
+			integer,dimension(:),intent(inout),optional,pointer ::point
+			integer,optional,intent(out)::len
 		end function
+ 
+		function j_gettablecoef(ivtable,point)
+			integer, intent(in)::ivtable
+			double precision,dimension(:),intent(inout),optional,pointer ::point
+		end function
+ 
+		function j_getsubdata(ivdata,needed)
+			integer,intent(in)::ivdata
+			logical,optional ::needed
+		end function
+ 
+		function j_getupdata(ivdata,needed)
+			integer,intent(in)::ivdata
+			logical,optional ::needed
+		end function
+ 
+		subroutine j_checkobject(ivobject,itype,named)
+			integer,intent(in):: ivobject,itype
+			logical,intent(in),optional::named
+		end subroutine
  
  
 		function j_num2iv(r)
@@ -3660,6 +3757,11 @@ module jmod
  
 		double precision function j_iv2val(iv)
 			integer,intent(in)::iv
+		end function !real function j_val(text)
+ 
+		double precision function j_stemsplineval(ifunc,darg)
+			integer,intent(in)::ifunc
+			double precision ::darg
 		end function !real function j_val(text)
  
 		!	character(len=lenoption) function option_name(iopt)
@@ -3794,7 +3896,7 @@ module jmod
  
 		subroutine j_printname(text1,iv,text2,iv2) !print variable name with text
 			!use errmod, only: j_err
-			!use j_globalsmod, only: j_namedv   ! current namber of named objects
+			!use j_globalsmod, only: j_named   ! current namber of named objects
 			!use j_globalsmod, only: j_v   ! real variable associated with each named object +
 			!use j_globalsmod, only: j_ivnames
 			character(len=*),intent(in):: text1
@@ -3918,9 +4020,9 @@ module jmod
 		end subroutine
  
 		!!!jlp !!!!!
-		subroutine p_getrow(le,nterminrow,nterm,termvars,pvars,coefvars,isplus)
+		subroutine p_getrow(le,nterminrow,nterm,termvar,pvars,coefvars,isplus)
 			integer::le !length os the left side
-			integer, dimension(:), allocatable :: nterminrow,termvars,pvars,coefvars
+			integer, dimension(:), allocatable :: nterminrow,termvar,pvars,coefvars
 			integer, dimension(:), allocatable ::isplus
  
 		end subroutine

@@ -112,6 +112,11 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+! Version 23.2.2023. The most important change is that the data() function is rewritten.
+!  Now it is simpler and more easy to maintain. It is not possible to make two DATA objects with
+! a single call to data(), but it is not really reasonable to put unit data and schedules data 
+! into the same file. There are some other changes which are note yet fully reported. Examples go through
+! but there are some not properly tested features. 
 
 !Version 25.1.2023. Factory optimization started. It does not work yet
 ! but the example shows how it can be used in the future.
@@ -238,10 +243,11 @@
   ! Luke cannot let me take care of the publication but the leaders wanted to publish J
  ! themselves. This started a frustrating and humillating process which lasted six 
  !and half years. Eleven
- ! leaders of Luke were involved in the process.
+ ! leaders of Luke were involved in the process,
+ ! and none of them was eventually interested to get the software publisehd.
  
  !I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017.
- ! I was not informed of the decision. Later Luke turned down any cooperation
+ ! I was not informed of the decision. Later Luke turned down explicitly any cooperation
  ! in the publication or in the development of 
  ! the software.
  
@@ -260,18 +266,22 @@
 ! between me and Luke in this process.
  ! As I could not accept the interpretation that I had fighted six and half years against wind mills, 
  ! I described in previous versions some details of the process. This kept my bitterness
-! alive which was unfortunate for my mind and also because
+! alive which was unfortunate for my peace of mind and also because
 ! I knew well how pathetic old bitter men are. After some recent rounds of argumentation, the research director
 ! called me in January 12 2023 and admitted that Luke did not handle the opening and publication properly
 ! and that Luke will improve its procedures. I want now look forward, and I make 
 !only two comments.
+
 ! First, I think that if a government research institute decides that a sowtware can be
 !opened and published, the principal author should have the right to participate in the
-!preparation of the formal opening decision and to take care of the publication. Second.
+!preparation of the formal opening decision and to take care of the publication.
+
+!Second.
 ! The software contained so much dirty code that it could not be developed without my involvement,
-! and barely even maintained. This
-! suggests that an expert organization should listen the best experts before 
-! turning down the cooperation with them.
+! and barely even maintained. The leaders of Luke did not know this because they were not
+! interested to discuss with me anything related to the state, publication or 
+! development of the software. I think that an expert organization should
+! always consult best experts and not only those who can express them most persuasively. 
 
   
  ! \subsection*{Rewriting the software}
