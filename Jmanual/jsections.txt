@@ -7,6 +7,9 @@
 !Inpuf ;dif
 !Inpuf ;pause
 !Inpuf ;where
+!Inpuf ;if
+!Inpuf ;elseif
+!Inpuf ;else
 
 
 !Macro seecom
@@ -111,6 +114,14 @@
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
+
+!version 27.2. 2023 Someare bugs corrected, i.e. in jlpz(), and some user errors are detected
+! to avoid memory overflow. If values of matrix elements were
+!given
+!in the input paragraph after matrix(), it was not possible to separate numbers with spaces (even if this was not 
+!told in the manual). Now spaces are allowed as separators but input programming is not. If 
+!input programming tools are needed, it is easly to add option which makes it possible. ;if();then
+!structures in the input programming were not described in the manual, now they are.
 
 ! Version 23.2.2023. The most important change is that the data() function is rewritten.
 !  Now it is simpler and more easy to maintain. It is not possible to make two DATA objects with
@@ -1269,6 +1280,30 @@
 ! 5,6,7
 !/
 !endex
+!endsection
+
+!Section inpuif ;if()...
+!If the condition within the parenthesis if TRUE (i.e. has a nonzero value)the following text if the next input line
+!generated.
+!endheader
+!Note In the previous J version it was possible to write these one line ifs outsoed a TRANS object 
+! the semicolon, i.e. in form  if().... Now this is not allowed, even if it would be simple to implement
+!in order to  make a clear distinction between input programming and transformations
+!endnote
+!endsection
+
+!Section inpuifthen ;if();then
+! If the conditon within the parenthesis is tRUE (i.e. ahas a nonzero value, the text up to
+! ;elsif());then or ;else  becosme part of the input. Thus the whole thing can look like
+! ;if(...);then\\
+! ...\\
+! ;elseif(...);then\\
+! ...\\
+! ;elseif(...);then\\
+! ...\\
+! ;else\\
+! ...\\
+! ;endif\\
 !endsection
 
 !Section short Shortcuts

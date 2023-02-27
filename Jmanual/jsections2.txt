@@ -51,6 +51,8 @@ subsection inpureplace
 subsection incl
 subsection inpugoto
 subsection inpudo
+subsection inpuif
+subsection inpuifthen
 subsection inpusum
 subsection inpudif
 subsection inpupause

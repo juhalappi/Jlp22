@@ -174,6 +174,14 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+version 27.2. 2023 Someare bugs corrected, i.e. in \textcolor{VioletRed}{jlpz}(), and some user errors are detected 
+to avoid memory overflow. If values of matrix elements were 
+given 
+in the input paragraph after \textcolor{VioletRed}{matrix}(), it was not possible to separate numbers with spaces (even if this was not 
+told in the manual). Now spaces are allowed as separators but input programming is not. If 
+input programming tools are needed, it is easly to add option which makes it possible. ;if();then 
+structures in the input programming were not described in the manual, now they are. 
+ 
 Version 23.2.2023. The most important change is that the \textcolor{VioletRed}{data}() function is rewritten. 
 Now it is simpler and more easy to maintain. It is not possible to make two \textcolor{teal}{DATA} objects with 
 a single call to \textcolor{VioletRed}{data}(), but it is not really reasonable to put unit data and schedules data 
@@ -879,6 +887,28 @@ x1=   10.000000000000000
 x2=   20.000000000000000 
 \end{verbatim} 
 \color{Black} 
+\subsection{;if()...} 
+\label{inpuif} 
+If the condition within the parenthesis if TRUE (i.e. has a nonzero value)the following text if the next input line 
+generated. 
+\begin{note} 
+In the previous \textbf{J} version it was possible to write these one line ifs outsoed a \textcolor{teal}{TRANS} object 
+the semicolon, i.e. in form  \textcolor{VioletRed}{if}().... Now this is not allowed, even if it would be simple to implement 
+in order to  make a clear distinction between input programming and transformations 
+\end{note} 
+\subsection{;if();then} 
+\label{inpuifthen} 
+If the conditon within the parenthesis is tRUE (i.e. ahas a nonzero value, the text up to 
+;elsif());then or ;else  becosme part of the input. Thus the whole thing can look like 
+;if(...);then\\ 
+...\\ 
+;elseif(...);then\\ 
+...\\ 
+;elseif(...);then\\ 
+...\\ 
+;else\\ 
+...\\ 
+;endif\\ 
 \subsection{\textcolor{Red}{;sum}() sums into input}\index{;sum} 
 \label{inpusum} 
 \textbf{Jlp22} an generate text of form part1+part2+...partn into input line using 
@@ -3708,8 +3738,15 @@ submatrices equal
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
+\begin{note} 
+When reading matrix from the following input paragraph, the numbers must be separated with commas. It would 
+otherwise easy to read alos comma separated numbers, but because the lines are obtained throug 
+input programming, the spaces would mix up input programmig. If the numbers are separated with 
+spaces either a reading error coccurs or warning like \\ 
+*wrn* the number of values            7  does not agree with the number of elements 
+\end{note} 
 \singlespacing 
-\begin{example}[matrixex]Example of generating matrices\\ 
+\begin{example}[matrixex]Example of generatig matrices\\ 
 \label{matrixex} 
 \noindent A=\textcolor{VioletRed}{matrix}(3,\\ 
  

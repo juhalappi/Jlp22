@@ -3732,6 +3732,13 @@ module jmod
 			logical,intent(in),optional::single
 		end subroutine !subroutine j_getinput(prompt,inprint,nul0t)
  
+		subroutine j_getinput0(prompt,inprint,nul0t,single)
+			character*(*), intent(in):: prompt
+			integer, intent(in),optional:: inprint
+			integer,intent(in),optional :: nul0t !at what value of nul(0) returns
+			logical,intent(in),optional::single
+		end subroutine !subroutine j_getinput(prompt,inprint,nul0t)
+ 
 		subroutine j_sit()
  
 		endsubroutine
