@@ -422,9 +422,10 @@ section spline Splines, stem splines,  and volume functions
 subsection tautspline tautspline()
 subsection stemspline stemspline()
 subsection stempolar stempolar(): stem curve in polar coorniates
+subsection stemcurve 
 subsection laasvol laasvol() volume function of Laasasenaho
 subsection laaspoly laaspoly() polynomial stem curve of Laasasenaho
-subsection integrate integrate()
+!subsection integrate integrate()
 !
 	
 section bit Bit functions

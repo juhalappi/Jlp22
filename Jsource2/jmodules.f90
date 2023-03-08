@@ -83,7 +83,7 @@ module jmod
 	integer, parameter :: j_nfjlp=21 !jlp
 	integer, parameter :: j_nfsimu=6 !
 	integer, parameter :: j_nffig=6 !
-	integer, parameter :: j_nfspli=6 !
+	integer, parameter :: j_nfspli=7 ! tautspline..
 	integer, parameter :: j_nfbit=7 !
 	integer, parameter :: j_nfmisc=7 !
  
@@ -259,7 +259,7 @@ module jmod
 		'plotyx','draw','drawclass', 'drawline','show', 'plot3d',& ! 6
  
 		!! Splines, stem splines,  and volume functions
-		'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate',  & ! 6
+		'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve', & ! 7
  
 		!! Bit function
 		'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
@@ -339,8 +339,8 @@ module jmod
 		0,0,1,1,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
-		1,2,2,2,2,2,&
-		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate',  & ! 6
+		1,2,2,2,2,2,1,&
+		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',  & ! 6
  
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
@@ -420,8 +420,8 @@ module jmod
 		0,0,1,1,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
-		1,2,2,2,2,2,&
-		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate',  & ! 6
+		1,2,2,2,2,2,9999,&
+		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',  & ! 6
  
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
@@ -464,7 +464,7 @@ module jmod
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 		'extraup','extra','mean', 'min','max',& ! 1-10
 		'sd','var','warm','volsd','rhs','rhs2','w','obs', 'obsup','problem',& !11-20 MIXED UP
-		'from','dataup','nobsw','readup','keep','keepup','maketransup','rmse','rows','inupfree', & !21-30
+		'from','dataup','nobsw','readup','keep','keepup','maketransup','rmse','rows','cylinder', & !21-30
 		'formupfree','filterup','print','sum','duplicate','loglike','mask','maxrounds','test','debug', & !31-40
 		'default','classlink','x','maxlines','q','obsw','nobswcum','xrange','yrange','mark',& !41-50
 		'keepperiod','nobs','append','variance','oldupobs','noint','periods','period','unitdata','unitdataobs', & !51-60
@@ -492,7 +492,7 @@ module jmod
 	parameter (j_mvolsd=16,j_mrhs=17,j_mrhs2=18,j_mw=19,j_mobs=20,j_mobsup=21)   !mobs was mxdata
 	parameter (j_mproblem=22,j_mfrom=23)
 	parameter (j_mdataup=24,j_mnobsw=25,j_mreadup=26,j_mkeep=27,j_mkeepup=28,j_mmaketransup=29)
-	parameter (j_mrmse=30,j_mrows=31,j_mupinfree=32,j_mupformfree=33,j_mupfilterfree=34,j_mprint=35)
+	parameter (j_mrmse=30,j_mrows=31,j_mcylinder=32,j_mupformfree=33,j_mupfilterfree=34,j_mprint=35)
 	parameter (j_msum=36,j_mduplicate=37,j_mloglike=38,j_mmask=39,j_mmaxrounds=40)
 	parameter (j_mtest=41,j_mdebug=42,j_mdefault=43)
 	parameter (j_mclasslink=44,j_mx=45,j_mmaxlines=46,j_mq=47,j_mobsw=48,j_mnobswcum=49)
@@ -523,7 +523,7 @@ module jmod
 	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211,j_milist=212,j_mnrowtot=213,j_mshowdomain=214)
 	parameter (j_mknn=215,j_mnewup=216)
  
-	integer,parameter :: j_nnamedoptarg=52
+	integer,parameter :: j_nnamedoptarg=53
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
  
 	data j_namedoptarg / & !%%options which should have named objects as arguments
@@ -534,7 +534,7 @@ module jmod
 		'duplicate','classlink','x','q','obsw','nobswcum','oldupobs','period','unitdata',&
 		'unitdataobs','oldobsw','class','title','z','out','matrix','treevars','plotvars','report','dummy',&
 		'y','arg','area','notareavars','stemcurves','relheight',&
-		'local','file','zmatrix','eof','list','ext' &
+		'local','file','zmatrix','eof','list','ext','cylinder' &
 		/
  
  
@@ -553,7 +553,7 @@ module jmod
 	character*(j_lenobjecttype), dimension (1:j_notypes)::j_otypes !=(/ &
 	data j_otypes/ & !%%objecttypes
 		'REAL','CHAR','free','LIST','MATRIX','MATRIXS','TRANS','TABLE','LISTI','TXT', & !1-10
-		'STEMSPLINE','TEXT','DATA','PROB','FIG','SMOOTH','free','REGR','BITMATRIX','PIECEWISE',& !11-20
+		'STEMSPLINE','TEXT','DATA','PROB','FIG','SMOOTH','STECURVE','REGR','BITMATRIX','PIECEWISE',& !11-20
 		'free','free','free','LAASPOLY','TAUTSPLINE'/
  
 	integer, dimension (1:j_notypes)::j_lotypes
@@ -677,7 +677,7 @@ module jmod
 	parameter (j_ipproblem=14)
 	parameter (j_ipfigure=15)
 	parameter (j_ipsmooth=16) ! smooth spline
-	!parameter (j_ipbits=17) !bitstore
+	parameter (j_ipstemcurve=17) !bitstore
 	parameter (j_ipregr=18)
 	parameter (j_ipbitmatrix=19)
 	parameter (j_ippiecewise=20)
@@ -1175,7 +1175,7 @@ module jmod
 	!* search  -> searching for an address
 	double precision, dimension(:), pointer ::p_datamatup
 	double precision, dimension(:), pointer ::j_datamatup
-	integer, dimension(:), allocatable ::j_keepindex
+	integer, dimension(:), allocatable ::j_keepindex,j_readindex,j_readindex0
  
 	logical j_reacom(j_mxinc)
 	!       logical ,reado1
@@ -2680,6 +2680,11 @@ module jmod
 			integer,intent(in),optional::iv2,iv3
 		end subroutine !subroutine j_getline(iv,line,buffer,le)
  
+		character*1 function j_getnamech(iv)
+			integer, intent(in):: iv
+		end function !subroutine j_getline(iv,line,buffer,le)
+ 
+ 
 		subroutine j_getname0(iv,name,lname)
 			integer, intent(in):: iv
 			integer,intent(out) ::lname
@@ -3766,9 +3771,29 @@ module jmod
 			integer,intent(in)::iv
 		end function !real function j_val(text)
  
+ 
 		double precision function j_stemsplineval(ifunc,darg)
 			integer,intent(in)::ifunc
 			double precision ::darg
+		end function !real function j_val(text)
+ 
+ 
+		double precision function j_stemcurveint(ifunc,darg1,darg2,iob,io)
+			integer,intent(in)::ifunc
+			double precision,intent(in)::darg1,darg2
+			integer,intent(in)::iob,io
+		end function !real function j_val(text)
+ 
+		double precision function j_stemcurveval(ifunc,darg)
+			integer,intent(in)::ifunc
+			double precision,intent(in) ::darg
+		end function !real function j_val(text)
+ 
+ 
+		double precision function j_stemsplineint(ifunc,darg1,darg2,iob,io)
+			integer,intent(in)::ifunc
+			double precision ::darg1,darg2
+			integer,intent(in)::iob,io
 		end function !real function j_val(text)
  
 		!	character(len=lenoption) function option_name(iopt)

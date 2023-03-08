@@ -174,12 +174,17 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
-version 27.2. 2023 Someare bugs corrected, i.e. in \textcolor{VioletRed}{jlpz}(), and some user errors are detected 
+Version 8.3.2023 Some bugs corrected, e.g. in \textcolor{VioletRed}{data}() function and one bug in the precompiler. 
+Some user errors are reported better. The manual is updated. There is 
+now function stemcurve() which defines a stem curve used with linear interpolation. 
+This is reported if anyone is interested. 
+ 
+Version 27.2. 2023 Some bugs corrected, i.e. in \textcolor{VioletRed}{jlpz}(), and some user errors are detected 
 to avoid memory overflow. If values of matrix elements were 
 given 
 in the input paragraph after \textcolor{VioletRed}{matrix}(), it was not possible to separate numbers with spaces (even if this was not 
 told in the manual). Now spaces are allowed as separators but input programming is not. If 
-input programming tools are needed, it is easly to add option which makes it possible. ;if();then 
+input programming tools are needed, it is easly to add option which makes it possible. \textcolor{Red}{;if}();then 
 structures in the input programming were not described in the manual, now they are. 
  
 Version 23.2.2023. The most important change is that the \textcolor{VioletRed}{data}() function is rewritten. 
@@ -793,7 +798,7 @@ i=5;\\
 i=6;\\ 
 //  \\ 
 file;\\ 
-;if(\textcolor{VioletRed}{exist\_f}('file.txt'))\textcolor{VioletRed}{delete\_f}('file.txt')\\ 
+\textcolor{Red}{;if}(\textcolor{VioletRed}{exist\_f}('file.txt'))\textcolor{VioletRed}{delete\_f}('file.txt')\\ 
 \textcolor{VioletRed}{write}('file.txt',\$,file)\\ 
 \textcolor{VioletRed}{close}('file.txt')\\ 
 \textcolor{Red}{;incl}(file.txt)\\ 
@@ -887,7 +892,7 @@ x1=   10.000000000000000
 x2=   20.000000000000000 
 \end{verbatim} 
 \color{Black} 
-\subsection{;if()...} 
+\subsection{\textcolor{Red}{;if}()...}\index{;if} 
 \label{inpuif} 
 If the condition within the parenthesis if TRUE (i.e. has a nonzero value)the following text if the next input line 
 generated. 
@@ -896,15 +901,15 @@ In the previous \textbf{J} version it was possible to write these one line ifs o
 the semicolon, i.e. in form  \textcolor{VioletRed}{if}().... Now this is not allowed, even if it would be simple to implement 
 in order to  make a clear distinction between input programming and transformations 
 \end{note} 
-\subsection{;if();then} 
+\subsection{\textcolor{Red}{;if}();then}\index{;if} 
 \label{inpuifthen} 
 If the conditon within the parenthesis is tRUE (i.e. ahas a nonzero value, the text up to 
 ;elsif());then or ;else  becosme part of the input. Thus the whole thing can look like 
-;if(...);then\\ 
+\textcolor{Red}{;if}(...);then\\ 
 ...\\ 
-;elseif(...);then\\ 
+\textcolor{Red}{;elseif}(...);then\\ 
 ...\\ 
-;elseif(...);then\\ 
+\textcolor{Red}{;elseif}(...);then\\ 
 ...\\ 
 ;else\\ 
 ...\\ 
@@ -3987,8 +3992,7 @@ values of the matrix elements are put to the variable \$.
 \singlespacing 
 \begin{example}[findex]Finding something from matrix\\ 
 \label{findex} 
-\noindent {\color{ForestGreen}** Example of find, illustrating also rann() (line   6426 file c:/j3/j.f90)}\\ 
-{\color{ForestGreen}** Repeating the example, different results will be obtained}\\ 
+\noindent {\color{ForestGreen}** Repeating the example, different results will be obtained}\\ 
 rm=\textcolor{VioletRed}{matrix}(500)\\ 
 m,s=2,3\\ 
 rm=\textcolor{VioletRed}{rann}(m,s)\\ 
@@ -4969,7 +4973,7 @@ Pv"i"=\textcolor{VioletRed}{list}(xdataP\#"i"\%nobsw,@pv"i")\\
 \textcolor{Red}{;enddo}\\ 
  
 \textcolor{Red}{;do}(i,1,5)\\ 
-;if(i.eq.5)keepo=0\\ 
+\textcolor{Red}{;if}(i.eq.5)keepo=0\\ 
 xdataP\#"i"=\textcolor{VioletRed}{data}(\textcolor{blue}{in->}'xdatap.txt',\textcolor{blue}{read->}(@Pv"i"),\textcolor{blue}{keepopen->}keepo,\textcolor{blue}{continue->}contd,\textcolor{blue}{nobs->}nobscur)\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}xdataP\#"i",\textcolor{blue}{sum->})\\ 
 nobscur=xdataP\#"i"\%nobsw\%sum;\\ 
@@ -6196,11 +6200,13 @@ plistb=;list(\textcolor{teal}{probb}\%?);\\
 \textcolor{teal}{jlpb}\%income5;\\ 
 \textcolor{teal}{jlpb}\%income5[site.gt.3];\\ 
 \textcolor{teal}{jlpb}\%income5[3.lt.site];\\ 
+\textcolor{teal}{Continue}=1\\ 
 {\color{ForestGreen}** Now problem without constraints}\\ 
 probc=\textcolor{VioletRed}{problem}();\\ 
 npv\#0==max\\ 
 /         \\ 
 jlpc=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}probc,\textcolor{blue}{data->}xdata,\textcolor{blue}{showdomain->}'3.lt.site')\\ 
+\textcolor{teal}{Continue}=0\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -6572,7 +6578,7 @@ mark types of Gnuplot. The mark can be given also as \textcolor{teal}{CHAR} vari
 \label{drawex} 
 \noindent fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
 fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{cos}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
-;if(\textcolor{VioletRed}{type}(figyx).ne.FIGURE)plotyxex\\ 
+\textcolor{Red}{;if}(\textcolor{VioletRed}{type}(figyx).ne.FIGURE)plotyxex\\ 
 \textcolor{VioletRed}{show}(figyx,\textcolor{blue}{continue->}fcont)\\ 
 reg0=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},\textcolor{teal}{x})\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}datyx,\textcolor{blue}{min->},\textcolor{blue}{max->})\\ 
@@ -6788,7 +6794,6 @@ The mark can be given also as \textcolor{teal}{CHAR} varible or constant.
 \begin{example}[drawlineex]Example of \textcolor{VioletRed}{drawline}()\\ 
 \label{drawlineex} 
 \noindent ;drawlineex:\\ 
-{\color{ForestGreen}** Example of drawline() (line  13761 file c:/j3/j.f90)}\\ 
 fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
 fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{Pi},\textcolor{VioletRed}{sin}(\textcolor{teal}{Pi})+0.1,\textcolor{blue}{label->}'\textcolor{VioletRed}{sin}()',\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
 xval=\textcolor{VioletRed}{matrix}(\textcolor{blue}{do->}(1,10));\\ 
@@ -6817,7 +6822,7 @@ figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{trans
 fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x})\\ 
 fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{xrange->}(1,100),\textcolor{blue}{func->}Sin(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x})\\ 
 \textcolor{teal}{Continue}=0\\ 
-;if(wait)\textcolor{Red}{;pause}\\ 
+\textcolor{Red}{;if}(wait)\textcolor{Red}{;pause}\\ 
 \textcolor{Red}{;return}\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
@@ -6920,18 +6925,18 @@ The taut spline algorithm is published by de Boor (1978) on pages 310-314. The s
 was loaded from Netlib. 
 \subsection{\textcolor{VioletRed}{stemspline}() Creates STEMSPLINE}\index{stemspline()} 
 \label{stemspline} 
-To be reported later. 
+To be reported later, soon if needed. 
 \subsection{\textcolor{VioletRed}{stempolar}() Puts a stem into polar coordinates}\index{stempolar()} 
 \label{stempolar} 
 To be reported later 
+\subsection{stemcurve() Defines stem curve interpolated linearly between points} 
+\label{stemcurve} 
+To be reported later, soon if needed. 
 \subsection{\textcolor{VioletRed}{laasvol}() Volume equations of Laasasenaho}\index{laasvol()} 
 \label{laasvol} 
 To be reported later. 
 \subsection{\textcolor{VioletRed}{laaspoly}() Polynomial stem curves of Laasasenaho}\index{laaspoly()} 
 \label{laaspoly} 
-To be reported later. 
-\subsection{\textcolor{VioletRed}{integrate}() Integrates volume from STEMSPLINE}\index{integrate()} 
-\label{integrate} 
 To be reported later. 
 \section{Bit functions} 
 \label{bit} 

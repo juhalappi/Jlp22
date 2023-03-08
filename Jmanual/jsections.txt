@@ -115,7 +115,12 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
-!version 27.2. 2023 Someare bugs corrected, i.e. in jlpz(), and some user errors are detected
+!Version 8.3.2023 Some bugs corrected, e.g. in data() function and one bug in the precompiler.
+!Some user errors are reported better. The manual is updated. There is
+! now function stemcurve() which defines a stem curve used with linear interpolation.
+!This is reported if anyone is interested.
+
+!Version 27.2. 2023 Some bugs corrected, i.e. in jlpz(), and some user errors are detected
 ! to avoid memory overflow. If values of matrix elements were
 !given
 !in the input paragraph after matrix(), it was not possible to separate numbers with spaces (even if this was not 

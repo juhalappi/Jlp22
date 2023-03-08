@@ -291,6 +291,7 @@ program jpre
 	! write(6,*)'log written to file fort.4 (or similar name depending on compiler)'
 	goto 1
 11 write(6,*)'error opening file ',inp(1:le), ',iostat =',iostatus, ' try again'
+call system('dir')
 	stop
  
 1 write(6,'(a,$)')'Give command file, default jpre.txt>'
@@ -1235,16 +1236,25 @@ ploop:		do ip=1,nprefix
 				write(6,*)inp(1:le)
 				call pstop('prefix as a variable')
 			endif !if(inp(ipf:k-1).eq.prefix(ip)(1:lprefix(ip)))   1126
+			
+				! if(linein.eq.18420)then
+			! write(6,*)'k,ipf',k,ipf,'infunc',infunc,lensubname
+			! write(6,*)'k',inp(1:k)
+			! write(6,*)'ipf',inp(1:ipf)
+			! endif
  
 	loop2:		do j=1,modulewords
 					!	if(pm)write(6,*)'<32>',ipf,k,inp(1:le),'*',inp(ipf:k-1)
+			!		if(j.eq.14)write(6,*)'her',-ipf,lenmoduleword(j),'/',moduleword(j)(1:lenmoduleword(j)),'/',&
+			!		inp(ipf:k-1)
 				if(k-ipf.ne.lenmoduleword(j))cycle
 				if(moduleword(j)(1:lenmoduleword(j)).eq.inp(ipf:k-1))then
-					!		if(pm)write(6,*)'<53 ',inp(ipf:k-1),nused,used(1:nused),' j ',j
+			!				if(j.eq.14.and.linein.eq.18411-1)write(6,*)'<53 ',inp(ipf:k-1),nused,used(1:nused),' j ',j
 					do ii=1,nused
 						!	if(pm)write(6,*)'was used ',ii,inp(ipf:k-1)
 						if(used(ii).eq.j)goto 19
 					enddo !ii=1,nused   1137
+			!		if(j.eq.14.and.linein.eq.18411-1)write(6,*)'inf',infunc,lensubname,k-ipf
 					if(infunc.and.lensubname.eq.k-ipf)then
 						! if(linein.gt.570.and.linein.lt.900)write(6,*)'<6623',inp(ipf:k-1),&
 						! subname(1:len_trim(subname)),index(subname,inp(ipf:k-1))
@@ -1256,7 +1266,7 @@ ploop:		do ip=1,nprefix
 					!if(isfunc)	write(6,*)'3773',linein,isfunc,nused,inp(ipf:k-1),subname
 					nused=nused+1
 					used(nused)=j
- 
+ !if(j.eq.14.and.linein.eq.18420)write(6,*)'nused',nused,j
  
 					!if(nused.le.20)write(6,*)'nused,j',nused,j,moduleword(j),inp(1:le)
 					goto 19
@@ -1264,6 +1274,9 @@ ploop:		do ip=1,nprefix
 				endif !if(moduleword(j)(1:lenmoduleword(j)).eq.inp(ipf:k-1))   1135
  
 			enddo loop2 !p2:		do j=1,modulewords   1132
+		
+	
+			
 			write(6,*)'prefix word ',inp(ipf:k-1),' not in modules????????????',nused,' nused'
 			write(6,*)'line ',linein,k-ipf.ne.lenmoduleword(j),k-ipf,lenmoduleword(j)
 			write(6,*)inp(1:le)
@@ -1288,7 +1301,9 @@ ploop:		do ip=1,nprefix
 			! stop
  
 19				ial=k+1
-			if(ial.ge.le-lprefix(ip))cycle ploop
+!if(linein.eq.18420)p=.true.
+!if(linein.eq.18420)write(6,*)'ial',ial,le,lprefix(ip),ial.ge.le-lprefix(ip)
+			if(ial.gt.le-lprefix(ip))cycle ploop
 			ipf=index(inp(ial:le),prefix(ip)(1:lprefix(ip)))
  
 			if(ipf.gt.0)ipf=ipf+ial-1
