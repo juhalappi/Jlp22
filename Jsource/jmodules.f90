@@ -85,7 +85,7 @@ module jmod
 	integer, parameter :: j_nffig=6 !
 	integer, parameter :: j_nfspli=7 ! tautspline..
 	integer, parameter :: j_nfbit=7 !
-	integer, parameter :: j_nfmisc=7 !
+	integer, parameter :: j_nfmisc=8!
  
 	integer, parameter :: j_fbspec=0   !basis
 	integer, parameter :: j_fbobj=j_fbspec+j_nfspec
@@ -265,7 +265,7 @@ module jmod
 		'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
 		!! Misc. utility functions
-		'value','properties','cpu','secnds','where','batch','system'/ !6
+		'value','properties','cpu','secnds','where','batch','system','info'/ !8
  
 	integer,dimension(j_nfunctions_) :: j_minarg_ ! = (/ &  !!!%function
 	data j_minarg_/ 1,1,1,1,1,1,1,2,&
@@ -320,7 +320,7 @@ module jmod
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix',  & !19
  
-		0,0,1,2,0,0,1,0,0,0,0,1,&
+		0,0,0,2,0,0,1,0,0,0,0,1,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
 		!linkdata2,splitdata
  
@@ -345,8 +345,8 @@ module jmod
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
-		6*0,1/
-	! 'value','properties','cpu','seconds','where','batch','misc'/ !6
+		6*0,1,0/
+	! 'value','properties','cpu','seconds','where','batch','system','info'/ !8
  
  
 	integer, dimension(j_nfunctions_):: j_maxarg_  !=  & !!%%function
@@ -426,8 +426,8 @@ module jmod
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
-		6*0,1/
-	! 'value','properties','cpu','seconds','where','batch','system'/ !6
+		6*0,1,9999/
+	! 'value','properties','cpu','seconds','where','batch','system','info'/ !8
  
  
  
@@ -1528,8 +1528,11 @@ module jmod
 	logical p_maxo ! what is the objective
 	logical p_feasible	! if we have found feasible solution
 	logical p_feasible1   !first feasible
- 
+	logical p_wasfeasible
+	integer,dimension(1:100):: p_pivots
+	integer p_pivotbas,p_bad
 	integer p_ivnext,p_iviprev
+	integer p_idebug1,p_idebug2
 	!*************************
 	!	integer ,dimension(:), pointer::p_nsetr=>null()   !start
 	!integer ,dimension(:), pointer::p_nsetd=>null()
@@ -1814,7 +1817,7 @@ module jmod
 	logical p_sentered
 	logical p_echo
 	logical p_p,p_p9,p_p8,p_p2
-	real*8 p_val_
+	!real*8 p_val_
 	real*8 p_rcur
 	logical p_justkey
 	logical ::p_factnow=.false.  !are factories checked
@@ -2854,6 +2857,11 @@ module jmod
 			integer, intent(out):: le
 			character (len=*),intent(inout):: text
 		end subroutine !subroutine j_clean(text,le)
+ 
+		subroutine j_clean0(text,le) ! remove blanks, tabs etc , le is the length of the cleaned text
+			integer, intent(inout):: le
+			character (len=*),intent(inout):: text
+		end subroutine j_clean0!subroutine j_clean(text,le)
  
 		subroutine j_cleanstart(text,le) ! remove blanks, tabs etc , le is the length of the cleaned text
 			integer, intent(out):: le

@@ -445,6 +445,7 @@ section  misc Misc. utility functions
 subsection properties properties()
 subsection cpu cpu()
 subsection secnds secnds()
+subsection info
 !
 !
 section error

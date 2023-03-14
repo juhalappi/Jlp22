@@ -174,6 +174,10 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 14.3. 2023 Function \textcolor{VioletRed}{exceldata}() corrected. A bug corrected in \textcolor{VioletRed}{jlpz}(). 
+More user errors noticed before a memory overflow. A bug corrected when space 
+for numeric constants had to be increased. 
+ 
 Version 8.3.2023 Some bugs corrected, e.g. in \textcolor{VioletRed}{data}() function and one bug in the precompiler. 
 Some user errors are reported better. The manual is updated. There is 
 now function stemcurve() which defines a stem curve used with linear interpolation. 
@@ -4704,7 +4708,7 @@ First the first line is copied and pasted as the second line. To the beginning o
 '@\#'. Then each entry separated by ';' is edited as follows. If the column is just ignored, then 
 put '!' to the beginning of the entry. If all characters in the column are read in as 
 a numeric variable, change the name to accpetable variable name in \textbf{J}. 
-If the column is read in but it is just used as an input variable fot 
+If the column is read in but it is just used as an input variable for 
 \textcolor{blue}{maketrans->} trasformations, then start the name with '\$' so the variable is not put to 
 the list of \textcolor{blue}{keep->} variables. If a contains only character values then it must 
 be ignored using '!'. If the contains numeric values surrounded by characters, the the numeric value can be picked 
@@ -6249,7 +6253,7 @@ the following 3 options must be present and either \textcolor{blue}{min->} or \t
 \noindent \textcolor{blue}{rhs}  \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{MATRIX} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Lower bounds as row or column vector having as many elements as there are 
-rows in the matrix given in \textcolor{blue}{zmatrix->}. 
+rows in the matrix given in \textcolor{blue}{zmatrix->}. Use value -1.e20 to indicate that there is no lower bound. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6257,7 +6261,7 @@ rows in the matrix given in \textcolor{blue}{zmatrix->}.
 \noindent \textcolor{blue}{rhs2}  \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{MATRIX} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Upper bounds as row or column vector having as many elements as there are 
-rows  in the matrix given in \textcolor{blue}{zmatrix->}. 
+rows  in the matrix given in \textcolor{blue}{zmatrix->}. Use value 1.e20 to indicate that there is no upper bound. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6286,7 +6290,7 @@ constraint matrix has columns.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{debug} \tabto{3cm} -1|0|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Gives the value of Pivot at which a pause is generated. During the pause all essential 
+\noindent  NOT UP TO DATE Gives the value of Pivot at which a pause is generated. During the pause all essential 
 matrices can be studied. Pure \textcolor{blue}{debug->} is the same as \textcolor{blue}{debug->}0, which implies that pause is generated before 
 pivoting. If variable \textcolor{teal}{Debug} is given a new value, the the next pause is generated when Pivot.eq.\textcolor{teal}{Debug}. The default is that 
 the next pause is generated after the next pivot. The \textcolor{VioletRed}{pause}() function can now use also \\ 
@@ -6512,6 +6516,12 @@ mark types of Gnuplot. The mark can be given also as \textcolor{teal}{CHAR} vari
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
+\begin{note} 
+By default \textcolor{VioletRed}{plotyx}() uses the names of the \textcolor{teal}{x}-variable and \textcolor{teal}{y}-variable 
+inte xlabe and ylabel. If the names contain e.g. underscore \_, this would make 
+the next character as under script. To plot the underscore character, 
+use \textcolor{blue}{xlabel->} 	and \textcolor{blue}{ylabel->}, and replace \_ with \\\_. 
+\end{note} 
 \singlespacing 
 \begin{example}[plotyxex]plotyx()\\ 
 \label{plotyxex} 
@@ -6639,7 +6649,19 @@ of class means computed as \textcolor{VioletRed}{sqrt}(sample\_within-class\_var
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{sd}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Within-calss standard deviations are drawn. 
+\noindent  Within-class standard deviations are drawn, if there is no \textcolor{blue}{mean->} 
+option. If there is also \textcolor{blue}{mean->} option then sd-error line are drawn 
+around mean similarly as with \textcolor{blue}{se->} standard error lines are drawn. Both se error bars and sd errors bars 
+can be obtained by first making figure with sd error bars with some color 
+and then calling \textcolor{VioletRed}{drawclass}() with different color, possibly with larger 
+\textcolor{blue}{width->}, and with \textcolor{blue}{append->}, see the example below. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{mean}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Class measn are drawn. Has effect only together with \textcolor{blue}{sd->}. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6696,7 +6718,9 @@ fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textco
 fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{x}\%min,\textcolor{teal}{x}\%max,reg(\textcolor{teal}{x}\%min),reg(\textcolor{teal}{x}\%max),\textcolor{blue}{width->}3,\textcolor{blue}{color->}\textcolor{teal}{Cyan},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
 cl=\textcolor{VioletRed}{classify}(\textcolor{teal}{Resid},\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{classes->}5)\\ 
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
-fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{mean->},\textcolor{blue}{sd->},\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Red})\\ 
+fi2=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Black},\textcolor{blue}{width->}2,\textcolor{blue}{append->})\\ 
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{continue->}fcont)\\ 
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{var->},\textcolor{blue}{continue->}fcont)\\ 
 {\color{ForestGreen}** x-values were equally distributed due to data construction}\\ 
@@ -7008,6 +7032,11 @@ selapsed=sec1-sec0;\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
+\subsection{info() print some information of current parameters.} 
+\label{info} 
+\begin{note} 
+Late addtiona information sis printed. 
+\end{note} 
 \section{Error handling} 
 \label{error} 
 There can happen basically three kinds of errors: 
