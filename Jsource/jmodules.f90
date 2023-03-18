@@ -78,7 +78,7 @@ module jmod
 	integer, parameter :: j_nffile=8  !file
 	integer, parameter :: j_nfio=7  ! io
 	integer, parameter :: j_nfmatr=19  !matrix
-	integer, parameter :: j_nfdata=12  !data functions
+	integer, parameter :: j_nfdata=13  !data functions
 	integer, parameter :: j_nfstat=13  !stat
 	integer, parameter :: j_nfjlp=21 !jlp
 	integer, parameter :: j_nfsimu=6 !
@@ -241,8 +241,8 @@ module jmod
 		'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix',  & !19
  
 		!! Data functions
-		'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !11
-		'joindata','splitdata',&
+		'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !13
+		'joindata','splitdata','partdata',&
 		!! Statistical functions
 		'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
 		'varcomp', 'classify', 'class', & !13
@@ -320,9 +320,9 @@ module jmod
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix',  & !19
  
-		0,0,0,2,0,0,1,0,0,0,0,1,&
+		0,0,0,2,0,0,1,0,0,0,0,1,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
-		!linkdata2,splitdata
+		!linkdata2,splitdata,partdata
  
 		0,1,1,1,1,1,2,1,1,2,  1,0,1,&
 		! 'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
@@ -350,20 +350,20 @@ module jmod
  
  
 	integer, dimension(j_nfunctions_):: j_maxarg_  !=  & !!%%function
-	data j_maxarg_/ 4,4,4,99999,9999,9999,9999,3,&
+	data j_maxarg_/ 4,5,5,99999,9999,9999,9999,3,&
 		! 'setoption','getelem','setelem','list2', 'o1_funcs','o2_funcs','o3_funcs','setcodeopt', &  ! 8n
  
-		1,1,1,1,&
+		1,99999,1,1,&
 		! 'type','delete_o','exist_o','name',    &  !3
  
 		9999,1,1,0,1,&
 		! 'trans','call','pause','noptions','R', &  !4
  
-		4,1,2,9999,2,99999,99999,1,1,0,0,0,0,2,0,9999,999,9999,&
+		4,1,2,9999,9999,99999,99999,1,1,0,0,0,0,2,0,9999,999,9999,&
 		! 'do', 'if','assign','sit','which','errexit', 'goto','itrace', 'trace','tracenow',  &
 		! 'itraceoff','traceoff','tracetest','assoneone','enddo','assmany','goto2','goto3',&  !16
  
-		2,2,2,2,2,2,1,  2,2,2,   2,2,2,1,2,2,2,2,2,&
+		2,2,2,2,2,2,2,  2,2,2,   2,2,2,1,2,2,2,2,2,&
 		!Arithmetic and logical operations after converting to the polish notation
 		!'HMULT','HDIV','IPOWER','MULT','DIV','PLUS','MINUS','EQ','NE','LE', &
 		!'LT','GE','GT','NOT','AND','OR','EQV','NEQV','POWER', & !19
@@ -374,38 +374,38 @@ module jmod
 		! 'cotand','asin','asind','acos','acosd','atan','atand','acotan','acotand','sinh', &
 		! 'cosh','tanh','fraction','abs', & !34
  
-		1,1,1,1,2,&
+		99,1,1,1,2,&
 		! 'der','gamma','loggamma','logistic','npv', & !5
  
-		1,1,2,2,0,&
+		2,3,3,3,1,&
 		! 'pdf','cdf','bin','negbin', 'density' ,&  !4
  
-		0,0,0,1,2,1,1,&
+		0,2,1,2,2,2,1,&
 		! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
  
 		1,4,4,&
 		! 'interpolate','plane','bilin', & !3
  
-		0,9999,2,1,2,1,1,2,2,&
+		99999,9999,2,2,2,1,99999,2,2,&
 		! 'list','merge','difference','index','index_v','len','ilist','putlist','table',& ! 8
  
 		0,0, &
 		! 'text','txt', & !2  text is old txt new
  
-		1,1,1,0,1,0,1,99,&
+		1,99999,1,0,1,0,1,99,&
 		! 'exist_f','delete_f','close','showdir','setdir','thisfile', 'filestat','print_f',& ! 8
  
-		3,2,0,0,1,1,1,&
+		9999,9999,9999,1,1,9999,999999,&
 		! 'read','write','print','ask','askc','printresult','printresult2', & ! 6 j_fbio
  
-		0,4*1,2,12*1,1,1,&
+		4,4*1,2,12*1,1,&
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix', & !19
  
-		0,1,0,99,0,1,0,1,0,0,1,&
+		0,999,0,2,1,1,9999,1,0,0,999,1,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
-		!linkdata2,splitdata
-		0,1,1,1,1,1,2,1,1,2,  1,0,1,&
+		!joindata,splitdata,partdata
+		9999,99999,99999,99999,1,1,2,1,1,2,  99999,99999,1,&
 		! 'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
 		! 'varcomp', 'classify', 'class', & !13
  
@@ -417,7 +417,7 @@ module jmod
 		0,1,1,0,0,0,&
 		! 'simulator','next','branch','simulate','cut','loadtrees', & ! 6
  
-		0,0,1,1,1,1,&
+		2,0,1,9999,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
 		1,2,2,2,2,2,9999,&
@@ -465,7 +465,7 @@ module jmod
 		'extraup','extra','mean', 'min','max',& ! 1-10
 		'sd','var','warm','volsd','rhs','rhs2','w','obs', 'obsup','problem',& !11-20 MIXED UP
 		'from','dataup','nobsw','readup','keep','keepup','maketransup','rmse','rows','cylinder', & !21-30
-		'formupfree','filterup','print','sum','duplicate','loglike','mask','maxrounds','test','debug', & !31-40
+		'drop','filterup','print','sum','duplicate','loglike','mask','maxrounds','test','debug', & !31-40
 		'default','classlink','x','maxlines','q','obsw','nobswcum','xrange','yrange','mark',& !41-50
 		'keepperiod','nobs','append','variance','oldupobs','noint','periods','period','unitdata','unitdataobs', & !51-60
 		'any','oldobsw','refac','tole','utiltrans','class','key','sparse','row','show',& ! 61-70
@@ -478,7 +478,7 @@ module jmod
 		'column','source','diag','width','level','errexit','xlegend','ylegend', & !131-140
 		'local','tab','par','wait','file','memory','zmatrix','break', 'content','chi2',&         !141-150
 		'expand','exist','slow','initial','eof','object','fastrounds','fast%','finterval','cov', & !151-160
-		'sdmean','parmin','parmax','step','dpar','rfhead','rfcodefree','rfheafree','rfcode','nobsup',& !161-
+		'sdmean','parmin','parmax','step','dpar','rfhead','harvester','prefix','rfcode','nobsup',& !161-
 		'stop','rfvars','first','last','echo','list','delete','ext','got','do','set','xlabel', & !171-179
 		'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
 		'tailtofirst','tailtolast','cumulative','time','missing','clean','factgroup','dpivot','int','pullout',&
@@ -492,7 +492,7 @@ module jmod
 	parameter (j_mvolsd=16,j_mrhs=17,j_mrhs2=18,j_mw=19,j_mobs=20,j_mobsup=21)   !mobs was mxdata
 	parameter (j_mproblem=22,j_mfrom=23)
 	parameter (j_mdataup=24,j_mnobsw=25,j_mreadup=26,j_mkeep=27,j_mkeepup=28,j_mmaketransup=29)
-	parameter (j_mrmse=30,j_mrows=31,j_mcylinder=32,j_mupformfree=33,j_mupfilterfree=34,j_mprint=35)
+	parameter (j_mrmse=30,j_mrows=31,j_mcylinder=32,j_mdrop=33,j_mupfilterfree=34,j_mprint=35)
 	parameter (j_msum=36,j_mduplicate=37,j_mloglike=38,j_mmask=39,j_mmaxrounds=40)
 	parameter (j_mtest=41,j_mdebug=42,j_mdefault=43)
 	parameter (j_mclasslink=44,j_mx=45,j_mmaxlines=46,j_mq=47,j_mobsw=48,j_mnobswcum=49)
@@ -513,7 +513,7 @@ module jmod
 	parameter (j_mmemory=148,j_mzmatrix=149,j_mbreak=150,j_mcontent=151,j_mchi2=152)
 	parameter (j_mexpand=153,j_mexist=154,j_mslow=155,j_minitial=156,j_meof=157,j_mobject=158)
 	parameter (j_mfastrounds=159,j_mfastp=160,j_mfinterval=161,j_mcov=162,j_msdmean=163)
-	parameter (j_mparmin=164,j_mparmax=165,j_mstep=166,j_mdpar=167,j_mrfhead=168,j_muprfcode=169,j_muprfhead=170,j_mrfcode=171)
+	parameter (j_mparmin=164,j_mparmax=165,j_mstep=166,j_mdpar=167,j_mrfhead=168,j_mharvester=169,j_mprefix=170,j_mrfcode=171)
 	parameter (j_mupnobs=172,j_mstop=173,j_mrfvars=174,j_mfirst=175,j_mlast=176,j_mecho=177,j_mlist=178,j_mdelete=179,j_mext=180)
 	parameter (j_mgot=181,j_mdo=182,j_mset=183,j_mxlabel=184,j_mylabel=185,j_mt=186,&
 		j_mcoef=187,j_msorted=188,j_msub=189,j_mdiscrete=190,j_mprolog=191,j_mepilog=192,j_munit=193)
@@ -736,6 +736,7 @@ module jmod
 	integer j_named ! current namber of named objects
 	integer j_mxnamedv !maximum number of named objects , setted in j_init, possibly read fron j.par
 	integer j_nv  ! mitä on ??
+	integer j_nvtot !
 	integer ::j_nconstantv=0  ! current number of constants
 	integer j_mxconstantv  ! maximum number of constants
 	integer j_mxtemporalv  ! maximum number of intermediate results
@@ -869,7 +870,8 @@ module jmod
 	integer,parameter::j_ivfastp=76
 	integer,parameter::j_ivobs=77
 	integer,parameter::j_ivblack=78
-	integer,parameter::j_predefined=78
+	integer,parameter::j_ivtempout=79
+	integer,parameter::j_predefined=79
  
 	integer ::p_fastmakes
  
@@ -1055,7 +1057,7 @@ module jmod
 	! integer, dimension(:),allocatable::j_curdatasets
 	! integer, dimension(:),allocatable::j_iobcur,j_nobcur,j_iobcum
 	!	integer j_ndatasets
- 
+	integer*8 j_iobs
 	!	integer j_levels,j_level
 	integer::j_divdata,j_dfilterlink,j_drejectlink,j_divtrans,j_divvars,j_divmat,j_divvars2
 	integer::j_divdataup,j_dfilterlinkup,j_drejectlinkup,j_divtransup,j_divvarsup,j_divmatup,j_divvars2up
@@ -2323,6 +2325,11 @@ module jmod
 			integer,intent(in)::iout
 		end subroutine !subroutine j_copy(iob,io)
  
+		subroutine j_move(irg,iout)   ! uses move_alloc to move an object to ither name
+			integer,intent(in)::irg
+			integer,intent(in)::iout
+		end subroutine !subroutine j_copy(iob,io)
+ 
  
 		! subroutine j_addwarning(iob,io,ifunc)
 		! integer, intent(in) ::iob
@@ -2415,6 +2422,8 @@ module jmod
 			integer,dimension(2),intent(in)::i4
 		end function
  
+ 
+ 
 		subroutine j_i8i4(i8,i4)
 			integer,dimension(2),intent(out)::i4
 			integer*8,intent(in)::i8
@@ -2466,6 +2475,15 @@ module jmod
 			integer,intent(in),optional::rowtot
 			double precision,dimension(:),optional,intent(out),pointer::point
 		end function !subroutine j_defmatrix(iv,na
+ 
+		subroutine j_defmatdim(ivmat,nrows,ncols)
+			integer,intent(in)::ivmat,nrows,ncols
+		end subroutine
+ 
+		subroutine j_defmatdim8(ivmat,nrows8,ncols8)
+			integer,intent(in)::ivmat
+			integer*8,intent(in)::nrows8,ncols8
+		end subroutine
  
  
  

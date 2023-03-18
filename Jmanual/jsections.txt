@@ -115,6 +115,16 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+!Version 18.3 2023 Function partdata() can pick part of data by dropping 
+!observations and/or variables. function info() prints current objects and options.
+!The checking during the parsing phase whether a function has too many arguments 
+! is reactivated. It may cause unwarranted error conditions.
+! It is possible to make lists of lists and pick the name of the list element which
+! is also a list into the input paragraphs. This is useful when making the same
+!analysis for many data objects. The stemcurve() function has new properties which
+! can be documented if anyone is interested. Now the function can be used to 
+! analyse stem vectors generated with harvesters.
+
 !Version 14.3. 2023 Function exceldata() corrected. A bug corrected in jlpz().
 ! More user errors noticed before a memory overflow. A bug corrected when space
 ! for numeric constants had to be increased.
@@ -267,7 +277,7 @@
  ! and none of them was eventually interested to get the software publisehd.
  
  !I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017.
- ! I was not informed of the decision. Later Luke turned down explicitly any cooperation
+ ! I was not informed of the decision. Later Luke rejected explicitly any cooperation
  ! in the publication or in the development of 
  ! the software.
  
@@ -315,8 +325,8 @@
  ! for Metla and Luke. One important change was to put the software into 64-bit which
  ! allows the analysis of big data sets. The following manual tells what Jlp22 can do now.
  ! The factory optimization is under development, and I will be published it later. 
- ! Reetta has participated
- ! in testing, in addition to teaching the use of Github and giving encouragement all the time.
+ ! Reetta has been actively testing the software,
+ !  in addition to teaching the use of Github and giving encouragement all the time.
  
  
  !\subsection*{Book: Linear and nonlinear programming methods}
@@ -1477,12 +1487,23 @@ $$=300
 !Section inpulistelem @List(index) Gets a name from a LIST
 !The name of an object in a LIST can be obtained into the input using the following example.
 !endheader
-!Ex inpulistelem Getting name from list
+!Ex inpulistelem Getting name from LIST
 ! lis=list(c2...c5);
 ! @lis=2...5;
 ! @lis(2)=6;
 ! @lis(4)=@lis(1);
 ! @lis(2)%@lis(4)=66;  
+!** Utilizing LISTs  of LISTs
+! lists=list(lis1...lis3);
+! lis1=list(x1...x4);
+! @lis1=1...4
+! lis2=list(z1...z3);
+! @lis2=10,20,30
+! lis3=list(y1,y2);
+! @lis3=100,200
+! ** @lists(2) drops lis2 to the input line giving @lis2; which cause 
+! ** that elements of lis2 are printed
+! @@lists(2);
 !endex
 !endsection
 

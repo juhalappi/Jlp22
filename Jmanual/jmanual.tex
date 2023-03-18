@@ -76,7 +76,7 @@ leaders of Luke were involved in the process,
 and none of them was eventually interested to get the software publisehd. 
  
 I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017. 
-I was not informed of the decision. Later Luke turned down explicitly any cooperation 
+I was not informed of the decision. Later Luke rejected explicitly any cooperation 
 in the publication or in the development of 
 the software. 
  
@@ -124,8 +124,8 @@ Only the sceleton and innermost loops in the optimization come from the time I w
 for Metla and Luke. One important change was to put the software into 64-bit which 
 allows the analysis of big data sets. The following manual tells what \textbf{Jlp22} can do now. 
 The factory optimization is under development, and I will be published it later. 
-Reetta has participated 
-in testing, in addition to teaching the use of Github and giving encouragement all the time. 
+Reetta has been actively testing the software, 
+in addition to teaching the use of Github and giving encouragement all the time. 
  
  
 \subsection*{Book: Linear and nonlinear programming methods} 
@@ -173,6 +173,16 @@ After renaming the software to \textbf{Jlp22}, this chapter starts to describe c
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
+ 
+Version 18.3 2023 Function partdata() can pick part of data by dropping 
+observations and/or variables. function info() prints current objects and options. 
+The checking during the parsing phase whether a function has too many arguments 
+is reactivated. It may cause unwarranted error conditions. 
+It is possible to make lists of lists and pick the name of the list element which 
+is also a list into the input paragraphs. This is useful when making the same 
+analysis for many data objects. The stemcurve() function has new properties which 
+can be documented if anyone is interested. Now the function can be used to 
+analyse stem vectors generated with harvesters. 
  
 Version 14.3. 2023 Function \textcolor{VioletRed}{exceldata}() corrected. A bug corrected in \textcolor{VioletRed}{jlpz}(). 
 More user errors noticed before a memory overflow. A bug corrected when space 
@@ -1024,20 +1034,6 @@ rel=;list(x?a);\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsection{@List(index) Gets a name from a \textcolor{teal}{LIST}} 
-\label{inpulistelem} 
-The name of an object in a \textcolor{teal}{LIST} can be obtained into the input using the following example. 
-\singlespacing 
-\begin{example}[inpulistelem]Getting name from list\\ 
-\label{inpulistelem} 
-\noindent lis=\textcolor{VioletRed}{list}(c2...c5);\\ 
-@lis=2...5;\\ 
-@lis(2)=6;\\ 
-@lis(4)=@lis(1);\\ 
-@lis(2)\%@lis(4)=66;\\ 
-\end{example} 
-\vspace{-7mm} \rule{5cm}{0.1pt} 
-\onehalfspacing 
 \subsection{@List expands a \textcolor{teal}{LIST}} 
 \label{expand} 
 If a \textcolor{teal}{LIST} is generated explicitly with \textcolor{VioletRed}{list}() function or as a byproduct of an other function, 
@@ -1071,6 +1067,31 @@ dat=\textcolor{VioletRed}{data}(\textcolor{blue}{in->},\textcolor{blue}{read->}(
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
  
+\subsection{@List(index) Gets a name from a \textcolor{teal}{LIST}} 
+\label{inpulistelem} 
+The name of an object in a \textcolor{teal}{LIST} can be obtained into the input using the following example. 
+\singlespacing 
+\begin{example}[inpulistelem]Getting name from \textcolor{teal}{LIST}\\ 
+\label{inpulistelem} 
+\noindent lis=\textcolor{VioletRed}{list}(c2...c5);\\ 
+@lis=2...5;\\ 
+@lis(2)=6;\\ 
+@lis(4)=@lis(1);\\ 
+@lis(2)\%@lis(4)=66;\\ 
+{\color{ForestGreen}** Utilizing LISTs  of LISTs}\\ 
+lists=\textcolor{VioletRed}{list}(lis1...lis3);\\ 
+lis1=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x4);\\ 
+@lis1=1...4\\ 
+lis2=\textcolor{VioletRed}{list}(z1...z3);\\ 
+@lis2=10,20,30\\ 
+lis3=\textcolor{VioletRed}{list}(\textcolor{teal}{y1},\textcolor{teal}{y2});\\ 
+@lis3=100,200\\ 
+{\color{ForestGreen}** @lists(2) drops lis2 to the input line giving @lis2; which cause}\\ 
+{\color{ForestGreen}** that elements of lis2 are printed}\\ 
+@@lists(2);\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \subsection{...  sequences} 
 \label{dots} 
 It is often natural to index object names, and often we need to refer object 
@@ -2941,7 +2962,7 @@ would produce a \textcolor{teal}{REAL} value rm.
  
 \subsection{\textcolor{VioletRed}{ranpoi}() Poisson}\index{ranpoi()} 
 \label{ranpoi} 
-\textcolor{VioletRed}{ranpoi}(\textcolor{teal}{myy}// 
+\textcolor{VioletRed}{ranpoi}(\textcolor{teal}{myy}\\ 
 returns a random Poisson variable with expected value and variance \textcolor{teal}{myy} 
 \subsection{\textcolor{VioletRed}{ranbin}() Binomial}\index{ranbin()} 
 \label{ranbin} 
@@ -3399,7 +3420,7 @@ Prints the files associated with the \textcolor{teal}{CHAR} arguments\\
 \textcolor{VioletRed}{close}(file) closes an open file where file is either a character constant 
 or character variable associated with a file. 
 \begin{note} 
-No open(9)function is needed. An file is opened when it is first time in \textcolor{VioletRed}{write}() or 
+No open()function is needed. An file is opened when it is first time in \textcolor{VioletRed}{write}() or 
 \textcolor{VioletRed}{print}(\textcolor{blue}{file->}). 
 \end{note} 
 \subsection{\textcolor{VioletRed}{showdir}() shows the current directory}\index{showdir()} 
@@ -4694,7 +4715,6 @@ Oulu,210,220,230,240\\
 /                   \\ 
 sawsub=;list(sawmills\%?);\\ 
 @sawsub;\\ 
-sawmills\%?;\\ 
 \textcolor{VioletRed}{stat}()\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
@@ -5299,10 +5319,10 @@ call j_getdataobject(iob,io)
 if(j_err)return 
 call j_clearoption(iob,io)  ! subroutine 
  
-do iobs=j_dfrom,j_duntil 
-call j_getobs(iobs) 
+do j_iobs=j_dfrom,j_duntil 
+call j_getobs(j_iobs) 
 if(j_err)return 
-end do !do iobs=j_dfrom,j_duntil 
+end do !do j_iobs=j_dfrom,j_duntil 
  
 if(j_depilog.gt.0)call dotrans(j_depilog,1) 
  
@@ -6817,8 +6837,7 @@ The mark can be given also as \textcolor{teal}{CHAR} varible or constant.
 \singlespacing 
 \begin{example}[drawlineex]Example of \textcolor{VioletRed}{drawline}()\\ 
 \label{drawlineex} 
-\noindent ;drawlineex:\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
+\noindent fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
 fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{Pi},\textcolor{VioletRed}{sin}(\textcolor{teal}{Pi})+0.1,\textcolor{blue}{label->}'\textcolor{VioletRed}{sin}()',\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
 xval=\textcolor{VioletRed}{matrix}(\textcolor{blue}{do->}(1,10));\\ 
 mat=\textcolor{VioletRed}{matrix}(\textcolor{blue}{values->}(xval,xval+1,xval,xval+2,xval,xval+3))\\ 

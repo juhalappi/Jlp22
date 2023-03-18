@@ -3478,14 +3478,14 @@ subroutine jlpz(iob,io)
 	! the following 3 options must be present and either min-> or max->.
 	!zmatrix &-1|1&MATRIX& Constraint matrix.
 	!rhs &-1|1&MATRIX& Lower bounds as row or column vector having as many elements as there are
-	! 	rows in the matrix given in zmatrix->.
+	! 	rows in the matrix given in zmatrix->. Use value -1.e20 to indicate that there is no lower bound.
 	!rhs2 &-1|1&MATRIX& Upper bounds as row or column vector having as many elements as there are
-	! 	rows  in the matrix given in zmatrix->.
+	! 	rows  in the matrix given in zmatrix->. Use value 1.e20 to indicate that there is no upper bound.
 	!max&-1|1&MATRIX& The objective vector for a maximization problem. It must have as many elements as the
 	! constraint matrix has columns.
 	!min&-1|1&MATRIX& The objective vector for a minimization problem.
 	!dpivot&-1|1&REAL& The objective function etc are printed after  dpivot pivots.
-	!debug&-1|0|1&REAL& Gives the value of Pivot at which a pause is generated. During the pause all essential
+	!debug&-1|0|1&REAL& NOT UP TO DATE Gives the value of Pivot at which a pause is generated. During the pause all essential
 	! matrices can be studied. Pure debug-> is the same as debug->0, which implies that pause is generated before
 	! pivoting. If variable Debug is given a new value, the the next pause is generated when Pivot.eq.Debug. The default is that
 	! the next pause is generated after the next pivot. The pause() function can now use also \\
@@ -4030,7 +4030,7 @@ subroutine jlpz(iob,io)
 		write(6,'(i8,g19.12,1x,f5.2,3i6,4x,i3,a,f5.2,i5,a,f5.2,a)')&
 			p_pivot,p_coefmax*p_objf,pros,p_lr0,p_lz0,p_nnf,&
 			iminc,':',secd,imint,':',sect,' *OPTIMAL*'
-	!	write(6,*)'p_objfv ',p_objfv
+		!	write(6,*)'p_objfv ',p_objfv
 	else
 		j_v(p_ivoptimal)=j_1
  
