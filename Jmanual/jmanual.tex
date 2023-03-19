@@ -174,6 +174,9 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 19.3.2023 Function \textcolor{VioletRed}{jlp}() corrected, in the previous version it was 
+completely out of order. 
+ 
 Version 18.3 2023 Function partdata() can pick part of data by dropping 
 observations and/or variables. function info() prints current objects and options. 
 The checking during the parsing phase whether a function has too many arguments 
@@ -1982,7 +1985,7 @@ tr\%source. List tr\%arg contains all arguments.
 If a semicolon ';'  is at the end of an input line, then 
 the output is printed if \textcolor{teal}{REAL} variable Prindebug has value 1 or value>2 at 
 the execution time. If the double semicolon ';;' is at the end then the output is 
-printed if \textcolor{teal}{Printresult}>1. If there is no output, but just list of objects, then these 
+printed if printresult>1. If there is no output, but just list of objects, then these 
 objects will be printed with semicolns. 
  
 	! 
@@ -2012,7 +2015,7 @@ The user can intervene the execution from console if the code calls \textcolor{V
 such input programming command as \textcolor{Red}{;incl}. 
 \end{note} 
 \begin{note} 
-The value of \textcolor{teal}{Printresult} can be changed in other parts of the transformation, or 
+The value of printresult can be changed in other parts of the transformation, or 
 in other transforamations called or during execution of \textcolor{VioletRed}{pause}(). 
 \end{note} 
  
@@ -3131,7 +3134,14 @@ pointers to objects, see e.g. the selector option of the simulate() function.
 \vspace{0.3cm} 
 \noindent Args \tabto{3cm}  0-  \tabto{5cm}     \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  named objects. If an argument is \textcolor{teal}{LIST} it is ex+panded 
+\noindent  named objects. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent merge \tabto{3cm} N \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Duplicates are dropped. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -3156,17 +3166,21 @@ which can be updated later.
 \begin{note} 
 The index of object in a \textcolor{teal}{LIST} can be obtained using \textcolor{VioletRed}{index}(). 
 \end{note} 
-li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...\textcolor{teal}{x3}); 
-\textcolor{VioletRed}{index}(\textcolor{teal}{x2},li); 
-\textcolor{teal}{Continue}=1 
-\textcolor{VioletRed}{index}(x4,li);  ! error 
-\textcolor{teal}{Continue}=0 
- 
- 
+\begin{note} 
+Versions before March 2023 allowed list arguments which were then expanded. 
+This property is dropped because lists can be included better with @-cosnstruct. 
+\end{note} 
 \singlespacing 
-\begin{example}[list2ex]x\\ 
-\label{list2ex} 
-\noindent all=\textcolor{VioletRed}{list}();\,\,{\color{ForestGreen}! empty list}\\ 
+\begin{example}[listex]\\ 
+\label{listex} 
+\noindent li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5);\\ 
+li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5,merge->);\\ 
+li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5,\textcolor{teal}{x2}...x4,merge->);\\ 
+\textcolor{VioletRed}{index}(\textcolor{teal}{x2},li);\\ 
+{\color{ForestGreen}***returns zero}\\ 
+\textcolor{VioletRed}{index}(x6,li);\\ 
+***                                 \\ 
+all=\textcolor{VioletRed}{list}();\,\,{\color{ForestGreen}! empty list}\\ 
 sub=\textcolor{VioletRed}{list}();\\ 
 nper=3\\ 
 \textcolor{Red}{;do}(i,1,nper)\\ 
@@ -3570,10 +3584,10 @@ named \textbf{Jlp22} objects. The printing format is dependent on the object typ
 \begin{note} 
 \textcolor{VioletRed}{print}() function can be executed for the output of a \textbf{Jlp22} command 
 by writing ';' or ';;' at the end of the line. The excution of implied \textcolor{VioletRed}{print}() 
-is dependent on the value of \textcolor{teal}{Printoutput}. If \textcolor{teal}{printoutput} =0, 
-then the output is not printed, If \textcolor{teal}{printoutput} =1, then ';' is 
-causing printing, if \textcolor{teal}{Printoutput} =2 then only ';;'-outputs are 
-printed, and if \textcolor{teal}{Printoutput} =3, then both ';' and ';;' outputs are printed. 
+is dependent on the value of \textcolor{teal}{printresult}. If \textcolor{teal}{printresult} =0, 
+then the output is not printed, If \textcolor{teal}{printresult} =1, then ';' is 
+causing printing, if \textcolor{teal}{printresult} =2 then only ';;'-outputs are 
+printed, and if \textcolor{teal}{printresult} =3, then both ';' and ';;' outputs are printed. 
 \end{note} 
 \begin{note} 
 it was earlier to print a file using this function, but now function Print\_f must be 
@@ -3671,19 +3685,23 @@ object type than character variable).
 If there are no arguments, then the value is asked for the output variable, otherwise for 
 the arguments. 
 \end{note} 
-\subsection{\textcolor{VioletRed}{printresult}() and \textcolor{VioletRed}{printresult2}() for ending ; and ;;}\index{printresult()printresult2()} 
+\subsection{\textcolor{teal}{Printresult} controls printing of the result} 
 \label{printresult} 
-The \textbf{Jlp22} interpreter translates ';'  at the end of the 
-line to a call to \textcolor{VioletRed}{printresult}() function and ';;' to a call to \textcolor{VioletRed}{printresult2}() 
-The output of a function is printed by writing ';' or ';;' at the end of the line. The excution of implied \textcolor{VioletRed}{print}() 
-is dependent on the value of \textcolor{teal}{Printoutput}. If \textcolor{teal}{printoutput} =0, 
-then the output is not printed, If \textcolor{teal}{printoutput} =1, then ';' is 
-causing printing, if \textcolor{teal}{Printoutput} =2 then only ';;'-outputs are 
-printed, and if \textcolor{teal}{Printoutput} =3, then both ';' and ';;' outputs are printed. 
+If there is semicolon ; at the end of a line at command level or within a 
+\textcolor{teal}{TRANS} object line, the the output is	printed with implicit \textcolor{VioletRed}{printresult}() function if the value 
+of \textcolor{teal}{printresult} has value 1. If the line ends with double semicolon ;; then the 
+output is printed if variable \textcolor{teal}{printresult} has value 2. If \textcolor{teal}{printresult}=3, then 
+the output of both ; and ;; -lines are printed. Using \textcolor{Red}{;pause} in command level or 
+\textcolor{VioletRed}{pause}() in \textcolor{teal}{TRANS} object makes it possible to debug code initially 
+by printing many variables and objects, and the the printing can be stopped during a pause by changing the value 
+by putting during the pause \textcolor{teal}{printresult} into zero. 
+ 
 \begin{note} 
-\textcolor{VioletRed}{printresult}() and \textcolor{VioletRed}{printresult2}() are  simple functions 
-which just test the value of 
-\textcolor{teal}{Printoutput} and then call the  printing subroutine, if needed. 
+Controlling the printing with ending semicolon is a property stolen from 
+Matlab. In order to avoid possible lawsuits, it works differently: in Matlab 
+ending semicolon prevents printing. In \textbf{Jlp22} this printing is more powerful as 
+there are two different printing levels, and the the printing can be changed 
+without changing the script. 
 \end{note} 
 \section{Matrix functions} 
 \label{matrixs} 
@@ -5096,14 +5114,7 @@ be generated depending on the arguments and \textcolor{blue}{first->}, \textcolo
 \begin{changemargin}{3cm}{0cm} 
 \noindent  The variables whose class information is computed. Arguments 
 are not necessary if \textcolor{blue}{first->} and/or \textcolor{blue}{last->} are present. 
-Let §Arg be the generic name for arguments. 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent \textcolor{blue}{class} \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  .oindent class \tabto{3cm} 1 \tabto{5cm}  REAL \tabto{7cm} 
+Let \textcolor{teal}{Arg} be the generic name for arguments. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5113,7 +5124,7 @@ Let §Arg be the generic name for arguments.
 \noindent The variable indicating the class. The class variable which must be present in the data object or which is 
 an output variable of the \textcolor{blue}{trans->} transformations. 
 When the \textcolor{blue}{class->} variable, denoted as 
-as §Class changes, 
+as Class changes, 
 the class changes. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -5121,7 +5132,7 @@ the class changes.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{data} \tabto{3cm} 0|1 \tabto{5cm}  \textcolor{teal}{Data} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent \textcolor{teal}{Data} object used. Only one data object used; extra \textcolor{blue}{data->} objects just ignored. The default is the last 
+\noindent \textcolor{teal}{Data} object used. Only one data object can be used; extra \textcolor{blue}{data->} objects just ignored. The default is the last 
 data object generated. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -5141,7 +5152,7 @@ equal to the number of classes.
 \noindent \textcolor{blue}{first} \tabto{3cm} 0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent The the number of first observation in class is stored in vector 
-§Class\%\%first if \textcolor{blue}{expand->} is present and §Class\%first if \textcolor{blue}{expand->} is not present. 
+Class\%\%first if \textcolor{blue}{expand->} is present and Class\%first if \textcolor{blue}{expand->} is not present. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5149,7 +5160,7 @@ equal to the number of classes.
 \noindent \textcolor{blue}{last} \tabto{3cm} 0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent The the number of lastt observation in class is stored in vector 
-§Class\%\%last if \textcolor{blue}{expand->} is present and §Class\%lastobject if \textcolor{blue}{expand->} is not present. 
+Class\%\%last if \textcolor{blue}{expand->} is present and Class\%lastobject if \textcolor{blue}{expand->} is not present. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5172,10 +5183,10 @@ Ext be denote the extension.
 \noindent \textcolor{blue}{mean} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent The class means are stored in the vectors \newline 
-§Arg\#Class\%\%mean with \textcolor{blue}{expand->} and without \textcolor{blue}{ext->}\newline 
-§Arg\#Class\%\%meanExt with \textcolor{blue}{expand->} and with \textcolor{blue}{ext->} are \newline 
-§Arg\#Class\%mean without \textcolor{blue}{expand->} and without \textcolor{blue}{ext->} \newline 
-§Arg\#Class\%meanExt without \textcolor{blue}{expand->} and with \textcolor{blue}{ext->} 
+\textcolor{teal}{Arg}\#Class\%\%mean with \textcolor{blue}{expand->} and without \textcolor{blue}{ext->}\newline 
+\textcolor{teal}{Arg}\#Class\%\%meanExt with \textcolor{blue}{expand->} and with \textcolor{blue}{ext->} are \newline 
+\textcolor{teal}{Arg}\#Class\%mean without \textcolor{blue}{expand->} and without \textcolor{blue}{ext->} \newline 
+\textcolor{teal}{Arg}\#Class\%meanExt without \textcolor{blue}{expand->} and with \textcolor{blue}{ext->} 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 

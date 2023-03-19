@@ -115,6 +115,9 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+!Version 19.3.2023 Function jlp() corrected, in the previous version it was 
+!completely out of order.
+
 !Version 18.3 2023 Function partdata() can pick part of data by dropping 
 !observations and/or variables. function info() prints current objects and options.
 !The checking during the parsing phase whether a function has too many arguments 

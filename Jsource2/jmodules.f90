@@ -339,7 +339,7 @@ module jmod
 		0,0,1,1,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
-		1,2,2,2,2,2,1,&
+		1,2,2,2,2,2,0,&
 		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',  & ! 6
  
 		2,1,1,1,0,2,1,&
@@ -465,7 +465,7 @@ module jmod
 		'extraup','extra','mean', 'min','max',& ! 1-10
 		'sd','var','warm','volsd','rhs','rhs2','w','obs', 'obsup','problem',& !11-20 MIXED UP
 		'from','dataup','nobsw','readup','keep','keepup','maketransup','rmse','rows','cylinder', & !21-30
-		'drop','filterup','print','sum','duplicate','loglike','mask','maxrounds','test','debug', & !31-40
+		'drop','merge','print','sum','duplicate','loglike','mask','maxrounds','test','debug', & !31-40
 		'default','classlink','x','maxlines','q','obsw','nobswcum','xrange','yrange','mark',& !41-50
 		'keepperiod','nobs','append','variance','oldupobs','noint','periods','period','unitdata','unitdataobs', & !51-60
 		'any','oldobsw','refac','tole','utiltrans','class','key','sparse','row','show',& ! 61-70
@@ -492,7 +492,7 @@ module jmod
 	parameter (j_mvolsd=16,j_mrhs=17,j_mrhs2=18,j_mw=19,j_mobs=20,j_mobsup=21)   !mobs was mxdata
 	parameter (j_mproblem=22,j_mfrom=23)
 	parameter (j_mdataup=24,j_mnobsw=25,j_mreadup=26,j_mkeep=27,j_mkeepup=28,j_mmaketransup=29)
-	parameter (j_mrmse=30,j_mrows=31,j_mcylinder=32,j_mdrop=33,j_mupfilterfree=34,j_mprint=35)
+	parameter (j_mrmse=30,j_mrows=31,j_mcylinder=32,j_mdrop=33,j_mmerge=34,j_mprint=35)
 	parameter (j_msum=36,j_mduplicate=37,j_mloglike=38,j_mmask=39,j_mmaxrounds=40)
 	parameter (j_mtest=41,j_mdebug=42,j_mdefault=43)
 	parameter (j_mclasslink=44,j_mx=45,j_mmaxlines=46,j_mq=47,j_mobsw=48,j_mnobswcum=49)
