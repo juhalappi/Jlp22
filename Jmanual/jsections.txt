@@ -10,6 +10,7 @@
 !Inpuf ;if
 !Inpuf ;elseif
 !Inpuf ;else
+!Inpuf ;list
 
 
 !Macro seecom
@@ -17,7 +18,11 @@
 !endmacro
 
 !Macro data
-! data & N|1- & Data &	data sets , see section Common options for default.
+! data & N|1- & DATA &	DATA object. Default last DATA defined.
+!from&N|1&REAL& First observation used.
+!until&N|1&REAL& Last observation used.
+!trans&N|1&TRANS& TRANS computed fro each observation
+!epilog&N|1&TRANS &TRANS computed after going through data.
 !endmacro
 
 !Macro in1 
@@ -31,6 +36,14 @@
 ! then the data are in the following input paragraph. If the values are
 !character constants or a character variables, then data are read in from
 ! files having those names.
+!endmacro
+
+!Macro draw 
+! x&1&REAL&Variable which is stepped before computing the value of func->.
+!xrange&0-4&REAL& Range for the x-variable. If there are now arguments Jlp22 tries to
+!find variables var%min and var%max which where computed with stat() with options min->
+!and max->. If there is need to define a smaller range for computing the values as wished
+! for the x-axes, then  
 !endmacro
 
 
@@ -62,9 +75,9 @@
 ! contains continue-> option, pause() is not generated.
 ! xlabel & N | 1&CHAR & Label for x-axes. Default is the name of the x-variable.
 ! ylabel & N | 1&CHAR & Label for y-axes. Default is the name of the x-variable.
-!xrange & N |1-2& the range for x-axes. Gnuplot generates it automatically, but
+!xrange & N |1-2& REAL&the range for x-axes. Gnuplot generates it automatically, but
 ! sometimes the range used by Gnuplot needs to be changed.
-!yrange & N |1-2& the range for y-axes. Gnuplot generates it automatically, but
+!yrange & N |1-2&REAL& the range for y-axes. Gnuplot generates it automatically, but
 ! sometimes the range used by Gnuplot needs to be changed.
 ! color & N | 1 & REAL & The color used. The color indices are put to
 ! following  predefined REAL variables: ]Black[, ]Red[, ]Green[, ]Blue[,
@@ -114,6 +127,14 @@
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
+
+!Version 26.4. 2023. draw() can now make circles etc. stat() can now compute statistics
+! for a function without need to put the function values in the data. classify() merges classes
+! with too few observations in a better way.
+! Some errors corrected. New yet undocumented functions for stem curve
+! analyses, e.g. for bucking purposes. Use of hierarchical data in jlp() was made compatible
+! with the use of hierarchical data in other functions. Some not-yet-corrected bugs were
+!possibly generated.
 
 !Version 19.3.2023 Function jlp() corrected, in the previous version it was 
 !completely out of order.
@@ -1954,8 +1975,8 @@ $$=300
 ! There are some options which are used in many Jlp22 functions. Such options are e.g.
 !endheader
 !Option
-!@@in2 
-!@@data
+!@@in2@ 
+!@@data@
 !All data sets will be
 ! treated logically as a single data set. 
 ! If the function is using data sets, the daenta sets are given in data-> option. All data sets will be
@@ -1967,10 +1988,10 @@ $$=300
 ! When a data set is created, it will automatically become the only element in LastData list. If
 ! the Data list has not been defined and there is no data-> option, then the LastData dataset
 ! will be used.
-!@@trans
+!@@trans@
 ! In all functions which are using data sets, trans-> option defines a
 ! transformation set which is used in this function. 
-!@@filter
+!@@filter@
 !endoption
 !Ex comoptex data1
 !dat=data(read->(x,y),in->)
@@ -2670,6 +2691,20 @@ a call to function assone()
  	! Hershey/Symbol_Math	 \\
  	! ZapfDingbats.
 !space within font name can be replaced with '-', e.g. Times-Roman.	
+ !endsection
+ 
+ !Section gnuchar Scandic and other special characters
+ ! Scandic charcters can be put into figures as follows. Make first the figure
+ !without scandic characters e.g using characters without the dots. Let the name of the generated FIG object be fig. 
+ !Open the file fig.jfig. Change the coding of the file into UTF-8 (under Encoding in Notepad++).
+ !Add the scandic characters to xlabel, ylabel, title, or label -parts in the header.
+ !Save the file. Give at sit> prompt the command show('fig.jfig').\\
+ !Subscript is made with the underscore before the subscript.\\
+ !Underscore is put into the labels with three backslash followed with the the underscore.\\
+ !Superscript is made with ^ before the character.\\
+ !Character ^ can be put into the text with three backslash followed with ^.\\
+ !Longer subscripts or superscripts can be made using {} around the scripts.\\
+ !For other things see gnuplot documentation.
  !endsection
  
 

@@ -174,16 +174,24 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 26.4. 2023. \textcolor{VioletRed}{draw}() can now make circles etc. \textcolor{VioletRed}{stat}() can now compute statistics 
+for a function without need to put the function values in the data. \textcolor{VioletRed}{classify}() merges classes 
+with too few observations in a better way. 
+Some errors corrected. New yet undocumented functions for stem curve 
+analyses, e.g. for bucking purposes. Use of hierarchical data in \textcolor{VioletRed}{jlp}() was made compatible 
+with the use of hierarchical data in other functions. Some not-yet-corrected bugs were 
+possibly generated. 
+ 
 Version 19.3.2023 Function \textcolor{VioletRed}{jlp}() corrected, in the previous version it was 
 completely out of order. 
  
-Version 18.3 2023 Function partdata() can pick part of data by dropping 
-observations and/or variables. function info() prints current objects and options. 
+Version 18.3 2023 Function \textcolor{VioletRed}{partdata}() can pick part of data by dropping 
+observations and/or variables. function \textcolor{VioletRed}{info}() prints current objects and options. 
 The checking during the parsing phase whether a function has too many arguments 
 is reactivated. It may cause unwarranted error conditions. 
 It is possible to make lists of lists and pick the name of the list element which 
 is also a list into the input paragraphs. This is useful when making the same 
-analysis for many data objects. The stemcurve() function has new properties which 
+analysis for many data objects. The \textcolor{VioletRed}{stemcurve}() function has new properties which 
 can be documented if anyone is interested. Now the function can be used to 
 analyse stem vectors generated with harvesters. 
  
@@ -193,7 +201,7 @@ for numeric constants had to be increased.
  
 Version 8.3.2023 Some bugs corrected, e.g. in \textcolor{VioletRed}{data}() function and one bug in the precompiler. 
 Some user errors are reported better. The manual is updated. There is 
-now function stemcurve() which defines a stem curve used with linear interpolation. 
+now function \textcolor{VioletRed}{stemcurve}() which defines a stem curve used with linear interpolation. 
 This is reported if anyone is interested. 
  
 Version 27.2. 2023 Some bugs corrected, i.e. in \textcolor{VioletRed}{jlpz}(), and some user errors are detected 
@@ -653,16 +661,16 @@ te=0\,{\color{ForestGreen}!delete also text object te}\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsection{system() executes Windows commands} 
+\subsection{\textcolor{VioletRed}{system}() executes Windows commands}\index{system()} 
 \label{systemcom} 
 Windows system commands can be given by\\ 
-system('command')\\ 
+\textcolor{VioletRed}{system}('command')\\ 
 For instance \\ 
-system('cls') clears screen 
-system('dir') prints the directory 
+\textcolor{VioletRed}{system}('cls') clears screen 
+\textcolor{VioletRed}{system}('dir') prints the directory 
 \subsection{cls clears screen} 
 \label{cls} 
-command cls clears screen, thus cls is equivalent to system('cls') 
+command cls clears screen, thus cls is equivalent to \textcolor{VioletRed}{system}('cls') 
 \subsection{Input programming} 
 \label{inpuprog} 
 The purpose of the input programming is to read or generate \textbf{Jlp22} commands or input lines 
@@ -1014,9 +1022,9 @@ to the following example.
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsubsection{;list(part\%?) \textcolor{teal}{LIST} of objects having common part in name} 
+\subsubsection{\textcolor{Red}{;list}(part\%?) \textcolor{teal}{LIST} of objects having common part in name}\index{;list} 
 \label{inpusub2} 
-;list() Makes a list of objects. The example shows how the list can be printed and how 
+\textcolor{Red}{;list}() Makes a list of objects. The example shows how the list can be printed and how 
 to print all objects in the list. 
  
 \singlespacing 
@@ -1026,13 +1034,13 @@ to print all objects in the list.
 1,2\\ 
 3,4\\ 
 /  \\ 
-\textcolor{teal}{lista}=;list(\textcolor{teal}{dataa}\%?);\\ 
+\textcolor{teal}{lista}=\textcolor{Red}{;list}(\textcolor{teal}{dataa}\%?);\\ 
 {\color{ForestGreen}**Then all objects in the list are printed.}\\ 
 @lista;\\ 
 {\color{ForestGreen}**Seeing and printing relatives}\\ 
 x1a...x3a=3...5\\ 
 x?a;\\ 
-rel=;list(x?a);\\ 
+rel=\textcolor{Red}{;list}(x?a);\\ 
 @rel;\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
@@ -1580,6 +1588,99 @@ only those observations are accepted which pass the filter.\\
 \textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(\textcolor{VioletRed}{sin}(\$\textcolor{teal}{x})+1),\textcolor{teal}{x}->\$\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,10,1),\textcolor{blue}{continue->}fcont)\\ 
 \textcolor{blue}{func->} option 
 transmits the function to be drawn not a single value. 
+\subsubsection{Common options} 
+\label{comoptions} 
+There are some options which are used in many \textbf{Jlp22} functions. Such options are e.g. 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{in} \tabto{3cm} 0|1- \tabto{5cm}  Char \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Indicates from where the data are read in. If there are no arguments, 
+then the data are in the following input paragraph. If the values are 
+character constants or a character variables, then data are read in from 
+files having those names. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{from} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  First observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Last observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{epilog} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \textcolor{teal}{TRANS} computed after going through data. 
+All data sets will be 
+treated logically as a single data set. 
+If the function is using data sets, the daenta sets are given in \textcolor{blue}{data->} option. All data sets will be 
+treated logically as a single data set. If a \textbf{Jlp22} function needs to access data, and the \textcolor{blue}{data->} 
+option is not given then \textbf{Jlp22} uses default data which is determined as follows. 
+If the user has defined an object list \textcolor{teal}{Data} consisting of one or more data sets, then these will 
+be used as the default data set. E.g. 
+\textcolor{teal}{Data}=\textcolor{VioletRed}{list}(\textcolor{teal}{dataa},\textcolor{teal}{datab}) 
+When a data set is created, it will automatically become the only element in \textcolor{teal}{LastData} list. If 
+the \textcolor{teal}{Data} list has not been defined and there is no \textcolor{blue}{data->} option, then the \textcolor{teal}{LastData} dataset 
+will be used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans}  \tabto{3cm} -1 | 1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	transformation set which is executed for each observation. If there is a transformation set associated with the data set, those transformations are computed first. 
+In all functions which are using data sets, \textcolor{blue}{trans->} option defines a 
+transformation set which is used in this function. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{filter}  \tabto{3cm} -1 | 1 \tabto{5cm}  Code \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  logical or arithmetic statement (nonzero value indicating True) describing which observations will be accepted. \textcolor{blue}{trans->} transformations are computed before using filter. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\singlespacing 
+\begin{example}[comoptex]data1\\ 
+\label{comoptex} 
+\noindent dat=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x},\textcolor{teal}{y}),\textcolor{blue}{in->})\\ 
+1,2\\ 
+3,4\\ 
+5,6\\ 
+/  \\ 
+\textcolor{teal}{transa}=\textcolor{VioletRed}{trans}()\\ 
+xy=\textcolor{teal}{x}*\textcolor{teal}{y}\\ 
+\textcolor{teal}{x},\textcolor{teal}{y},xy;\\ 
+/                                          \\ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{trans->}\textcolor{teal}{transa})\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \section{Arithmetic and logical functions and operations} 
 \label{arith} 
 \textbf{Jlp22} has all the standard arithmetic and logical operations and functions. 
@@ -3139,7 +3240,7 @@ pointers to objects, see e.g. the selector option of the simulate() function.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent merge \tabto{3cm} N \tabto{5cm}    \tabto{7cm} 
+\noindent \textcolor{blue}{merge} \tabto{3cm} N \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Duplicates are dropped. 
 \end{changemargin} 
@@ -3174,8 +3275,8 @@ This property is dropped because lists can be included better with @-cosnstruct.
 \begin{example}[listex]\\ 
 \label{listex} 
 \noindent li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5);\\ 
-li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5,merge->);\\ 
-li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5,\textcolor{teal}{x2}...x4,merge->);\\ 
+li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5,\textcolor{blue}{merge->});\\ 
+li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5,\textcolor{teal}{x2}...x4,\textcolor{blue}{merge->});\\ 
 \textcolor{VioletRed}{index}(\textcolor{teal}{x2},li);\\ 
 {\color{ForestGreen}***returns zero}\\ 
 \textcolor{VioletRed}{index}(x6,li);\\ 
@@ -3192,9 +3293,9 @@ sub=\textcolor{VioletRed}{list}(@sub,@sub\#"i")\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsection{;list(part\%?) \textcolor{teal}{LIST} of objects having common part in name} 
+\subsection{\textcolor{Red}{;list}(part\%?) \textcolor{teal}{LIST} of objects having common part in name}\index{;list} 
 \label{inpusub2b} 
-;list() Makes a list of objects. The example shows how the list can be printed and how 
+\textcolor{Red}{;list}() Makes a list of objects. The example shows how the list can be printed and how 
 to print all objects in the list. This function is described also in section \ref{inpusub2} 
  
 \singlespacing 
@@ -3204,7 +3305,7 @@ to print all objects in the list. This function is described also in section \re
 1,2\\ 
 3,4\\ 
 /  \\ 
-\textcolor{teal}{lista}=;list(\textcolor{teal}{dataa}\%?);\\ 
+\textcolor{teal}{lista}=\textcolor{Red}{;list}(\textcolor{teal}{dataa}\%?);\\ 
 {\color{ForestGreen}**Then all objects in the list are printed.}\\ 
 @lista;\\ 
 \end{example} 
@@ -3346,7 +3447,7 @@ is the same as \textcolor{teal}{LIST} object which can be used in matrix computa
 \noindent {1,4,5};\\ 
 {4...1};\\ 
 A=\textcolor{VioletRed}{matrix}(4,4)\\ 
-A({1,5},{3}=\\ 
+A({1,4},{3})=7;\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -3360,6 +3461,8 @@ put OBJ into \textcolor{teal}{LIST}
 Usage:\\ 
 Output=\textcolor{VioletRed}{table}(rowlist,collist)\\ 
 This can be used in factory optimizations 
+ 
+ 
  
  
  
@@ -3796,8 +3899,8 @@ spaces either a reading error coccurs or warning like \\
 \singlespacing 
 \begin{example}[matrixex]Example of generatig matrices\\ 
 \label{matrixex} 
-\noindent A=\textcolor{VioletRed}{matrix}(3,\\ 
- 
+\noindent A=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{values->}(\textcolor{VioletRed}{sin}(2),\textcolor{VioletRed}{sqrt}(3),6));\\ 
+{\color{ForestGreen}** to be updated later}\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -4278,7 +4381,7 @@ of subdata variables are determined for each duplicate. The number of duplicate
 is transmitted to the variable \textcolor{teal}{Duplicate}. These transformations are called also 
 when \textcolor{teal}{Duplicate}=0. This means that when there is the \textcolor{blue}{duplicate->} option, 
 then all transformations for the subdata can be defined in the duplicate 
-transformation object, and \textcolor{blue}{submaketrans->} is not necessary. If there are duplications 
+transformation object, and submaketrans-> is not necessary. If there are duplications 
 the \%nobsw variable of the upper level data is updated. 
  
 \end{changemargin} 
@@ -4335,7 +4438,7 @@ not). Note that the buffers are not needed if number of observations is given in
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{par} \tabto{3cm} -1|1- \tabto{5cm}   Real \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent additional parameters for reading. If \textcolor{blue}{subform->} option is '\textcolor{teal}{bgaya}' then par 
+\noindent additional parameters for reading. If subform-> option is '\textcolor{teal}{bgaya}' then par 
 option can be given in form \textcolor{blue}{par->}(ngvar,npvar) where ngvar is the number 
 of nonperiodic \textcolor{teal}{x}-variables and npvar is the number of period specific \textcolor{teal}{x}-variables 
 for each period. Default values are \textcolor{blue}{par->}(8,93). 
@@ -4731,7 +4834,7 @@ The function creates subobjects Output\%matrix,Output\%keep, and Output\%case, w
 Kotka,110,120,130,140\\ 
 Oulu,210,220,230,240\\ 
 /                   \\ 
-sawsub=;list(sawmills\%?);\\ 
+sawsub=\textcolor{Red}{;list}(sawmills\%?);\\ 
 @sawsub;\\ 
 \textcolor{VioletRed}{stat}()\\ 
 \end{example} 
@@ -4868,7 +4971,7 @@ stand and schedule data can be given in \textcolor{blue}{unit->} option
 {\color{ForestGreen}**link now DATAs}\\ 
 {\color{ForestGreen}** First varaible in the upper level dataa must be dataa\%nobsw}\\ 
 \textcolor{VioletRed}{linkdata}(\textcolor{teal}{dataa},\textcolor{teal}{datab})\\ 
-\textcolor{teal}{listb}=;list(\textcolor{teal}{datab}\%?);\\ 
+\textcolor{teal}{listb}=\textcolor{Red}{;list}(\textcolor{teal}{datab}\%?);\\ 
 @listb;\\ 
 {\color{ForestGreen}** when working with subdata the upper level data is feeded in for all observations}\\ 
 {\color{ForestGreen}** if up-> is present}\\ 
@@ -5064,8 +5167,8 @@ or collect data into different period matrices and write the directly all data i
 \end{itemize} 
 \subsection{\textcolor{VioletRed}{getobs}() Obsevarion from  \textcolor{teal}{DATA}}\index{getobs()} 
 \label{getobs} 
-Getting an observation from a data set: // 
-\textcolor{VioletRed}{getobs}(dataset,obs[,\textcolor{blue}{trans->}])// 
+Getting an observation from a data set: \\ 
+\textcolor{VioletRed}{getobs}(dataset,obs[,\textcolor{blue}{trans->}])\\ 
 Get the values of all variables associated with observation obs in data object dataset. First all the 
 variables stored in row obs in the data matrix are put into the corresponding real variables. If 
 a transformation set is permanently associated with the data object, these transformations are 
@@ -5073,16 +5176,9 @@ executed.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent dataset \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{DATA}  \tabto{7cm} 
+\noindent Args \tabto{3cm} 2 \tabto{5cm}  \textcolor{teal}{DATA},\textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  the \textcolor{teal}{DATA} 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent \textcolor{blue}{obs}  \tabto{3cm} 1 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  row number in the data matrix of the dataset 
+\noindent  \textcolor{teal}{DATA} and the number of observation 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5159,8 +5255,16 @@ Class\%\%first if \textcolor{blue}{expand->} is present and Class\%first if \tex
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{last} \tabto{3cm} 0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent The the number of lastt observation in class is stored in vector 
+\noindent The the number of last observation in class is stored in vector 
 Class\%\%last if \textcolor{blue}{expand->} is present and Class\%lastobject if \textcolor{blue}{expand->} is not present. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{nobsw} \tabto{3cm} 0 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent The number of observations in class is stored in vector nobsw\%Class if 
+expand is not present and in nobsw\%\%Class if \textcolor{blue}{expand->} is present 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5219,7 +5323,7 @@ Ext be denote the extension.
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
-Numbers of observations in each class can be obtained by \\ 
+Numbers of observations in each class can also be obtained by \\ 
 Class\%nobs=Class\%\%last-Class\%\%first+1 when \textcolor{blue}{expand->} is present, and \\ 
 Class\%nobs=Class\%\%last-Class\%\%first+1 
 \end{note} 
@@ -5319,7 +5423,41 @@ owners or regions found in data.
 This is useful e.g. when simulating harvesting schdules using a simulator which is defined 
 as an ordinary \textcolor{teal}{TRANS}. The whole function is written below to indicate 
 how users' own functions dealing with \textcolor{teal}{DATA} could be developped. 
-@@data 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{from} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  First observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Last observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{epilog} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \textcolor{teal}{TRANS} computed after going through data. 
+\end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
  
@@ -5365,7 +5503,41 @@ Computes and prints basic statistics from data objects.
 \noindent variables for which the statistics are computed, 
 the default is all variables in the data (all variables in the data matrix plus the output variables of the associated transformation object) and all output 
  
-@@data 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{from} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  First observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Last observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{epilog} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \textcolor{teal}{TRANS} computed after going through data. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5374,7 +5546,7 @@ the default is all variables in the data (all variables in the data matrix plus 
 \begin{changemargin}{3cm}{0cm} 
 \noindent 	data objects , see section Common options for default! weight 	gives the weight of each observations if weighted means and variances ar 
 transformation or it can be a variable in the data object 
-@@seecom 
+See \vref{comoptions} for more details. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5458,6 +5630,14 @@ then the minima are stored into these variables.
 \noindent transafter  \tabto{3cm} -1 | 1 \tabto{5cm}   \textcolor{teal}{TRANS} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  transformation object which is executed for each observation which has passed the filter and is not rejected by the \textcolor{blue}{reject->}-optio 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{func} \tabto{3cm} -1|1 \tabto{5cm}  CODE \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Defines function for whose values the statistics are computed. 
+Statistics are not computed for other variables in the data. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -5480,7 +5660,7 @@ then that observation is rejected when computing statistics for that variable.
 /    \\ 
 \textcolor{VioletRed}{stat}()\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{data->}data1,\textcolor{blue}{sum->}\textcolor{teal}{x2},\textcolor{blue}{mean->},\textcolor{blue}{filter->}(\textcolor{teal}{x3}.le.18.5))\\ 
-li=;list(\textcolor{teal}{x2}\%?);\\ 
+li=\textcolor{Red}{;list}(\textcolor{teal}{x2}\%?);\\ 
 @li;\\ 
 \textcolor{VioletRed}{stat}(\textcolor{teal}{x1},\textcolor{blue}{data->}data1,\textcolor{blue}{weight->}\textcolor{teal}{x2})\\ 
 \textcolor{VioletRed}{stat}(\textcolor{teal}{x1},\textcolor{blue}{weight->}(\textcolor{teal}{x2}**1.2))\\ 
@@ -5504,7 +5684,41 @@ li=;list(\textcolor{teal}{x2}\%?);\\
 \begin{changemargin}{3cm}{0cm} 
 \noindent  variables for which covarianes are computed, listing 
 individually or given as a \textcolor{teal}{LIST}. 
-@@data 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{from} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  First observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Last observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{epilog} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \textcolor{teal}{TRANS} computed after going through data. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5567,7 +5781,41 @@ Ordinary or stepwise linear regrwession can be computed using \textcolor{VioletR
 \begin{changemargin}{3cm}{0cm} 
 \noindent  \textcolor{teal}{y}-variable and \textcolor{teal}{x}-variables variables listing them 
 individually or given as a \textcolor{teal}{LIST}. 
-@@data 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{from} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  First observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Last observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{epilog} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \textcolor{teal}{TRANS} computed after going through data. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5661,12 +5909,53 @@ A matrix containing class information (details given below)
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent Args \tabto{3cm} 1- \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\noindent Args \tabto{3cm} -1- \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent \noindent Args \tabto{3cm} 1- \tabto{5cm}  REAL \tabto{7cm} 
-Variables for which class means are computed. 
- 
-@@data 
+\noindent \noindent Args \tabto{3cm} -1- \tabto{5cm}  REAL \tabto{7cm} 
+Variables for which class means are computed. If there are no arguments, code option 
+\textcolor{blue}{func->} must be present 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{func} \tabto{3cm} -1|1 \tabto{5cm}  CODE \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  code telling how the variable to be classified is computed. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{from} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  First observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Last observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{epilog} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \textcolor{teal}{TRANS} computed after going through data. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5754,9 +6043,27 @@ option
 classes number of classes, has effect if dx is not defined in xrangedx->. The default is 
 \textcolor{blue}{classes->}7. If \textcolor{teal}{z} is given then, there can be a second argument, which gives the 
 number of classes for \textcolor{teal}{z}, the default being 7. 
-@@trans 
-@@filter 
-@@reject 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans}  \tabto{3cm} -1 | 1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	transformation set which is executed for each observation. If there is a transformation set associated with the data set, those transformations are computed first. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{filter}  \tabto{3cm} -1 | 1 \tabto{5cm}  Code \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  logical or arithmetic statement (nonzero value indicating True) describing which observations will be accepted. \textcolor{blue}{trans->} transformations are computed before using filter. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{reject}  \tabto{3cm} -1 | 1 \tabto{5cm}  Code \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  logical or arithmetic statement (nonzero value indicating True) describing which observations will be rejected. \textcolor{blue}{trans->} transformations are computed before using \textcolor{blue}{reject->}. 
  
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -6189,7 +6496,7 @@ income"i"-income"i-1"=0\\
 \textcolor{Red}{;enddo}\\ 
 npv\#5-npv\#0>0\\ 
 /            \\ 
-plist=;list(\textcolor{teal}{proba}\%?);\\ 
+plist=\textcolor{Red}{;list}(\textcolor{teal}{proba}\%?);\\ 
 @plist;\\ 
  
 \textcolor{teal}{jlpa}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{proba},\textcolor{blue}{data->}xdata,\textcolor{blue}{showdomain->}('site.le.3','site.gt.3'))\\ 
@@ -6198,7 +6505,7 @@ plist=;list(\textcolor{teal}{proba}\%?);\\
 \textcolor{teal}{jlpa}\%income5[site.le.3];\\ 
 {\color{ForestGreen}** Note income variables are in theory equal but as their}\\ 
 {\color{ForestGreen}** values are computed numerically, they differ.}\\ 
-jlist=;list(\textcolor{teal}{jlpa}\%?);\\ 
+jlist=\textcolor{Red}{;list}(\textcolor{teal}{jlpa}\%?);\\ 
 {\color{ForestGreen}**  these could be printed with @jlist;}\\ 
  
 {\color{ForestGreen}** jlpa\%weights gets the weights of schdedules}\\ 
@@ -6229,7 +6536,7 @@ income"i"-income"i-1"=0\\
 \textcolor{Red}{;enddo}\\ 
 npv\#5-npv\#0>0\\ 
 /            \\ 
-plistb=;list(\textcolor{teal}{probb}\%?);\\ 
+plistb=\textcolor{Red}{;list}(\textcolor{teal}{probb}\%?);\\ 
 {\color{ForestGreen}*** these  could be printed with @plistb;}\\ 
 \textcolor{teal}{jlpb}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{probb},\textcolor{blue}{data->}xdata,\textcolor{blue}{showdomain->}'3.lt.site')\\ 
 \textcolor{teal}{jlpb}\%income5;\\ 
@@ -6257,7 +6564,7 @@ for \textcolor{blue}{max->} or \textcolor{blue}{min->}, and zmatriz->, \textcolo
 \noindent  Theres is no jlpz -object, but the output is used to name 
 several objects created with the function. The list of created objects can be seen 
 with \\ 
-outlist=;list(Output\%?);\\ 
+outlist=\textcolor{Red}{;list}(Output\%?);\\ 
 The objects can then be be seen with \\ 
 @outlist;\\ 
 The objects created can be used in debugging the algorithm and also in teaching how the alogorithm 
@@ -6325,8 +6632,8 @@ constraint matrix has columns.
 matrices can be studied. Pure \textcolor{blue}{debug->} is the same as \textcolor{blue}{debug->}0, which implies that pause is generated before 
 pivoting. If variable \textcolor{teal}{Debug} is given a new value, the the next pause is generated when Pivot.eq.\textcolor{teal}{Debug}. The default is that 
 the next pause is generated after the next pivot. The \textcolor{VioletRed}{pause}() function can now use also \\ 
-lis=;list(Output\%?); \\ 
-even if ;list is input programming function which are not otherwise allowed during \textcolor{VioletRed}{pause}(). 
+lis=\textcolor{Red}{;list}(Output\%?); \\ 
+even if \textcolor{Red}{;list} is input programming function which are not otherwise allowed during \textcolor{VioletRed}{pause}(). 
 	! 
 \end {changemargin} 
 \hrule 
@@ -6347,11 +6654,11 @@ The ordinary Lp-algorithm can be taught using matrices generated in pause to sho
 x4<5\\ 
 x5<3\\ 
 /   \\ 
-probzalist=;list(\textcolor{teal}{probza}\%?);\,{\color{ForestGreen}!subobjects created}\\ 
+probzalist=\textcolor{Red}{;list}(\textcolor{teal}{probza}\%?);\,{\color{ForestGreen}!subobjects created}\\ 
 @probzalist;\,{\color{ForestGreen}!printing the subobjects}\\ 
  
 \textcolor{teal}{jlpza}=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{problem->}\textcolor{teal}{probza},\textcolor{blue}{dpivot->}1)\\ 
-jlpzalist=;list(\textcolor{teal}{jlpza}\%?);\\ 
+jlpzalist=\textcolor{Red}{;list}(\textcolor{teal}{jlpza}\%?);\\ 
 @jlpzalist;\\ 
 {\color{ForestGreen}** The same problem is defined using different tools available.}\\ 
 	!                                                                                  \\ 
@@ -6377,7 +6684,7 @@ jlpzb=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{problem->}probzb,\textcolor{b
 **                                                                                              \\ 
 {\color{ForestGreen}**The matrices needed to use jlpz without problem-> can be obtained from a problem as follows}\\ 
 \textcolor{teal}{jlpcoefa}=\textcolor{VioletRed}{jlpcoef}(\textcolor{teal}{probza})\\ 
-jlpcoefalist=;list(\textcolor{teal}{jlpcoefa}\%?);\\ 
+jlpcoefalist=\textcolor{Red}{;list}(\textcolor{teal}{jlpcoefa}\%?);\\ 
 \textcolor{teal}{jlpza}=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{zmatrix->}\textcolor{teal}{jlpcoefa}\%matrix,\textcolor{blue}{rhs->}\textcolor{teal}{jlpcoefa}\%rhs,\textcolor{blue}{rhs2->}\textcolor{teal}{jlpcoefa}\%rhs2,\textcolor{blue}{min->}\textcolor{teal}{jlpcoefa}\%objective)\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
@@ -6484,6 +6791,19 @@ Hershey/Symbol\_Set\_2
 Hershey/Symbol\_Math	 \\ 
 ZapfDingbats. 
 space within font name can be replaced with '-', e.g. Times-Roman. 
+\subsection{Scandic and other special characters} 
+\label{gnuchar} 
+Scandic charcters can be put into figures as follows. Make first the figure 
+without scandic characters e.g using characters without the dots. Let the name of the generated \textcolor{teal}{FIG} object be \textcolor{teal}{fig}. 
+Open the file \textcolor{teal}{fig}.jfig. Change the coding of the file into UTF-8 (under Encoding in Notepad++). 
+Add the scandic characters to xlabel, ylabel, title, or label -parts in the header. 
+Save the file. Give at \textcolor{Red}{sit>} prompt the command \textcolor{VioletRed}{show}('\textcolor{teal}{fig}.jfig').\\ 
+Subscript is made with the underscore before the subscript.\\ 
+Underscore is put into the labels with three backslash followed with the the underscore.\\ 
+Superscript is made with ^ before the character.\\ 
+Character ^ can be put into the text with three backslash followed with ^.\\ 
+Longer subscripts or superscripts can be made using {} around the scripts.\\ 
+For other things see gnuplot documentation. 
 \subsection{\textcolor{blue}{color->}\textcolor{teal}{Black}, \textcolor{teal}{Red}, \textcolor{teal}{Green}, \textcolor{teal}{Blue}, \textcolor{teal}{Cyan} , \textcolor{teal}{Violet}, \textcolor{teal}{Yellow}, \textcolor{teal}{Orange}} 
 \label{color} 
 Gnuplot allows arbitrary color definitions. Currently the above colors can be used. 
@@ -6528,7 +6848,87 @@ In case \textcolor{teal}{y}-variable is given with \textcolor{blue}{func->}only,
 \begin{changemargin}{3cm}{0cm} 
 \noindent  \textcolor{teal}{Data} object used, default the last data object created or the dta given 
 with data=\textcolor{VioletRed}{list}(). 
-@@figu 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{append} \tabto{3cm} N | 0  \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The graph is appended to an existing FIGURE. If the output is does not exist 
+beforehand or it is not a FIGURE, then the figure is (and not error) is generated. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{continue} \tabto{3cm} N|0  \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Often sequentila figures are made using include files. It would be diffuct 
+to keep track of the figures if \textbf{Jlp22} continues the \textbf{Jlp22} script. Thus the default is that 
+after plotting the figure, \textbf{Jlp22} excutes \textcolor{VioletRed}{pause}() function. The user can 
+give any commands during the pause. Typing <return>, the exceution continues. Typing 'e' or 'end', 
+an error is generated, and the control returns to \textcolor{Red}{sit>} promt. If the function 
+contains \textcolor{blue}{continue->} option, \textcolor{VioletRed}{pause}() is not generated. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{xlabel}  \tabto{3cm}  N | 1 \tabto{5cm}  \textcolor{teal}{CHAR}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Label for \textcolor{teal}{x}-axes. Default is the name of the \textcolor{teal}{x}-variable. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{ylabel}  \tabto{3cm}  N | 1 \tabto{5cm}  \textcolor{teal}{CHAR}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Label for \textcolor{teal}{y}-axes. Default is the name of the \textcolor{teal}{x}-variable. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{xrange}  \tabto{3cm}  N |1-2 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent the range for \textcolor{teal}{x}-axes. Gnuplot generates it automatically, but 
+sometimes the range used by Gnuplot needs to be changed. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{yrange}  \tabto{3cm}  N |1-2 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  the range for \textcolor{teal}{y}-axes. Gnuplot generates it automatically, but 
+sometimes the range used by Gnuplot needs to be changed. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{color}  \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The color used. The color indices are put to 
+following  predefined \textcolor{teal}{REAL} variables: \textcolor{teal}{Black}, \textcolor{teal}{Red}, \textcolor{teal}{Green}, \textcolor{teal}{Blue}, 
+\textcolor{teal}{Cyan} , \textcolor{teal}{Violet}, \textcolor{teal}{Yellow}, \textcolor{teal}{Orange}. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{show} \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{blue}{show->}0 indicates the that the figure is not yet plotted. 
+As the value 0 can be given also as a variable or it can be computed, 
+the same code can produce different showing combinations. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{axes}  \tabto{3cm}  N | 1  \tabto{5cm}  \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Are axes drawn. 
+\begin{itemize} 
+\item \textcolor{blue}{axes->}11 Both axes are drawn. (Default) 
+\item \textcolor{blue}{axes->}10 \textcolor{teal}{x}- axes is  drawn, \textcolor{teal}{y}-axes not. 
+\item \textcolor{blue}{axes->}01 \textcolor{teal}{x}- axes is  drawn, \textcolor{teal}{y}-axes not. $\sim$ \textcolor{blue}{axes->}1. 
+\item \textcolor{blue}{axes->}00 Neiher axes is drawn. $\sim$ \textcolor{blue}{axes->}0. 
+\end{itemize} 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6591,10 +6991,48 @@ Gnuplot commands and file \textcolor{teal}{fi}.jfi0 containg data.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{func} \tabto{3cm}  N | 1  \tabto{5cm}   Code  \tabto{7cm} 
+\noindent \textcolor{blue}{func} \tabto{3cm}  N | 1  \tabto{5cm}   CODE  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent   Code option telling how the \textcolor{teal}{y}-variable is computed. 
-@@draw 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{xfunc} \tabto{3cm}  N | 1  \tabto{5cm}   CDE  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent   Code option telling how the \textcolor{teal}{x}-axes variable is computed from the \textcolor{teal}{x}-variable. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{xfuncrange}  \tabto{3cm} N|2 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Ranges for the \textcolor{teal}{x}-axes when \textcolor{blue}{xfunc->} is present and xrange is used for 
+the stepping of the \textcolor{teal}{x}->  variable. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{points} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Number of equal distance points used in \textcolor{blue}{xrange->} 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{teal}{x} \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Variable which is stepped before computing the value of \textcolor{blue}{func->}. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{xrange} \tabto{3cm} 0-4 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Range for the \textcolor{teal}{x}-variable. If there are now arguments \textbf{Jlp22} tries to 
+find variables var\%min and var\%max which where computed with \textcolor{VioletRed}{stat}() with options \textcolor{blue}{min->} 
+and \textcolor{blue}{max->}. If there is need to define a smaller range for computing the values as wished 
+for the \textcolor{teal}{x}-axes, then 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6618,7 +7056,14 @@ mark types of Gnuplot. The mark can be given also as \textcolor{teal}{CHAR} vari
 \begin{example}[drawex]Example of \textcolor{VioletRed}{draw}()\\ 
 \label{drawex} 
 \noindent fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{cos}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{cos}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}** Circle}\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(u),\textcolor{blue}{xfunc->}\textcolor{VioletRed}{cos}(u),\textcolor{teal}{x}->u,\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}**Spiral with too few points}\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(0.1*u*\textcolor{VioletRed}{sin}(u)),\textcolor{blue}{xfunc->}(0.1*u*\textcolor{VioletRed}{cos}(u)),\textcolor{teal}{x}->u,\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}**Spiral with more points}\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(0.1*u*\textcolor{VioletRed}{sin}(u)),\textcolor{blue}{xfunc->}(0.1*u*\textcolor{VioletRed}{cos}(u)),\textcolor{teal}{x}->u,\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{points->}500,\\ 
+\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}Orange,\textcolor{blue}{width->}2)\\ 
 \textcolor{Red}{;if}(\textcolor{VioletRed}{type}(figyx).ne.FIGURE)plotyxex\\ 
 \textcolor{VioletRed}{show}(figyx,\textcolor{blue}{continue->}fcont)\\ 
 reg0=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},\textcolor{teal}{x})\\ 
@@ -6636,6 +7081,8 @@ fu=reg2()\\
 figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{transa}(fu),\textcolor{blue}{xrange->},\textcolor{blue}{color->}Orange,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
 continue=0\\ 
 figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{transa}(fu),\textcolor{teal}{x}-\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{color->}Orange,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(u),\textcolor{blue}{xfunc->}\textcolor{VioletRed}{cos}(u),\textcolor{teal}{x}->u,\textcolor{blue}{xrange->}(0,0.5*\textcolor{teal}{Pi}))\\ 
+{\color{ForestGreen}**there is some problem with xrange}\\ 
 \textcolor{teal}{Continue}=1\,\,{\color{ForestGreen}!Errors}\\ 
 fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x})\\ 
 fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{xrange->}(1,100),\textcolor{blue}{func->}Sin(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x})\\ 
@@ -6644,8 +7091,18 @@ fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{xrange->}(1,100),\textcolor{blue
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
 \begin{note} 
+When \textcolor{blue}{xfunc->} is present the the variable given in \textcolor{teal}{x}-> is stepped in range given in \textcolor{blue}{xrange->} 
+and \textcolor{teal}{x}-axes variable is computed using \textcolor{blue}{xfunc->}. 
+\end{note} 
+\begin{note} 
 \textcolor{teal}{fi}=\textcolor{VioletRed}{draw}() produces or updates file \textcolor{teal}{fi}.jfig] which contains 
-Gnuplot commands and file \textcolor{teal}{fi}.jfi0 containg data. 
+Gnuplot commands and file \textcolor{teal}{fi}.jfi0 containg data. If scandic characters are needed 
+for labels, the edit these characters into fi.jfig and use \textcolor{VioletRed}{show}('fi.jfig') 
+\end{note} 
+\begin{note} 
+It is possible to have different range for the \textcolor{teal}{x}-axes range and range for stepping 
+the \textcolor{teal}{x}-variable. This is useful e.g. when the function is not defined for zero, which would 
+be nice lower in limit for the axes. I need to check how this works. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{drawclass}() Draws results of \textcolor{VioletRed}{classify}()}\index{drawclass()classify()} 
 \label{drawclass} 
@@ -6789,7 +7246,87 @@ and the second row the \textcolor{teal}{y} values.
 the first matrix gives the \textcolor{teal}{x}-values and the second matrix gives the \textcolor{teal}{y}-values. 
 It does not matter if arguments are row or column vectors. 
 \end{itemize} 
-@@figure 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{append} \tabto{3cm} N | 0  \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The graph is appended to an existing FIGURE. If the output is does not exist 
+beforehand or it is not a FIGURE, then the figure is (and not error) is generated. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{continue} \tabto{3cm} N|0  \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Often sequentila figures are made using include files. It would be diffuct 
+to keep track of the figures if \textbf{Jlp22} continues the \textbf{Jlp22} script. Thus the default is that 
+after plotting the figure, \textbf{Jlp22} excutes \textcolor{VioletRed}{pause}() function. The user can 
+give any commands during the pause. Typing <return>, the exceution continues. Typing 'e' or 'end', 
+an error is generated, and the control returns to \textcolor{Red}{sit>} promt. If the function 
+contains \textcolor{blue}{continue->} option, \textcolor{VioletRed}{pause}() is not generated. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{xlabel}  \tabto{3cm}  N | 1 \tabto{5cm}  \textcolor{teal}{CHAR}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Label for \textcolor{teal}{x}-axes. Default is the name of the \textcolor{teal}{x}-variable. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{ylabel}  \tabto{3cm}  N | 1 \tabto{5cm}  \textcolor{teal}{CHAR}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Label for \textcolor{teal}{y}-axes. Default is the name of the \textcolor{teal}{x}-variable. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{xrange}  \tabto{3cm}  N |1-2 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent the range for \textcolor{teal}{x}-axes. Gnuplot generates it automatically, but 
+sometimes the range used by Gnuplot needs to be changed. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{yrange}  \tabto{3cm}  N |1-2 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  the range for \textcolor{teal}{y}-axes. Gnuplot generates it automatically, but 
+sometimes the range used by Gnuplot needs to be changed. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{color}  \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The color used. The color indices are put to 
+following  predefined \textcolor{teal}{REAL} variables: \textcolor{teal}{Black}, \textcolor{teal}{Red}, \textcolor{teal}{Green}, \textcolor{teal}{Blue}, 
+\textcolor{teal}{Cyan} , \textcolor{teal}{Violet}, \textcolor{teal}{Yellow}, \textcolor{teal}{Orange}. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{show} \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{blue}{show->}0 indicates the that the figure is not yet plotted. 
+As the value 0 can be given also as a variable or it can be computed, 
+the same code can produce different showing combinations. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{axes}  \tabto{3cm}  N | 1  \tabto{5cm}  \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Are axes drawn. 
+\begin{itemize} 
+\item \textcolor{blue}{axes->}11 Both axes are drawn. (Default) 
+\item \textcolor{blue}{axes->}10 \textcolor{teal}{x}- axes is  drawn, \textcolor{teal}{y}-axes not. 
+\item \textcolor{blue}{axes->}01 \textcolor{teal}{x}- axes is  drawn, \textcolor{teal}{y}-axes not. $\sim$ \textcolor{blue}{axes->}1. 
+\item \textcolor{blue}{axes->}00 Neiher axes is drawn. $\sim$ \textcolor{blue}{axes->}0. 
+\end{itemize} 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6983,9 +7520,33 @@ To be reported later, soon if needed.
 \subsection{\textcolor{VioletRed}{stempolar}() Puts a stem into polar coordinates}\index{stempolar()} 
 \label{stempolar} 
 To be reported later 
-\subsection{stemcurve() Defines stem curve interpolated linearly between points} 
+\subsection{\textcolor{VioletRed}{stemcurve}() stem curve used with linear interpolation}\index{stemcurve()} 
 \label{stemcurve} 
-To be reported later, soon if needed. 
+\textcolor{VioletRed}{stemcurve}() defines a stem curve by giving points from the curve. Linear interpolation 
+is then used to compute diameters at given heights, heights of given diameter, 
+volumes in certain height section, cylinder and cylinders which get maximum volume. 
+	! 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output \tabto{3cm}  1 \tabto{5cm}  Matrix \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \noindent Output \tabto{3cm}  1 \tabto{5cm}  Matrix \tabto{7cm} 
+A matrix containing stem curve points information 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args \tabto{3cm} 4-999 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \noindent Args \tabto{3cm} 4-999 \tabto{5cm}  REAL \tabto{7cm} 
+First half of arguments hive heights of points in decimeters, second half 
+gives the diamters in centimeters. 
+ 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+ 
 \subsection{\textcolor{VioletRed}{laasvol}() Volume equations of Laasasenaho}\index{laasvol()} 
 \label{laasvol} 
 To be reported later. 
@@ -7062,7 +7623,7 @@ selapsed=sec1-sec0;\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsection{info() print some information of current parameters.} 
+\subsection{\textcolor{VioletRed}{info}() print some information of current parameters.}\index{info()} 
 \label{info} 
 \begin{note} 
 Late addtiona information sis printed. 

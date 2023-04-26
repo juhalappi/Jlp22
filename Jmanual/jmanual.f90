@@ -622,6 +622,7 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 		inmacro=.false.
 		isnote=.false.
 		isexample=.false.
+		frommacro=.false.
 		nl=0
 		nlsection=0
 1  continue
@@ -645,13 +646,47 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 				line(1:le-nb+1)=line(nb:le)
 				le=le-nb+1
 			endif !if(nb.gt.1)    527
-			!	write(6,*)'FROMMACRO:',line(1:le)
+				write(6,*)'FROMMACRO:',line(1:le)
+			!	read(5,*)ii
 			!	p=.true.
 		else
 			!17		read(2,'(a1,a)',end=789)ch,line;nl=nl+1;le=j_lentrim(line)
 17		read(2,'(a)',end=789)line;nl=nl+1;le=j_lentrim(line)
+
 			nb=nonblank(line,1,le)  !if le=0 nb=1
+			
+			if(line(nb:nb+2).eq.'!@@'.or.index(line(1:le),'@@').gt.0)then
+			write(6,*)nb,'<22>',line(1:le),line(nb:nb+2).eq.'!@@',line(le:le).eq.'@'
+	!		read(5,*)ii
+			if(line(le:le).eq.'@')then
+			imacro=j_isin(line(nb+3:le-1),macrolabel,nmacro)
+		!	write(6,*)line(ifirst(1):ilast(1))
+			if(imacro.le.0)then
+				write(6,*)'line ',nl, ' in ',infile(1:linfile),' ' ,line(nb+3:le-1),'  is not among macros: '
+				do ico=1,nmacro
+					write(6,*)macrolabel(ico)
+				enddo !ico=1,nmacro   1251
+				stop 'mcmcm'
+			endif !if(imacro.le.0)   1249
+			frommacro=.true.
+			lfrommacro=0
+			write(6,*)'Macro ',line(nb+3:le-1),imacro,' in line ',nl
+		!	read(5,*)iii
+			goto 1
+			endif
+		endif !if(line(nb+1:nb+1).eq.'@@')   1247
+		!!!!!! ordinary line
+		! if(index(line(1:le),'@@').gt.0)then
+		! write(6,*)'/',line(1:le),'/'
+		! write(6,*)nb,imacro,frommacro, 'line ',nl
+	! !	read(5,*)ii
+		! endif
 			!		if(iper.eq.100)write(6,*)'jdjdj',line(1:le+1)
+	
+			if(index(line(1:le),'@@').gt.0)then
+	write(6,*)'@@675',nl,nb
+!	read(5,*)iii
+	endif
 		
 			if(le.eq.0.and.insection)then
 				call putsec(' ')
@@ -698,7 +733,10 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 			call testblockend()
 			return
 790	continue
-
+			if(index(line(1:le),'@@').gt.0)then
+	write(6,*)'@@707',nl,nb
+	!read(5,*)iii
+	endif
 	!	write(6,*)'<34fromi2 ',line(1:le)
 		!if(nl.eq.48)write(6,*)'inheader0,insection0',inheader,insection
 			if(le.ge.3)then
@@ -718,10 +756,16 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 				goto 1
 			endif !if(inmacro)    587
 		endif !if(frommacro)    512
- 
+ 			if(index(line(1:le),'@@').gt.0)then
+	write(6,*)'@@730',nl,nb
+	!read(5,*)iii
+	endif
  
  
 		call words(line,1,le,nwords,ifirst,ilast,iss)  !tarvitaanko
+		
+		
+		
 		!	if(nl.eq.11690)write(6,*)'<66',line(ifirst(1):ilast(1)),line(ifirst(1):ilast(1)).eq.'Latex'
 		if(p)write(6,*)'<56nwords',nwords
 		if(nwords.ge.1)then
@@ -780,6 +824,10 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 				! if(icon.eq.0)stop
 			! endif
 		! endif
+		 			if(index(line(1:le),'@@').gt.0)then
+	write(6,*)'@@823',nl,nb
+	!read(5,*)iii
+	endif
  
 756	if(line(ifirst(1):ilast(1)).eq.'Section'.and.nocomment)then
 			if(nwords.lt.3)then
@@ -998,30 +1046,7 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 				write(6,*)line2(1:le2)
 				stop 'nix3'
 			endif !if(nie.ne.3)    852
-			! lee=le
-			! ipil=index(line(iliv+1:le),',')+iliv
-			! ipis=index(line(iliv+1:le),'.')+iliv
- 
-			! if(ipil.gt.0.and.ipis.eq.0)then
-			! ikatk=ipil
-			! elseif(ipis.gt.0.and.ipil.eq.0)then
-			! ikatk=ipis
-			! elseif(ipis.gt.0.and.ipil.gt.0)then
-			! ikatk=min(ipil,ipis)
-			! else
-			! ikatk=0
-			! endif
-			! if(ikatk.gt.0.and.ikatk.lt.le)then
-			! lee=ikatk
-			! jatko=line(ikatk+1:le)
-			! lek=le-ikatk
-			! write(6,*)'jatko',ikatk,jatko(1:lek),'/'
-			! endif
-			! lis=lee-iliv+1
-			! line2(le2+1:le2+lis)=line(iliv+1:lee)
-			! le2=le2+lis
-			! !	line=line2
-			! !	le=len_trim(line)
+		
 		!	p=index(line(1:le),' matrix to be generated ').gt.0
 			lee=le-iliv
 			jatko(1:lee)=line(iliv+1:le)
@@ -1045,20 +1070,7 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 			! stop
 			! endif
 			call words(line,1,le,nwords,ifirst,ilast,iss)
-			! if(p)then
-				! write(6,*)'ineT:',nwords,ifirst(1:nwords),ilast(1:nwords)
-				! !	stop
-			! endif !if(nl.eq.2997)    904
-		! if(p)	write(6,*)'inebef:',firsto,inpuf,ninpuf
-		! if(p)write(6,*)'line ',line(1:le)
-		! if(p)write(6,*)'line2',line2(1:le2)
-		! if(p)then
-			! do iw=1,nwords
-			! write(6,*)iw,' ',line(ifirst(iw):ilast(iw))
-			
-			! enddo
-	! !	line(1:1)='?'
-		! endif
+	
 			call colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,.false.,.false.,le2,le21,.false.)
 			! if(p)then
 				! write(6,*)'ineTw:',line2(1:le2)
@@ -1161,7 +1173,10 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 			! call endtabular()
 			! call putsec('\vspace{-1.51em}')
 			! endif
- 
+ if(index(line(1:le),'@@').gt.0)then
+	write(6,*)'@@1172',nl,nb
+	!read(5,*)iii
+	endif
  
 			! call putsec('\begin{table}[H]')
 			! call putsec(begintabular(1:j_lentrim(begintabular)))
@@ -1243,7 +1258,10 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 			!	stop
 			goto 1
 		endif !if(intabular)    991
- 
+ if(index(line(1:le),'@@').gt.0)then
+	write(6,*)'@@1257',nl,nb
+	!read(5,*)iii
+	endif
  
 		if(p)write(6,*)'<587nwords',nwords
 		isnote=.false.
@@ -1296,7 +1314,10 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 			goto 1
 		endif !if(line(ifirst(1):ilast(1)).eq.'endnote')   1113
  
- 
+ 	if(index(line(1:le),'@@').gt.0)then
+	write(6,*)'@@1313',nl,nb
+	!read(5,*)iii
+	endif
  
  
 		islisting=line(ifirst(1):ilast(1)).eq.'Listing'
@@ -1423,22 +1444,8 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
  
 		! endif
  
- 
-		if(line(nb+1:nb+1).eq.'@@')then
-			imacro=j_isin(line(ifirst(1):ilast(1)),macrolabel,nmacro)
-			if(imacro.le.0)then
-				write(6,*)'line ',nl, ' in ',infile(1:linfile),' ' ,line(ifirst(1):ilast(1)),'  is not among macros: '
-				do ico=1,nmacro
-					write(6,*)macrolabel(ico)
-				enddo !ico=1,nmacro   1251
-				stop 'mcmcm'
-			endif !if(imacro.le.0)   1249
-			frommacro=.true.
-			lfrommacro=0
-			goto 1
-		endif !if(line(nb+1:nb+1).eq.'@@')   1247
-		!!!!!! ordinary line
- 
+
+
  
 		if(inlisting)then  !listing can be within example
 			call putsec(line(1:max(1,le)))

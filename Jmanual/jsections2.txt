@@ -9,6 +9,7 @@ outfile jexamples.inc
 outfile jmanual.tex
 !!subsection matrix
 !!;return
+
 section* preface0
 
 section changes
@@ -90,6 +91,7 @@ subsection arguments
 subsection options
 subsubsection optionstructure
 subsubsection codeoption
+subsubsection comoptions
 
 section arith
 subsection arfu1
@@ -403,6 +405,7 @@ section Plotting figures
 !subsubsection FIGu
 subsection show
 subsection font
+subsection gnuchar
 subsection color
 subsection terminal
 subsection window
