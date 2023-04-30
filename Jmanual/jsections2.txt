@@ -242,10 +242,10 @@ subsection sum
 ! subsection fraction fraction()
 ! subsection abs abs()
 !
-	
+section der der()	
 section  Special arithemetic functions
 !	
-subsection der der()
+
 subsection gamma gamma()
 ubsection loggamma loggamma()
 subsection logistic logistic()

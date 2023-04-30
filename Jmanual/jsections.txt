@@ -75,10 +75,10 @@
 ! contains continue-> option, pause() is not generated.
 ! xlabel & N | 1&CHAR & Label for x-axes. Default is the name of the x-variable.
 ! ylabel & N | 1&CHAR & Label for y-axes. Default is the name of the x-variable.
-!xrange & N |1-2& REAL&the range for x-axes. Gnuplot generates it automatically, but
-! sometimes the range used by Gnuplot needs to be changed.
-!yrange & N |1-2&REAL& the range for y-axes. Gnuplot generates it automatically, but
-! sometimes the range used by Gnuplot needs to be changed.
+!xrange & N |1-2& REAL&the range for x-axes. gnuplot generates it automatically, but
+! sometimes the range used by gnuplot needs to be changed.
+!yrange & N |1-2&REAL& the range for y-axes. gnuplot generates it automatically, but
+! sometimes the range used by gnuplot needs to be changed.
 ! color & N | 1 & REAL & The color used. The color indices are put to
 ! following  predefined REAL variables: ]Black[, ]Red[, ]Green[, ]Blue[,
 ! ]Cyan[ , ]Violet[, ]Yellow[, ]Orange[.
@@ -109,8 +109,8 @@
 ! contains continue-> option, pause() is not generated.
 ! xlabel & N | 1&CHAR & Label for x-axes. Default is the name of the x-variable.
 ! ylabel & N | 1&CHAR & Label for y-axes. Default is the name of the x-variable.
-!yrange & N |1-2& the range for y-axes. Gnuplot generates it automatically, but
-! sometimes the range used by Gnuplot needs to be changed.
+!yrange & N |1-2& the range for y-axes. gnuplot generates it automatically, but
+! sometimes the range used by gnuplot needs to be changed.
 ! color & N | 1 & REAL & The color used. The color indices are put to
 ! following  predefined REAL variables: ]Black[, ]Red[, ]Green[, ]Blue[,
 ! ]Cyan[ , ]Violet[, ]Yellow[, ]Orange[.
@@ -127,6 +127,13 @@
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
+
+!Version 30.4. 2023. Errors corrected. More examples for graphics. In rewriting of ther software,
+! options are set for individual function occurences while in previous versions
+! options were set for each code line. Earlier it was necessary to clear options within each
+! function. Now they can be cleared just in one place before entering a new function. Now
+! full advantage is taken of the new option structure. It may be that some tricky complications
+! may arise.
 
 !Version 26.4. 2023. draw() can now make circles etc. stat() can now compute statistics
 ! for a function without need to put the function values in the data. classify() merges classes
@@ -431,9 +438,9 @@
 ! straightforward to do also data management in Jlp22. 
 
 ! Jlp22 can now be used for general matrix computations. I have included in Jlp22 all matrix functions of 
-! Matlab which I found useful in a consulting project. Jlp22 uses Gnuplot for making figures. 
+! Matlab which I found useful in a consulting project. Jlp22 uses gnuplot for making figures. 
 ! It is straigtforward to extend these graphics functions. Jlp22 can be used an
-! interface to Gnuplot graphics.  Jlp22 contains many tools to deal with classified data. 
+! interface to gnuplot graphics.  Jlp22 contains many tools to deal with classified data. 
 
 ! The current binary versions of Jlp22 are developed using Gfortran Fortran 90 compiler in MSYS2 MINGW 64-bit environment
 ! under Windows 10. 
@@ -685,7 +692,7 @@
 
 !Section gitpack Git package
 !The Jlp22  package can be loaded by pressing load zip button under the green
-! code button in the right side of the page github.com/juhalappi/Jlp22.  The package
+! code button in the right side of the page Github.com/juhalappi/Jlp22.  The package
 !contains the following files.
 
 !\begin{itemize}
@@ -795,7 +802,7 @@
 !endsection
  
  !Section start Install
- !This section tells how to install Jlp22, Gnuplot and Rscript from Jlp22
+ !This section tells how to install Jlp22, gnuplot and Rscript from Jlp22
 ! so that the user can start
 !  running the examples in file jexamples.inc.
  !endsection
@@ -804,14 +811,14 @@
 !endsection
 
 !Section installjlp22 Install Jlp22
- ! After loading Jlp22 from the Github.com/juhalappi/Jlp22, the folders of the exe files must be
+ ! After loading Jlp22 from the github.com/juhalappi/Jlp22, the folders of the exe files must be
 !  put into the environmental variable PATH. In my computer the PATH contains line C:\textbackslash jlp22
 ! An ordinary user may use Jlp22 and Jlp22r from the folder 
 ! Jgit\textbackslash Jlp22bin.
 !endsection
 
-!Section installgnuplot Install Gnuplot
-	! Let us then install Gnuplot. Go to page \url{http://gnuplot.info}, and select there download,
+!Section installgnuplot Install gnuplot
+	! Let us then install gnuplot. Go to page \url{http://gnuplot.info}, and select there download,
 	! and in the download page select green 'download latest version', which loads 
 	! 'gp543-min64-mingw.exe' (or similar), and if you let it install with usual yes-next procedures
 	! gnuplot is installed  in folder c:\textbackslash program files\textbackslash gnuplot
@@ -921,14 +928,14 @@
  
 
 ! Figures are made with Gnoplot.
-!Gnuplot is freely available at
+!gnuplot is freely available at
 
  
  ! https://sourceforge.net/projects/gnuplot/files/gnuplot/5.4.2/
  
  ! Download  download gp542-win64-mingw.exe. This will install gnuplot on your windows
-! system under C::\textbackslash Program Files\gnuplot\. Jlp22 will strat Gnuplot automatically when
-! plotting figures if Gnuplot is on the PATH (see section Installing Gnuplot and Jlp22).
+! system under C::\textbackslash Program Files\gnuplot\. Jlp22 will strat gnuplot automatically when
+! plotting figures if gnuplot is on the PATH (see section Installing gnuplot and Jlp22).
 ! Dcomentation is found also in \ref{gnu}
 
 !endsection
@@ -2164,7 +2171,7 @@ $$=300
 ! \item tand()
 ! \item cotan()
 ! \item cotand()
-!\end itemize
+!\end{itemize}
 !endsection
 
 !Section atrigfu arc-trig asin() asind() acos() acosd() atan() atand() acotan() acotand()
@@ -2178,7 +2185,7 @@ $$=300
 ! \item atand()
 ! \item acotan()
 ! \item acotand()
-!\end itemize
+!\end{itemize}
 !endsection
 
 !Section hyper Hyperbolic  sinh() cosh() tanh()
@@ -2542,13 +2549,13 @@ a call to function assone()
 !endsection
 
 ! Section Plotting Plotting figures
-! The graphiscs of the current version of Jlp22 is produced with Gnuplot, see
+! The graphiscs of the current version of Jlp22 is produced with gnuplot, see
 !\url{http://www.overleaf.com}
 ! Jlp22 offers an alternative interface
-! to Gnuplot, and it is quite easy to add more ploting routines later.
+! to gnuplot, and it is quite easy to add more ploting routines later.
 ! endsection
 ! Section figu Figures 
-! Figures are made using Gnuplot, see \url{http://gnuplot.info}. Jlp22 transmits information into Gnuplot using text files.
+! Figures are made using gnuplot, see \url{http://gnuplot.info}. Jlp22 transmits information into gnuplot using text files.
 ! Jlp22 generates the files using .jfig extension. Necessary files are generated  by deleting old
 ! files without asking permission. If ]fig[ is the output of a figure function, then
 ! Jlp22 creates always, except in 3D, file with name ]fig[.jfig and possibly other files with
@@ -2584,7 +2591,7 @@ a call to function assone()
 ! show then the FIG using show() function. The argument of show() can be
 !  either a FIG or the name of the .jfig file withing apostrohes.
  ! Thus it is possible
- ! to edit the file using Gnuplot capabilities.
+ ! to edit the file using gnuplot capabilities.
  !endheader
  
  ! Ex showex Example of show()
@@ -2597,7 +2604,8 @@ a call to function assone()
 	! show(fi,continue->fcont)
 	! Window='700,700'
 	! fi=drawline(1,10,3,1,color->Red,continue->fcont)
-	! show(fi,xrange->(1.1,11),continue->fcont) !the line is not visible
+	!*** The line is not visible
+	! show(fi,xrange->(1.1,11),continue->fcont)
 	! dat=data(read->(x,y),in->)
 	! 1,4
 	! 2,6
@@ -2605,7 +2613,9 @@ a call to function assone()
 	! 5,1
 	! /
 	! stat()
-	! fi=plotyx(y,x,continue->fcont)  ! Gnuplot hides points at border
+	! *** gnuplot hides points at border
+	! fi=plotyx(y,x,continue->fcont)  
+	! ** The ranges needs to be adjusted manually 
 	! show(fi,xrange->(0,6),yrange->(0,7),continue->fcont)
  
 	! endex
@@ -2627,26 +2637,26 @@ a call to function assone()
 
  
 !Section terminal Terminal
-! It is possible to change the terminal type used by Gnuplot by giving 
+! It is possible to change the terminal type used by gnuplot by giving 
  ! the name of the terminal to the predefine CHAR variable ]Terminal[.
  ! The default is \newline ]Terminal[='qt'. 
  !endsection
  
  !Section window Window size and shape
-! It is possible to change the window size and shape of Gnuplot by 
+! It is possible to change the window size and shape of gnuplot by 
 ! using the predefined CHAR variable Window.
 ! The default is \newline
 ! Window='700,700'
 !endsection
 
 !Section color color->]Black[, ]Red[, ]Green[, ]Blue[, ]Cyan[ , ]Violet[, ]Yellow[, ]Orange[
-!Gnuplot allows arbitrary color definitions. Currently the above colors can be used.
+!gnuplot allows arbitrary color definitions. Currently the above colors can be used.
 !General color definitions are implemented  when requested.
 !endsection
 
 
 !Section legend Legends
-!\item The default legends by Gnuplot do not look nice, and they are not implemented.
+!\item The default legends by gnuplot do not look nice, and they are not implemented.
 ! The user can write own legends using label-> option in drawline().
 !endsection
 
@@ -3054,7 +3064,7 @@ a call to function assone()
  
  ! \bibitem{gnu}
 ! Thomas Williams, Thomas and Kelley, Colin (2022),
-  ! \emph{Gnuplot 5.5},
+  ! \emph{gnuplot 5.5},
   ! url = http://gnuplot.info/docs_5.5/
 
 
@@ -3092,8 +3102,8 @@ a call to function assone()
 ! schedule weight.
 ! \item It would be interesting to see how Jlp22 can put to work with Heureka.
 ! \item The possibility to run R scripts from Jlp22 and Jlp22 scripts from R provide new possibilities.
-! \item Jlp22 can now be used as an interface to Gnuplot. 
-! Google search show how many possibilities Gnuplot provides.
+! \item Jlp22 can now be used as an interface to gnuplot. 
+! Google search show how many possibilities gnuplot provides.
 ! It is quite straightforward to implement these graphs if it is not currently possible.
 ! \item The possibility to generate random numbers from any discrete or continuous distribution provide new 
 ! possibilities to study the effects of random errors in the optimization.

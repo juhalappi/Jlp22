@@ -174,6 +174,13 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 30.4. 2023. Errors corrected. More examples for graphics. In rewriting of ther software, 
+options are set for individual function occurences while in previous versions 
+options were set for each code line. Earlier it was necessary to clear options within each 
+function. Now they can be cleared just in one place before entering a new function. Now 
+full advantage is taken of the new option structure. It may be that some tricky complications 
+may arise. 
+ 
 Version 26.4. 2023. \textcolor{VioletRed}{draw}() can now make circles etc. \textcolor{VioletRed}{stat}() can now compute statistics 
 for a function without need to put the function values in the data. \textcolor{VioletRed}{classify}() merges classes 
 with too few observations in a better way. 
@@ -294,9 +301,9 @@ is under development, and thus it is not usable. R users can do general data man
 straightforward to do also data management in \textbf{Jlp22}. 
  
 \textbf{Jlp22} can now be used for general matrix computations. I have included in \textbf{Jlp22} all matrix functions of 
-Matlab which I found useful in a consulting project. \textbf{Jlp22} uses Gnuplot for making figures. 
+Matlab which I found useful in a consulting project. \textbf{Jlp22} uses \textcolor{teal}{gnuplot} for making figures. 
 It is straigtforward to extend these graphics functions. \textbf{Jlp22} can be used an 
-interface to Gnuplot graphics.  \textbf{Jlp22} contains many tools to deal with classified data. 
+interface to \textcolor{teal}{gnuplot} graphics.  \textbf{Jlp22} contains many tools to deal with classified data. 
  
 The current binary versions of \textbf{Jlp22} are developed using Gfortran Fortran 90 compiler in MSYS2 MINGW 64-bit environment 
 under Windows 10. 
@@ -313,14 +320,14 @@ See chapter \ref{error} for more information of error handling.
  
  
 Figures are made with Gnoplot. 
-Gnuplot is freely available at 
+\textcolor{teal}{gnuplot} is freely available at 
  
  
-https://sourceforge.net/projects/gnuplot/files/gnuplot/5.4.2/ 
+https://sourceforge.net/projects/\textcolor{teal}{gnuplot}/files/\textcolor{teal}{gnuplot}/5.4.2/ 
  
-Download  download gp542-win64-mingw.exe. This will install gnuplot on your windows 
-system under C::\textbackslash Program Files\gnuplot\. \textbf{Jlp22} will strat Gnuplot automatically when 
-plotting figures if Gnuplot is on the PATH (see section Installing Gnuplot and \textbf{Jlp22}). 
+Download  download gp542-win64-mingw.exe. This will install \textcolor{teal}{gnuplot} on your windows 
+system under C::\textbackslash Program Files\\textcolor{teal}{gnuplot}\. \textbf{Jlp22} will strat \textcolor{teal}{gnuplot} automatically when 
+plotting figures if \textcolor{teal}{gnuplot} is on the PATH (see section Installing \textcolor{teal}{gnuplot} and \textbf{Jlp22}). 
 Dcomentation is found also in \ref{gnu} 
  
 \subsection{Developing own \textbf{Jlp22} functions in Fortran} 
@@ -355,7 +362,7 @@ folders of the Github distribution.
 \subsection{Git package} 
 \label{gitpack} 
 The \textbf{Jlp22}  package can be loaded by pressing load zip button under the green 
-code button in the right side of the page github.com/juhalappi/\textbf{Jlp22}.  The package 
+code button in the right side of the page Github.com/juhalappi/\textbf{Jlp22}.  The package 
 contains the following files. 
  
 \begin{itemize} 
@@ -465,16 +472,16 @@ Let us assume that the working folder is jtest.
 \label{install} 
 \subsection{Install \textbf{Jlp22}} 
 \label{installjlp22} 
-After loading \textbf{Jlp22} from the Github.com/juhalappi/\textbf{Jlp22}, the folders of the exe files must be 
+After loading \textbf{Jlp22} from the github.com/juhalappi/\textbf{Jlp22}, the folders of the exe files must be 
 put into the environmental variable PATH. In my computer the PATH contains line C:\textbackslash jlp22 
 An ordinary user may use \textbf{Jlp22} and \textbf{Jlp22}r from the folder 
 Jgit\textbackslash \textbf{Jlp22}bin. 
-\subsection{Install Gnuplot} 
+\subsection{Install \textcolor{teal}{gnuplot}} 
 \label{installgnuplot} 
-Let us then install Gnuplot. Go to page \url{http://gnuplot.info}, and select there download, 
+Let us then install \textcolor{teal}{gnuplot}. Go to page \url{http://\textcolor{teal}{gnuplot}.info}, and select there download, 
 and in the download page select green 'download latest version', which loads 
 'gp543-min64-mingw.exe' (or similar), and if you let it install with usual yes-next procedures 
-gnuplot is installed  in folder c:\textbackslash program files\textbackslash gnuplot 
+\textcolor{teal}{gnuplot} is installed  in folder c:\textbackslash program files\textbackslash \textcolor{teal}{gnuplot} 
 which should be placed into the environmental variable Path. 
 \subsection{Install Rscript} 
 \label{installrscript} 
@@ -1711,7 +1718,7 @@ In \textcolor{VioletRed}{sin}(), etc,  argument is in radians, in \textcolor{Vio
 \item \textcolor{VioletRed}{tand}() 
 \item \textcolor{VioletRed}{cotan}() 
 \item \textcolor{VioletRed}{cotand}() 
-\end itemize 
+\end{itemize} 
 \subsection{arc-trig \textcolor{VioletRed}{asin}() \textcolor{VioletRed}{asind}() \textcolor{VioletRed}{acos}() \textcolor{VioletRed}{acosd}() \textcolor{VioletRed}{atan}() \textcolor{VioletRed}{atand}() \textcolor{VioletRed}{acotan}() \textcolor{VioletRed}{acotand}()}\index{asin()asind()acos()acosd()atan()atand()acotan()aco} 
 \label{atrigfu} 
 Inverse trigonometric functions. In \textcolor{VioletRed}{asin}(), etc,  argument is in radians, in \textcolor{VioletRed}{asind}(), etc in degrees 
@@ -1724,7 +1731,7 @@ Inverse trigonometric functions. In \textcolor{VioletRed}{asin}(), etc,  argumen
 \item \textcolor{VioletRed}{atand}() 
 \item \textcolor{VioletRed}{acotan}() 
 \item \textcolor{VioletRed}{acotand}() 
-\end itemize 
+\end{itemize} 
 \subsection{Hyperbolic  \textcolor{VioletRed}{sinh}() \textcolor{VioletRed}{cosh}() \textcolor{VioletRed}{tanh}()}\index{sinh()cosh()tanh()} 
 \label{hyper} 
 \begin{itemize} 
@@ -2698,37 +2705,23 @@ See section matrixstat for details
 \subsection{\textcolor{VioletRed}{sum}() Sums or weighted sums}\index{sum()} 
 \label{sum} 
 See section matrixstat for details 
-\section{Special arithmetic functions} 
-\label{Special} 
-\textbf{Jlp22} has the following arithmetic functions producing \textcolor{teal}{REAL} values.These functions cannot yet have 
-matrix arguments. 
-\subsection{\textcolor{VioletRed}{der}() Derivatives}\index{der()} 
+\section{ Derivatives \textcolor{VioletRed}{der}()}\index{der()} 
 \label{der} 
 Derivates of a function with respect to any of its arguments can be 
 computed using the derivation rules by using \textcolor{VioletRed}{der}() function in the previous line. The funcion must be expressed with 
 one-line statement. The function can call other functions using the standard way 
 to obtain objects from transformations, but these functions cannot 
 contain variables for which derivatives are obtained. 
-Nonlinear regression needs the derivatives with respect to the parameters. 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent Output  \tabto{3cm}    \tabto{5cm}     \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  The \textcolor{VioletRed}{der}() function does not have an explicit output, but 
-\textcolor{VioletRed}{der}() accompanied with the function produces \textcolor{teal}{REAL} ]d[[] variable for each of the 
-argument variables. 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent Args  \tabto{3cm} 1-  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent   ]d[[Argi] variable will get the value of the derivative wiht 
-respect to the argument \textcolor{teal}{Argi}. 
-\end {changemargin} 
-\hrule 
-\vspace{0.2cm} 
+Nonlinear regression needs the derivatives with respect to the parameters.\\ 
+\textcolor{VioletRed}{der}() function does not have an explicit output, but 
+\textcolor{VioletRed}{der}() accompanied with the function produces \textcolor{teal}{REAL} variable for each of the 
+argument variables of \textcolor{VioletRed}{der}(). If the output of the next line is f and \textcolor{VioletRed}{der}() has argument a, then 
+f\textbackslash a will get the value of the derivative of f with respect to a. 
+ 
+\begin{note} 
+Derivative are now utlized in nonliear regression, but they will also be utilized in 
+nonlinear programming. 
+\end{note} 
 \singlespacing 
 \begin{example}[derex]Derivatives with \textcolor{VioletRed}{der}()\\ 
 \label{derex} 
@@ -2736,7 +2729,7 @@ respect to the argument \textcolor{teal}{Argi}.
 \textcolor{VioletRed}{der}(\textcolor{teal}{x})\\ 
 f=(1+\textcolor{teal}{x})*\textcolor{VioletRed}{cos}(\textcolor{teal}{x})\\ 
 /                                                                        \\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{transa}(f\\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,10),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->})\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{transa}(f\textbackslash x),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,10),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->})\\ 
 fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{transa}(f),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,10),\textcolor{blue}{color->}\textcolor{teal}{Cyan},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
@@ -2772,6 +2765,10 @@ fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(\textcolor{teal}{transa}
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
+\section{Special arithmetic functions} 
+\label{Special} 
+\textbf{Jlp22} has the following arithmetic functions producing \textcolor{teal}{REAL} values.These functions cannot yet have 
+matrix arguments. 
 \subsection{\textcolor{VioletRed}{gamma}() Gamma function}\index{gamma()} 
 \label{gamma} 
 Function \textcolor{VioletRed}{gamma}() produses the value of gamma funtion for a positive argument. 
@@ -2963,8 +2960,8 @@ f=\textcolor{VioletRed}{matrix}(1000)\\
 f=\textcolor{VioletRed}{rann}()\\ 
 da=\textcolor{VioletRed}{newdata}(f,\textcolor{blue}{read->}\textcolor{teal}{x})\\ 
 \textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->})\\ 
-cl=\textcolor{VioletRed}{classify}(\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->})\\ 
-fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{histogram->},\textcolor{blue}{classes->}20,\textcolor{blue}{continue->}fcont)\\ 
+cl=\textcolor{VioletRed}{classify}(\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{classes->}20)\\ 
+fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{histogram->},\textcolor{blue}{continue->}fcont)\\ 
 den=\textcolor{VioletRed}{density}(cl);\\ 
 fi=\textcolor{VioletRed}{drawline}(den,\textcolor{blue}{continue->}fcont)\\ 
 \end{example} 
@@ -3499,7 +3496,7 @@ programming functions or structures included)
 \subsection{\textcolor{VioletRed}{txt}() Creates \textcolor{teal}{TXT}}\index{txt()} 
 \label{txt} 
 Works as \textcolor{VioletRed}{text}(). The new \textcolor{teal}{TXT} object is used 
-to implement \textcolor{Red}{;incl} and Gnuplot -figures. 
+to implement \textcolor{Red}{;incl} and \textcolor{teal}{gnuplot} -figures. 
 \section{File handling} 
 \label{file} 
 The following functions can handle files. 
@@ -5466,7 +5463,7 @@ how users' own functions dealing with \textcolor{teal}{DATA} could be developped
 subroutine transdata(iob,io) 
 call j_getdataobject(iob,io) 
 if(j_err)return 
-call j_clearoption(iob,io)  ! subroutine 
+!!call j_clearoption(iob,io)  ! subroutine 
  
 do j_iobs=j_dfrom,j_duntil 
 call j_getobs(j_iobs) 
@@ -5925,6 +5922,13 @@ Variables for which class means are computed. If there are no arguments, code op
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{blue}{xfunc} \tabto{3cm}  N | 1  \tabto{5cm}   CODE  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent   Code option telling how the \textcolor{teal}{x} variable is computed from the data variables. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
@@ -6086,6 +6090,12 @@ deviations, and the last element is the overall standard deviation
 \end{note} 
 \begin{note} 
 Variable \textcolor{teal}{Accepted} gets the number of accepted obsevations. 
+\end{note} 
+\begin{note} 
+Note the difference of \textcolor{blue}{xrange->} in \textcolor{VioletRed}{classify}() and draw-> when \textcolor{blue}{xfunc->} is present. 
+In draw->, \textcolor{teal}{x}-> and \textcolor{blue}{xrange->} refer to the background variable which is stepped in \textcolor{blue}{xrange->} 
+and the \textcolor{teal}{x}-variable in figure is then computed using \textcolor{blue}{xfunc->}. In \textcolor{VioletRed}{classify}() \textcolor{blue}{xrange->} and 
+xfunc refer to the same variable. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{class}() Class of a given value}\index{class()} 
 \label{class} 
@@ -6697,10 +6707,10 @@ see \textcolor{VioletRed}{jlpz}() for how \textcolor{VioletRed}{jlpcoef}() can b
 \end{note} 
 \section{Plotting figures} 
 \label{Plotting} 
-The graphiscs of the current version of \textbf{Jlp22} is produced with Gnuplot, see 
+The graphiscs of the current version of \textbf{Jlp22} is produced with \textcolor{teal}{gnuplot}, see 
 \url{http://www.overleaf.com} 
 \textbf{Jlp22} offers an alternative interface 
-to Gnuplot, and it is quite easy to add more ploting routines later. 
+to \textcolor{teal}{gnuplot}, and it is quite easy to add more ploting routines later. 
 \subsection{\textcolor{VioletRed}{show}(), \textcolor{blue}{show->}  and \textcolor{blue}{continue->}}\index{show()} 
 \label{show} 
 By default, plotting functions plots (shows) FIGs immediately. When the final figure 
@@ -6720,7 +6730,7 @@ It is possible to collect a \textcolor{teal}{FIG} first (e.g. using loops), and
 show then the \textcolor{teal}{FIG} using \textcolor{VioletRed}{show}() function. The argument of \textcolor{VioletRed}{show}() can be 
 either a \textcolor{teal}{FIG} or the name of the .jfig file withing apostrohes. 
 Thus it is possible 
-to edit the file using Gnuplot capabilities. 
+to edit the file using \textcolor{teal}{gnuplot} capabilities. 
  
 \singlespacing 
 \begin{example}[showex]Example of \textcolor{VioletRed}{show}()\\ 
@@ -6734,7 +6744,8 @@ to edit the file using Gnuplot capabilities.
 \textcolor{VioletRed}{show}(fi,\textcolor{blue}{continue->}fcont)\\ 
 \textcolor{teal}{Window}='700,700'\\ 
 fi=\textcolor{VioletRed}{drawline}(1,10,3,1,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{continue->}fcont)\\ 
-\textcolor{VioletRed}{show}(fi,\textcolor{blue}{xrange->}(1.1,11),\textcolor{blue}{continue->}fcont)\,{\color{ForestGreen}!the line is not visible}\\ 
+{\color{ForestGreen}*** The line is not visible}\\ 
+\textcolor{VioletRed}{show}(fi,\textcolor{blue}{xrange->}(1.1,11),\textcolor{blue}{continue->}fcont)\\ 
 dat=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x},\textcolor{teal}{y}),\textcolor{blue}{in->})\\ 
 1,4\\ 
 2,6\\ 
@@ -6742,7 +6753,9 @@ dat=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x},\te
 5,1\\ 
 /  \\ 
 \textcolor{VioletRed}{stat}()\\ 
-fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{blue}{continue->}fcont)\,\,{\color{ForestGreen}! Gnuplot hides points at border}\\ 
+{\color{ForestGreen}*** gnuplot hides points at border}\\ 
+fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}** The ranges needs to be adjusted manually}\\ 
 \textcolor{VioletRed}{show}(fi,\textcolor{blue}{xrange->}(0,6),\textcolor{blue}{yrange->}(0,7),\textcolor{blue}{continue->}fcont)\\ 
  
 \end{example} 
@@ -6755,7 +6768,7 @@ It is possible to change the the font by appending the the font defintion
 between ][ at the end of the label, e.g., \\ 
 \textcolor{blue}{xlabel->}'My-xlabel]Times-Roman,15['\\ 
 where 15 is the size of the font. Available fonts vary from system to system. Web provides further inforamtion, see e.g 
-\url{https://gnuplot.sourceforge.net/docs_4.2/node356.html}\\ 
+\url{https://\textcolor{teal}{gnuplot}.sourceforge.net/docs_4.2/node356.html}\\ 
 According to this page, the following fonts may be available 
 Helvetica 
 Helvetica Bold 
@@ -6803,25 +6816,25 @@ Underscore is put into the labels with three backslash followed with the the und
 Superscript is made with ^ before the character.\\ 
 Character ^ can be put into the text with three backslash followed with ^.\\ 
 Longer subscripts or superscripts can be made using {} around the scripts.\\ 
-For other things see gnuplot documentation. 
+For other things see \textcolor{teal}{gnuplot} documentation. 
 \subsection{\textcolor{blue}{color->}\textcolor{teal}{Black}, \textcolor{teal}{Red}, \textcolor{teal}{Green}, \textcolor{teal}{Blue}, \textcolor{teal}{Cyan} , \textcolor{teal}{Violet}, \textcolor{teal}{Yellow}, \textcolor{teal}{Orange}} 
 \label{color} 
-Gnuplot allows arbitrary color definitions. Currently the above colors can be used. 
+\textcolor{teal}{gnuplot} allows arbitrary color definitions. Currently the above colors can be used. 
 General color definitions are implemented  when requested. 
 \subsection{\textcolor{teal}{Terminal}} 
 \label{terminal} 
-It is possible to change the terminal type used by Gnuplot by giving 
+It is possible to change the terminal type used by \textcolor{teal}{gnuplot} by giving 
 the name of the terminal to the predefine \textcolor{teal}{CHAR} variable \textcolor{teal}{Terminal}. 
 The default is \newline \textcolor{teal}{Terminal}='qt'. 
 \subsection{\textcolor{teal}{Window} size and shape} 
 \label{window} 
-It is possible to change the window size and shape of Gnuplot by 
+It is possible to change the window size and shape of \textcolor{teal}{gnuplot} by 
 using the predefined \textcolor{teal}{CHAR} variable \textcolor{teal}{Window}. 
 The default is \newline 
 \textcolor{teal}{Window}='700,700' 
 \subsection{Legends} 
 \label{legend} 
-\item The default legends by Gnuplot do not look nice, and they are not implemented. 
+\item The default legends by \textcolor{teal}{gnuplot} do not look nice, and they are not implemented. 
 The user can write own legends using \textcolor{blue}{label->} option in \textcolor{VioletRed}{drawline}(). 
 \subsection{\textcolor{VioletRed}{plotyx}() Scatterplot}\index{plotyx()} 
 \label{plotyx} 
@@ -6888,16 +6901,16 @@ contains \textcolor{blue}{continue->} option, \textcolor{VioletRed}{pause}() is 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{xrange}  \tabto{3cm}  N |1-2 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent the range for \textcolor{teal}{x}-axes. Gnuplot generates it automatically, but 
-sometimes the range used by Gnuplot needs to be changed. 
+\noindent the range for \textcolor{teal}{x}-axes. \textcolor{teal}{gnuplot} generates it automatically, but 
+sometimes the range used by \textcolor{teal}{gnuplot} needs to be changed. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{yrange}  \tabto{3cm}  N |1-2 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  the range for \textcolor{teal}{y}-axes. Gnuplot generates it automatically, but 
-sometimes the range used by Gnuplot needs to be changed. 
+\noindent  the range for \textcolor{teal}{y}-axes. \textcolor{teal}{gnuplot} generates it automatically, but 
+sometimes the range used by \textcolor{teal}{gnuplot} needs to be changed. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6936,47 +6949,83 @@ the same code can produce different showing combinations.
 \noindent \textcolor{blue}{mark}  \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL} | \textcolor{teal}{CHAR}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  The mark used in the plot. Numeric values refer to 
-mark types of Gnuplot. The mark can be given also as \textcolor{teal}{CHAR} varible or constant. 
+mark types of \textcolor{teal}{gnuplot}. The mark can be given also as \textcolor{teal}{CHAR} varible or constant. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{func} \tabto{3cm}  N | 1  \tabto{5cm}   Code  \tabto{7cm} 
+\noindent \textcolor{blue}{func} \tabto{3cm}  N | 1  \tabto{5cm}   CODE  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent   Code option telling how the \textcolor{teal}{y}-variable is computed. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{xfunc} \tabto{3cm}  N | 1  \tabto{5cm}   CODE  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent   Code option telling how the \textcolor{teal}{x}-variable is computed. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
 By default \textcolor{VioletRed}{plotyx}() uses the names of the \textcolor{teal}{x}-variable and \textcolor{teal}{y}-variable 
-inte xlabe and ylabel. If the names contain e.g. underscore \_, this would make 
+in the xlabel and ylabel. If the names contain e.g. underscore \_, this would make 
 the next character as under script. To plot the underscore character, 
 use \textcolor{blue}{xlabel->} 	and \textcolor{blue}{ylabel->}, and replace \_ with \\\_. 
+\end{note} 
+\begin{note} 
+There can be both \textcolor{blue}{func->} and \textcolor{blue}{xfunc->} 
+\end{note} 
+\begin{note} 
+If there is \textcolor{blue}{func->} and not xfunc, the \textcolor{teal}{x}-variable must be before \textcolor{blue}{func->} 
+as arguments are always before options. 
+\end{note} 
+\begin{note} 
+The default axes of \textcolor{teal}{gnuplot} may hide points. This must be solved somehow later, 
+but currently the user should define axes ranges explicitly in such cases, especially with plots with few 
+points. 
 \end{note} 
 \singlespacing 
 \begin{example}[plotyxex]plotyx()\\ 
 \label{plotyxex} 
-\noindent xmat=\textcolor{VioletRed}{matrix}(\textcolor{blue}{do->}(0,10,0.001))\\ 
+\noindent {\color{ForestGreen}** plotyx() (line  16019 file c:/jlp22/j.f90)}\\ 
+xmat=\textcolor{VioletRed}{matrix}(\textcolor{blue}{do->}(0,10,0.01))\\ 
 \textcolor{teal}{transa}=\textcolor{VioletRed}{trans}()\\ 
 \textcolor{teal}{y}=2+3*\textcolor{teal}{x}+0.4*\textcolor{teal}{x}*\textcolor{teal}{x}+4*\textcolor{VioletRed}{rann}()\\ 
 /                                                                                                                      \\ 
 datyx=\textcolor{VioletRed}{newdata}(xmat,\textcolor{blue}{read->}\textcolor{teal}{x},\textcolor{blue}{maketrans->}\textcolor{teal}{transa},\textcolor{blue}{extra->}(\textcolor{teal}{Regf},\textcolor{teal}{Resid}))\\ 
 fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}** It is not necessary to put the function into the data}\\ 
 fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{x},\textcolor{blue}{func->}\textcolor{teal}{transa}(\textcolor{teal}{y}),\textcolor{blue}{mark->}3,\textcolor{blue}{color->}Orange,\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}**look other way, rotate axes}\\ 
+fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{x},\textcolor{blue}{xfunc->}\textcolor{teal}{transa}(\textcolor{teal}{y}),\textcolor{blue}{mark->}3,\textcolor{blue}{color->}Orange,\textcolor{blue}{continue->}fcont)\\ 
 reg=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},\textcolor{teal}{x})\\ 
+{\color{ForestGreen}** ranges are stored in order to use them in classify()}\\ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->})\\ 
 figyx=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{blue}{show->}0)\\ 
-fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{Regf},\textcolor{teal}{x},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}**It would be possible to draw the regression function using draw()}\\ 
+figyx=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{Regf},\textcolor{teal}{x},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Blue})\\ 
 fir=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{Resid},\textcolor{teal}{x},\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}** When there are many observations, it is useful to compute class means of residuals}\\ 
+cl=\textcolor{VioletRed}{classify}(\textcolor{teal}{Resid},\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{dx->}1)\\ 
+{\color{ForestGreen}** Red error bars for standard deviations of residuals in calsees}\\ 
+fi22=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{mean->},\textcolor{blue}{continue->},\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{show->}0)\\ 
+{\color{ForestGreen}** Black error bars for standard errors for class means. These can be used to}\\ 
+{\color{ForestGreen}** study how significantly residuals are nonzero.}\\ 
+fi22=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{mean->},\textcolor{blue}{color->}\textcolor{teal}{Black},\textcolor{blue}{width->}2,\textcolor{blue}{append->},\\ 
+\textcolor{blue}{xlabel->}'Xvariable,\,m]Arial,11[',\\ 
+\textcolor{blue}{ylabel->}'Yvariable,\,\%]Arial,11[')\\ 
+\textcolor{Red}{;if}(wait)\textcolor{Red}{;pause}\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
 \begin{note} 
-With data with integer values, the default ranges of Gnuplot may be hide point at 
+With data with integer values, the default ranges of \textcolor{teal}{gnuplot} may be hide point at 
 borderlines. 
 \end{note} 
 \begin{note} 
 \textcolor{teal}{fi}=\textcolor{VioletRed}{plotyx}() produces or updates file \textcolor{teal}{fi}.jfig] which contains 
-Gnuplot commands and file \textcolor{teal}{fi}.jfi0 containg data. 
+\textcolor{teal}{gnuplot} commands and file \textcolor{teal}{fi}.jfi0 containg data. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{draw}() Draws a function}\index{draw()} 
 \label{draw} 
@@ -7041,7 +7090,7 @@ for the \textcolor{teal}{x}-axes, then
 \begin{changemargin}{3cm}{0cm} 
 \noindent  The mark used in the plot. 
 Numeric values refer to. 
-mark types of Gnuplot. The mark can be given also as \textcolor{teal}{CHAR} varible or constant. 
+mark types of \textcolor{teal}{gnuplot}. The mark can be given also as \textcolor{teal}{CHAR} varible or constant. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7081,7 +7130,7 @@ fu=reg2()\\
 figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{transa}(fu),\textcolor{blue}{xrange->},\textcolor{blue}{color->}Orange,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
 continue=0\\ 
 figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{transa}(fu),\textcolor{teal}{x}-\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{color->}Orange,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(u),\textcolor{blue}{xfunc->}\textcolor{VioletRed}{cos}(u),\textcolor{teal}{x}->u,\textcolor{blue}{xrange->}(0,0.5*\textcolor{teal}{Pi}))\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(u),\textcolor{blue}{xfunc->}\textcolor{VioletRed}{cos}(u),\textcolor{teal}{x}->u,\textcolor{blue}{xrange->}(0,0.5*\textcolor{teal}{Pi}),\textcolor{blue}{continue->}fcont)\\ 
 {\color{ForestGreen}**there is some problem with xrange}\\ 
 \textcolor{teal}{Continue}=1\,\,{\color{ForestGreen}!Errors}\\ 
 fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x})\\ 
@@ -7096,13 +7145,19 @@ and \textcolor{teal}{x}-axes variable is computed using \textcolor{blue}{xfunc->
 \end{note} 
 \begin{note} 
 \textcolor{teal}{fi}=\textcolor{VioletRed}{draw}() produces or updates file \textcolor{teal}{fi}.jfig] which contains 
-Gnuplot commands and file \textcolor{teal}{fi}.jfi0 containg data. If scandic characters are needed 
+\textcolor{teal}{gnuplot} commands and file \textcolor{teal}{fi}.jfi0 containg data. If scandic characters are needed 
 for labels, the edit these characters into fi.jfig and use \textcolor{VioletRed}{show}('fi.jfig') 
 \end{note} 
 \begin{note} 
 It is possible to have different range for the \textcolor{teal}{x}-axes range and range for stepping 
 the \textcolor{teal}{x}-variable. This is useful e.g. when the function is not defined for zero, which would 
 be nice lower in limit for the axes. I need to check how this works. 
+\end{note} 
+\begin{note} 
+Note the difference of \textcolor{blue}{xrange->} in \textcolor{VioletRed}{classify}() and draw-> when \textcolor{blue}{xfunc->} is present. 
+In draw->, \textcolor{teal}{x}-> and \textcolor{blue}{xrange->} refer to the background variable which is stepped in \textcolor{blue}{xrange->} 
+and the \textcolor{teal}{x}-variable in figure is then computed using \textcolor{blue}{xfunc->}. In \textcolor{VioletRed}{classify}() \textcolor{blue}{xrange->} and 
+xfunc refer to the same variable. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{drawclass}() Draws results of \textcolor{VioletRed}{classify}()}\index{drawclass()classify()} 
 \label{drawclass} 
@@ -7286,16 +7341,16 @@ contains \textcolor{blue}{continue->} option, \textcolor{VioletRed}{pause}() is 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{xrange}  \tabto{3cm}  N |1-2 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent the range for \textcolor{teal}{x}-axes. Gnuplot generates it automatically, but 
-sometimes the range used by Gnuplot needs to be changed. 
+\noindent the range for \textcolor{teal}{x}-axes. \textcolor{teal}{gnuplot} generates it automatically, but 
+sometimes the range used by \textcolor{teal}{gnuplot} needs to be changed. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{yrange}  \tabto{3cm}  N |1-2 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  the range for \textcolor{teal}{y}-axes. Gnuplot generates it automatically, but 
-sometimes the range used by Gnuplot needs to be changed. 
+\noindent  the range for \textcolor{teal}{y}-axes. \textcolor{teal}{gnuplot} generates it automatically, but 
+sometimes the range used by \textcolor{teal}{gnuplot} needs to be changed. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7356,14 +7411,14 @@ then with \textcolor{blue}{label->} option one can write text to any point.
 \noindent \textcolor{blue}{set}  \tabto{3cm}  N|1  \tabto{5cm}   \textcolor{teal}{REAL}<6  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Set to which lines are put. If the option is not present, 
-then a separate Gnuplot plot command with possible color and width information 
+then a separate \textcolor{teal}{gnuplot} plot command with possible color and width information 
 is generated for each \textcolor{VioletRed}{drawline}() and data points are stored 
 in file \textcolor{teal}{fi}.jfi0, i.e. the same file used by \textcolor{VioletRed}{plotyx}(). 
 If set is given e.g as \textcolor{blue}{set->}3, then it is possible to plot a large number of lines 
 with the same width and color. The data points are stored into file \textcolor{teal}{fi}.jfi3. This is 
 useful e.g. when drawing figures showing transportation of timber to factories 
 for huge number of sample plots. 
-Numeric values refer to Gnuplot mar types. 
+Numeric values refer to \textcolor{teal}{gnuplot} mar types. 
 The mark can be given also as \textcolor{teal}{CHAR} varible or constant. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -7430,7 +7485,7 @@ Plot 3d-figure with indicater contours  with colours.
 \vspace{0.3cm} 
 \noindent Output  \tabto{3cm}  1   \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{fi}=\textcolor{VioletRed}{plot3d}() generates Gnuplot file \textcolor{teal}{fi}.jfig. 
+\noindent  \textcolor{teal}{fi}=\textcolor{VioletRed}{plot3d}() generates \textcolor{teal}{gnuplot} file \textcolor{teal}{fi}.jfig. 
 No figure object is produced. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -7445,7 +7500,7 @@ No figure object is produced.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{sorted}  \tabto{3cm}  N | 1  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent \textcolor{VioletRed}{plot3d}() uses the Gnuplot function splot, which requires that the data 
+\noindent \textcolor{VioletRed}{plot3d}() uses the \textcolor{teal}{gnuplot} function splot, which requires that the data 
 is sorted withe respect to the \textcolor{teal}{x}-variable. \textcolor{blue}{sorted->} indicates that the argument matrix is sorted 
 either natrurally or with \textcolor{VioletRed}{sort}() function. If \textcolor{blue}{sort->} is not presented, plot3 
 sorts the data. 
@@ -7763,8 +7818,8 @@ and objectives.
 schedule weight. 
 \item It would be interesting to see how \textbf{Jlp22} can put to work with Heureka. 
 \item The possibility to run R scripts from \textbf{Jlp22} and \textbf{Jlp22} scripts from R provide new possibilities. 
-\item \textbf{Jlp22} can now be used as an interface to Gnuplot. 
-Google search show how many possibilities Gnuplot provides. 
+\item \textbf{Jlp22} can now be used as an interface to \textcolor{teal}{gnuplot}. 
+Google search show how many possibilities \textcolor{teal}{gnuplot} provides. 
 It is quite straightforward to implement these graphs if it is not currently possible. 
 \item The possibility to generate random numbers from any discrete or continuous distribution provide new 
 possibilities to study the effects of random errors in the optimization. 
@@ -7816,8 +7871,8 @@ DOI =  http://dx.doi.org/10.1080/02827581.2014.886714
  
 \bibitem{gnu} 
 Thomas Williams, Thomas and Kelley, Colin (2022), 
-\emph{Gnuplot 5.5}, 
-url = http://gnuplot.info/docs\_5.5/ 
+\emph{gnuplot 5.5}, 
+url = http://\textcolor{teal}{gnuplot}.info/docs\_5.5/ 
  
  
  

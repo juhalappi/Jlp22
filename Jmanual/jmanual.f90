@@ -402,7 +402,28 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 			write(19,'(a)')'**'//exlabel(ine)(lexlabel(ine)+1:j_lentrim(exlabel(ine)))//' (line '//&
 				exline(ine)//' file '//exfile(ine)(1:lef)//')'
 			do ine2=1,ninexample(ine)
-				write(19,'(a)')ex(ine2,ine)(1:leex(ine2,ine))
+			lee=leex(ine2,ine)
+			ibs=index(ex(ine2,ine)(1:lee),'?/?')
+			if(ibs.le.0)then
+	!				write(19,'(a)')ex(ine2,ine)(1:leex(ine2,ine))
+				write(19,'(a)')ex(ine2,ine)(1:lee)
+				else
+				
+				line(1:lee)=ex(ine2,ine)(1:lee)
+		!		write(6,*)line(1:lee)
+	458			line(ibs:lee-2)='\'//line(ibs+3:lee)
+				lee=lee-2
+				ibs=index(line(1:lee),'?/?')
+			!	write(6,*)line(1:lee)
+			!	write(6,*)'ibs',ibs
+				if(ibs.gt.0)goto 458
+				write(19,'(a)')line(1:lee)
+				
+			!	write(6,*)ex(ine2,ine)(1:leex(ine2,ine))
+			!	write(6,*)line(1:lee),'?'
+		!		read(5,*)iiip
+				
+				endif
 			enddo !ine2=1,ninexample(ine)    337
 			write(19,'(a)')';if(wait);pause'
 			write(19,'(a)')';return'
@@ -523,6 +544,23 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 					doit=.not.verbatim.and.index(sheaders(j,isec)(1:lei),'\url').le.0
 			
 					call final(sheaders(j,isec),lei,line2,le2,doit)
+					
+						ibs=index(line2(1:le2),'?/?')
+						if(ibs.gt.0)then
+				!		write(6,*)'line20:',line2(1:le2)
+						558			line2(ibs:le2+12)='\textbackslash '//line2(ibs+3:le2)
+				le2=le2+12
+				ibs=index(line2(1:le2),'?/?')
+			!	write(6,*)'line2:',line2(1:le2)
+		!		write(6,*)'ibs',ibs
+				if(ibs.gt.0)goto 558
+			
+				
+			!	read(5,*)iiii
+						
+						
+						endif
+						
 					if(line2(1:le2).ne.'\\')write(20,'(a)')line2(1:le2)//' '
 			
 					! if(nsi.gt.0)then
@@ -1701,6 +1739,8 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 	integer,parameter:: loptcolp=len(optcol)+1
 	character(len=*),parameter :: jlpcol='\textbf{Jlp22}'
 	integer,parameter:: ljlpcol=len(jlpcol)
+	character(len=*),parameter :: gnuplotcol='\textcolor{teal}{gnuplot}'
+	integer,parameter:: lgnuplotcol=len(gnuplotcol)
 	character(len=*),parameter :: jcol='\textbf{J}'
 	integer,parameter:: ljcol=len(jcol)
 	character(len=*),parameter :: comcol='\textcolor{green}{'
@@ -1854,12 +1894,38 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 !	 j=j+1
 	goto 100
 	 endif
+	! if(line(j:
+	! if(line(j:j+2).eq.'?/?')then
+			! write(6,*)'line20:',line2(1:le2)
+		 ! line2(le2+1:le2+15)='\textbackslash '
+		 
+		! le2=le2+15
+			
+		! j=j+2
+		! write(6,*)'line2:',line2(1:le2)
+		! write(6,*)'line:',line(1:j)
+		! read(5,*)iiiii
+		
+		! goto 100
+	
+	! endif
+	 
 	if(line(j:j+4).eq.'Jlp22')then
 		line2(le2+1:le2+ljlpcol)=jlpcol
 		!	 write(6,*)'<23>J',j
 		le2=le2+ljlpcol
 		nw=nw+1
 	 j=j+4
+		goto 100
+	endif !if(line(j:j).eq.'J'.and.(j.eq.1.or. line(max(j-1,1):max(j-   1625
+	
+	if(line(j:j+6).eq.'gnuplot')then
+	
+		line2(le2+1:le2+lgnuplotcol)=gnuplotcol
+		!	 write(6,*)'<23>J',j
+		le2=le2+lgnuplotcol
+		nw=nw+1
+	 j=j+6
 		goto 100
 	endif !if(line(j:j).eq.'J'.and.(j.eq.1.or. line(max(j-1,1):max(j-   1625
 	

@@ -639,6 +639,7 @@ module jmod
  
  
 	integer ::j_nopt =0 !!!option  number of used options for current !module
+	logical ::j_isnopt=.false.
 	integer :: j_nopt2=0  !code options
 	integer,parameter ::j_maxopenopt=40
  
@@ -919,7 +920,7 @@ module jmod
  
 	integer ::j_nread
 	logical ::j_eof
-	double precision,dimension(100)::j_tempv
+	double precision,dimension(400)::j_tempv,j_tempv2
 	double precision ::j_dapu,j_dapu2,j_dapu3  !for different purposes
 	character(len=:), pointer :: j_inprp
 	character*3000 j_tempchar
