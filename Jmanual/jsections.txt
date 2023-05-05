@@ -128,6 +128,9 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+!Version 5.5. 2023. Bug for treating extremly large matrices containg more elements than is the largest integer*4.
+!Bugs in rfcode-> and rchead-> in data() function were corrected.
+
 !Version 30.4. 2023. Errors corrected. More examples for graphics. In rewriting of ther software,
 ! options are set for individual function occurences while in previous versions
 ! options were set for each code line. Earlier it was necessary to clear options within each
@@ -302,9 +305,9 @@
  ! an open source software so that I could continue its development after my retirement. 
 ! The leaders of Luke told that it is a good idea to open the software, and this is so important that
   ! Luke cannot let me take care of the publication but the leaders wanted to publish J
- ! themselves. This started a frustrating and humillating process which lasted six 
+ ! themselves. This started a frustrating and humillating hostile overtake process which lasted six 
  !and half years. Eleven
- ! leaders of Luke were involved in the process,
+ ! leaders of Luke were involved,
  ! and none of them was eventually interested to get the software publisehd.
  
  !I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017.
@@ -328,7 +331,7 @@
  ! As I could not accept the interpretation that I had fighted six and half years against wind mills, 
  ! I described in previous versions some details of the process. This kept my bitterness
 ! alive which was unfortunate for my peace of mind and also because
-! I knew well how pathetic old bitter men are. After some recent rounds of argumentation, the research director
+! I knew well how pathetic old bitter men are. After some recent rounds of opposite argumentation, the research director
 ! called me in January 12 2023 and admitted that Luke did not handle the opening and publication properly
 ! and that Luke will improve its procedures. I want now look forward, and I make 
 !only two comments.
@@ -342,7 +345,7 @@
 ! and barely even maintained. The leaders of Luke did not know this because they were not
 ! interested to discuss with me anything related to the state, publication or 
 ! development of the software. I think that an expert organization should
-! always consult best experts and not only those who can express them most persuasively. 
+! always consult best experts. 
 
   
  ! \subsection*{Rewriting the software}

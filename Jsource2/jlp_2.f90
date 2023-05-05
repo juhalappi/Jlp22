@@ -3350,7 +3350,7 @@ subroutine jlpz(iob,io)
 	use jmod, only: j_igetopt
 	use jmod, only: j_mprint
 	use jmod, only: p_iprint
-	use jmod, only: j_getoption_index
+	use jmod, only: j_getoption
 	use jmod, only: j_mproblem
 	use jmod, only: j_ipproblem
 	use jmod, only: j_optarg0
@@ -3564,7 +3564,7 @@ subroutine jlpz(iob,io)
 	! p_p8=.true.
 	! p_n16=6
 	! call cpu_time(time00)
-	! call j_getoption_index(iob,io,j_mproblem,-1,1,j_ipproblem,.true.,noptarg,j_optarg0)
+	! call j_getoption(iob,io,j_mproblem,-1,1,j_ipproblem,.true.,noptarg,j_optarg0)
 	! if(j_err)return
 	! !	p_row0=1   !updated for domainprob
 	! p_ivproblem=j_optarg0(1)
@@ -3630,7 +3630,7 @@ subroutine jlpz(iob,io)
 		p_iprint=1
 	endif !if(ivprint.gt.0)   3086
  
-	call j_getoption_index(iob,io,j_mproblem,-1,1,j_ipproblem,.true.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_mproblem,-1,1,j_ipproblem,.true.,noptarg,j_optarg0)
 	if(j_err)return
 	p_ivfeasible=j_getobject(j_ivout,'%feasible',j_ipreal)
 	p_ivobjective=j_getobject(j_ivout,'%objective',j_ipreal)
@@ -3653,7 +3653,7 @@ subroutine jlpz(iob,io)
 		p_zmatrix=.false.
  
 	else
-		call j_getoption_index(iob,io,j_mzmatrix,-1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
+		call j_getoption(iob,io,j_mzmatrix,-1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
 		if(j_err)then
 			write(6,*)'jlpz() there must be either problem-> or zmatrix->'
 			return
@@ -3663,7 +3663,7 @@ subroutine jlpz(iob,io)
 		p_nrow=j_o(p_ivzmatrix)%i(1)
 		p_nrowtot=p_nrow+1
 		p_ncol=j_o(p_ivzmatrix)%i(2)
-		call j_getoption_index(iob,io,j_mrhs,-1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
+		call j_getoption(iob,io,j_mrhs,-1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
 		if(j_err)return
 		p_ivrhs=j_optarg0(1)
  
@@ -3675,7 +3675,7 @@ subroutine jlpz(iob,io)
 		endif !if(j_o(p_ivrhs)%i(3).ne.p_nrow)   3132
 		p_rhs=>j_o(p_ivrhs)%d(1:p_nrow)
  
-		call j_getoption_index(iob,io,j_mrhs2,1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
+		call j_getoption(iob,io,j_mrhs2,1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
 		if(j_err)return
 		p_ivrhs2=j_optarg0(1)
 		nrhsoptdim1=j_o(p_ivrhs)%i(1);nrhsoptdim2 =j_o(p_ivrhs)%i(2)
@@ -3686,14 +3686,14 @@ subroutine jlpz(iob,io)
 			j_err=.true.;return
 		endif !if(j_o(p_ivrhs2)%i(3).ne.p_nrow)   3144
 		p_rhs2=>j_o(p_ivrhs2)%d(1:p_nrow)
-		call j_getoption_index(iob,io,j_mmax,-1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
+		call j_getoption(iob,io,j_mmax,-1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
 		if(j_err)return
 		if(noptarg.gt.0)then
 			p_maxo =.true.
  
 			p_coefmax=j_1
 		else
-			call j_getoption_index(iob,io,j_mmin,1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
+			call j_getoption(iob,io,j_mmin,1,1,j_ipmatrix,.true.,noptarg,j_optarg0)
 			if(j_err)return
 			if(noptarg.gt.0)then
 				p_maxo =.false.
@@ -4608,7 +4608,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	use jmod, only: j_arg
 	use jmod, only: j_ivout
 	use jmod, only: j_err
-	use jmod, only: j_getoption_index
+	use jmod, only: j_getoption
 	use jmod, only: j_mproblem
 	use jmod, only: j_ipproblem
 	use jmod, only: j_optarg0
@@ -5232,7 +5232,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	call j_startfunction(iob,io,0,narg,j_arg,j_ivout,needsout=.true.)
 	if(j_err)return
 	!	call j_getdataobject(iob,io)
-	call j_getoption_index(iob,io,j_mproblem,1,1,j_ipproblem,.true.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_mproblem,1,1,j_ipproblem,.true.,noptarg,j_optarg0)
 	if(j_err)return
  
 	p_ivproblem=j_optarg0(1)
@@ -5257,7 +5257,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	!j_o(ivproblem)%i(4)=p_ivrow  !text for rows
  
 	!	write(6,*)'jlp1'
-	call j_getoption_index(iob,io,j_mshowdomain,-1,99,j_ipchar,.true.,p_nshow,p_show)
+	call j_getoption(iob,io,j_mshowdomain,-1,99,j_ipchar,.true.,p_nshow,p_show)
 	write(6,*)'jlp2',p_nshow
 	if(j_err)return
 	!	p_row0=1   !updated for domainprob
@@ -5419,7 +5419,7 @@ subroutine jlp(iob,io)   ! %%jlp  !!!!******************************************
 	! j_err=.true. ;return
  
 	! endif !if(ivout.eq.j_ivresult)   3909
-	call j_getoption_index(iob,io,j_mfastdif,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_mfastdif,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
 	if(j_err)return
 	if(noptarg.ge.1)p_fastdif=j_v(j_optarg0(1))
 	!	p_row0=1   !updated for domainprob
@@ -6899,7 +6899,7 @@ subroutine tulostele3()
 end subroutine tulostele3
 
 subroutine commonopt(iob,io)
-	use jmod, only: j_getoption_index
+	use jmod, only: j_getoption
 	use jmod, only: j_mpullout
 	use jmod, only: j_optarg0
 	use jmod, only: j_err
@@ -6959,7 +6959,6 @@ subroutine commonopt(iob,io)
 	use jmod, only: j_0
 	use jmod, only: p_feasible
 	use jmod, only: p_icolold
-	use jmod, only: j_getoption
 	use jmod, only: j_mreport
 	use jmod, only: j_ipchar
 	use jmod, only: p_ivreport
@@ -6998,7 +6997,7 @@ subroutine commonopt(iob,io)
  
  
  
-	call j_getoption_index(iob,io,j_mpullout,-1,1,0,.true.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_mpullout,-1,1,0,.true.,noptarg,j_optarg0)
 	if(j_err)return
 	p_ispullout=noptarg.ge.0
  
@@ -7021,7 +7020,7 @@ subroutine commonopt(iob,io)
 	! else !if(j_linkoption(iob,io,j_mtest).gt.0)then
 	! p_testl=.false.
 	! end if !if(j_linkoption(iob,io,j_mtest).ge.0)   5191
-	call j_getoption_index(iob,io,j_mdebug,-1,2,0,.true.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_mdebug,-1,2,0,.true.,noptarg,j_optarg0)
 	if(noptarg.lt.0)then
 		p_idebug1=-1
 		p_idebug2=-1
@@ -7100,13 +7099,13 @@ subroutine commonopt(iob,io)
 	!		simobug=.true.
 	p_ilrmax=1  !to avoi array bounds exeeded situation in point !assshshdhs
 	nout=0
-	call j_getoption_index(iob,io,j_mslow,-1,100,j_ipreal,.true.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_mslow,-1,100,j_ipreal,.true.,noptarg,j_optarg0)
 	if(j_err)return
 	!	call j_getoption(iob,io,j_mslow,-1,1,j_ipreal,.true.,nslow,slowopt)
 	if(noptarg.ge.0)write(6,*)'slow-> is obsolete, use stop->'
 	!write(6,*)'<56',iob
  
-	call j_getoption_index(iob,io,j_mecho,-1,1,j_ipreal,.false.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_mecho,-1,1,j_ipreal,.false.,noptarg,j_optarg0)
 	if(j_err)return
 	!	call j_getoption(iob,j_mslow,-1,1,j_ipreal,.true.,nslow,slowopt)
 	p_echo=.true.
@@ -7541,7 +7540,7 @@ end subroutine startlist
 ! ! Also xdata and cdata objects are accessed but not used
 ! ! because options are accessed iob and io myst be as arguments
 
-! call j_getoption_index(iob,io,j_mnonlintrans,-1,1,j_iptrans,.true.,noptarg,j_optarg0)
+! call j_getoption(iob,io,j_mnonlintrans,-1,1,j_iptrans,.true.,noptarg,j_optarg0)
 ! if(j_err)return
 
 ! if(noptarg.gt.0)then
@@ -7580,7 +7579,6 @@ subroutine initjlp2(iob,io)
 	use jmod, only: j_err
 	use jmod, only: j_v
 	use jmod, only: p_maxrounds
-	use jmod, only: j_getoption_index
 	use jmod, only: j_mz
 	use jmod, only: j_ipmatrix
 	use jmod, only: p_zopt
@@ -7645,7 +7643,7 @@ subroutine initjlp2(iob,io)
 	endif !if(nargopt.gt.0)   6599
 	!	write(6,*)'djjdp_npvar ',p_npvar
 	write(6,*)'maxrounds ',p_maxrounds
-	call j_getoption_index(iob,io,j_mz,-1,0,j_ipmatrix,.false.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_mz,-1,0,j_ipmatrix,.false.,noptarg,j_optarg0)
 	if(j_err)return
 	p_zopt=noptarg.ge.0
  
@@ -7688,7 +7686,7 @@ subroutine initjlp2(iob,io)
 	! p_fastusesame= value of fastround
 	! faspros= fastpercent
 	! iterxkf=finterval
-	call j_getoption_index(iob,io,j_minteger,-1,0,0,.false.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_minteger,-1,0,0,.false.,noptarg,j_optarg0)
 	if(j_err)return
 	!	call j_getoption(iob,j_mslow,-1,1,j_ipreal,.true.,nslow,slowopt)
 	p_intapp=noptarg.ge.0
@@ -16120,7 +16118,7 @@ subroutine initdata0(iob,io)
 	use jmod, only: p_ivarea
 	use jmod, only: j_object
 	use jmod, only: j_err
-	use jmod, only: j_getoption_index
+	use jmod, only: j_getoption
 	use jmod, only: j_munit
 	use jmod, only: j_ipreal
 	use jmod, only: j_optarg0
@@ -16229,7 +16227,7 @@ subroutine initdata0(iob,io)
 	endif !if(p_ivarea.eq.0)  13713
  
  
-	call j_getoption_index(iob,io,j_munit,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
+	call j_getoption(iob,io,j_munit,-1,1,j_ipreal,.true.,noptarg,j_optarg0)
 	if(j_err)return
 	p_isunit=.false.
  
@@ -16240,7 +16238,7 @@ subroutine initdata0(iob,io)
 	endif !if(noptarg.gt.0)  13728
  
 	!	write(6,*)'here'
-	! call j_getoption_index(iob,io,j_mdata,1,1,j_ipdata,.true.,noptarg,j_optarg0)
+	! call j_getoption(iob,io,j_mdata,1,1,j_ipdata,.true.,noptarg,j_optarg0)
 	! if(j_err)then
 	! write(6,*)'jlp() neeeds data->, problems without schedules are solved with jlpz()'
 	! return

@@ -70,9 +70,9 @@ When my retirement was approaching, I suggested Luke that \textbf{J} would be pu
 an open source software so that I could continue its development after my retirement. 
 The leaders of Luke told that it is a good idea to open the software, and this is so important that 
 Luke cannot let me take care of the publication but the leaders wanted to publish \textbf{J} 
-themselves. This started a frustrating and humillating process which lasted six 
+themselves. This started a frustrating and humillating hostile overtake process which lasted six 
 and half years. Eleven 
-leaders of Luke were involved in the process, 
+leaders of Luke were involved, 
 and none of them was eventually interested to get the software publisehd. 
  
 I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017. 
@@ -96,7 +96,7 @@ between me and Luke in this process.
 As I could not accept the interpretation that I had fighted six and half years against wind mills, 
 I described in previous versions some details of the process. This kept my bitterness 
 alive which was unfortunate for my peace of mind and also because 
-I knew well how pathetic old bitter men are. After some recent rounds of argumentation, the research director 
+I knew well how pathetic old bitter men are. After some recent rounds of opposite argumentation, the research director 
 called me in January 12 2023 and admitted that Luke did not handle the opening and publication properly 
 and that Luke will improve its procedures. I want now look forward, and I make 
 only two comments. 
@@ -110,7 +110,7 @@ The software contained so much dirty code that it could not be developed without
 and barely even maintained. The leaders of Luke did not know this because they were not 
 interested to discuss with me anything related to the state, publication or 
 development of the software. I think that an expert organization should 
-always consult best experts and not only those who can express them most persuasively. 
+always consult best experts. 
  
  
 \subsection*{Rewriting the software} 
@@ -173,6 +173,9 @@ After renaming the software to \textbf{Jlp22}, this chapter starts to describe c
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
+ 
+Version 5.5. 2023. Bug for treating extremly large matrices containg more elements than is the largest integer*4. 
+Bugs in \textcolor{blue}{rfcode->} and rchead-> in \textcolor{VioletRed}{data}() function were corrected. 
  
 Version 30.4. 2023. Errors corrected. More examples for graphics. In rewriting of ther software, 
 options are set for individual function occurences while in previous versions 
@@ -4448,7 +4451,8 @@ for each period. Default values are \textcolor{blue}{par->}(8,93).
 \begin{changemargin}{3cm}{0cm} 
 \noindent  When reading data from a text file, the first lines can contain a header which is 
 printed but othewise ignored. If the number of header lines is geater than one, 
-the argument gives the number of header lines. 
+the argument gives the number of header lines. The default number of header lines, when 
+\textcolor{blue}{rfhead->} is present,	is one. 
  
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -4456,11 +4460,11 @@ the argument gives the number of header lines.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{rfcode}  \tabto{3cm} -1-1 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent The data file can contain also \textbf{Jlp22}-code which is first executed. Note the code can 
+\noindent The data file can contain also \textbf{Jlp22}-code lines which are first executed. Note the code can 
 be like var1,var,\textcolor{teal}{x1}...x5=1,2,3,4,5,6,7, which give the possibility to 
-define variables which describe the \textcolor{blue}{in->} file. 
-If there are both header and code lines, they are read in the same order as 
-the options are. 
+define variables which describe the \textcolor{blue}{in->} file. The argument of \textcolor{blue}{rfcode->} gives the number of code lines. 
+If there is no argument, one code line is read in. 
+ 
  
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -4474,12 +4478,16 @@ the options are.
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
+there are both header and code lines, they are read in the same order as 
+the options are. 
+\end{note} 
+\begin{note} 
 It was earlier possiblöe to create both the upper level data and subdata with the same \textcolor{VioletRed}{data}(). 
 This made the function very complicated. The function is also otherwise greatly 
 simplified. 
 \end{note} 
 \begin{note} 
-Direct acces formats and format for reading Pascal binary files are easy 
+Direct access formats and format for reading Pascal binary files are easy 
 to include. 
 \end{note} 
 \begin{note} 
@@ -4487,7 +4495,7 @@ to include.
 of links to data matrix, etc. see \textcolor{teal}{Data} object object. If \textcolor{teal}{Data} is the output 
 of the function, the function creates the list \textcolor{teal}{Data}\%keep telling the 
 variables in the data and 
-\textcolor{teal}{Data}\%matrix containg the data as a single precision matrix. The number of observations can be obtained by \textcolor{VioletRed}{nobs}(\textcolor{teal}{Data}) or by 
+\textcolor{teal}{Data}\%matrix containg the data as a double precision matrix. The number of observations can be obtained by \textcolor{VioletRed}{nobs}(\textcolor{teal}{Data}) or by 
 \textcolor{VioletRed}{nrows}(\textcolor{teal}{Data}\%matrix) or \textcolor{VioletRed}{nobs}(\textcolor{teal}{Data}). 
 \end{note} 
 \begin{note} 

@@ -920,8 +920,8 @@ module jmod
  
 	integer ::j_nread
 	logical ::j_eof
-	double precision,dimension(400)::j_tempv,j_tempv2
-	double precision ::j_dapu,j_dapu2,j_dapu3  !for different purposes
+	double precision,dimension(400)::j_tempv,j_tempv2,j_tempv3
+	double precision ::j_dapu,j_dapu2,j_dapu3,j_dapu4,j_dapu5  !for different purposes
 	character(len=:), pointer :: j_inprp
 	character*3000 j_tempchar
 	character*3000 j_tempchar7   !used in j_interpret
@@ -1951,52 +1951,13 @@ module jmod
 	! logical p_oto401
  
  
- 
- 
-	!	logical j_xmatinmemory,j_xdatinmemory,j_xdatfromdisk
-	!integer j_xmatekaobs,j_xmattokaobs ! buffer observations
-	!integer j_xdatekaobs,j_xdattokaobs  !
-	!integer j_xmatekabas,j_xmattokabas ! buffer observations
-	!integer j_xdatekabas,j_xdattokabas  !
-	!	integer j_xmatfirst,j_xdatfirst
-	!integer j_xmatlast,j_xdatlast  !last current observation or packed obs in the intitial buffer
-	!integer j_xmatlast2,j_xdatlast2 !last observation in the upper buffer
-	!integer j_xmatlopp,j_xdatlopp ! last possible obervation in the intial buffer
-	!integer j_xmatfirst2,j_xdatfirst2    !j_xmatlopp-1
-	!integer j_xmatibas2,j_xdatibas2
-	!integer j_xmatnu,j_xdatnu
- 
- 
- 
- 
-	!end motule !!module j_globalsmod
- 
-	! !module linkrmod
-	! type linkr
-	! real, dimension(:),pointer::rbuf=>null()
-	! type(linkr),pointer ::pnext=>null()
-	! end type
-	! !end motule
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-	!end motule !!module j_specialmod
- 
- 
-	!!end motule ! j_specialmod
- 
 	!module getmod
 	!<modcom> !<modcom>
-	interface j_getoption
-		subroutine j_getoption_index(iob,io,moption,minarg,maxarg,iptype,needsarg,noptarg,optarg)
+	!interface j_getoption
+ 
+	interface
+ 
+		subroutine j_getoption(iob,io,moption,minarg,maxarg,iptype,needsarg,noptarg,optarg,link)
 			integer, intent(in):: iob
 			integer, intent(in):: io
 			integer, intent(in):: moption
@@ -2007,10 +1968,10 @@ module jmod
 			logical, intent(in):: needsarg    !min0 is reserved
 			integer,intent(out) :: noptarg
 			integer, dimension (:), pointer :: optarg
- 
+			integer, optional,intent(out)::link
 		end subroutine !subroutine j_getoption_index(iob,moption,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg,istart)
  
-		subroutine j_getoption_name(iob,io,option,minarg,maxarg,iptype,needsarg,noptarg,optarg)
+		subroutine j_getoption_name(iob,io,option,minarg,maxarg,iptype,needsarg,noptarg,optarg,link)
 			integer, intent(in):: iob
 			integer, intent(in):: io
 			character*(*) option
@@ -2021,78 +1982,14 @@ module jmod
 			logical, intent(in):: needsarg
 			integer,intent(out) :: noptarg
 			integer, dimension (:), pointer :: optarg
+			integer, optional,intent(out)::link
 			!integer,optional ::istart
 		end subroutine !subroutine j_getoption_name(iob,option,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg,istart)
-	end interface !interface j_getoption
- 
- 
-	! interface j_getoption2
-	! subroutine j_getoption2_index(iob,io,moption,minarg,maxarg,iptype,needsarg,noptarg,optarg)
-	! integer, intent(in):: iob
-	! integer, intent(in):: io
-	! integer, intent(in):: moption
-	! integer, intent(in):: minarg
-	! integer, intent(in)::maxarg
-	! integer, intent(in):: iptype
-	! !	logical, intent(in):: expand
-	! logical, intent(in):: needsarg    !min0 is reserved
-	! integer,intent(out) :: noptarg
-	! integer, dimension (:), allocatable :: optarg
- 
-	! end subroutine !subroutine j_getoption_index(iob,moption,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg,istart)
- 
-	! subroutine j_getoption2_name(iob,io,option,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg)
-	! integer, intent(in):: iob
-	! integer, intent(in):: io
-	! character*(*) option
-	! integer, intent(in):: minarg
-	! integer, intent(in)::maxarg
-	! integer, intent(in):: iptype
-	! logical, intent(in):: expand
-	! logical, intent(in):: needsarg
-	! integer,intent(out) :: noptarg
-	! integer, dimension (:), allocatable :: optarg
-	! !integer,optional ::istart
-	! end subroutine !subroutine j_getoption_name(iob,option,minarg,maxarg,iptype,expand,needsarg,noptarg,optarg,istart)
-	! end interface !interface j_getoption
- 
-	! interface j_linkcodeoption     NOT NEEDED
-	! function j_linkcodeoption_index(moption)
-	! integer, intent(in):: moption
-	! end function
- 
-	! function j_linkcodeoption_name(option)
-	! character*(*), intent(in):: option
-	! end function
-	! end interface
-	! interface j_putmatrix
-	! subroutine j_putmatrix_s(ivmat,irow,icol,val)
-	! integer, intent(in):: ivmat
-	! integer*4,intent(in) ::irow,icol
-	! real, intent(in):: val
-	! end subroutine !subroutine j_putmatrix(ivmat,irow,icol,val)
-	! subroutine j_putmatrix_d(ivmat,irow,icol,val)
-	! integer, intent(in):: ivmat
-	! integer*4,intent(in)::irow,icol
-	! double precision, intent(in):: val
-	! end subroutine !subroutine j_putmatrix(ivmat,irow,icol,val)
-	! end interface
- 
- 
- 
-	! interface j_chr8
-	! character*8 function j_chr8_s(a)
-	! real, intent(in):: a
-	! end function !character*8 function j_chr8(a)
-	! character*4 function j_chr8_d(a)
-	! double precision, intent(in):: a
-	! end function !character*8 function j_chr8(a)
-	! end interface
  
  
  
  
-	interface
+		!interface
 		! subroutine j_freeunit(nu) ! free unit nu
 		! integer,intent(in) ::nu
 		! end subroutine !subroutine j_freeunit (nu)
@@ -2470,7 +2367,7 @@ module jmod
  
 		!20150812(arg1<->arg2) oli: 		subroutine defdata(name,iv,ivmat,ivkeep,ivcases,ivprolog,ivmaketrans,ivtrans,&
  
-		integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point)
+		integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point,temp)
 			integer, intent(in):: iv,itype
 			integer,intent(in) ::ndim1,ndim2
 			character*(*), intent(in):: name
@@ -2478,6 +2375,7 @@ module jmod
 			logical,intent(in),optional:: nod
 			integer,intent(in),optional::rowtot
 			double precision,dimension(:),optional,intent(out),pointer::point
+			double precision,dimension(:),optional,allocatable::temp
 		end function !subroutine j_defmatrix(iv,na
  
 		subroutine j_defmatdim(ivmat,nrows,ncols)
@@ -2491,7 +2389,7 @@ module jmod
  
  
  
-		integer	function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point)
+		integer	function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point,temp)
 			integer, intent(in):: iv,itype
 			integer*8,intent(in) ::ndim1,ndim2
 			character*(*), intent(in):: name
@@ -2499,6 +2397,7 @@ module jmod
 			logical,intent(in),optional:: nod
 			integer*8,intent(in),optional ::rowtot
 			double precision,dimension(:),optional,intent(out),pointer::point
+			double precision,dimension(:),optional,allocatable::temp
 		end function !subroutine j_defmatrix(iv,name,ndim1,ndim2,itype,expand,ivout)
  
 		subroutine j_putmatrix(ivmat,irow,icol,val)
@@ -3876,7 +3775,8 @@ module jmod
  
 		integer function j_linkoption(iob,io,mopt,clear,link)
 			integer,intent(in)::iob,io,mopt
-			logical,optional,intent(in)::clear,link
+			logical,optional,intent(in)::clear
+			integer,optional,intent(out)::link
 		end function
  
 		integer function j_intloc(ivec,lenvec,i)
