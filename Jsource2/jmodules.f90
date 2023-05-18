@@ -947,8 +947,8 @@ module jmod
 	integer::j_gplelabel
 	integer::j_gppoints
 	integer ::j_gpaxes
-	integer,parameter::j_gpplots=40   ! must be half
-	integer,parameter::j_gplines=500
+	integer,parameter::j_gpplots=200   ! must be half
+	integer,parameter::j_gplines=800
 	integer::j_gpix,j_gpiy
 	integer::j_gpletitle,j_gplexlabel,j_gpleylabel
 	character*7 ::j_gppt=' pt   '

@@ -8,9 +8,9 @@ module o1_mod
 	integer, parameter :: o1_nfunctions = 11
 	character(len=j_lenfunction) :: o1_functions(o1_nfunctions)
 	data o1_functions/&
-		'melareport1','include1', &
-		'pmin1', 'Pmax1','rpmin1','rpmax1','smin1', 'smax', 'rsmin1', 'rsmax1', &
-		'koe1' &
+		'melareport1_1','include1_1', &
+		'pmin1_1', 'Pmax1_1','rpmin1_1','rpmax1_1','smin1_1', 'smax_1', 'rsmin1_1', 'rsmax1_1', &
+		'koe1_1' &
 		/
 	integer, dimension(o1_nfunctions) :: o1_minarg = (/ &
 		1, 1, &
@@ -25,7 +25,7 @@ module o1_mod
  
 	integer,parameter::o1_nnamedfuncarg=1
 	character(len=j_lenfunction), dimension(o1_nnamedfuncarg) :: o1_namedfuncarg
-	data o1_namedfuncarg /'koe1'/
+	data o1_namedfuncarg /'koe1_1'/
 	! logical, dimension(o1_nfunctions) :: o1_namedfuncarg = (/ &
 	! .false.,.false., &
 	! .false.,.false.,.false.,.false.,.false.,.false.,.false.,.false., &

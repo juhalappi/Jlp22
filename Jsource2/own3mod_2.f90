@@ -11,9 +11,9 @@ module o3_mod
 	integer, parameter :: o3_nfunctions = 11
 	character(len=j_lenfunction) :: o3_functions(o3_nfunctions)
 	data o3_functions/&
-		'melareport3','include3', &
-		'pmin3', 'Pmax3','rpmin3','rpmax3','smin3', 'smax3', 'rsmin3', 'rsmax3', &
-		'koe3' &
+		'melareport_3','include_3', &
+		'pmin_3', 'Pmax_3','rpmin_3','rpmax_3','smin_3', 'smax_3', 'rsmin_3', 'rsmax_3', &
+		'koe_3' &
 		/
 	integer, dimension(o3_nfunctions) :: o3_minarg = (/ &
 		1, 1, &
@@ -28,7 +28,7 @@ module o3_mod
  
 	integer,parameter::o3_nnamedfuncarg=1
 	character(len=j_lenfunction), dimension(o3_nnamedfuncarg) :: o3_namedfuncarg
-	data o3_namedfuncarg /'koe3'/
+	data o3_namedfuncarg /'koe_3'/
 	! logical, dimension(o3_nfunctions) :: o3_namedfuncarg = (/ &
 	! .false.,.false., &
 	! .false.,.false.,.false.,.false.,.false.,.false.,.false.,.false., &

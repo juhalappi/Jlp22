@@ -11,7 +11,7 @@
 !Inpuf ;elseif
 !Inpuf ;else
 !Inpuf ;list
-
+!Inpuf ;now
 
 !Macro seecom
 !See \vref{comoptions} for more details. 
@@ -123,10 +123,15 @@
 
 !Section changes Recent changes
 
+
+
 !After renaming the software to Jlp22, this chapter starts to describe changes in new versions.
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
+
+! Version   . New input programming function ;now() added. This is useful 
+!  within trans() or within problem() when ;do() is present.
 
 !Version 5.5. 2023. Bug for treating extremly large matrices containg more elements than is the largest integer*4.
 !Bugs in rfcode-> and rchead-> in data() function were corrected.
@@ -526,6 +531,8 @@
 ! ;elseif();then \\
 ! ;else \\
 ! ;endif
+!\item ;now() Executes immediamently the code within parenthesis. This is useful 
+!  within trans() or within problem() when ;do() is present. 
 !\end{itemize}
 
 ! Jlp22 functions can have arguments and options. Options are used to trasnmit optional arguments
@@ -1390,6 +1397,18 @@
 !delete_f('shortex.txt')
 !te=0 !delete also text object te
 !endex
+!endsection
+
+!Section now ;now() doing something immedidately
+!;now() Executes immediamently the code within parenthesis. This is useful 
+!  within trans() or within problem() when ;do() is present.
+!endheader
+!Ex nowex
+tr=trans()
+;do(i,1,3)
+;enddo
+
+!endex 
 !endsection
 
 !Section inpuprog Input programming

@@ -169,10 +169,15 @@ Juha Lappi
 \section{Recent changes} 
 \label{changes} 
  
+ 
+ 
 After renaming the software to \textbf{Jlp22}, this chapter starts to describe changes in new versions. 
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
+ 
+Version   . New input programming function \textcolor{Red}{;now}() added. This is useful 
+within \textcolor{VioletRed}{trans}() or within \textcolor{VioletRed}{problem}() when \textcolor{Red}{;do}() is present. 
  
 Version 5.5. 2023. Bug for treating extremly large matrices containg more elements than is the largest integer*4. 
 Bugs in \textcolor{blue}{rfcode->} and rchead-> in \textcolor{VioletRed}{data}() function were corrected. 
@@ -5647,12 +5652,26 @@ Statistics are not computed for other variables in the data.
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
-1: \textcolor{VioletRed}{stat}() function prints min, max, means, sd and sd of the mean computed 
+\textcolor{VioletRed}{stat}() function prints min, max, means, sd and sd of the mean computed 
 as sd/\textcolor{VioletRed}{sqrt}(number of observations) 
 \end{note} 
 \begin{note} 
-2: If the value of a variable is greater than or equal to 1.7e19, 
+If the value of a variable is greater than or equal to 1.7e19, 
 then that observation is rejected when computing statistics for that variable. 
+\end{note} 
+\begin{note} 
+When making several analyses with several transformations, it is often convenient 
+to define a basic \textcolor{teal}{TRANS} object trans0, and define for each special analyses 
+a \textcolor{teal}{TRANS} object transcur, where the first line is \textcolor{VioletRed}{call}(trans0) and which is used as 
+the argument in \textcolor{blue}{trans->}. It is easier to handle 
+short \textcolor{teal}{TRANS} objects. 
+\end{note} 
+\begin{note} 
+If a \textbf{Jlp22} function used in tranformation generates \textcolor{teal}{MATRIX} objects, then these vectors 
+can be made ordinary data variables using lists. Defing that veclist=\textcolor{VioletRed}{list}(e1...e6), 
+then a vector Evec defined inside a \textbf{Jlp22} function as a row or column vector can be 
+accessed as data variables using veclist=Evec. It is possible to acces also matrices by 
+remembering that matrices are stored in row order. 
 \end{note} 
 \singlespacing 
 \begin{example}[statex]stat() computes minimums, maximums, means and std deviatons\\ 

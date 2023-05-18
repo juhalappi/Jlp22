@@ -1,4 +1,4 @@
- ** this file contains           70  examples of using Jlp22
+ ** this file contains           71  examples of using Jlp22
 ** launch Jlp22 in the command promt in the folder of this file 
 ** using: Jlp22 jexamples.inc
 ** if you want to pause after each example answer to first question with 1
@@ -9,6 +9,7 @@ exfile=thisfile()
 current=';incl(exfile,from->current)'
 inpuparag=';incl(exfile,from->inpuparag)'
 shortex=';incl(exfile,from->shortex)'
+nowex=';incl(exfile,from->nowex)'
 dotsex=';incl(exfile,from->dotsex)'
 inpulistelem=';incl(exfile,from->inpulistelem)'
 sublistex=';incl(exfile,from->sublistex)'
@@ -95,7 +96,7 @@ fcont=.not.fpause
  
  
 ;inpuparag:  
-** Example of inputparagraph (line   1326 file jsections.txt)
+** Example of inputparagraph (line   1333 file jsections.txt)
 transa=trans()
 a=log(b)
 write($,'(~sinlog is=~,f4.0)',sin(a))
@@ -109,7 +110,7 @@ b=matrix(2,3,in->)
  
  
 ;shortex:  
-** Example of using shortcuts and include files (line   1368 file jsections.txt)
+** Example of using shortcuts and include files (line   1375 file jsections.txt)
 short1='sin(Pi)+cos(Pi);'
 short1
 te=text()
@@ -137,8 +138,14 @@ te=0 !delete also text object te
 ;return
  
  
+;nowex:  
+** (line   1406 file jsections.txt)
+;if(wait);pause
+;return
+ 
+ 
 ;dotsex:  
-** Example of dots construct (line   1503 file jsections.txt)
+** Example of dots construct (line   1522 file jsections.txt)
 dat=data(read->(x4...x7),in->)
 1,2,3,4
 11,12,13,14
@@ -157,7 +164,7 @@ Continue=0
  
  
 ;inpulistelem:  
-** Getting name from LIST (line   1524 file jsections.txt)
+** Getting name from LIST (line   1543 file jsections.txt)
 lis=list(c2...c5);
 @lis=2...5;
 @lis(2)=6;
@@ -179,7 +186,7 @@ lis3=list(y1,y2);
  
  
 ;sublistex:  
-** taking sublist (line   1547 file jsections.txt)
+** taking sublist (line   1566 file jsections.txt)
 lista=list(x1...x5);
 lista2%5=lista(2,-5);
 ;if(wait);pause
@@ -187,7 +194,7 @@ lista2%5=lista(2,-5);
  
  
 ;expandex:  
-** Example of expanding lists with @ (line   1567 file jsections.txt)
+** Example of expanding lists with @ (line   1586 file jsections.txt)
 list0=list(site,altitude)
 list1=list(
 ;do(i,1,3)
@@ -204,7 +211,7 @@ stat()
  
  
 ;subobjex:  
-** Seeing subobjects (line   1591 file jsections.txt)
+** Seeing subobjects (line   1610 file jsections.txt)
 dataa=data(in->,read->(x,y))
 1,2
 3,4
@@ -215,7 +222,7 @@ dataa%?; !prints subobjects
  
  
 ;subobjex2:  
-** (line   1605 file jsections.txt)
+** (line   1624 file jsections.txt)
 dataa=data(in->,read->(x,y))
 1,2
 3,4
@@ -233,7 +240,7 @@ rel=;list(x?a);
  
  
 ;subobjex2:  
-** (line   1626 file jsections.txt)
+** (line   1645 file jsections.txt)
 dataa=data(in->,read->(x,y))
 1,2
 3,4
@@ -246,7 +253,7 @@ lista=;list(dataa%?);
  
  
 ;jfuncex:  
-** Examples of Jlp22-functions (line   1908 file jsections.txt)
+** Examples of Jlp22-functions (line   1927 file jsections.txt)
 b,c=2,3;
 a = sin(cos(c)+b); ! Usual arithmetic functions can have numeric values as arguments
 c=matrix(2,2,in->);
@@ -272,7 +279,7 @@ c = inverse(h+t(g)); ! The argument can be intermediate result from matrix compu
  
  
 ;codeoptex:  
-** Codeoptions (line   1941 file jsections.txt)
+** Codeoptions (line   1960 file jsections.txt)
 dat=data(read->(D,H),in->)
 3,2
 2,4
@@ -286,7 +293,7 @@ continue->fcont,xlabel->'x',width->2) ! the func-> option transmits the function
  
  
 ;comoptex:  
-** data1 (line   2006 file jsections.txt)
+** data1 (line   2025 file jsections.txt)
 dat=data(read->(x,y),in->)
 1,2
 3,4
@@ -302,7 +309,7 @@ stat(trans->transa)
  
  
 ;recursion:  
-** Recursion produces system crash. (line   2047 file jsections.txt)
+** Recursion produces system crash. (line   2066 file jsections.txt)
 transa=trans() !level will be initialized as zero
 level;
 level=level+1
@@ -316,7 +323,7 @@ Continue=0
  
  
 ;transfunc:  
-** Transformation as a function (line   2070 file jsections.txt)
+** Transformation as a function (line   2089 file jsections.txt)
 delete_o(a,c)
 transa=trans()
 a=8;
@@ -333,7 +340,7 @@ a=c+transb(a)+c+transa(a);
  
  
 ;matrixop:  
-** Matrix operations (line   2290 file jsections.txt)
+** Matrix operations (line   2309 file jsections.txt)
 A=matrix(3,4,do->);
 A+2;
 A-1;
@@ -363,7 +370,7 @@ Continue=0
  
  
 ;doex:  
-** do-loop (line   2365 file jsections.txt)
+** do-loop (line   2384 file jsections.txt)
 !!begin
 transa=trans()
 do(i,1,5)
@@ -380,7 +387,7 @@ call(transa)
  
  
 ;retex:  
-** example of return and goto () (line   2386 file jsections.txt)
+** example of return and goto () (line   2405 file jsections.txt)
 transa=trans()
 ad1:r=ran();
 if(r.lt.0.2)return
@@ -392,7 +399,7 @@ call(transa)
  
  
 ;errexitex:  
-** errexit() returns as if error had occured (line   2406 file jsections.txt)
+** errexit() returns as if error had occured (line   2425 file jsections.txt)
 transa=trans()
 if(a.eq.0)errexit('illegal value ',a)
 s=3/a; ! division with zero is tested automatically
@@ -409,7 +416,7 @@ Continue=0
  
  
 ;gotoex:  
-** Example of unconditional goto (line   2445 file jsections.txt)
+** Example of unconditional goto (line   2464 file jsections.txt)
 transa=trans()
 i=0
 if(i.eq.0)goto(koe)
@@ -423,7 +430,7 @@ out;
  
  
 ;congotoex:  
-** (line   2460 file jsections.txt)
+** (line   2479 file jsections.txt)
 transa=trans()
 out=999
 goto(ad1)
@@ -455,7 +462,7 @@ Continue=0
  
  
 ;assignex:  
-** Examples of assignments (line   2525 file jsections.txt)
+** Examples of assignments (line   2544 file jsections.txt)
 a=matrix(2,3);
 a=4;
 a=rann();
@@ -470,7 +477,7 @@ Continue=0
  
  
 ;showex:  
-** Example of show() (line   2600 file jsections.txt)
+** Example of show() (line   2619 file jsections.txt)
 fi=draw(func->sqrt2(x),x->x,xrange->(-50,50),continue->fcont)
 show(fi,xrange->(-60,60),xlabel->'NEWX]Times Roman,16[',ylabel->'NEWY]Courier,10[',continue->fcont)
 show(fi,axes->10,continue->fcont)
@@ -498,7 +505,7 @@ show(fi,xrange->(0,6),yrange->(0,7),continue->fcont)
  
  
 ;errorex:  
-** (line   3261 file jsections.txt)
+** (line   3280 file jsections.txt)
 round=5
 write('inca.txt',$,'**we are in inca.txt')
 write('inca.txt',$,'round;')
@@ -529,7 +536,7 @@ delete_f('inca.txt','incb.txt')
  
  
 ;inpuincl:  
-** Example of ;incl() (line  11846 file c:/jlp22/jutilities.f90)
+** Example of ;incl() (line  11856 file c:/jlp22/jutilities.f90)
 file=text()
 ** File start
 i=1;
@@ -563,7 +570,7 @@ close('file.txt')
  
  
 ;inpugotoex:  
-** Example of ;goto() and ;incl() (line  11887 file c:/jlp22/jutilities.f90)
+** Example of ;goto() and ;incl() (line  11897 file c:/jlp22/jutilities.f90)
 gototxt=text()
 !! Start jumping
 ;goto(ad2)
@@ -587,7 +594,7 @@ delete_f('goto.txt')
  
  
 ;inpudoex:  
-** Examples of ;do() (line  12459 file c:/jlp22/jutilities.f90)
+** Examples of ;do() (line  12469 file c:/jlp22/jutilities.f90)
 ;do(i,1,2)
 x"i"="i"*10
 print('Greetings from iteration "i"')
@@ -603,7 +610,7 @@ x4,y4);
  
  
 ;inpusumex:  
-** Example of ;sum() (line  12717 file c:/jlp22/jutilities.f90)
+** Example of ;sum() (line  12727 file c:/jlp22/jutilities.f90)
 prob=problem()
 ;sum(i,1,5)(a"i"*x"i")==max
 ;sum(i,1,3)(a"i"*x"i")<8
@@ -1410,7 +1417,7 @@ delete_f('data.bin')
  
  
 ;statex:  
-** stat() computes minimums, maximums, means and std deviatons (line  21780 file c:/jlp22/j.f90)
+** stat() computes minimums, maximums, means and std deviatons (line  21792 file c:/jlp22/j.f90)
 data1=data(in->,read->(x1,x2,x3))
 1,2,3
 4,6,8
@@ -1428,7 +1435,7 @@ stat(x1,weight->(x2**1.2))
  
  
 ;covex:  
-** Example of covariance (line  22208 file c:/jlp22/j.f90)
+** Example of covariance (line  22220 file c:/jlp22/j.f90)
 X1=matrix(200)
 X1=rann()
 ;do(i,2,6)
@@ -1447,7 +1454,7 @@ co=cov(dat%keep);
  
  
 ;matrixex:  
-** Example of generatig matrices (line  22432 file c:/jlp22/j.f90)
+** Example of generatig matrices (line  22444 file c:/jlp22/j.f90)
 A=matrix(3,values->(sin(2),sqrt(3),6));
 ** to be updated later
 ;if(wait);pause
@@ -1455,7 +1462,7 @@ A=matrix(3,values->(sin(2),sqrt(3),6));
  
  
 ;transex:  
-** Demonstrates also error handling (line  23246 file c:/jlp22/j.f90)
+** Demonstrates also error handling (line  23258 file c:/jlp22/j.f90)
 transa=trans()
 $x3=x1+3
 x2=2/$x3;
@@ -1482,7 +1489,7 @@ call(transc)
  
  
 ;listex:  
-** (line  23565 file c:/jlp22/j.f90)
+** (line  23577 file c:/jlp22/j.f90)
 li=list(x1...x5);
 li=list(x1...x5,merge->);
 li=list(x1...x5,x2...x4,merge->);
@@ -1504,7 +1511,7 @@ sub=list(@sub,@sub#"i")
  
  
 ;Rex:  
-** Example of Rscript (line  25212 file c:/jlp22/j.f90)
+** Example of Rscript (line  25225 file c:/jlp22/j.f90)
 rscript=text()
 # A simple R-script that generates a small data to file mydat.txt
 wd<-"C:/jlp22/jmanual"
@@ -1523,7 +1530,7 @@ delete_f('mydat.txt','miniscript.r')
  
  
 ;diffex:  
-** (line  25985 file c:/jlp22/j.f90)
+** (line  25998 file c:/jlp22/j.f90)
 lis=list(x1...x3,z3..z5);
 lis2=list(x1,z5);
 liso=difference(lis,lis2);
@@ -1537,7 +1544,7 @@ Continue=0
  
  
 ;derex:  
-** Derivatives with der() (line  26335 file c:/jlp22/j.f90)
+** Derivatives with der() (line  26348 file c:/jlp22/j.f90)
 transa=trans()
 der(x)
 f=(1+x)*cos(x)
@@ -1549,7 +1556,7 @@ fi=draw(func->transa(f),x->x,xrange->(0,10),color->Cyan,append->,continue->fcont
  
  
 ;derex2:  
-** (line  26343 file c:/jlp22/j.f90)
+** (line  26356 file c:/jlp22/j.f90)
 X=matrix(do->(0,1000,10))
 e=matrix(nrows(X))
 e=rann(0,2);
@@ -1576,7 +1583,7 @@ fi=draw(func->(transa(f)),x->I,xrange->(0,1000),color->Violet,append->,continue-
  
  
 ;densityex:  
-** Example of distributions (line  27208 file c:/jlp22/j.f90)
+** Example of distributions (line  27221 file c:/jlp22/j.f90)
 ber=density(func->(1-p+(2*p-1)*$),xrange->(0,1),discrete->); Bernoully
 bim=matrix(100)
 bim=random(ber)
@@ -1829,6 +1836,7 @@ f=jlp(problem->fprob,data->xdata,utiltrans->util,knn->2)
 ;ALL:
 inpuparag
 shortex
+nowex
 dotsex
 inpulistelem
 sublistex

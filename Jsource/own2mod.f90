@@ -9,8 +9,8 @@ module o2_mod
  
 	character(len=j_lenfunction) :: o2_functions(o2_nfunctions)
 	data o2_functions/&
-		'example2','own22', &
-		'pmin2', 'Pmax2' &
+		'example2_2','own22_2', &
+		'pmin2_2', 'Pmax2_2' &
 		/
 	integer, dimension(o2_nfunctions) :: o2_minarg = (/ &
 		0, 1, &
@@ -23,7 +23,7 @@ module o2_mod
  
 	integer,parameter::o2_nnamedfuncarg=1
 	character(len=j_lenfunction), dimension(o2_nnamedfuncarg) :: o2_namedfuncarg
-	data o2_namedfuncarg /'Pmax2'/
+	data o2_namedfuncarg /'Pmax2_2'/
 	! logical, dimension(o2_nfunctions) :: o2_namedfuncarg = (/ &
 	! .false.,.false., &
 	! .false.,.false.,.false.,.false.,.false.,.false.,.false.,.false., &
