@@ -301,7 +301,7 @@ module jmod
 		0,0,0,1,2,1,1,&
 		! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
  
-		1,4,4,&
+		2,4,4,&
 		! 'interpolate','plane','bilin', & !3
  
 		0,1,2,1,2,1,1,2,2,&
@@ -345,7 +345,7 @@ module jmod
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
-		6*0,1,0/
+		1,5*0,1,0/
 	! 'value','properties','cpu','seconds','where','batch','system','info'/ !8
  
  
@@ -383,7 +383,7 @@ module jmod
 		0,2,1,2,2,2,1,&
 		! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
  
-		1,4,4,&
+		7,4,4,&
 		! 'interpolate','plane','bilin', & !3
  
 		99999,9999,2,2,2,1,99999,2,2,&
@@ -426,7 +426,7 @@ module jmod
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
-		6*0,1,9999/
+		99999,5*0,1,9999/
 	! 'value','properties','cpu','seconds','where','batch','system','info'/ !8
  
  
@@ -598,7 +598,7 @@ module jmod
 	integer :: 	j_leno2_title !=index(o2_title,' ')
 	integer 	j_leno3_title ! =index(o3_title,' ')
  
-	!	integer,parameter :: j_maxjlpvarx=800 !!!jlp max number of x-variables in jlpproblem
+	!	integer,parameter :: j_maxjlpxvar=800 !!!jlp max number of x-variables in jlpproblem
  
 	!global variables related to data function	%%data
 	!these can be used when reading data with own format
@@ -873,7 +873,8 @@ module jmod
 	integer,parameter::j_ivobs=77
 	integer,parameter::j_ivblack=78
 	integer,parameter::j_ivtempout=79
-	integer,parameter::j_predefined=79
+	integer,parameter::j_ivprintpause=80
+	integer,parameter::j_predefined=80
  
 	integer ::p_fastmakes
  
@@ -1170,7 +1171,8 @@ module jmod
 	logical :: j_printdo=.false.
 	logical,dimension (0:j_mxniifs)::j_bypa=.false.
 	logical,dimension (0:j_mxniifs)::j_ifdone=.false.
-	integer ,dimension (0:j_mxniifs) :: j_niifsindo=0 ! how many loops are open for each ;if
+	integer ,dimension (1:j_mxniifs) :: j_niifsindo=0 ! how many loops are open for each ;if
+	integer ,dimension (1:j_mxniifs) :: j_ifstart=0
 	integer ::j_niifs=0
 	integer j_linp,j_ialb,j_linp7,j_linpold,j_linpr2,j_linpr
  
@@ -1199,6 +1201,8 @@ module jmod
 	! jlp *******************************************************************************
 	!	module jlpmod
 	logical p_isunit
+	integer p_areakeep
+	!logical p_ipart
 	real p_time0,p_time00
 	!integer ::p_dpivot
 	type p_rowxkfkey_type
@@ -1309,13 +1313,13 @@ module jmod
 	double precision, dimension(:),pointer::p_vx   !,p_vxpack
 	real, dimension(:),pointer:: p_vxpack
 	integer p_ivvx
-	!	double precision, dimension(j_maxjlpvarx):: p_vxpack2    !fixed
+	!	double precision, dimension(j_maxjlpxvar):: p_vxpack2    !fixed
 	integer, dimension(:),pointer::p_ixpack
  
 	integer p_ivns,p_ivkeys,p_ivibaunit,p_ivvxpack,p_ivixpack
 	integer p_ivnsvar
  
-	!	integer, dimension(j_maxjlpvarx)::p_ixpack2
+	!	integer, dimension(j_maxjlpxvar)::p_ixpack2
 	! ix(irow)= 0, no x in the row
 	integer, dimension(:),pointer::p_ix,p_rowcurx
 	integer, dimension(:),pointer::p_rowx
@@ -1331,15 +1335,15 @@ module jmod
  
  
 	logical, dimension(:),pointer::p_ixcur,p_ixcur0
-	integer, dimension(:),pointer::p_varx !x-varaibles in the problem
-	integer, dimension(:),pointer::p_varxarea ! the list of areavars
-	integer, dimension(:),allocatable::p_varxareatot ! the list of areavars including all
+	integer, dimension(:),pointer::p_xvar !x-varaibles in the problem
+	integer, dimension(:),pointer::p_xvararea ! the list of areavars
+	!	integer, dimension(:),allocatable::p_xvarareatot ! the list of areavars including all
 	!	integer, dimension(:),pointer::p_cvarl
 	!	double precision, dimension(:),allocatable::p_cvar
 	!	integer p_ivcvar
  
-	integer p_ivix,p_ivrowcurx,p_ivrowx,p_ivixcur,p_ivixcur0,p_ivvarx,p_ivvarxarea
-	integer p_ivvarxareatot   !,p_ivcvarl,p_ivcvar
+	integer p_ivix,p_ivrowcurx,p_ivrowx,p_ivixcur,p_ivixcur0,p_ivxvar,p_ivxvararea
+	!	integer p_ivxvarareatot   !,p_ivcvarl,p_ivcvar
 	integer ::p_nimp,p_nimp2
 	!****** definition:
 	! nonexpanded problem: rows are as in the original problem definition,
@@ -1476,14 +1480,14 @@ module jmod
 	!logical p_yes
  
  
-	!	varx(-1:100) !xvar-variables of the problem
+	!	xvar(-1:100) !xvar-variables of the problem
 	!	cvarl(-1:50) !cvar variables of the problem
 	!	zvarsl(-1:100) !zvars of the problem , nyt z-muuttujat ovat nimetönnä
 	!	zcoefl(-1:1),zcoef0l(-1:1)	! variables storing table for coefficients
 	! of zvariables and table for cofficient in the objective row
 	!	rhsl(-1:1),rhs2l(-1:1) ! variables for tables of lower and upper
 	! bounds in RHS
-	!	ix(0:la)		! indexes for varx for each row (0 =objective row)
+	!	ix(0:la)		! indexes for xvar for each row (0 =objective row)
  
 	! approximation
 	real, dimension(:),pointer::p_shpx  ! shadow prices of x-variables in each domain
@@ -1550,7 +1554,7 @@ module jmod
 	integer ,dimension(:), pointer::p_coefplus=>null()
 	integer  ,dimension(:), pointer::p_rowofterm=>null()
 	integer  ,dimension(:), pointer::p_nterminrow=>null()  !number of terms in row
-	integer, dimension(:), pointer ::p_irowvarx
+	integer, dimension(:), pointer ::p_irowxvar
 	double precision  ,dimension(:), pointer::p_coef=>null()
 	integer p_ivcoef
 	double precision    ,dimension(:), pointer:: p_xcoef
@@ -1559,7 +1563,7 @@ module jmod
 	integer ::p_mxlws
 	double precision    ,dimension(:), pointer::p_coefz
  
-	integer p_ivnvars,p_ivtermvar,p_ivxtermvar,p_ivcoefvars,p_ivcoefplus,p_ivrowofterm,p_ivnterminrow,p_ivirowvarx,p_ivxcoef
+	integer p_ivnvars,p_ivtermvar,p_ivxtermvar,p_ivcoefvars,p_ivcoefplus,p_ivrowofterm,p_ivnterminrow,p_ivirowxvar,p_ivxcoef
 	integer p_ivibatemp,p_ivnrowtemp,p_ivcoefz
 	logical p_nonlin
 	integer p_nonlintrans
@@ -1582,7 +1586,7 @@ module jmod
 	integer p_pullout1,p_pullout2
  
 	real ::p_as,p_asv
-	logical ,dimension(:),allocatable:: p_isvarx ,p_istermx
+	logical ,dimension(:),allocatable:: p_isxvar ,p_istermx
 	integer ,dimension(:), pointer ::p_zvars,p_tables
 	integer::p_zvars0
 	integer ,dimension(:),pointer:: p_ninrowx,p_nrowx2
@@ -1659,7 +1663,7 @@ module jmod
 	double precision, dimension(:), allocatable::p_coeffx	! alfa
  
 	integer:: p_ivutiltrans
-	integer, dimension(:),allocatable::p_irowfvarx ! i:nnen tehdas x-mjaesiintymän xk:n indeksi xk-listassa (ivxk)
+	integer, dimension(:),allocatable::p_irowfxvar ! i:nnen tehdas x-mjaesiintymän xk:n indeksi xk-listassa (ivxk)
 	integer, dimension(:),allocatable::p_irowffact	! i:nnen tehdas x-mjaesiintymän tehtaan indeksi factories-listassa (ivfact)
 	integer, dimension(:),allocatable::p_irowfkeep	! i:nnen tehdas x-mjaesiintymän xk:n indeksi datassa (ivxmat)
 	integer, dimension(:),allocatable::p_irowfyvars ! i:nnen tehdas y-mjaesiintymän ptl-listan indeksi v-vektorissa
@@ -1812,6 +1816,7 @@ module jmod
 	integer p_maxrounds
 	integer ::p_itran,p_itrans,p_itemp,p_maxns,p_ivcdata  !,p_ncvararea,p_needc
 	integer ::p_ivarea,p_nnotareavars,p_nxvararea,p_nxvar,p_ntemp,p_itemp0,p_idomba,p_idombas
+	logical p_isarea
 	integer,dimension(:),pointer::p_notareavars
 	integer ::p_md
 	integer ::p_ivfeasible,p_ivunbounded,p_ivobjective,p_ivoptimal,p_ivobjective0
@@ -1819,7 +1824,7 @@ module jmod
 	integer p_ivoutresult
 	integer p_ivpivots
 	integer ::p_ilres,p_nresw,p_npivotw,p_nkeyfact
-	integer p_nxvarareatot
+	!	integer p_nxvarareatot
 	logical p_sentered
 	logical p_echo
 	logical p_p,p_p9,p_p8,p_p2
@@ -1837,7 +1842,7 @@ module jmod
 	logical p_zmatrix, p_zobj, p_rhsopt, p_rhs2opt
 	integer p_ivzmatrix
 	integer p_ivzobj
-	double precision,dimension(:),allocatable:: p_varx1,p_varx2 !to delete redundant
+	double precision,dimension(:),allocatable:: p_xvar1,p_xvar2 !to delete redundant
 	double precision ::p_oldsol
 	integer ::p_ienterv=-1
 	integer ::p_nsame=0
@@ -1910,6 +1915,11 @@ module jmod
 	!variables used earlier in contains-subroutines
 	integer p_ilzmax,p_ienter,p_leave,p_leavec,p_leaved,p_nrowxkfkey,p_nrowykfkey,p_ilrmax
 	integer p_unitv,p_unit,p_kierv,p_kier,p_newa,p_leavk,p_ia,p_iaft
+ 
+	integer p_ivunit
+	double precision, dimension(:), allocatable ::p_unitvars
+	integer, dimension(:), allocatable ::p_unitkeep
+ 
 	integer p_rsame,p_ixk_,p_ifopt,p_id
  
 	integer p_ixk1_,p_ixk_lkf,p_if_,p_inf_,p_infopt,p_lcursamef,p_lcur0_unit,p_lcur_,p_nz,p_nfy

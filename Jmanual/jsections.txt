@@ -130,8 +130,13 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
-! Version   . New input programming function ;now() added. This is useful 
-!  within trans() or within problem() when ;do() is present.
+! Version   14.6.2023. New input programming function ;now() added. This is useful 
+!  within trans() or within problem() when ;do() is present. unit-> option in jlp() can now define 
+!several variables, and the unit changes if atl least one variable changes. 
+! When printing using semicolon or double semicolon at the end of line, if Printpause has value 1 or 3 and
+!Printresult indicates that lines with single semicolon are printed, then
+!pause() is generated after printing. Similarly values 2 or 3 indicate pause(), if double semicolon lines 
+! are printed. area-> option may now work in jlp().
 
 !Version 5.5. 2023. Bug for treating extremly large matrices containg more elements than is the largest integer*4.
 !Bugs in rfcode-> and rchead-> in data() function were corrected.

@@ -176,8 +176,13 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
-Version   . New input programming function \textcolor{Red}{;now}() added. This is useful 
-within \textcolor{VioletRed}{trans}() or within \textcolor{VioletRed}{problem}() when \textcolor{Red}{;do}() is present. 
+Version   14.6.2023. New input programming function \textcolor{Red}{;now}() added. This is useful 
+within \textcolor{VioletRed}{trans}() or within \textcolor{VioletRed}{problem}() when \textcolor{Red}{;do}() is present. \textcolor{blue}{unit->} option in \textcolor{VioletRed}{jlp}() can now define 
+several variables, and the unit changes if atl least one variable changes. 
+When printing using semicolon or double semicolon at the end of line, if Printpause has value 1 or 3 and 
+\textcolor{teal}{Printresult} indicates that lines with single semicolon are printed, then 
+\textcolor{VioletRed}{pause}() is generated after printing. Similarly values 2 or 3 indicate \textcolor{VioletRed}{pause}(), if double semicolon lines 
+are printed. \textcolor{blue}{area->} option may now work in \textcolor{VioletRed}{jlp}(). 
  
 Version 5.5. 2023. Bug for treating extremly large matrices containg more elements than is the largest integer*4. 
 Bugs in \textcolor{blue}{rfcode->} and rchead-> in \textcolor{VioletRed}{data}() function were corrected. 
@@ -3797,12 +3802,13 @@ the arguments.
 \label{printresult} 
 If there is semicolon ; at the end of a line at command level or within a 
 \textcolor{teal}{TRANS} object line, the the output is	printed with implicit \textcolor{VioletRed}{printresult}() function if the value 
-of \textcolor{teal}{printresult} has value 1. If the line ends with double semicolon ;; then the 
-output is printed if variable \textcolor{teal}{printresult} has value 2. If \textcolor{teal}{printresult}=3, then 
+of \textcolor{teal}{Printresult} has value 1. If the line ends with double semicolon ;; then the 
+output is printed if variable \textcolor{teal}{Printresult} has value 2. If \textcolor{teal}{Printresult}=3, then 
 the output of both ; and ;; -lines are printed. Using \textcolor{Red}{;pause} in command level or 
 \textcolor{VioletRed}{pause}() in \textcolor{teal}{TRANS} object makes it possible to debug code initially 
 by printing many variables and objects, and the the printing can be stopped during a pause by changing the value 
-by putting during the pause \textcolor{teal}{printresult} into zero. 
+by putting during the pause \textcolor{teal}{Printresult} into zero. If variable \textcolor{teal}{Printpause} has 
+the same value as \textcolor{teal}{Printresult}, then a pause is generated after printing. 
  
 \begin{note} 
 Controlling the printing with ending semicolon is a property stolen from 
@@ -6387,10 +6393,10 @@ used also to teach how the algorithm proceeds.
 \item  Output\%objective= value of the objective function 
 \item  	Output\%rows= the vector the valuef of the constraint rows. 
 \item   Output\%shprice = vector of shadow prices of the rows 
-\item  Output\%varx= \textcolor{teal}{LIST} of xvariables in the schedules data 
-Output\%varxproblem= \textcolor{teal}{LIST} of \textcolor{teal}{x}-variables in the PROB 
-\item  Output\%xsum= Vector of sums of variables in Output\%varxproblem 
-\item  Output\%xprice Shadow prices of the variables in Output\%varxproblem 
+\item  Output\%xvar= \textcolor{teal}{LIST} of xvariables in the schedules data 
+Output\%xvarproblem= \textcolor{teal}{LIST} of \textcolor{teal}{x}-variables in the PROB 
+\item  Output\%xsum= Vector of sums of variables in Output\%xvarproblem 
+\item  Output\%xprice Shadow prices of the variables in Output\%xvarproblem 
 \item   Output\%xsumint The sums of \textcolor{teal}{x}-variables in the integer approximation, generated if \textcolor{blue}{integer->} is present 
 \end{itemize} 
 \end{changemargin} 
@@ -6406,9 +6412,22 @@ Output\%varxproblem= \textcolor{teal}{LIST} of \textcolor{teal}{x}-variables in 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{data} \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{DATA} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Schedules data (Sic!) linked to it with unitdata if ubit-> is not given 
-\textcolor{blue}{unit->} gives the  unit variable which changes when unit changes. 
-	! 
+\noindent  Schedules data (Sic!) linked to it with unitdata if \textcolor{blue}{unit->} is not given 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{unit} \tabto{3cm} -1-99 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  gives the  unit variables from which at least one  changes when unit changes. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{area} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The values in variables in xdata are per area variables, except 
+variables given in \textcolor{blue}{notareavars->} option 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6537,7 +6556,7 @@ plist=\textcolor{Red}{;list}(\textcolor{teal}{proba}\%?);\\
 @plist;\\ 
  
 \textcolor{teal}{jlpa}=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}\textcolor{teal}{proba},\textcolor{blue}{data->}xdata,\textcolor{blue}{showdomain->}('site.le.3','site.gt.3'))\\ 
-{\color{ForestGreen}** sums of x-variables are stored into the same variables with jlpa\%prefix}\\ 
+{\color{ForestGreen}** sums of x-variables are stored into the same variables with jlpa\% prefix}\\ 
 \textcolor{teal}{jlpa}\%income5;\\ 
 \textcolor{teal}{jlpa}\%income5[site.le.3];\\ 
 {\color{ForestGreen}** Note income variables are in theory equal but as their}\\ 
