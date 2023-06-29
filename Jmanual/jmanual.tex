@@ -78,7 +78,7 @@ and none of them was eventually interested to get the software publisehd.
 I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017. 
 I was not informed of the decision. Later Luke rejected explicitly any cooperation 
 in the publication or in the development of 
-the software. 
+the software or in testing the behavior of Mela-software. 
  
 When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke. 
 The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall 
@@ -175,6 +175,14 @@ After renaming the software to \textbf{Jlp22}, this chapter starts to describe c
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
+ 
+Version 29.6.2023. Function find\_d() added. This function can be used to get \textcolor{teal}{ILIST} 
+of all observatiosn satisfying a condition. The \textcolor{VioletRed}{data}() and \textcolor{VioletRed}{matrix}() functions can get values 
+from varaible names or computation rules. Sparse data can be obtained using \textcolor{blue}{sparse->} 
+option. \textcolor{teal}{Data} with named cases is now obtianed using case->option in \textcolor{VioletRed}{data}(), 
+and \textcolor{VioletRed}{datawcase}() is removed.When printing is indicated with semicolon or double semicolon, and the object 
+can contain piecewise linear terms. Nonlinear terms will be easy to include in  a similar way. 
+ 
  
 Version   14.6.2023. New input programming function \textcolor{Red}{;now}() added. This is useful 
 within \textcolor{VioletRed}{trans}() or within \textcolor{VioletRed}{problem}() when \textcolor{Red}{;do}() is present. \textcolor{blue}{unit->} option in \textcolor{VioletRed}{jlp}() can now define 
@@ -1038,7 +1046,7 @@ to the following example.
 1,2\\ 
 3,4\\ 
 /  \\ 
-\textcolor{teal}{dataa}\%?;\,{\color{ForestGreen}!prints subobjects}\\ 
+li=\textcolor{Red}{;list}(\textcolor{teal}{dataa}\%?);\,{\color{ForestGreen}!prints subobjects}\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -1059,7 +1067,7 @@ to print all objects in the list.
 @lista;\\ 
 {\color{ForestGreen}**Seeing and printing relatives}\\ 
 x1a...x3a=3...5\\ 
-x?a;\\ 
+ 
 rel=\textcolor{Red}{;list}(x?a);\\ 
 @rel;\\ 
 \end{example} 
@@ -2313,7 +2321,7 @@ row index, \textcolor{teal}{r1} to first row in a row range, \textcolor{teal}{r2
 columns can be specifiel using \textcolor{teal}{ILIST} objects \textcolor{teal}{il1} and \textcolor{teal}{il2} to specify noncontiguous ranges. 
 It is currently not possible to mix \textcolor{teal}{ILIST} range and contiguous range, so if \textcolor{teal}{ILIST} 
 is needed for rows (columns), it must be used also for columns (rows). \textcolor{teal}{ILIST} can be 
-specified using explicitly \textcolor{VioletRed}{ilist}() function or using {} construction. 
+specified using \textcolor{VioletRed}{ilist}() function or using {} construction. 
 Similarly columns are indicated  with \textcolor{teal}{c}. It is always legal to refer to 
 vectors by using the \textcolor{teal}{M} formulation and giving \textcolor{teal}{c} with value 1 for column vectors and 
 and \textcolor{teal}{r} with value 1 for row vectors. 
@@ -3257,6 +3265,16 @@ pointers to objects, see e.g. the selector option of the simulate() function.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{blue}{do} \tabto{3cm} -1- \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Consecutive values are given to variables in the \textcolor{teal}{LIST}. If \textcolor{blue}{do->} 
+has no arguments, values 1,2,.. are used. If \textcolor{blue}{do->} has one argument, it gives the starting value. 
+If \textcolor{blue}{do->} has two arguments, the first argument gives the starting value and 
+the second argument gives the step. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{mask} \tabto{3cm}  N|1-  \tabto{5cm}  REAl \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Which object are picked from the list of arguments. 
@@ -3273,6 +3291,12 @@ The same object may appear several times in the list. (see \textcolor{VioletRed}
 \begin{note} 
 There may be zero arguments, which result in an empty list 
 which can be updated later. 
+\end{note} 
+\begin{note} 
+Also \textcolor{VioletRed}{matrix}() has option \textcolor{blue}{do->} for similar purpose as \textcolor{VioletRed}{list}(), but 
+it works slightly differently as in \textcolor{VioletRed}{matrix}(), \textcolor{blue}{do->} can determine 
+the dimensions of generated \textcolor{teal}{MATRIX} and it is possible to fill only part of 
+the \textcolor{teal}{MATRIX}. 
 \end{note} 
 \begin{note} 
 The index of object in a \textcolor{teal}{LIST} can be obtained using \textcolor{VioletRed}{index}(). 
@@ -3300,6 +3324,9 @@ sub\#"i"=\textcolor{VioletRed}{list}(@period\#"i",\textcolor{blue}{mask->}(-2,1,
 all=\textcolor{VioletRed}{list}(@all,@period\#"i")\,{\color{ForestGreen}!note that all is on both sides}\\ 
 sub=\textcolor{VioletRed}{list}(@sub,@sub\#"i")\\ 
 ;end\,do\\ 
+li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x13,\textcolor{blue}{do->});\\ 
+li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x13,\textcolor{blue}{do->}4)\\ 
+li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x13,\textcolor{blue}{do->}(3,2));\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -3341,7 +3368,7 @@ ilistc=\textcolor{VioletRed}{merge}(ilista);\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsection{\textcolor{VioletRed}{difference}() Difference of LISTs}\index{difference()} 
+\subsection{\textcolor{VioletRed}{difference}() Difference of LISTs or removes an object from \textcolor{teal}{LIST}}\index{difference()} 
 \label{difference} 
 \textcolor{VioletRed}{difference}() removes elements from a \textcolor{teal}{LIST} 
 \vspace{0.3cm} 
@@ -3358,7 +3385,7 @@ ilistc=\textcolor{VioletRed}{merge}(ilista);\\
 \begin{changemargin}{3cm}{0cm} 
 \noindent  The first argument is the \textcolor{teal}{LIST} from which the elements of of the 
 are removed  If second argument is \textcolor{teal}{LIST} then all of its eleemts are remove, other wise 
-it is assumed that the second argument is an object which is remode from the lisrt. 
+it is assumed that the second argument is an object which is removed from the lisrt. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -3461,6 +3488,7 @@ A({1,4},{3})=7;\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
+ 
 \subsection{\textcolor{VioletRed}{putlist}() puts into \textcolor{teal}{LIST} an object}\index{putlist()} 
 \label{putlist} 
 Usage:\\ 
@@ -3809,7 +3837,8 @@ the output of both ; and ;; -lines are printed. Using \textcolor{Red}{;pause} in
 by printing many variables and objects, and the the printing can be stopped during a pause by changing the value 
 by putting during the pause \textcolor{teal}{Printresult} into zero. If variable \textcolor{teal}{Printpause} has 
 the same value as \textcolor{teal}{Printresult}, then a pause is generated after printing. 
- 
+In the version 28.6.2023 'printing' a \textcolor{teal}{TRANS} object means taht the trasnforamtion is computed. This gives 
+still further possibilities for debugging. 
 \begin{note} 
 Controlling the printing with ending semicolon is a property stolen from 
 Matlab. In order to avoid possible lawsuits, it works differently: in Matlab 
@@ -3883,10 +3912,21 @@ are given, and there are fewer values than is the size the matrix, matrix is
 filled row by row using all values given in 
 \textcolor{blue}{values->}. If there are more values as is the size, an error occurs unless there is 
 \textcolor{blue}{any->} option present. 
-Thus \textcolor{VioletRed}{matrix}(N,N,\textcolor{blue}{values->}1) generates the identity matrix. 
+Thus \textcolor{VioletRed}{matrix}(N,N,\textcolor{blue}{values->}1,\textcolor{blue}{diag->}) generates the identity matrix. 
 If value-> refers to one \textcolor{teal}{MATRIX},and \textcolor{blue}{diag->} is present then a block diagonal 
 matrix is generated. Without \textcolor{blue}{diag->}, a partitioned matrix is generated having all 
-submatrices equal 
+submatrices equal. In the new version also values given in the input paragraph or in the \textcolor{blue}{in->} file 
+can have names of variables whose values are put into the matrix. The value can be also computed 
+using transformations if the element is put within parenthesis. If values are read from a file, 
+then code-> option must be present telling \textbf{Jlp22} that values can not be read directly. 
+The same method can be used in \textcolor{VioletRed}{data}() function. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent code  \tabto{3cm} N|0 \tabto{5cm}  \textcolor{teal}{REAL}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The values given in \textcolor{blue}{in->} file are interpreted and not read directly. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -3901,17 +3941,30 @@ submatrices equal
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
-When reading matrix from the following input paragraph, the numbers must be separated with commas. It would 
-otherwise easy to read alos comma separated numbers, but because the lines are obtained throug 
-input programming, the spaces would mix up input programmig. If the numbers are separated with 
-spaces either a reading error coccurs or warning like \\ 
-*wrn* the number of values            7  does not agree with the number of elements 
+In the current version the values in the input paragraph or \textcolor{blue}{in->} file can be separated with commas or 
+spaces, or tabulators, and there can be several separators between two values. 
+\end{note} 
+\begin{note} 
+Values given for vectors or for the diagonal in a diagonal matrix can be in several lines. 
+\end{note} 
+\begin{note} 
+If there are fewer values in the input paragraph or in the file than there are matrix elements, 
+a warning but no error is generated. Extra values are ignored without a notice. 
 \end{note} 
 \singlespacing 
 \begin{example}[matrixex]Example of generatig matrices\\ 
 \label{matrixex} 
 \noindent A=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{values->}(\textcolor{VioletRed}{sin}(2),\textcolor{VioletRed}{sqrt}(3),6));\\ 
-{\color{ForestGreen}** to be updated later}\\ 
+{\color{ForestGreen}** The same in the new version}\\ 
+h=9\\ 
+A=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{in->});\\ 
+(\textcolor{VioletRed}{sin}(2)),(\textcolor{VioletRed}{sqrt}(3)),6,h\\ 
+/                                                                   \\ 
+ma=\textcolor{VioletRed}{matrix}(5,5,\textcolor{blue}{diag->},\textcolor{blue}{in->});\\ 
+15,(\textcolor{VioletRed}{sin}(4)),43,h\\ 
+5,7\\ 
+8,9\\ 
+/  \\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -4263,7 +4316,10 @@ or from the following input paragraph. New data objects can
 be created with \textcolor{VioletRed}{newdata}() function from previous data objects and/or matrices. 
 A data object can created using a \textcolor{teal}{TRANS} object 
 by creating first data matrix with \textcolor{VioletRed}{matrix}() and then using \textcolor{VioletRed}{newdata}() to 
-create data object. 
+create data object. In the new version data values can be obtained from a variable whose name is given or 
+using computation rule within parenthesis. If the data is given in \textcolor{blue}{in->} file, there must be 
+code-> option to indicate that interpreation is need for getting values. If there is \textcolor{blue}{sparse->} or case-> 
+then code-> is not needed for a file input either. 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
@@ -4305,6 +4361,15 @@ Char giving a Fortran format, e.g. '(4f4.1,1x,f4.3)' \newline
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent case  \tabto{3cm} N|0|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The corresponding column in the data gives names of variables used for the cases. 
+The values for the variables will be the case number. If the case variable is Case, the \textcolor{teal}{LIST} output\%Case 
+will contain all the case variables. The Case variable will be in the data, and will have values 1,2,..etc. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{maketrans} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent Transformations computed for each observation when reading the data 
@@ -4332,7 +4397,16 @@ computed before using filter. Option \textcolor{blue}{filter->} can utilize auto
 variable \textcolor{teal}{Record} which tells which input record has been just read. If observations 
 are rejected, then the \textcolor{teal}{Obs}-variable has as its value number of already accepted 
 observations+1. 
- 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{sparse}  \tabto{3cm} N|0 \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  In the input there can be for each observation after variables given in \textcolor{blue}{read->} any 
+number of variable,value -pairs. The variables are collected from these line endings and they need 
+not to be specified otherwise. The value part can also be a variable name or it can be obtained with transformations. 
+Also the variables in the \textcolor{blue}{read->} part can be given with variables names or computaion rules withi parenthesis. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -4516,6 +4590,22 @@ See common options section for how data objects used in other \textbf{Jlp22} fun
 \begin{note} 
 In ealier versions, the user could select the name for the variable telling the number 
 of the observation. After version Dec 20 2022, the name for \textcolor{teal}{DATA} \textcolor{teal}{datab} is always \textcolor{teal}{datab}\%obs. 
+\end{note} 
+ 
+\begin{note} 
+The values can be obtained from variables or form code also in \textcolor{VioletRed}{matrix}(), but case-> or \textcolor{blue}{sparse->} are not 
+possible. 
+\end{note} 
+ 
+\begin{note} 
+In the previous versions \textcolor{teal}{DATA} with case names was generated with \textcolor{VioletRed}{datawcase}() function. 
+This function is not available any more as case-> option does the same thing. The difference is that case-> 
+varible need not be in the first column and the case column is now part of the \textcolor{teal}{DATA} as earlier only the list 
+containg case names was made. 
+\end{note} 
+ 
+\begin{note} 
+when case-> or \textcolor{blue}{sparse->} option is present \textcolor{blue}{keep->} will probably mix up \textbf{Jlp22}. 
 \end{note} 
  
 \begin{note} 
@@ -4714,6 +4804,14 @@ dc\%keep;\\
 dc\%matrix;\\ 
 \textcolor{VioletRed}{delete\_f}('data.bin')\\ 
  
+setdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(set,set\_D),\textcolor{blue}{in->},\textcolor{blue}{sparse->},case->)\\ 
+set1,15,d50x100,2,d22x100,2\\ 
+set2,18,d50x75,4,d20x100,2\\ 
+/                         \\ 
+\textcolor{VioletRed}{stat}()\\ 
+setdata\%matrix;\\ 
+setdata\%set;\\ 
+ 
 \textcolor{Red}{;return}\\ 
  
 \end{example} 
@@ -4814,48 +4912,9 @@ new=\textcolor{VioletRed}{newdata}(data1,matrix1,\textcolor{blue}{read->}(z1,z2)
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsection{\textcolor{VioletRed}{datawcase}() \textcolor{teal}{DATA} with case names}\index{datawcase()} 
+\subsection{Deleted function for data with cases} 
 \label{datawcase} 
-This function will replace the properties function in factory optimizations. 
-The function creates subobjects Output\%matrix,Output\%keep, and Output\%case, which is a list of case names. 
-	! 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent Output  \tabto{3cm} 0|1 \tabto{5cm}  \textcolor{teal}{Data} \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent \noindent Output  \tabto{3cm} 0|1 \tabto{5cm}  Data \tabto{7cm} 
-\textcolor{teal}{Data} object to be created. 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent \textcolor{blue}{read}  \tabto{3cm} 0|1- \tabto{5cm}  REAL|List \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  Variables read from the following input paragraph. 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent \textcolor{blue}{maketrans}  \tabto{3cm} 0|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  Transformations made. Output variables whose names do not start with \$ are put into the data. 
-\end {changemargin} 
-\hrule 
-\vspace{0.2cm} 
-\singlespacing 
-\begin{example}[datawcaseex]Example of datawcase\\ 
-\label{datawcaseex} 
-\noindent sawmills=\textcolor{VioletRed}{datawcase}(\textcolor{blue}{read->}(capacity1...capacity4))\\ 
-Kotka,110,120,130,140\\ 
-Oulu,210,220,230,240\\ 
-/                   \\ 
-sawsub=\textcolor{Red}{;list}(sawmills\%?);\\ 
-@sawsub;\\ 
-\textcolor{VioletRed}{stat}()\\ 
-\end{example} 
-\vspace{-7mm} \rule{5cm}{0.1pt} 
-\onehalfspacing 
+datawcase is a deleted function. Use \textcolor{VioletRed}{data}() with case->option to get names for cases. 
 \subsection{\textcolor{VioletRed}{exceldata}() \textcolor{teal}{DATA} from an excel file}\index{exceldata()} 
 \label{exceldata} 
 Generates data object from csv data generated with excel. It is assumed that ';' is used as column separator, 
@@ -5218,7 +5277,8 @@ new matrices from submatrices using \textcolor{VioletRed}{matrix}() function wit
 they can be used in transformation objects to compute class related things. 
 There is no explicit output for the function, but several output vectors can 
 be generated depending on the arguments and \textcolor{blue}{first->}, \textcolor{blue}{last->} and 
-\textcolor{blue}{expand->} options. The function prints the names of the output vectors generated. 
+\textcolor{blue}{expand->} options. The function creates automatically \textcolor{teal}{REAL} variable 
+Class\%nobs whose value will be the number of classwes. The function prints the names of the output vectors generated. 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
@@ -5494,6 +5554,56 @@ if(j_depilog.gt.0)call dotrans(j_depilog,1)
 return 
 \end{verbatim} 
 \color{Black} 
+\subsection{find\_d() makes a \textcolor{teal}{ILIST} of observations satisfying a condition.} 
+\label{find_d} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output \tabto{3cm}  1 \tabto{5cm}   \textcolor{teal}{ILIST}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent The generated \textcolor{teal}{ILIST}. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{from} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  First observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Last observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{filter} \tabto{3cm} N|1 \tabto{5cm}  CODE \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Code telling what observations are accepted 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{reject} \tabto{3cm} N|1 \tabto{5cm}  CODE  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Code telling what observations are rejected. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+Function \textcolor{VioletRed}{find}() can be used to search all or first elements of a vector 
+satifying a condition. 
+\end{note} 
 \section{Statistical functions} 
 \label{statistics} 
 There are several statistical functions which can be used to compute basic statistics 
@@ -6345,6 +6455,15 @@ that the unit belongs to the domain. Recall tha logical operations produce 1 for
 The code is parsed at this point, so syntax errors are detected at this point, 
 but other errors (e.g. division by zero) are detected in \textcolor{VioletRed}{jlp}(). 
  
+If  a coefficient is a column vector and the variable is a \textcolor{teal}{x}-variable in the objective row, this 
+indicate a piecewise linear objective. The if the value of the \textcolor{teal}{x}-varaible is smaller than 
+the first value in the vector, the second value gives the coeffient. If 
+the \textcolor{teal}{x}-variable is between the first and third value, then the fourth value gives the coeffient which applies after the third value. 
+The value is obtained using the value at the first knot plus the value coming from the second section. 
+A nonlinear objective can be devloped quite easily using the same data structures and the derivative 
+computations already present in \textbf{Jlp22}. 	An example is presented for optimization of sawmill sets, for 
+which also the new properties of \textcolor{VioletRed}{data}() function are developed. 
+ 
  
 \vspace{0.3cm} 
 \hrule 
@@ -6729,12 +6848,12 @@ x4<5\\
 x5<3\\ 
 /   \\ 
 x34=\textcolor{VioletRed}{list}(\textcolor{teal}{x3},x4)\\ 
-x34c=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(3,-2))\\ 
+x34c=\textcolor{VioletRed}{matrix}(1,2,\textcolor{blue}{values->}(3,-2))\\ 
 i10=10\\ 
 zero=0\\ 
 jlpzb=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{problem->}probzb,\textcolor{blue}{dpivot->}1)\\ 
 {\color{ForestGreen}**Now different problem is obtained}\\ 
-x34c=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(3,-3))\\ 
+x34c=\textcolor{VioletRed}{matrix}(1,2,\textcolor{blue}{values->}(3,-3))\\ 
 zero=1\\ 
 jlpzb=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{problem->}probzb,\textcolor{blue}{dpivot->}1)\\ 
 **                                                                                              \\ 
@@ -7055,10 +7174,10 @@ fir=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{Resid},\textcolor{teal}{x},\t
 {\color{ForestGreen}** When there are many observations, it is useful to compute class means of residuals}\\ 
 cl=\textcolor{VioletRed}{classify}(\textcolor{teal}{Resid},\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{dx->}1)\\ 
 {\color{ForestGreen}** Red error bars for standard deviations of residuals in calsees}\\ 
-fi22=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{mean->},\textcolor{blue}{continue->},\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{show->}0)\\ 
+fi22=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{mean->},\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{show->}0)\\ 
 {\color{ForestGreen}** Black error bars for standard errors for class means. These can be used to}\\ 
 {\color{ForestGreen}** study how significantly residuals are nonzero.}\\ 
-fi22=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{mean->},\textcolor{blue}{color->}\textcolor{teal}{Black},\textcolor{blue}{width->}2,\textcolor{blue}{append->},\\ 
+fi22=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{mean->},\textcolor{blue}{color->}\textcolor{teal}{Black},\textcolor{blue}{width->}2,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont,\\ 
 \textcolor{blue}{xlabel->}'Xvariable,\,m]Arial,11[',\\ 
 \textcolor{blue}{ylabel->}'Yvariable,\,\%]Arial,11[')\\ 
 \textcolor{Red}{;if}(wait)\textcolor{Red}{;pause}\\ 

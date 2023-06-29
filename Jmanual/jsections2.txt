@@ -353,6 +353,7 @@ subsection nobs nobs(): number of observations
 subsection classvector classvector(): extracting information from grouped data 
 subsection values values(): getting different values of a variable in DATA
 subsection transdata transdata() going through data and computing tranformations
+subsection find_d find_d()
 
 section statistics Statistical functions
 

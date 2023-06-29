@@ -130,6 +130,15 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+!Version 29.6.2023. Function find_d() added. This function can be used to get ILIST 
+!of all observatiosn satisfying a condition. The data() and matrix() functions can get values
+! from varaible names or computation rules. Sparse data can be obtained using sparse->
+!option. Data with named cases is now obtianed using case->option in data(),
+!and datawcase() is removed.When printing is indicated with semicolon or double semicolon, and the object
+to be printed is a TRANS object, the trasformation is computed. The objective in jlp() function
+!can contain piecewise linear terms. Nonlinear terms will be easy to include in  a similar way.
+
+
 ! Version   14.6.2023. New input programming function ;now() added. This is useful 
 !  within trans() or within problem() when ;do() is present. unit-> option in jlp() can now define 
 !several variables, and the unit changes if atl least one variable changes. 
@@ -323,7 +332,7 @@
  !I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017.
  ! I was not informed of the decision. Later Luke rejected explicitly any cooperation
  ! in the publication or in the development of 
- ! the software.
+ ! the software or in testing the behavior of Mela-software.
  
  !When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke.
  ! The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall
@@ -1617,7 +1626,7 @@ $$=300
 !1,2
 !3,4
 !/
-!dataa%?; !prints subobjects
+!li=;list(dataa%?); !prints subobjects
 !endex
 !endsection
 
@@ -1636,7 +1645,7 @@ $$=300
 !@lista;
 !**Seeing and printing relatives 
 ! x1a...x3a=3...5
-!x?a;
+
 !rel=;list(x?a);
 !@rel;
 !endex

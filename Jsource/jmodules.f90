@@ -78,7 +78,7 @@ module jmod
 	integer, parameter :: j_nffile=8  !file
 	integer, parameter :: j_nfio=7  ! io
 	integer, parameter :: j_nfmatr=19  !matrix
-	integer, parameter :: j_nfdata=13  !data functions
+	integer, parameter :: j_nfdata=14  !data functions
 	integer, parameter :: j_nfstat=13  !stat
 	integer, parameter :: j_nfjlp=21 !jlp
 	integer, parameter :: j_nfsimu=6 !
@@ -242,7 +242,7 @@ module jmod
  
 		!! Data functions
 		'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !13
-		'joindata','splitdata','partdata',&
+		'joindata','splitdata','partdata','find_d',&
 		!! Statistical functions
 		'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
 		'varcomp', 'classify', 'class', & !13
@@ -320,7 +320,7 @@ module jmod
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix',  & !19
  
-		0,0,0,2,2,0,1,0,0,0,0,1,0,&
+		0,0,0,2,2,0,1,0,0,0,0,1,0,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
 		!linkdata2,splitdata,partdata
  
@@ -402,7 +402,7 @@ module jmod
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix', & !19
  
-		0,999,0,2,2,1,9999,1,0,0,999,1,0,&
+		0,999,0,2,2,1,9999,1,0,0,999,1,0,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
 		!joindata,splitdata,partdata
 		9999,99999,99999,99999,1,1,2,1,2,2,  99999,99999,1,&
@@ -460,7 +460,7 @@ module jmod
 	integer,dimension(j_nnamedfuncarg):: j_needsnamed
  
 	!free options free$
-	parameter (j_noptions_=218) !!!option number of j_ options
+	parameter (j_noptions_=221) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 		'extraup','extra','mean', 'min','max',& ! 1-10
@@ -484,7 +484,7 @@ module jmod
 		'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
 		'tailtofirst','tailtolast','cumulative','time','missing','clean','factgroup','dpivot','int','pullout',&
 		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist',&
-		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
+		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange','makelist','code','case'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -522,7 +522,7 @@ module jmod
 	parameter (j_mclean=199,j_mfactgroup=200,j_mdpivot=201,j_mineuueut=202,j_mpullout=203)
 	parameter (j_mbasis=204,j_mcondition=205,j_mfastdif=206,j_mmarksize=207,j_mkeepopen=208)
 	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211,j_milist=212,j_mnrowtot=213,j_mshowdomain=214)
-	parameter (j_mknn=215,j_mnewup=216,j_mxfunc=217,j_mxfuncrange=218)
+	parameter (j_mknn=215,j_mnewup=216,j_mxfunc=217,j_mxfuncrange=218,j_mmakelist=219,j_mcode=220,j_mcase=221)
  
 	integer,parameter :: j_nnamedoptarg=53
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
@@ -573,6 +573,25 @@ module jmod
  
 	!module errmod   ! includes only j_err
 	logical :: j_err=.false.
+	logical ::j_end=.false.
+	logical ::j_isreadnu=.false.
+	logical ::j_isgetinp=.false.
+	logical ::j_needsall=.false.
+	!	logical ::j_isreadinp=.false.
+	logical ::j_iscode=.false.
+	logical::j_issparse
+	integer,dimension(:),allocatable::j_sparsen,j_sparsekeep
+	double precision,dimension(:),allocatable::j_sparseval
+	integer j_nsparseval
+ 
+ 
+	integer :: j_nu
+	logical ::j_ismakelist
+	integer j_makelistvar,j_makelist
+	integer,dimension(:),allocatable::j_fromvarvector
+	integer, dimension(:), pointer :: j_fromvar
+ 
+ 
  
 	integer j_ierr
 	!end motule !!module errmod
@@ -874,6 +893,7 @@ module jmod
 	integer,parameter::j_ivblack=78
 	integer,parameter::j_ivtempout=79
 	integer,parameter::j_ivprintpause=80
+	!integer,parameter::j_ivvarfor=81
 	integer,parameter::j_predefined=80
  
 	integer ::p_fastmakes
@@ -920,6 +940,8 @@ module jmod
  
  
 	integer ::j_nread
+	integer j_ivcase,j_caseread,j_ivcaselist
+ 
 	logical ::j_eof
 	double precision,dimension(400)::j_tempv,j_tempv2,j_tempv3
 	double precision ::j_dapu,j_dapu2,j_dapu3,j_dapu4,j_dapu5  !for different purposes
@@ -1039,6 +1061,7 @@ module jmod
 	!	integer,dimension(:,:),allocatable::j_itempvect or2d
 	double precision,dimension(:),pointer::j_tempdpoint
 	integer,dimension(:),pointer ::j_templist,j_templist2,j_templist3
+	integer j_ivtemplist
 	!object-types
 	integer, dimension(:),allocatable ::j_otype
  
@@ -1076,6 +1099,9 @@ module jmod
 	integer ::j_dprint,j_depilog
 	integer,dimension(:),pointer::j_dkeep,j_dkeepup
 	double precision, dimension(:),pointer::j_dmatup,j_dmat
+	logical j_isnobs
+ 
+ 
  
 	integer::j_dnup
 	integer,parameter:: j_dmaxlevels=20
@@ -1200,6 +1226,21 @@ module jmod
 	!end module jmod
 	! jlp *******************************************************************************
 	!	module jlpmod
+	integer p_npiece,p_ivpiece,p_ivpiecevar,p_ivpiecekeep,p_ivpiececoef
+	integer p_ivpieceint
+	integer, dimension (:), pointer:: p_piecekeep
+	double precision, dimension (:), pointer:: p_piecexps,p_piecesum
+	integer, dimension (:), pointer:: p_piececoef
+	double precision, dimension (:), pointer:: p_pieceprice,p_pieceint
+	double precision p_piecexps0,p_piecexps0dif
+	integer p_ivpieceprice,p_ivtermpiece
+	logical ,dimension(:),allocatable:: p_ispiecevar ,p_istermpiece
+	integer p_ivpiecexps,p_ivpiecesum
+	logical p_ispiece,p_piecenotinited
+ 
+	!double precision p_pieceint  !intercept
+ 
+ 
 	logical p_isunit
 	integer p_areakeep
 	!logical p_ipart
@@ -2981,6 +3022,11 @@ module jmod
 			double precision, intent(in):: x0,x1,y0,y1,x
 		end function !real function j_rlinter(x0,x1,y0,y1,x)
  
+		double precision function j_rlinterm(ivmatrix,x)  !linear interpolation
+			double precision, intent(in):: x
+			integer,intent(in)::ivmatrix
+		end function
+ 
 		double precision function j_bilin(xa,xy,za,zy,aa,ay,ya,yy,x,z)
 			double precision,intent(in):: xa,xy,za,zy,aa,ay,ya,yy,x,z
 		end function
@@ -3119,6 +3165,10 @@ module jmod
 			integer, intent(in),optional::irecl
 			integer,intent(out),optional::ivout
 		end subroutine !subroutine j_getwritefilebin(ivfile)
+ 
+		integer function j_nlinesnu(nu)
+			integer,intent(in):: nu
+		end function
  
 		!clear options
 		subroutine j_clearoption(iob,io)
@@ -3846,6 +3896,20 @@ module jmod
 			character*(*),intent(inout):: inp
 			logical, intent(in)::plus
  
+		end subroutine
+ 
+		subroutine j_frominpinit(iob,io)
+			integer,intent(in)::iob,io
+		end subroutine
+ 
+		subroutine j_readfrominp(vect,nvar)
+			double precision,dimension(:),intent(out)::vect
+			integer,intent(out)::nvar
+		end subroutine
+ 
+		subroutine j_readvector(vect,nvar)
+			double precision,dimension(:),intent(out)::vect
+			integer,intent(out):: nvar
 		end subroutine
  
 		subroutine j_objectname(iv,name,le)
