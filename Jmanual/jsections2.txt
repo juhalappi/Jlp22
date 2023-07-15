@@ -280,10 +280,14 @@ subsection bilin bilin()
 section  lists List functions
 subsection listo List object
 subsection  list
+subsection symconst
+subsubsection list2sym 
+subsubsection namenum
 subsection inpusub2b
 subsection merge
 subsection difference
 subsection index
+subsection index_o
 !!subsection index_v
 subsection len
 subsection ilist
@@ -354,6 +358,7 @@ subsection classvector classvector(): extracting information from grouped data
 subsection values values(): getting different values of a variable in DATA
 subsection transdata transdata() going through data and computing tranformations
 subsection find_d find_d()
+subsection fromdata
 
 section statistics Statistical functions
 

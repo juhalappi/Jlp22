@@ -130,11 +130,18 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+!Version 12.7. 2023. Numeric values can obtained from variable names using namenum() and
+!namenum%() functions. This is useful with data with case or making lists using the new makelist-> option in data().
+!continuation character can be removed with '<<'. This is useful when using ;do-loops to generate
+! an input line. minloc() and maxloc() functions can be used to find the location of minimum 
+! and maximum in a vector or variable in data (thus returning the number of observation). 
+!New options step-> and points-> in drawline().
+
 !Version 29.6.2023. Function find_d() added. This function can be used to get ILIST 
 !of all observatiosn satisfying a condition. The data() and matrix() functions can get values
-! from varaible names or computation rules. Sparse data can be obtained using sparse->
-!option. Data with named cases is now obtianed using case->option in data(),
-!and datawcase() is removed.When printing is indicated with semicolon or double semicolon, and the object
+! from variable or using computation rules. Sparse data can be obtained using sparse->
+!option. Data with named cases is now obtained using case->option in data(),
+!and datawcase() is removed. InformationWhen printing is indicated with semicolon or double semicolon, and the object
 to be printed is a TRANS object, the trasformation is computed. The objective in jlp() function
 !can contain piecewise linear terms. Nonlinear terms will be easy to include in  a similar way.
 

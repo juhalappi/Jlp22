@@ -41,7 +41,7 @@ module jmod
 	integer, parameter :: j_lenin=60
 	!integer, parameter :: j_lenin_c=120
 	!integer, parameter :: j_lendata_subform_c=160
-	integer, parameter :: j_lenobject=60
+	integer, parameter :: j_lenobject=80
 	!end motule !!module lenmod
  
 	logical ::j_ispause=.false.
@@ -63,7 +63,7 @@ module jmod
 	character*76 :: j_title  !='j: j3.0 22.04.2022 (c) Juha Lappi and Natural Resources Institute Finland'
 	!to be updated in j_init
 	!functions
-	integer, parameter :: j_nfspec=8
+	integer, parameter :: j_nfspec=9
 	integer, parameter :: j_nfobj=4
 	integer, parameter :: j_nftrans=5
 	integer, parameter :: j_nfloop=18
@@ -73,7 +73,7 @@ module jmod
 	integer, parameter :: j_nfdist=5  !distributions
 	integer, parameter :: j_nfran=7  !random
 	integer, parameter :: j_nfinter=3 !interpola
-	integer, parameter :: j_nflist=9  !list function
+	integer, parameter :: j_nflist=11  !list function
 	integer, parameter :: j_nftex=2  !text
 	integer, parameter :: j_nffile=8  !file
 	integer, parameter :: j_nfio=7  ! io
@@ -85,7 +85,7 @@ module jmod
 	integer, parameter :: j_nffig=6 !
 	integer, parameter :: j_nfspli=8 ! tautspline..
 	integer, parameter :: j_nfbit=7 !
-	integer, parameter :: j_nfmisc=8!
+	integer, parameter :: j_nfmisc=10!
  
 	integer, parameter :: j_fbspec=0   !basis
 	integer, parameter :: j_fbobj=j_fbspec+j_nfspec
@@ -189,7 +189,8 @@ module jmod
 	!to get the function index in jdotrans the j_nspecialtot (38) must be added to index of the function
 	data j_functions/ &
 		! Special functions
-		'setoption','getelem','setelem','list2', 'o1_funcs','o2_funcs','o3_funcs','setcodeopt', &  ! 8
+		'setoption','getelem','setelem','list2', 'o1_funcs','o2_funcs','o3_funcs','setcodeopt', &
+		'setpointer',	&	! 9
  
 		! Objects
 		'type','delete_o','exist_o','name',    &  !4
@@ -225,7 +226,7 @@ module jmod
 		'interpolate','plane','bilin', & !3
  
 		!!! List functions
-		'list','merge','difference','index','index_v','len','ilist','putlist','table',& ! 9
+		'list','merge','difference','index','index_o','len','ilist','putlist','table','fromlist','list2sym',& ! 11
  
 		!! Creating a text  object
 		'text','txt', & !2  text is old txt new
@@ -265,12 +266,12 @@ module jmod
 		'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
 		!! Misc. utility functions
-		'value','properties','cpu','secnds','where','batch','system','info'/ !8
+		'value','properties','cpu','secnds','where','batch','system','info','namenum','namenum%'/ !9
  
 	integer,dimension(j_nfunctions_) :: j_minarg_ ! = (/ &  !!!%function
-	data j_minarg_/ 1,1,1,1,1,1,1,2,&
+	data j_minarg_/ 1,1,1,1,1,1,1,2,1,&
 		! 'setoption','getelem','setelem','list2', 'o1_funcs','o2_funcs','o3_funcs','setcodeopt', &  ! 8n
- 
+		!setpointer
 		0,1,1,1,&
 		! 'type','delete_o','exist_o','name',    &  !4
  
@@ -304,8 +305,8 @@ module jmod
 		2,4,4,&
 		! 'interpolate','plane','bilin', & !3
  
-		0,1,2,1,2,1,1,2,2,&
-		! 'list','merge','difference','index','index_v','len','ilist','putlist','table',& ! 8
+		0,1,2,1,1,1,1,2,2,2,2,&
+		! 'list','merge','difference','index','index_o','len','ilist','putlist','table','fromlist','list2sym',& ! 10
  
 		0,0, &
 		! 'text','txt', & !2  text is old txt new
@@ -339,20 +340,20 @@ module jmod
 		0,0,1,1,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
-		1,2,2,2,2,2,0,8,&     !calle,lmin,lmax,dmin,gam,b
+		1,2,2,2,2,2,0,7,&     !calle,lmin,lmax,dmin,gam,b
 		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt,  & ! 6
  
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
-		1,5*0,1,0/
-	! 'value','properties','cpu','seconds','where','batch','system','info'/ !8
+		1,5*0,1,0,1,1/
+	! 'value','properties','cpu','seconds','where','batch','system','info','namenum','namenum%',/ !8
  
  
 	integer, dimension(j_nfunctions_):: j_maxarg_  !=  & !!%%function
-	data j_maxarg_/ 4,5,5,99999,9999,9999,9999,3,&
+	data j_maxarg_/ 4,5,5,99999,9999,9999,9999,3,999,&
 		! 'setoption','getelem','setelem','list2', 'o1_funcs','o2_funcs','o3_funcs','setcodeopt', &  ! 8n
- 
+		!setpointer
 		1,99999,1,1,&
 		! 'type','delete_o','exist_o','name',    &  !3
  
@@ -368,7 +369,7 @@ module jmod
 		!'HMULT','HDIV','IPOWER','MULT','DIV','PLUS','MINUS','EQ','NE','LE', &
 		!'LT','GE','GT','NOT','AND','OR','EQV','NEQV','POWER', & !19
  
-		9999,9999,2,31*1, &
+		9999,9999,2,2,30*1, &
 		! 'min','max','sign','mod',	'nint','int','ceiling','floor','sqrt','sqrt2', & ! sqrt2(-4)=-2
 		! 'log','log10','exp','sin','sind','cos','cosd','tan','tand','cotan', & !d indicates degree argument
 		! 'cotand','asin','asind','acos','acosd','atan','atand','acotan','acotand','sinh', &
@@ -386,13 +387,13 @@ module jmod
 		7,4,4,&
 		! 'interpolate','plane','bilin', & !3
  
-		99999,9999,2,2,2,1,99999,2,2,&
-		! 'list','merge','difference','index','index_v','len','ilist','putlist','table',& ! 8
+		99999,9999,2,2,2,1,99999,2,2,2,2,&
+		! 'list','merge','difference','index','index_o','len','ilist','putlist','table','fromlist','list2sym',& ! 10
  
 		0,0, &
 		! 'text','txt', & !2  text is old txt new
  
-		1,99999,1,0,1,0,1,99,&
+		1,99999,999,0,1,0,1,99,&
 		! 'exist_f','delete_f','close','showdir','setdir','thisfile', 'filestat','print_f',& ! 8
  
 		9999,9999,9999,1,1,9999,999999,&
@@ -420,14 +421,14 @@ module jmod
 		2,0,1,9999,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
-		1,2,2,2,2,2,9999,8, & !calle,lmin,lmax,dmin,gam,b
+		1,2,2,2,2,2,9999,7, & !calle,lmin,lmax,dmin,gam,b
 		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',stemopt  & ! 8
  
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
-		99999,5*0,1,9999/
-	! 'value','properties','cpu','seconds','where','batch','system','info'/ !8
+		99999,5*0,1,9999,3,3/
+	! 'value','properties','cpu','seconds','where','batch','system','info','namenum','namenum%'/ !8
  
  
  
@@ -460,7 +461,7 @@ module jmod
 	integer,dimension(j_nnamedfuncarg):: j_needsnamed
  
 	!free options free$
-	parameter (j_noptions_=221) !!!option number of j_ options
+	parameter (j_noptions_=223) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 		'extraup','extra','mean', 'min','max',& ! 1-10
@@ -484,7 +485,8 @@ module jmod
 		'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
 		'tailtofirst','tailtolast','cumulative','time','missing','clean','factgroup','dpivot','int','pullout',&
 		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist',&
-		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange','makelist','code','case'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
+		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange','makelistFREE','code','case', &
+		'maxobs','pointsonly'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -523,7 +525,7 @@ module jmod
 	parameter (j_mbasis=204,j_mcondition=205,j_mfastdif=206,j_mmarksize=207,j_mkeepopen=208)
 	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211,j_milist=212,j_mnrowtot=213,j_mshowdomain=214)
 	parameter (j_mknn=215,j_mnewup=216,j_mxfunc=217,j_mxfuncrange=218,j_mmakelist=219,j_mcode=220,j_mcase=221)
- 
+	parameter (j_mmaxobs=222,j_mpointsonly=223)
 	integer,parameter :: j_nnamedoptarg=53
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
  
@@ -576,6 +578,7 @@ module jmod
 	logical ::j_end=.false.
 	logical ::j_isreadnu=.false.
 	logical ::j_isgetinp=.false.
+	logical ::j_isinpu=.false.
 	logical ::j_needsall=.false.
 	!	logical ::j_isreadinp=.false.
 	logical ::j_iscode=.false.
@@ -587,7 +590,7 @@ module jmod
  
 	integer :: j_nu
 	logical ::j_ismakelist
-	integer j_makelistvar,j_makelist
+	integer j_makelistvar,j_makelist,j_makelistnvar
 	integer,dimension(:),allocatable::j_fromvarvector
 	integer, dimension(:), pointer :: j_fromvar
  
@@ -662,6 +665,8 @@ module jmod
 	integer :: j_nopt2=0  !code options
 	integer,parameter ::j_maxopenopt=40
  
+ 
+ 
 	!	integer,dimension(j_maxopenopt2)::j_curropt2
 	integer, dimension(j_maxopenopt) :: j_optioniob
 	integer, dimension(j_maxopenopt) :: j_optionlink
@@ -720,7 +725,7 @@ module jmod
 		1,2,3,4,7,8,9,11,12,13,14,15,19,20,21,22,23,24,26,27,28,29,30/)
 	integer ::j_readunit(30)=0 ! 27 is the largest of above values
 	integer ::j_unitchar(30)=0 ! 0 unit not open,-iv readfile iv write file
- 
+	integer :: j_unitform(30)
 	!                    27 is the largest of above values
 	!                   used only for files associated with characters (iv)
 	! units used otherwise in J: 17 and 18 in figures   What else???????
@@ -943,7 +948,7 @@ module jmod
 	integer j_ivcase,j_caseread,j_ivcaselist
  
 	logical ::j_eof
-	double precision,dimension(400)::j_tempv,j_tempv2,j_tempv3
+	double precision,dimension(400)::j_tempv,j_tempv2,j_tempv3,j_tempv4
 	double precision ::j_dapu,j_dapu2,j_dapu3,j_dapu4,j_dapu5  !for different purposes
 	character(len=:), pointer :: j_inprp
 	character*3000 j_tempchar
@@ -1085,6 +1090,7 @@ module jmod
 	! integer, dimension(:),allocatable::j_curdatasets
 	! integer, dimension(:),allocatable::j_iobcur,j_nobcur,j_iobcum
 	!	integer j_ndatasets
+ 
 	integer*8 j_iobs
 	!	integer j_levels,j_level
 	integer::j_divdata,j_dfilterlink,j_drejectlink,j_divtrans,j_divvars,j_divmat,j_divvars2
@@ -1147,6 +1153,15 @@ module jmod
 	double precision, dimension(:),pointer::rbuf=>null()
 	type(j_linkr),pointer ::pnext=>null()
 	end type !type j_linkr
+ 
+	type j_pointer
+	integer, dimension(:),allocatable::i2
+	endtype
+	type(j_pointer),dimension(j_maxopenopt):: j_opoint
+ 
+	type(j_pointer),dimension(j_mxrecursion):: j_apoint
+ 
+ 
 	!!end motule
  
 	!!module jumpmod used to
@@ -1174,7 +1189,7 @@ module jmod
 	! character*256 inpold
 	character*14096 j_inpr
 	character*14096 j_inpr2
-	character*40 j_adr
+	character*70 j_adr
 	character*8 j_ch8,j_ch8b
 	parameter(j_incnu=31)
 	integer::j_ninc=1
@@ -2190,7 +2205,8 @@ module jmod
  
 		end function
  
-		function j_lenpara()
+		function j_lenpara(isinpu)
+			logical,optional,intent(out)::isinpu
  
 		end function j_lenpara
  
@@ -2221,6 +2237,18 @@ module jmod
 		double precision function j_quad(x,x0,x1,x2,y0,y1,y2) !*qudratic interpolation for point x, Newton forward-form
 			double precision, intent(in) :: x,x0,x1,x2,y0,y1,y2
 		end function !real function j_quad(x,x0,x1,x2,y0,y1,y2)
+ 
+		double precision function j_namenum(name,num) !*
+			character*(*),intent(in) ::name
+			integer, intent(in) :: num
+		end function !real function j_quad(x,x0,x1,x2,y0,y1,y2)
+		subroutine j_namenum2(name,num,val,iv,make) !*
+			character*(*),intent(in) ::name
+			integer, intent(in) :: num
+			integer,intent(out),optional::iv
+			double precision,intent(out),optional::val
+			logical,intent(in),optional::make
+		end subroutine
  
 		integer function j_iprintin(iob,idef) !idef default for print->
 			integer,intent(in):: iob,idef
@@ -2491,6 +2519,12 @@ module jmod
 			integer,intent(in) ::iv
 			!j_datasub=	j_o(iv)%i(9)
 		end function !integer function j_datasub(iv)
+ 
+		integer function j_from(iob,io,ivmat,until)
+			integer,intent(in)::iob,io,ivmat
+			integer,intent(out)::until
+		end function
+ 
  
 		integer function j_datanobsw(iv)  ! !!data
 			integer,intent(in) ::iv
@@ -2998,6 +3032,7 @@ module jmod
 		character*10 function j_chr10(a)
 			DOUBLE PRECISION, intent(in)::  a
 		end function !character*10 function j_chr10(a)
+ 
  
 		subroutine j_gayainit(iob,io)
 			integer, intent(in):: iob,io
@@ -3960,6 +3995,26 @@ module jmod
 			integer,intent(in) :: iel
 			integer,intent(in) :: ival
 		end subroutine j_puti !subroutine j_puti(ivec,iel,ival)
+ 
+		subroutine j_allocatei(ivec,len)
+			integer,dimension(:),intent(inout), allocatable::ivec
+			integer,intent(in) :: len
+ 
+		end subroutine
+ 
+		subroutine j_allocated(dvec,len)
+			double precision,dimension(:),intent(inout), allocatable::dvec
+			integer,intent(in) :: len
+		end subroutine
+		subroutine j_allocated8(dvec,len)
+			double precision,dimension(:),intent(inout), allocatable::dvec
+			integer*8,intent(in) :: len
+		end subroutine
+ 
+		subroutine j_allocates(rvec,len)
+			real,dimension(:),intent(inout), allocatable::rvec
+			integer,intent(in) :: len
+		end subroutine
  
 		subroutine j_checki(ivec,iel)
 			integer,dimension(:),intent(inout), allocatable::ivec

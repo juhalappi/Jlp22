@@ -176,11 +176,18 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 12.7. 2023. Numeric values can obtained from variable names using namenum() and 
+namenum\%() functions. This is useful with data with case or making lists using the new makelist-> option in \textcolor{VioletRed}{data}(). 
+continuation character can be removed with '<<'. This is useful when using \textcolor{Red}{;do}-loops to generate 
+an input line. \textcolor{VioletRed}{minloc}() and \textcolor{VioletRed}{maxloc}() functions can be used to find the location of minimum 
+and maximum in a vector or variable in data (thus returning the number of observation). 
+New options \textcolor{blue}{step->} and \textcolor{blue}{points->} in \textcolor{VioletRed}{drawline}(). 
+ 
 Version 29.6.2023. Function find\_d() added. This function can be used to get \textcolor{teal}{ILIST} 
 of all observatiosn satisfying a condition. The \textcolor{VioletRed}{data}() and \textcolor{VioletRed}{matrix}() functions can get values 
-from varaible names or computation rules. Sparse data can be obtained using \textcolor{blue}{sparse->} 
-option. \textcolor{teal}{Data} with named cases is now obtianed using case->option in \textcolor{VioletRed}{data}(), 
-and \textcolor{VioletRed}{datawcase}() is removed.When printing is indicated with semicolon or double semicolon, and the object 
+from variable or using computation rules. Sparse data can be obtained using \textcolor{blue}{sparse->} 
+option. \textcolor{teal}{Data} with named cases is now obtained using case->option in \textcolor{VioletRed}{data}(), 
+and \textcolor{VioletRed}{datawcase}() is removed. InformationWhen printing is indicated with semicolon or double semicolon, and the object 
 can contain piecewise linear terms. Nonlinear terms will be easy to include in  a similar way. 
  
  
@@ -1353,13 +1360,6 @@ The following objects are generated during the initilaization.
  
  
 \noindent \textcolor{teal}{Data}  \tabto{25mm }  List \tabto{45mm }    List object used to indicate current data setsDat 
- 
- 
- 
- 
- 
- 
- 
  
  
  
@@ -3330,6 +3330,124 @@ li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x13,\textcolor{blue}{do->}
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
+\subsection{Symbolic constants} 
+\label{symconst} 
+\textcolor{teal}{REAL} variables having some fixed value are can be considered as constants. Only 
+some constants created at the initialization are constants in the sense that their value 
+cannot be changed later. For some time I made a possiblity to lock the values of other 
+variables also, but this was not very useful. But in a \textcolor{teal}{DATA} having symbolic names for cases, the 
+names for cases can be considered as symbolic contants. In \textcolor{teal}{DATA} with cases data\%case is 
+a list having the case names as elements. These case names are actually ordinary \textcolor{teal}{REAL} 
+variables but with the special property that the value of ith element is equal to i. 
+This way the case name tells what is the observation number, which makes it possible to 
+acces a row in data matrix using the case name. Other lists of symbolic constants can be 
+made with list2sym() function, which can pick from the names of varaibles in the list a new \textcolor{teal}{LIST} 
+having this property. The purpose of symbolic constants is give a tag which ca be used to tell 
+that subjects occuring in different parts of the code refer to the same subject. When 
+the symbolic constant is in the case-list of 	a \textcolor{teal}{DATA}, the value of the constant tells in what 
+observation of the \textcolor{teal}{DATA} further properties are defined. The namenum() and namenum\%() functions allow 
+to maintain also numeric variables in the name of the constant. This way it is not necessary 
+to look these quantitative properties from the \textcolor{teal}{DATA} because this infomation is carried in ther name. 
+This is a handy way to maintain indexes without the need to establish permanent indexes. 
+I will use this property in a forthcoming 
+application where \textbf{Jlp22} is used for optimization of blade settings in saw mills. 
+\subsubsection{list2sym() makes \textcolor{teal}{LIST} of symbolic constants from another \textcolor{teal}{LIST}.} 
+\label{list2sym} 
+List of symbolic constants is a \textcolor{teal}{LIST} of \textcolor{teal}{REAL} variables where the value of each variable 
+equals the position of the variable in the list. Applications of this will be presented 
+in the worthcoming project of optimization of sawing blade settings. 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output  \tabto{3cm} 1  \tabto{5cm}   \textcolor{teal}{LIST}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{LIST} of symbolic constants generated 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args  \tabto{3cm} 2 \tabto{5cm}   List and \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The first argument tells from waht list the output is generated. 
+It is probably the list of cases in a \textcolor{teal}{DATA} with cases. The second argument tells how many '\%' 
+signs precede that part of variable names from which the list is made. The variable names 
+are taken to the next '\%' or to the end of name. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+See functions namenum() and namenum\%() how to pick numbers from variable names. 
+\end{note} 
+\singlespacing 
+\begin{example}[list2symex]Example of list2sym()\\ 
+\label{list2symex} 
+\noindent {\color{ForestGreen}*** Log boxes in a sawmill where boxes are defined with top diameter, length and species.}\\ 
+logdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(T\_log,N\_log),\textcolor{blue}{in->},case->)\\ 
+L15\%40\%Spruce,200\\ 
+L15\%43\%Spruce,300\\ 
+L18\%40\%Pine,100\\ 
+L18\%43\%Spruce,150\\ 
+/                \\ 
+li=\textcolor{Red}{;list}(logdata\%?);\\ 
+@li;\\ 
+logdata\%case;\\ 
+{\color{ForestGreen}** Pick after two \%}\\ 
+ili=list2sym(logdata\%case,2);\\ 
+@ili;\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
+\subsubsection{namenum() and namenum\%() take numbers from object name} 
+\label{namenum} 
+Object names often contain some numbers. These can be 
+picked using namenum() and namenum\%() functions. Probably the function will be used so that the object is 
+in an object \textcolor{teal}{LIST}. The are two ways to pick object from \textcolor{teal}{LIST}, either in input programming or either at \textcolor{Red}{sit>} prompt or 
+in \textcolor{teal}{TRANS} object. Usually the numbers are picked from the list of cases in a data 
+with cases. 
+Function namenum() picks the number which is presented with consecutive numbers, while 
+namenum\%() picks the numbers from a \textcolor{teal}{REAL} variable. 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output \tabto{3cm}  1 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The number picked from the name 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args \tabto{3cm} 1-3 \tabto{5cm}  REAL|LIST \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  There are two cases:\\ 
+The first argument is the object from whose name the number is picked. Then the second argument can be 
+The second argument tells what is the order of the number among numbers (in namenum()) or \textcolor{teal}{REAL} 
+variables whose name starts after 
+'\%' ( in Namenum\%() )	of the name. Default is one, i.e. the first 
+number is picked. \\ 
+The fist argument is \textcolor{teal}{LIST} and sewcond argument is the element number and third argument can be the order of number. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\singlespacing 
+\begin{example}[namenumex]Example of namenum() and namenum\%() in the data decribing the log storage in a sawmill\\ 
+\label{namenumex} 
+\noindent logdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(T\_log,N\_log),\textcolor{blue}{in->},case->)\\ 
+L15\%40\%Spruce,200\\ 
+L15\%43\%Spruce,300\\ 
+L18\%40\%Pine,100\\ 
+L18\%43\%Spruce,150\\ 
+/                \\ 
+D=namenum(logdata\%case,3,2);\\ 
+D=namenum(@logdata\%case(3),2);\\ 
+logdata\%case;\\ 
+ili=list2sym(logdata\%case,2);\\ 
+@ili;\\ 
+ 
+species=namenum\%(logdata\%case,3,2);\\ 
+species=namenum\%(@logdata\%case(3),2);\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \subsection{\textcolor{Red}{;list}(part\%?) \textcolor{teal}{LIST} of objects having common part in name}\index{;list} 
 \label{inpusub2b} 
 \textcolor{Red}{;list}() Makes a list of objects. The example shows how the list can be printed and how 
@@ -3411,6 +3529,8 @@ if list is not in \textcolor{teal}{LIST} list.\\
 the matrix through in row order. If valuea is not in \textcolor{teal}{matrixa} \textcolor{VioletRed}{index}() returns zero.\\ 
 \textcolor{VioletRed}{index}(valuea,\textcolor{teal}{matrixa},\textcolor{blue}{any->}) returns the location of the first element which is greater or equal 
 to valuea. 
+\subsection{index\_o() Index of the first argument in the \textcolor{teal}{LIST} of second argument} 
+\label{index_o} 
 \subsection{\textcolor{VioletRed}{len}() Length of \textcolor{teal}{LIST}, \textcolor{teal}{ILIST} or \textcolor{teal}{MATRIX}}\index{len()} 
 \label{len} 
 \textcolor{VioletRed}{len}(\textcolor{teal}{arg})  Lenghts for the following argument types 
@@ -4236,11 +4356,19 @@ See section matrixstat for details
 \textcolor{VioletRed}{minloc}(\textcolor{teal}{MATRIX}) generates a row vector containing the locations of the  minimum 
 values in each column. \textcolor{VioletRed}{minloc}(VECTOR) is the \textcolor{teal}{REAL} scalar telling 
 the location of the minimum value. Thus the VECTOR can also be a row vector. 
+\begin{note} 
+The observation for which a \textcolor{teal}{DATA} variable gets minimum value can be obtained 
+using \textcolor{blue}{minobs->} option in \textcolor{VioletRed}{stat}(). 
+\end{note} 
 \subsection{\textcolor{VioletRed}{maxloc}() Locations of the minimum values}\index{maxloc()} 
 \label{maxloc} 
 \textcolor{VioletRed}{maxloc}(\textcolor{teal}{MATRIX}) generates a row vector containing the locations of the  minimum 
 values in each column. \textcolor{VioletRed}{maxloc}(VECTOR) is the \textcolor{teal}{REAL} scalar telling 
 the location of the maxim value whether VECTOR is a row vector or column vector. 
+\begin{note} 
+The observation for which a \textcolor{teal}{DATA} variable gets the maximum value can be obtained 
+using maxobs-> option in \textcolor{VioletRed}{stat}() 
+\end{note} 
 \subsection{\textcolor{VioletRed}{cumsum}() Cumulative sums}\index{cumsum()} 
 \label{cumsum} 
 \textcolor{VioletRed}{cumsum}(\textcolor{teal}{MATRIX}) generates a \textcolor{teal}{MATRIX} with the same dimesnions as the argument, 
@@ -4567,7 +4695,7 @@ there are both header and code lines, they are read in the same order as
 the options are. 
 \end{note} 
 \begin{note} 
-It was earlier possiblöe to create both the upper level data and subdata with the same \textcolor{VioletRed}{data}(). 
+It was earlier possible to create both the upper level data and subdata with the same \textcolor{VioletRed}{data}(). 
 This made the function very complicated. The function is also otherwise greatly 
 simplified. 
 \end{note} 
@@ -4794,7 +4922,7 @@ dc\%matrix;\\
 \textcolor{VioletRed}{delete\_f}('data.bin')\\ 
  
 \textcolor{VioletRed}{write}('data.bin','\textcolor{teal}{B}',da\%matrix)\\ 
-\textcolor{VioletRed}{close}('data.bin')\\ 
+\textcolor{VioletRed}{close}('data.bin')j\_mcase\\ 
 dc=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1},\textcolor{teal}{x2}),\textcolor{blue}{form->}'\textcolor{teal}{B}',\textcolor{blue}{in->}'data.bin')\\ 
 dc\%keep;\\ 
 dc\%matrix;\\ 
@@ -4813,6 +4941,13 @@ setdata\%matrix;\\
 setdata\%set;\\ 
  
 \textcolor{Red}{;return}\\ 
+{\color{ForestGreen}*** sparse data with case-> and makelist->}\\ 
+logdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(D\_log,L\_log,T\_log,N\_log),makelist->T\_log,\textcolor{blue}{in->})\\ 
+15,40,Spruce,200\\ 
+15,43,Spruce,300\\ 
+18,40,Pine,100\\ 
+18,43,Spruce,150\\ 
+/               \\ 
  
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
@@ -5604,6 +5739,33 @@ return
 Function \textcolor{VioletRed}{find}() can be used to search all or first elements of a vector 
 satifying a condition. 
 \end{note} 
+\subsection{Taking data from data matrix} 
+\label{fromdata} 
+\textcolor{teal}{DATA} is essentially a \textcolor{teal}{MATRIX} data\%matrix with names for columns. 
+The matrix data\%matrix can be used as any other matrix. But it is also possible 
+to take data from data\%matrix utlizing column names. 
+The following examples show how this can be done. 
+\singlespacing 
+\begin{example}[fromdataex]\\ 
+\label{fromdataex} 
+\noindent \textcolor{teal}{datab}=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x1}...x5),\textcolor{blue}{in->})\\ 
+1,2,3,4,5\\ 
+10,20,30,40,50\\ 
+100,200,300,400,500\\ 
+/                  \\ 
+{\color{ForestGreen}**taking a single value}\\ 
+h=\textcolor{teal}{datab}(\textcolor{teal}{x3},\textcolor{blue}{row->}2);\\ 
+{\color{ForestGreen}** taking whole columns}\\ 
+a=\textcolor{teal}{datab}(\textcolor{teal}{x2},x5);\\ 
+{\color{ForestGreen}** taking whole row}\\ 
+a=\textcolor{teal}{datab}\%\textcolor{VioletRed}{matrix}(3,All);\\ 
+{\color{ForestGreen}**picking values from a row}\\ 
+a=\textcolor{teal}{datab}(\textcolor{teal}{x1},x5,\textcolor{blue}{row->}2);\\ 
+{\color{ForestGreen}**picking several rows}\\ 
+a=\textcolor{teal}{datab}(\textcolor{teal}{x2},x5,\textcolor{blue}{from->}1,\textcolor{blue}{until->}2);\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \section{Statistical functions} 
 \label{statistics} 
 There are several statistical functions which can be used to compute basic statistics 
@@ -7559,9 +7721,23 @@ then with \textcolor{blue}{label->} option one can write text to any point.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{blue}{step} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Points taken from matrices are taken at steps given in \textcolor{blue}{step->} 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{mark}  \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL} | \textcolor{teal}{CHAR}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  The mark used in the plot. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent pointsonly \tabto{3cm} N|0 \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Only points are drawn. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7583,7 +7759,7 @@ If set is given e.g as \textcolor{blue}{set->}3, then it is possible to plot a l
 with the same width and color. The data points are stored into file \textcolor{teal}{fi}.jfi3. This is 
 useful e.g. when drawing figures showing transportation of timber to factories 
 for huge number of sample plots. 
-Numeric values refer to \textcolor{teal}{gnuplot} mar types. 
+Numeric values refer to \textcolor{teal}{gnuplot} mark types. 
 The mark can be given also as \textcolor{teal}{CHAR} varible or constant. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -7602,6 +7778,11 @@ The mark can be given also as \textcolor{teal}{CHAR} varible or constant.
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
+\begin{note} 
+Both  fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{x},\textcolor{teal}{y},\textcolor{blue}{mark->}'*',\textcolor{blue}{append->}) and fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{x},\textcolor{teal}{y},\textcolor{blue}{label->}'*',\textcolor{blue}{append->}) can 
+be used to put the mark into a figure, but mark is centered at the point but 
+for a label \textcolor{teal}{x} and \textcolor{teal}{y} give the upper-left coordiantes. 
+\end{note} 
 \singlespacing 
 \begin{example}[drawlineex]Example of \textcolor{VioletRed}{drawline}()\\ 
 \label{drawlineex} 
