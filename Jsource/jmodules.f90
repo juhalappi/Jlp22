@@ -340,7 +340,7 @@ module jmod
 		0,0,1,1,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
-		1,2,2,2,2,2,0,7,&     !calle,lmin,lmax,dmin,gam,b
+		1,2,2,2,2,2,0,9,&     !calle,lmin,lmax,dmin,gam,b
 		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt,  & ! 6
  
 		2,1,1,1,0,2,1,&
@@ -351,7 +351,7 @@ module jmod
  
  
 	integer, dimension(j_nfunctions_):: j_maxarg_  !=  & !!%%function
-	data j_maxarg_/ 4,5,5,99999,9999,9999,9999,3,999,&
+	data j_maxarg_/ 4,9999,5,99999,9999,9999,9999,3,999,&
 		! 'setoption','getelem','setelem','list2', 'o1_funcs','o2_funcs','o3_funcs','setcodeopt', &  ! 8n
 		!setpointer
 		1,99999,1,1,&
@@ -421,7 +421,7 @@ module jmod
 		2,0,1,9999,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
-		1,2,2,2,2,2,9999,7, & !calle,lmin,lmax,dmin,gam,b
+		1,2,2,2,2,2,9999,9, & !calle,lmin,lmax,dmin,gam,b
 		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',stemopt  & ! 8
  
 		2,1,1,1,0,2,1,&
@@ -1060,7 +1060,8 @@ module jmod
 	integer, dimension(:),allocatable::j_traceline,j_traceiv,j_traceii
 	integer,parameter::j_txtlen=160
 	character*160,dimension(:),allocatable::j_temptxt
-	double precision,dimension(:),allocatable::j_tempvector,j_tempvector2
+	double precision,dimension(:),allocatable::j_tempvector
+	double precision,dimension(:),allocatable::j_tempvector2
 	real,dimension(:),allocatable::j_tempvectors
 	integer,dimension(:),allocatable::j_itempvector,j_itempvector2,j_itempvector3
 	!	integer,dimension(:,:),allocatable::j_itempvect or2d
