@@ -130,6 +130,8 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+!Version 4.8. 2023 Some bugs corrected, and user errors are detected so that system crash is prevented.
+
 !Version 12.7. 2023. Numeric values can obtained from variable names using namenum() and
 !namenum%() functions. This is useful with data with case or making lists using the new makelist-> option in data().
 !continuation character can be removed with '<<'. This is useful when using ;do-loops to generate
@@ -141,7 +143,7 @@
 !of all observatiosn satisfying a condition. The data() and matrix() functions can get values
 ! from variable or using computation rules. Sparse data can be obtained using sparse->
 !option. Data with named cases is now obtained using case->option in data(),
-!and datawcase() is removed. InformationWhen printing is indicated with semicolon or double semicolon, and the object
+!and datawcase() is removed. When printing is indicated with semicolon or double semicolon, and the object
 to be printed is a TRANS object, the trasformation is computed. The objective in jlp() function
 !can contain piecewise linear terms. Nonlinear terms will be easy to include in  a similar way.
 
@@ -2154,7 +2156,7 @@ $$=300
 ! \end{itemize}
 
 
-! The matrix operations are explained in section ?. Their operation rules extent
+! The matrix operations are explained in section Arithmetic and logical operations. Their operation rules extent
 ! the standard rules. 
 ! endsection
 !!!'\textbf{J}'

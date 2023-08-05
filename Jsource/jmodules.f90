@@ -485,7 +485,7 @@ module jmod
 		'ylabel','t','coef','sorted','sub','discrete','prolog','epilog','unit',&
 		'tailtofirst','tailtolast','cumulative','time','missing','clean','factgroup','dpivot','int','pullout',&
 		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist',&
-		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange','makelistFREE','code','case', &
+		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange','param','code','case', &
 		'maxobs','pointsonly'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
@@ -524,7 +524,7 @@ module jmod
 	parameter (j_mclean=199,j_mfactgroup=200,j_mdpivot=201,j_mineuueut=202,j_mpullout=203)
 	parameter (j_mbasis=204,j_mcondition=205,j_mfastdif=206,j_mmarksize=207,j_mkeepopen=208)
 	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211,j_milist=212,j_mnrowtot=213,j_mshowdomain=214)
-	parameter (j_mknn=215,j_mnewup=216,j_mxfunc=217,j_mxfuncrange=218,j_mmakelist=219,j_mcode=220,j_mcase=221)
+	parameter (j_mknn=215,j_mnewup=216,j_mxfunc=217,j_mxfuncrange=218,j_mparam=219,j_mcode=220,j_mcase=221)
 	parameter (j_mmaxobs=222,j_mpointsonly=223)
 	integer,parameter :: j_nnamedoptarg=53
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
@@ -955,10 +955,10 @@ module jmod
 	character*3000 j_tempchar7   !used in j_interpret
 	character*13000 j_tempchar2
 	character*400 j_tempchar3
-	character*60 j_varname1, j_varname2,j_oname,j_oname2,j_oname3
+	character*60 j_varname1, j_varname2,j_oname,j_oname2,j_oname3,j_onameer
 	character*40 j_asktext
 	character*160 j_gottext
-	integer::j_loname,j_loname2,j_loname3,j_lgottext
+	integer::j_loname,j_loname2,j_loname3,j_lonameer,j_lgottext
 	!!end motule
  
 	!!module figmod
@@ -2689,6 +2689,8 @@ module jmod
 			integer, intent(in):: iv
 			integer,intent(in),optional::iv2,iv3
 		end subroutine !subroutine j_getline(iv,line,buffer,le)
+		
+		
  
 		character*1 function j_getnamech(iv)
 			integer, intent(in):: iv
@@ -3193,6 +3195,10 @@ module jmod
 			integer, intent(in)::ivfile
 			character*(*), intent(in),optional::ext
 		end function j_exist
+ 
+		logical function j_ispara()
+ 
+		end function j_ispara
  
 		!getwritefilebin(ivfile) : get file for reading, name is stored in character constant iv
 		subroutine j_getwritefilebin(ivfile,ext,irecl,ivout)
@@ -3934,9 +3940,9 @@ module jmod
  
 		end subroutine
  
-		subroutine j_frominpinit(iob,io)
-			integer,intent(in)::iob,io
-		end subroutine
+		!	subroutine j_frominpinit(iob,io)
+		!		integer,intent(in)::iob,io
+		!	end subroutine
  
 		subroutine j_readfrominp(vect,nvar)
 			double precision,dimension(:),intent(out)::vect

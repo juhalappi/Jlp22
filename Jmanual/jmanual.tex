@@ -176,6 +176,8 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 4.8. 2023 Some bugs corrected, and user errors are detected so that system crash is prevented. 
+ 
 Version 12.7. 2023. Numeric values can obtained from variable names using namenum() and 
 namenum\%() functions. This is useful with data with case or making lists using the new makelist-> option in \textcolor{VioletRed}{data}(). 
 continuation character can be removed with '<<'. This is useful when using \textcolor{Red}{;do}-loops to generate 
@@ -187,7 +189,7 @@ Version 29.6.2023. Function find\_d() added. This function can be used to get \t
 of all observatiosn satisfying a condition. The \textcolor{VioletRed}{data}() and \textcolor{VioletRed}{matrix}() functions can get values 
 from variable or using computation rules. Sparse data can be obtained using \textcolor{blue}{sparse->} 
 option. \textcolor{teal}{Data} with named cases is now obtained using case->option in \textcolor{VioletRed}{data}(), 
-and \textcolor{VioletRed}{datawcase}() is removed. InformationWhen printing is indicated with semicolon or double semicolon, and the object 
+and \textcolor{VioletRed}{datawcase}() is removed. When printing is indicated with semicolon or double semicolon, and the object 
 can contain piecewise linear terms. Nonlinear terms will be easy to include in  a similar way. 
  
  
@@ -1818,7 +1820,7 @@ In matrix computations there are two additional operations.
 \end{itemize} 
  
  
-The matrix operations are explained in section ?. Their operation rules extent 
+The matrix operations are explained in section Arithmetic and logical operations. Their operation rules extent 
 the standard rules. 
 \subsection{Logic and relation .eq. .ne. .gt. .ge. .lt. .le. .not. .and. .or. .eqv. .neqv.} 
 \label{logic} 
@@ -4446,7 +4448,7 @@ A data object can created using a \textcolor{teal}{TRANS} object
 by creating first data matrix with \textcolor{VioletRed}{matrix}() and then using \textcolor{VioletRed}{newdata}() to 
 create data object. In the new version data values can be obtained from a variable whose name is given or 
 using computation rule within parenthesis. If the data is given in \textcolor{blue}{in->} file, there must be 
-code-> option to indicate that interpreation is need for getting values. If there is \textcolor{blue}{sparse->} or case-> 
+code-> option to indicate that interpretation is needed for getting values. If there is \textcolor{blue}{sparse->} or case-> 
 then code-> is not needed for a file input either. 
 \vspace{0.3cm} 
 \hrule 
@@ -5852,9 +5854,23 @@ then the minima are stored into these variables.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{blue}{minobs}  \tabto{3cm} N|0 \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Observation where minimum is obtained is stored in var\%minobs 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{max}  \tabto{3cm} -1,99 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  maxima are stored, works as \textcolor{blue}{min->} 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent maxobs  \tabto{3cm} N|0 \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Observation where maximum is obtained is stored in var\%maxobs 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
