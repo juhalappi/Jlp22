@@ -176,6 +176,14 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 20.9.2023 The interpretation of the sequence within " " is changed when the numeric value is not integer. 
+when plotting both \textcolor{blue}{se->} and \textcolor{blue}{sd->} error bars both can be (again) plotted with the same \textcolor{VioletRed}{drawclass}(). 
+Function \textcolor{VioletRed}{drawline}() without arguments and with \textcolor{blue}{append->} can be used to define axes afterwards. 
+Working with submatrices is rewritten, because it had gone very complicated. Now now continuous 
+row and column ranges can be mixed with sepcifying rows and/or \textcolor{teal}{ILIST} objects. 
+ 
+Version 10.8.2023 Function matrixborder() added. It puts header on top and/or left of \textcolor{teal}{MATRIX}. 
+ 
 Version 4.8. 2023 Some bugs corrected, and user errors are detected so that system crash is prevented. 
  
 Version 12.7. 2023. Numeric values can obtained from variable names using namenum() and 
@@ -722,8 +730,13 @@ An input paragraph can also contain input programming structures.
 The included text files can contain labels. Labels define possible starting points for the 
 inclusion or jump labels within an include file. A label starts with semicolon (;) and 
 ends with colon (:). There can be text after the label and the text is printed but 
-otherwise ignored.\\ 
+otherwise ignored. The section of an include file starting with a label and ending with '\textcolor{Red}{;return}' are 
+called input sections. They can be used as subroutines in the input programming. 
  
+\begin{note} 
+Input sections can be called both from outside from the \textcolor{Red}{sit>} prompt or from an upper 
+level include file or from the same include file 
+\end{note} 
  
 ;ad1:  At this point we are doing thit and that 
  
@@ -749,7 +762,8 @@ then
 is equivalent to 
 \textcolor{blue}{in->}'D:/\j/\area1.svs' 
 If the "-expression is not a character variable then \textbf{Jlp22} interprets the sequence as an arithmetic 
-expression and computes its value. Then the value is converted to character string and 
+expression and computes its value. If the format of the number is not given, 
+the value is made integer and the integer value is converted to character string and 
 substituted into the place. E.g. if nper is variable having value 10, then lines 
 \color{Green} 
 \begin{verbatim} 
@@ -765,21 +779,16 @@ chv = 'code10'
 \end{verbatim} 
 \color{Black} 
  
-With " " substitution one can define general macros which will get specific interpretation by 
-giving values for character and numeric parameters, and numeric parameters can be utilized in 
-variable names or other character strings. In transformation sets one can shorten computation 
-time by calculating values of expressions in the interpretation time instead of doing 
-computations repeatedly. E.g. if there is in a data set transformation 
-\textcolor{teal}{x3} = "\textcolor{VioletRed}{sin}(\textcolor{teal}{Pi}/4)"*x5 
-Then evaluation of \textcolor{VioletRed}{sin}(\textcolor{teal}{Pi}/4) is done immediately, and the value is transmitted to the 
-transformation set as a real constant. 
-If value of the expression within a “” sequence is an integer then the value is dropped in the 
-place without the decimal point and without any spaces, otherwise its value is presented in 
-form which is dependent on magnitude of the value. After J3.0 the format can be explicitly 
-specified within [] before the numeric value. Eg. text can be put into a figure as 
-\textcolor{teal}{fig} = 
-\textcolor{VioletRed}{drawline}(5,5,\textcolor{blue}{mark->}’y=”[f5.2]coef(reg,\textcolor{teal}{x1})“*\textcolor{teal}{x1}+”[f5.2]coef(reg,1)“‘) 
-See file jex.txt and Chapter 8 for an ex 
+If the integer value does not have sufficient accuracly, the format must be given at the end 
+of the sequence within ][. 
+Eg. text can be put into a figure as 
+\textcolor{teal}{fig} =\textcolor{VioletRed}{drawline}(5,5,\textcolor{blue}{mark->}’y=”coef(reg,\textcolor{teal}{x1})]f5.2[“*\textcolor{teal}{x1}+”coef(reg,1)]f5.2[“‘) 
+\begin{note} 
+Before version August 2023, the format was given at the beginning of the sequece 
+within []. This was changed to be compatible to the specification of the font in the labels 
+of figures. If the value was not integer, \textbf{Jlp22} tried to figure out proper format, but 
+it is more straightforward that the user gives it. 
+\end{note} 
 \subsection{\textcolor{Red}{;incl}() lines from a file}\index{;incl} 
 \label{incl} 
 Includes lines from a file or from a text object. Using the \textcolor{blue}{from->} 
@@ -1524,7 +1533,7 @@ objects when generating arguments for functions or options,
 or values of code options, or in any place within a transformation object. 
 If {tr} is a transformation and the transformation computes an object {A} then 
 {tr(A)} is first calling transformation {tr} and provides then object {A} into this place. 
-As the transformation computes also other objects which are computed within it, also thes objects 
+As the transformation computes also other objects which are computed within it, also these objects 
 are available. At this point it is important to note that arguments of 
 a transformation line are computed from right to left, because options must be computed before 
 entering into a function. 
@@ -1796,7 +1805,7 @@ behave in a special way, \textcolor{VioletRed}{max}() behaves similarly as \text
 \textcolor{VioletRed}{sign}(A,\textcolor{teal}{B}) returns the value of A with the sign of \textcolor{teal}{B}. 
 \subsection{Numeric operations -, +, *, **, ***, /, *., /.} 
 \label{numer} 
-An arithmetic expression consisting of ordinary arith metic operations is formed in 
+An arithmetic expression consisting of ordinary arithmetic operations is formed in 
 the standard way. The operations are in the order of their precedence. 
 \begin{itemize} 
 \item - unary minus 
@@ -2321,8 +2330,7 @@ be used as if it would 1 \textcolor{teal}{x} 1 \textcolor{teal}{MATRIX}. This ca
 matrices whose dimensions can vary starting from 1 \textcolor{teal}{x} 1. Symbol \textcolor{teal}{r} refers to 
 row index, \textcolor{teal}{r1} to first row in a row range, \textcolor{teal}{r2} to the last row. The rows and 
 columns can be specifiel using \textcolor{teal}{ILIST} objects \textcolor{teal}{il1} and \textcolor{teal}{il2} to specify noncontiguous ranges. 
-It is currently not possible to mix \textcolor{teal}{ILIST} range and contiguous range, so if \textcolor{teal}{ILIST} 
-is needed for rows (columns), it must be used also for columns (rows). \textcolor{teal}{ILIST} can be 
+\textcolor{teal}{ILIST} can be 
 specified using \textcolor{VioletRed}{ilist}() function or using {} construction. 
 Similarly columns are indicated  with \textcolor{teal}{c}. It is always legal to refer to 
 vectors by using the \textcolor{teal}{M} formulation and giving \textcolor{teal}{c} with value 1 for column vectors and 
@@ -2403,6 +2411,9 @@ H(3,-4,\textcolor{blue}{diag->})=\textcolor{VioletRed}{matrix}(2,\textcolor{blue
 \onehalfspacing 
 \begin{note} 
 When giving range, the lower and upper limit can be equal. 
+\end{note} 
+\begin{note} 
+It was not possible to mix \textcolor{teal}{ILIST} range and contiguous range. Now they can be mixed. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{getelem}(): extracting information from an object}\index{getelem()} 
 \label{getelem0} 
@@ -4408,6 +4419,61 @@ Negative diagonal eleemnt produces error, value zero correaltion 9,99.
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
+\subsection{matrixborder) puts row above a \textcolor{teal}{MATRIX} or column on the left} 
+\label{matrixborder} 
+When computing reasults into a \textcolor{teal}{MATRIX}, often header row is needed on top and/or on left. 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output \tabto{3cm}  1 \tabto{5cm}   \textcolor{teal}{MATRIX} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  the augmented matrix 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args  \tabto{3cm} 1 \tabto{5cm}   \textcolor{teal}{MATRIX} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  input 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{row}  \tabto{3cm} -1 - \tabto{5cm}   LIST|MATRIX|REAL  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  values put on top 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{column}  \tabto{3cm} -1 - \tabto{5cm}   LIST|MATRIX|REAL  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  values put to left 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\singlespacing 
+\begin{example}[matrixborderex]derex\\ 
+\label{matrixborderex} 
+\noindent a=\textcolor{VioletRed}{matrix}(2,3,\textcolor{blue}{do->});\\ 
+\textcolor{teal}{b}=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(2,5));\\ 
+ab=matrixborder(a,\textcolor{blue}{column->}\textcolor{teal}{b});\\ 
+c=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{values->}(4,2,5));\\ 
+ac=matrixborder(a,\textcolor{blue}{row->}c);\\ 
+abc=matrixborder(a,\textcolor{blue}{row->}c,\textcolor{blue}{column->}\textcolor{teal}{b});\\ 
+row=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...\textcolor{teal}{x3})\\ 
+@row=4,2,5\\ 
+col=\textcolor{VioletRed}{list}(c1,c2)\\ 
+@col=2,5\\ 
+ab=matrixborder(a,\textcolor{blue}{column->}col);\\ 
+ac=matrixborder(a,\textcolor{blue}{row->}row);\\ 
+abc=matrixborder(a,\textcolor{blue}{row->}row,\textcolor{blue}{column->}col);\\ 
+ab=matrixborder(a,\textcolor{blue}{column->}(2,5));\\ 
+ac=matrixborder(a,\textcolor{blue}{row->}(4,2,5));\\ 
+abc=matrixborder(a,\textcolor{blue}{row->}(4,2,5),\textcolor{blue}{column->}(2,5));\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \section{ \textcolor{teal}{DATA} functions} 
 \label{datahead} 
 \textcolor{teal}{Data} can be analyzed and processed either using matrix computations 
@@ -7050,10 +7116,14 @@ see \textcolor{VioletRed}{jlpz}() for how \textcolor{VioletRed}{jlpcoef}() can b
 \end{note} 
 \section{Plotting figures} 
 \label{Plotting} 
-The graphiscs of the current version of \textbf{Jlp22} is produced with \textcolor{teal}{gnuplot}, see 
+The graphics of the current version of \textbf{Jlp22} is produced with \textcolor{teal}{gnuplot}, see 
 \url{http://www.overleaf.com} 
 \textbf{Jlp22} offers an alternative interface 
-to \textcolor{teal}{gnuplot}, and it is quite easy to add more ploting routines later. 
+to \textcolor{teal}{gnuplot}, and it is quite easy to add more plotting routines later. 
+Preparing figures, it is useful to make three separate input sections into an include file. 
+In the first section all matrices and datas are done. The second section uses the graphics 
+functions to put necessary lines and points to the figures. 
+The third section makes first working copies of the figures and adds labels and modifies axes if needed. 
 \subsection{\textcolor{VioletRed}{show}(), \textcolor{blue}{show->}  and \textcolor{blue}{continue->}}\index{show()} 
 \label{show} 
 By default, plotting functions plots (shows) FIGs immediately. When the final figure 
@@ -7528,26 +7598,28 @@ density funtions can be drawn in the same figure.
 \noindent \textcolor{blue}{se}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent Presence of option tells to include that error bars showing standard errors 
-of class means computed as \textcolor{VioletRed}{sqrt}(sample\_within-class\_variance)/number\_of\_obs) 
+of class means computed as \textcolor{VioletRed}{sqrt}(sample\_within-class\_variance)/number\_of\_obs). If \textcolor{blue}{se->} is present, 
+also the mean curve is drawn. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{sd}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Within-class standard deviations are drawn, if there is no \textcolor{blue}{mean->} 
-option. If there is also \textcolor{blue}{mean->} option then sd-error line are drawn 
-around mean similarly as with \textcolor{blue}{se->} standard error lines are drawn. Both se error bars and sd errors bars 
-can be obtained by first making figure with sd error bars with some color 
-and then calling \textcolor{VioletRed}{drawclass}() with different color, possibly with larger 
-\textcolor{blue}{width->}, and with \textcolor{blue}{append->}, see the example below. 
+\noindent  Within-class standard deviations are drawn, if there is no \textcolor{blue}{mean->}. 
+If there is also \textcolor{blue}{mean->} or \textcolor{blue}{se->} option then sd-error bars are drawn 
+around mean. If both \textcolor{blue}{se->} error and \textcolor{blue}{sd->} are present, then the se error bars and 
+sd error bars can have different color and width. If \textcolor{blue}{color->} and/or \textcolor{blue}{width->} has two 
+arguments, the first argument refers to \textcolor{blue}{sd->} error bars, and the second argument refers to 
+\textcolor{blue}{se->} error bars. Using \textcolor{blue}{width->}(1,2) gives nice looking error bars. 
+ 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{mean}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Class measn are drawn. Has effect only together with \textcolor{blue}{sd->}. 
+\noindent  Class mean are drawn. Has effect only together with \textcolor{blue}{sd->}. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7603,10 +7675,7 @@ reg=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},\textcolor{teal}{x})\,{\colo
 fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{blue}{continue->}fcont)\\ 
 fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{x}\%min,\textcolor{teal}{x}\%max,reg(\textcolor{teal}{x}\%min),reg(\textcolor{teal}{x}\%max),\textcolor{blue}{width->}3,\textcolor{blue}{color->}\textcolor{teal}{Cyan},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
 cl=\textcolor{VioletRed}{classify}(\textcolor{teal}{Resid},\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{classes->}5)\\ 
-fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
-fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{mean->},\textcolor{blue}{sd->},\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Red})\\ 
-fi2=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{continue->}fcont)\\ 
-fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Black},\textcolor{blue}{width->}2,\textcolor{blue}{append->})\\ 
+fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{se->},\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{width->}(2,1))\\ 
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{continue->}fcont)\\ 
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{var->},\textcolor{blue}{continue->}fcont)\\ 
 {\color{ForestGreen}** x-values were equally distributed due to data construction}\\ 
@@ -7799,6 +7868,17 @@ Both  fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{x},\textcolor{teal}{y}
 be used to put the mark into a figure, but mark is centered at the point but 
 for a label \textcolor{teal}{x} and \textcolor{teal}{y} give the upper-left coordiantes. 
 \end{note} 
+\begin{note} 
+Using \textcolor{VioletRed}{drawline}() without arguments and with \textcolor{blue}{append->} and with \textcolor{blue}{xlabel->},\textcolor{blue}{ylabel->}, 
+\textcolor{blue}{xrange->} and/or \textcolor{blue}{yrange->} 
+can be use to define axes after making the figure. 
+\end{note} 
+\begin{note} 
+A useful tactic to add labels to a figure \textcolor{teal}{fi} and fine tune them, is to 
+add	a section into the include file where the figure is copied into a working figure \textcolor{teal}{fi0} 
+using \textcolor{teal}{fi0}=\textcolor{teal}{fi}. Then the finetuning the figure can be done using this section 
+without the need to start making the figure several times using the grpahics functions. 
+\end{note} 
 \singlespacing 
 \begin{example}[drawlineex]Example of \textcolor{VioletRed}{drawline}()\\ 
 \label{drawlineex} 
@@ -7826,10 +7906,6 @@ figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}reg0(),\textcolor{teal
 /                                                                                              \\ 
 reg2=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{teal}{x2},\textcolor{blue}{trans->}\textcolor{teal}{transa})\\ 
 figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{transa}(fu),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{color->}Orange,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
-\textcolor{teal}{Continue}=1\,\,{\color{ForestGreen}!Errors}\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x})\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{xrange->}(1,100),\textcolor{blue}{func->}Sin(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x})\\ 
-\textcolor{teal}{Continue}=0\\ 
 \textcolor{Red}{;if}(wait)\textcolor{Red}{;pause}\\ 
 \textcolor{Red}{;return}\\ 
 \end{example} 

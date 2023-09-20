@@ -130,6 +130,14 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+!Version 20.9.2023 The interpretation of the sequence within " " is changed when the numeric value is not integer.
+! when plotting both se-> and sd-> error bars both can be (again) plotted with the same drawclass().
+! Function drawline() without arguments and with append-> can be used to define axes afterwards.
+!Working with submatrices is rewritten, because it had gone very complicated. Now now continuous
+! row and column ranges can be mixed with sepcifying rows and/or ILIST objects.
+
+!Version 10.8.2023 Function matrixborder() added. It puts header on top and/or left of MATRIX.
+
 !Version 4.8. 2023 Some bugs corrected, and user errors are detected so that system crash is prevented.
 
 !Version 12.7. 2023. Numeric values can obtained from variable names using namenum() and
@@ -1448,9 +1456,13 @@ tr=trans()
 ! The included text files can contain labels. Labels define possible starting points for the
 ! inclusion or jump labels within an include file. A label starts with semicolon (;) and
 !ends with colon (:). There can be text after the label and the text is printed but
-! otherwise ignored.\\
+! otherwise ignored. The section of an include file starting with a label and ending with ';return' are
+!called input sections. They can be used as subroutines in the input programming.
 
 !endheader
+!Note Input sections can be called both from outside from the sit> prompt or from an upper
+!level include file or from the same include file
+!endnote
 
 !Ex2
 ! ;ad1:  At this point we are doing thit and that
@@ -1480,7 +1492,8 @@ tr=trans()
 ! is equivalent to
 ! in->'D:/\j/\area1.svs'
 ! If the "-expression is not a character variable then Jlp22 interprets the sequence as an arithmetic
-! expression and computes its value. Then the value is converted to character string and
+! expression and computes its value. If the format of the number is not given,
+! the value is made integer and the integer value is converted to character string and
 ! substituted into the place. E.g. if nper is variable having value 10, then lines
 !Listing
 ! x#"nper+1"#"nper" = 56
@@ -1492,22 +1505,16 @@ tr=trans()
 ! chv = 'code10'
 !endlisting
 
-! With " " substitution one can define general macros which will get specific interpretation by
-! giving values for character and numeric parameters, and numeric parameters can be utilized in
-! variable names or other character strings. In transformation sets one can shorten computation
-! time by calculating values of expressions in the interpretation time instead of doing
-! computations repeatedly. E.g. if there is in a data set transformation
-! x3 = "sin(Pi/4)"*x5
-! Then evaluation of sin(Pi/4) is done immediately, and the value is transmitted to the
-! transformation set as a real constant.
-! If value of the expression within a “” sequence is an integer then the value is dropped in the
-! place without the decimal point and without any spaces, otherwise its value is presented in
-! form which is dependent on magnitude of the value. After J3.0 the format can be explicitly
-! specified within [] before the numeric value. Eg. text can be put into a figure as
-! fig =
-! drawline(5,5,mark->’y=”[f5.2]coef(reg,x1)“*x1+”[f5.2]coef(reg,1)“‘)
-! See file jex.txt and Chapter 8 for an ex
+! If the integer value does not have sufficient accuracly, the format must be given at the end
+!of the sequence within ][.
+! Eg. text can be put into a figure as
+! fig =drawline(5,5,mark->’y=”coef(reg,x1)]f5.2[“*x1+”coef(reg,1)]f5.2[“‘)
 !endheader
+!Note Before version August 2023, the format was given at the beginning of the sequece 
+!within []. This was changed to be compatible to the specification of the font in the labels
+!of figures. If the value was not integer, Jlp22 tried to figure out proper format, but
+! it is more straightforward that the user gives it.
+!endnote
 !endsection
 
 !Section inpureturn ;return from ;incl
@@ -2104,7 +2111,7 @@ $$=300
 ! or values of code options, or in any place within a transformation object. 
 ! If {tr} is a transformation and the transformation computes an object {A} then
 ! {tr(A)} is first calling transformation {tr} and provides then object {A} into this place.
-! As the transformation computes also other objects which are computed within it, also thes objects
+! As the transformation computes also other objects which are computed within it, also these objects
 ! are available. At this point it is important to note that arguments of 
 ! a transformation line are computed from right to left, because options must be computed before
 ! entering into a function. 
@@ -2130,7 +2137,7 @@ $$=300
 !endsection
 
 ! Section numer Numeric operations -, +, *, **, ***, /, *., /.
-! An arithmetic expression consisting of ordinary arith metic operations is formed in 
+! An arithmetic expression consisting of ordinary arithmetic operations is formed in 
 ! the standard way. The operations are in the order of their precedence.
 ! Latex
 ! \begin{itemize}
@@ -2594,11 +2601,16 @@ a call to function assone()
 !endsection
 
 ! Section Plotting Plotting figures
-! The graphiscs of the current version of Jlp22 is produced with gnuplot, see
+! The graphics of the current version of Jlp22 is produced with gnuplot, see
 !\url{http://www.overleaf.com}
 ! Jlp22 offers an alternative interface
-! to gnuplot, and it is quite easy to add more ploting routines later.
+! to gnuplot, and it is quite easy to add more plotting routines later.
+!Preparing figures, it is useful to make three separate input sections into an include file.
+!In the first section all matrices and datas are done. The second section uses the graphics
+!functions to put necessary lines and points to the figures. 
+!The third section makes first working copies of the figures and adds labels and modifies axes if needed.
 ! endsection
+
 ! Section figu Figures 
 ! Figures are made using gnuplot, see \url{http://gnuplot.info}. Jlp22 transmits information into gnuplot using text files.
 ! Jlp22 generates the files using .jfig extension. Necessary files are generated  by deleting old
