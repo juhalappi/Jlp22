@@ -130,6 +130,9 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
 
+! Version 1.10. 2023 submatrices can be specified with matrices (vectors). Lp problems
+! can be without constraints. The name of the subobject containg the value
+!of the objective is changed into %obj for having better balance with a coming stemopt function.
 !Version 20.9.2023 The interpretation of the sequence within " " is changed when the numeric value is not integer.
 ! when plotting both se-> and sd-> error bars both can be (again) plotted with the same drawclass().
 ! Function drawline() without arguments and with append-> can be used to define axes afterwards.
@@ -320,7 +323,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  ! This would give feedback to the developers 
  ! and would allow communication between users. 
  
- ! J version 2.0 published in 2013 made it possible optimize simultatenously
+ ! J version 2.0 published in 2013 made it possible optimize simultaneously
  ! forestry and transportations to factories
  ! and factory production. 
  ! Reetta Lempinen started to work with me in the factory optimization. 
@@ -344,12 +347,12 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  ! themselves. This started a frustrating and humillating hostile overtake process which lasted six 
  !and half years. Eleven
  ! leaders of Luke were involved,
- ! and none of them was eventually interested to get the software publisehd.
+ ! and none of them was eventually interested to get the software published.
  
  !I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017.
  ! I was not informed of the decision. Later Luke rejected explicitly any cooperation
  ! in the publication or in the development of 
- ! the software or in testing the behavior of Mela-software.
+ ! the software.
  
  !When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke.
  ! The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall
@@ -380,7 +383,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 ! The software contained so much dirty code that it could not be developed without my involvement,
 ! and barely even maintained. The leaders of Luke did not know this because they were not
 ! interested to discuss with me anything related to the state, publication or 
-! development of the software. I think that an expert organization should
+! development possibilities of the software. I think that an expert organization should
 ! always consult best experts. 
 
   

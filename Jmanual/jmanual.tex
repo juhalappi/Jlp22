@@ -49,7 +49,7 @@ the users would rise a flag when they use the sofware.
 This would give feedback to the developers 
 and would allow communication between users. 
  
-\textbf{J} version 2.0 published in 2013 made it possible optimize simultatenously 
+\textbf{J} version 2.0 published in 2013 made it possible optimize simultaneously 
 forestry and transportations to factories 
 and factory production. 
 Reetta Lempinen started to work with me in the factory optimization. 
@@ -73,12 +73,12 @@ Luke cannot let me take care of the publication but the leaders wanted to publis
 themselves. This started a frustrating and humillating hostile overtake process which lasted six 
 and half years. Eleven 
 leaders of Luke were involved, 
-and none of them was eventually interested to get the software publisehd. 
+and none of them was eventually interested to get the software published. 
  
 I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017. 
 I was not informed of the decision. Later Luke rejected explicitly any cooperation 
 in the publication or in the development of 
-the software or in testing the behavior of Mela-software. 
+the software. 
  
 When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke. 
 The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall 
@@ -109,7 +109,7 @@ Second.
 The software contained so much dirty code that it could not be developed without my involvement, 
 and barely even maintained. The leaders of Luke did not know this because they were not 
 interested to discuss with me anything related to the state, publication or 
-development of the software. I think that an expert organization should 
+development possibilities of the software. I think that an expert organization should 
 always consult best experts. 
  
  
@@ -176,6 +176,9 @@ The corrections of errors are not described in detail. The first version of \tex
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
  
+Version 1.10. 2023 submatrices can be specified with matrices (vectors). Lp problems 
+can be without constraints. The name of the subobject containg the value 
+of the objective is changed into \%obj for having better balance with a coming stemopt function. 
 Version 20.9.2023 The interpretation of the sequence within " " is changed when the numeric value is not integer. 
 when plotting both \textcolor{blue}{se->} and \textcolor{blue}{sd->} error bars both can be (again) plotted with the same \textcolor{VioletRed}{drawclass}(). 
 Function \textcolor{VioletRed}{drawline}() without arguments and with \textcolor{blue}{append->} can be used to define axes afterwards. 
@@ -2360,26 +2363,17 @@ and \textcolor{teal}{r} with value 1 for row vectors.
 \hrule 
 \vspace{0.2cm} 
  
-Row and column ranges can be spcidie as follows. 
+Row and column ranges can be specified as follows. Both rows and columns can be given 
+in similar way. Assume that submatrix is specified with  \textcolor{teal}{M}(r,c). Then r can 
+be the following constructions. Columns can be defined similarly: 
 \begin{itemize} 
-\item  \textcolor{teal}{M}(r,c) \tabto{5cm} Get or set single element. 
-\item  \textcolor{teal}{C}(r)  \tabto{5cm} Get or set single element in column vector. 
-\item  \textcolor{teal}{R}(c) \tabto{5cm} Get or set single element in column vector. 
-\item  \textcolor{teal}{M}(RANGES) \tabto{5cm} Get or set a submatrix, where RANGES 
-can be. For a column vector, the column range need not to specified. 
-\begin{itemize} 
-\item  r1,-r2,c1,-c2 
-\item  r,c1,-c2  \tabto{5cm} part of row r 
-\item  r1,-r2,c	\tabto{5cm} part of column c 
-\item  r1,-r2,All  \tabto{5cm} All columns of the row range 
-\item  All,c1,-c2  \tabto{5cm} All rows of the column range 
-\item  {r1,....rm},{c1,...,cn}  \tabto{5cm} Given rows and columns 
-\item  {r1,....rm}  \tabto{5cm} Given rows for column vector 
-\item  il1,il2   \tabto{5cm} for matrix with several columns 
-\item  il1   \tabto{5cm} for column vector 
-\end{itemize} 
-\item  When r2= m, then -r2 can be replaced with \textcolor{teal}{Tolast}. 
-\item  When c2= n, then -c2 can be replaced with \textcolor{teal}{Tolast}. 
+\item  r1 : a variable or constant for singel row. 
+\item r1,-r2 : a range of rows 
+\item r1,Ninf : Rows from row r1 to the last row 
+\item All : All rows 
+\item ili : Rows sepfied with a \textcolor{teal}{ILIST} object ili defined earlier 
+\item {r1,...,rn} : The \textcolor{teal}{ILIST} object is defined here 
+\item mat : Where mat is a matrix whose all elements (in row order)are made first integers 
 \end{itemize} 
  
 If option \textcolor{blue}{diag->} is present then 
@@ -2406,6 +2400,11 @@ A(1,-2,3,-4,\textcolor{blue}{sum->}2)=A(2,-3,1,-2);\\
 C=A({1,3},{4...2});\\ 
 H=\textcolor{VioletRed}{matrix}(4,4,\textcolor{blue}{diag->},\textcolor{blue}{do->}3);\\ 
 H(3,-4,\textcolor{blue}{diag->})=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(4,7));\\ 
+row=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(2.5,3.6))\\ 
+col=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{values->}(1,3.5,2))\\ 
+matr=\textcolor{VioletRed}{matrix}(4,5,\textcolor{blue}{do->});\\ 
+c=matr({2,3},{1,3,2});\\ 
+c=matr(row,col);\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -2413,7 +2412,10 @@ H(3,-4,\textcolor{blue}{diag->})=\textcolor{VioletRed}{matrix}(2,\textcolor{blue
 When giving range, the lower and upper limit can be equal. 
 \end{note} 
 \begin{note} 
-It was not possible to mix \textcolor{teal}{ILIST} range and contiguous range. Now they can be mixed. 
+It was earlier not possible to mix \textcolor{teal}{ILIST} range and contiguous range. Now they can be mixed. 
+\end{note} 
+\begin{note} 
+Giving rows or columsn with matrices is introduced in version October 1, 2023. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{getelem}(): extracting information from an object}\index{getelem()} 
 \label{getelem0} 
@@ -2575,7 +2577,8 @@ is the default value.
 \singlespacing 
 \begin{example}[whichex]Example of \textcolor{VioletRed}{which}()\\ 
 \label{whichex} 
-\noindent c=9\\ 
+\noindent \textcolor{VioletRed}{delete\_o}(a,c)\\ 
+a,c=3,9\\ 
 \textcolor{VioletRed}{which}(a.eq.3.or.c.gt.8,5,a.eq.7,55);\\ 
 a=7\\ 
 \textcolor{VioletRed}{which}(a.eq.3.or.c.gt.8,5,a.eq.7,55);\\ 
@@ -6753,7 +6756,7 @@ but they are currently used for debuggging purposes and they will be described l
 used also to teach how the algorithm proceeds. 
 \begin{itemize} 
 \item Output\%weights The weights of the schedules, see teh example below. 
-\item  Output\%objective= value of the objective function 
+\item  Output\%obj= value of the objective function 
 \item  	Output\%rows= the vector the valuef of the constraint rows. 
 \item   Output\%shprice = vector of shadow prices of the rows 
 \item  Output\%xvar= \textcolor{teal}{LIST} of xvariables in the schedules data 
@@ -6961,13 +6964,13 @@ plistb=\textcolor{Red}{;list}(\textcolor{teal}{probb}\%?);\\
 \textcolor{teal}{jlpb}\%income5;\\ 
 \textcolor{teal}{jlpb}\%income5[site.gt.3];\\ 
 \textcolor{teal}{jlpb}\%income5[3.lt.site];\\ 
-\textcolor{teal}{Continue}=1\\ 
+ 
 {\color{ForestGreen}** Now problem without constraints}\\ 
 probc=\textcolor{VioletRed}{problem}();\\ 
 npv\#0==max\\ 
 /         \\ 
 jlpc=\textcolor{VioletRed}{jlp}(\textcolor{blue}{problem->}probc,\textcolor{blue}{data->}xdata,\textcolor{blue}{showdomain->}'3.lt.site')\\ 
-\textcolor{teal}{Continue}=0\\ 
+ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -7104,7 +7107,7 @@ jlpzb=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{problem->}probzb,\textcolor{b
 {\color{ForestGreen}**The matrices needed to use jlpz without problem-> can be obtained from a problem as follows}\\ 
 \textcolor{teal}{jlpcoefa}=\textcolor{VioletRed}{jlpcoef}(\textcolor{teal}{probza})\\ 
 jlpcoefalist=\textcolor{Red}{;list}(\textcolor{teal}{jlpcoefa}\%?);\\ 
-\textcolor{teal}{jlpza}=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{zmatrix->}\textcolor{teal}{jlpcoefa}\%matrix,\textcolor{blue}{rhs->}\textcolor{teal}{jlpcoefa}\%rhs,\textcolor{blue}{rhs2->}\textcolor{teal}{jlpcoefa}\%rhs2,\textcolor{blue}{min->}\textcolor{teal}{jlpcoefa}\%objective)\\ 
+\textcolor{teal}{jlpza}=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{zmatrix->}\textcolor{teal}{jlpcoefa}\%matrix,\textcolor{blue}{rhs->}\textcolor{teal}{jlpcoefa}\%rhs,\textcolor{blue}{rhs2->}\textcolor{teal}{jlpcoefa}\%rhs2,\textcolor{blue}{min->}\textcolor{teal}{jlpcoefa}\%obj)\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 

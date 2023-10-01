@@ -54,7 +54,7 @@ module jmod
 	double precision,parameter::j_pi=3.14159265358979323
 	double precision,parameter::j_0=0.d0
 	double precision,parameter::j_1=1.d0
-	integer*8  ::j_18=1
+	integer*8  ::j_18=1,j_08=0
 	double precision,parameter::j_m1=-1.d0
 	double precision,parameter::j_deg=j_pi/180.d0 !100.d0  !korjaa  j_deg makes degrees to radians
 	double precision,parameter::j_todeg=180.d0/j_pi !korjaa !makes radians to degrees
@@ -575,6 +575,7 @@ module jmod
  
 	!module errmod   ! includes only j_err
 	logical :: j_err=.false.
+	logical :: j_errprint=.false.
 	logical ::j_end=.false.
 	logical ::j_isreadnu=.false.
 	logical ::j_isgetinp=.false.
@@ -949,6 +950,9 @@ module jmod
  
 	logical ::j_eof
 	double precision,dimension(400)::j_tempv,j_tempv2,j_tempv3,j_tempv4
+	integer,parameter::j_lenwrite=500
+	double precision,dimension(j_lenwrite)::j_writetemp
+	!	real,dimension(j_lenwrite)::j_writetemps
 	double precision ::j_dapu,j_dapu2,j_dapu3,j_dapu4,j_dapu5  !for different purposes
 	character(len=:), pointer :: j_inprp
 	character*3000 j_tempchar
@@ -1878,7 +1882,7 @@ module jmod
 	logical p_isarea
 	integer,dimension(:),pointer::p_notareavars
 	integer ::p_md
-	integer ::p_ivfeasible,p_ivunbounded,p_ivobjective,p_ivoptimal,p_ivobjective0
+	integer ::p_ivfeasible,p_ivunbounded,p_ivobj,p_ivoptimal,p_ivobj0
 	integer p_ivobjective2
 	integer p_ivoutresult
 	integer p_ivpivots
@@ -2334,16 +2338,16 @@ module jmod
 			integer, intent(in):: ivtext
 		end subroutine !subroutine j_cleartext(ivtext)
  
-		subroutine j_startwrite(narg,arg,isbin,isbin8,nu)
+		subroutine j_startwrite(narg,arg,isbin,isbin8,nu,lenwrite)
 			integer,intent(in)::narg
 			integer,dimension(:),intent(in)::arg
 			logical,intent(out)::isbin,isbin8
-			integer,intent(out)::nu
+			integer,intent(out)::nu,lenwrite
  
 		end subroutine
  
-		subroutine j_write(narg,arg,nu,bin,bin8)
-			integer,intent(in)::narg,nu
+		subroutine j_write(narg,arg,nu,bin,bin8,lenwrite)
+			integer,intent(in)::narg,nu,lenwrite
 			integer,intent(in),dimension(:)::arg
 			logical,intent(in):: bin,bin8
 		end subroutine
