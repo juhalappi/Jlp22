@@ -129,6 +129,21 @@
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
+! Version 7.10.2023 Bugs in the new submatrix code corrected. When defining a submatrix using matrices to tell 
+! what columns and rows are taken, nonpositive values are ignored. This is useful e.g. in the new stemopt-function (to be reported soon)
+! where fixed length matrices are reserved for log dimensions but only as many elments are use
+! as there are logs in a stem. In the new submatrix code, diag-> is not properlyt tested.
+! drawline() has several new ways to generate polygons. It is now told in the manual that
+! having any-> option in statistical functions for matrices, the whole matrix is treated. 
+!There has been ambiguity how lists have been used. I have started to use them so that
+! they can be fluently used as if they were vectors, but anyhow individual variables can be accessed.
+ !If li is a list, li(4)=x sometimes ment that element 4 of list will become x, and sometimes that
+ !The 4th variable in the list gets the current value of x. Now li(4)=>x means that 4th
+ ! element of the list becomes x, and li(4)=x that current 4th variable gets a new value. 
+ !Now there is implicit function setpointer to take car of =>. 
+ !I probably will give new tasks for this function.
+
+
 
 ! Version 1.10. 2023 submatrices can be specified with matrices (vectors). Lp problems
 ! can be without constraints. The name of the subobject containg the value

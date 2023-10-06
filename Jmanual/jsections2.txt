@@ -143,7 +143,6 @@ subsection pause
 section  special Special functions
 
 subsection setoption setoption()
-subsection getelem getelem()
 subsection getelem0
 
 subsection setelem setelem()
@@ -271,7 +270,7 @@ subsection select select()
 subsection random random()
 !  
 section inter Interpolation
-!	
+
 subsection interpolate interpolate()
 subsection plane plane()
 subsection bilin bilin()
@@ -280,6 +279,7 @@ subsection bilin bilin()
 section  lists List functions
 subsection listo List object
 subsection  list
+ 
 subsection symconst
 subsubsection list2sym 
 subsubsection namenum
@@ -323,6 +323,8 @@ subsection printresult
 	
 section  matrixs functions for matrices
 subsection matrixo
+subsection getelem getelem()
+
 subsection matrix matrix()
 subsection nrows nrows()
 subsection ncols ncols()

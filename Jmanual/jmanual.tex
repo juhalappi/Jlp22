@@ -175,6 +175,21 @@ After renaming the software to \textbf{Jlp22}, this chapter starts to describe c
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
+Version 7.10.2023 Bugs in the new submatrix code corrected. When defining a submatrix using matrices to tell 
+what columns and rows are taken, nonpositive values are ignored. This is useful e.g. in the new stemopt-function (to be reported soon) 
+where fixed length matrices are reserved for log dimensions but only as many elments are use 
+as there are logs in a stem. In the new submatrix code, \textcolor{blue}{diag->} is not properlyt tested. 
+\textcolor{VioletRed}{drawline}() has several new ways to generate polygons. It is now told in the manual that 
+having \textcolor{blue}{any->} option in statistical functions for matrices, the whole matrix is treated. 
+There has been ambiguity how lists have been used. I have started to use them so that 
+they can be fluently used as if they were vectors, but anyhow individual variables can be accessed. 
+If li is a list, li(4)=\textcolor{teal}{x} sometimes ment that element 4 of list will become \textcolor{teal}{x}, and sometimes that 
+The 4th variable in the list gets the current value of \textcolor{teal}{x}. Now li(4)=>\textcolor{teal}{x} means that 4th 
+element of the list becomes \textcolor{teal}{x}, and li(4)=\textcolor{teal}{x} that current 4th variable gets a new value. 
+Now there is implicit function setpointer to take car of =>. 
+I probably will give new tasks for this function. 
+ 
+ 
  
 Version 1.10. 2023 submatrices can be specified with matrices (vectors). Lp problems 
 can be without constraints. The name of the subobject containg the value 
@@ -185,21 +200,21 @@ Function \textcolor{VioletRed}{drawline}() without arguments and with \textcolor
 Working with submatrices is rewritten, because it had gone very complicated. Now now continuous 
 row and column ranges can be mixed with sepcifying rows and/or \textcolor{teal}{ILIST} objects. 
  
-Version 10.8.2023 Function matrixborder() added. It puts header on top and/or left of \textcolor{teal}{MATRIX}. 
+Version 10.8.2023 Function \textcolor{VioletRed}{matrixborder}() added. It puts header on top and/or left of \textcolor{teal}{MATRIX}. 
  
 Version 4.8. 2023 Some bugs corrected, and user errors are detected so that system crash is prevented. 
  
-Version 12.7. 2023. Numeric values can obtained from variable names using namenum() and 
+Version 12.7. 2023. Numeric values can obtained from variable names using \textcolor{VioletRed}{namenum}() and 
 namenum\%() functions. This is useful with data with case or making lists using the new makelist-> option in \textcolor{VioletRed}{data}(). 
 continuation character can be removed with '<<'. This is useful when using \textcolor{Red}{;do}-loops to generate 
 an input line. \textcolor{VioletRed}{minloc}() and \textcolor{VioletRed}{maxloc}() functions can be used to find the location of minimum 
 and maximum in a vector or variable in data (thus returning the number of observation). 
 New options \textcolor{blue}{step->} and \textcolor{blue}{points->} in \textcolor{VioletRed}{drawline}(). 
  
-Version 29.6.2023. Function find\_d() added. This function can be used to get \textcolor{teal}{ILIST} 
+Version 29.6.2023. Function \textcolor{VioletRed}{find\_d}() added. This function can be used to get \textcolor{teal}{ILIST} 
 of all observatiosn satisfying a condition. The \textcolor{VioletRed}{data}() and \textcolor{VioletRed}{matrix}() functions can get values 
 from variable or using computation rules. Sparse data can be obtained using \textcolor{blue}{sparse->} 
-option. \textcolor{teal}{Data} with named cases is now obtained using case->option in \textcolor{VioletRed}{data}(), 
+option. \textcolor{teal}{Data} with named cases is now obtained using \textcolor{blue}{case->}option in \textcolor{VioletRed}{data}(), 
 and \textcolor{VioletRed}{datawcase}() is removed. When printing is indicated with semicolon or double semicolon, and the object 
 can contain piecewise linear terms. Nonlinear terms will be easy to include in  a similar way. 
  
@@ -2318,105 +2333,6 @@ When a function has an option then the parser generates first code
 \textcolor{VioletRed}{setoption}(...) where the arguments of the option are interpred in the similar way as 
 arguments of all functions. Then the parser genarates the code for 
 \textcolor{VioletRed}{setoption}() function in a special way. 
-\subsection{Get or set a matrix element or submatrices} 
-\label{getelem} 
-Matrix elements or submatrices can be accessed using the same syntax as 
-accesing \textbf{Jlp22} functions. 
- 
-One can get or set matrix elements and submatrices as follows. If the expression 
-is on the right side of '=' then \textbf{Jlp22} gets a \textcolor{teal}{REAL} value or submatrix, if the expression 
-is on the left side of '=', the \textbf{Jlp22} sets new values for a matrix element or a submatrix. 
-In the following formulas \textcolor{teal}{C} is a column vector, \textcolor{teal}{R} a row vector, and \textcolor{teal}{M} is 
-a general matrix with m rows and n columns. 
-If \textcolor{teal}{C} is actually \textcolor{teal}{REAL} it can 
-be used as if it would 1 \textcolor{teal}{x} 1 \textcolor{teal}{MATRIX}. This can be useful when working with 
-matrices whose dimensions can vary starting from 1 \textcolor{teal}{x} 1. Symbol \textcolor{teal}{r} refers to 
-row index, \textcolor{teal}{r1} to first row in a row range, \textcolor{teal}{r2} to the last row. The rows and 
-columns can be specifiel using \textcolor{teal}{ILIST} objects \textcolor{teal}{il1} and \textcolor{teal}{il2} to specify noncontiguous ranges. 
-\textcolor{teal}{ILIST} can be 
-specified using \textcolor{VioletRed}{ilist}() function or using {} construction. 
-Similarly columns are indicated  with \textcolor{teal}{c}. It is always legal to refer to 
-vectors by using the \textcolor{teal}{M} formulation and giving \textcolor{teal}{c} with value 1 for column vectors and 
-and \textcolor{teal}{r} with value 1 for row vectors. 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent Args \tabto{3cm} 0-4 \tabto{5cm}  \textcolor{teal}{REAL} | \textcolor{teal}{ILIST} \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent row and column range as explained below. 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent \textcolor{blue}{diag} \tabto{3cm} N| \tabto{5cm}    \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent Get or set diagonal elements 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent \textcolor{blue}{sum} \tabto{3cm} N|0|1 \tabto{5cm}    \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent  When setting elements, the right side is added to the current elements. If the 
-\textcolor{blue}{sum->} option has argument, the right side is multiplied with the argument when adding to the curretn elements. 
-\end {changemargin} 
-\hrule 
-\vspace{0.2cm} 
- 
-Row and column ranges can be specified as follows. Both rows and columns can be given 
-in similar way. Assume that submatrix is specified with  \textcolor{teal}{M}(r,c). Then r can 
-be the following constructions. Columns can be defined similarly: 
-\begin{itemize} 
-\item  r1 : a variable or constant for singel row. 
-\item r1,-r2 : a range of rows 
-\item r1,Ninf : Rows from row r1 to the last row 
-\item All : All rows 
-\item ili : Rows sepfied with a \textcolor{teal}{ILIST} object ili defined earlier 
-\item {r1,...,rn} : The \textcolor{teal}{ILIST} object is defined here 
-\item mat : Where mat is a matrix whose all elements (in row order)are made first integers 
-\end{itemize} 
- 
-If option \textcolor{blue}{diag->} is present then 
-\begin{itemize} 
-\item  \textcolor{teal}{M}(\textcolor{blue}{diag->}) Get or set the diagonal. If \textcolor{teal}{M} is not square matrix, and error 
-occurs. 
-\item  \textcolor{teal}{M}(r1,-r2,\textcolor{blue}{diag->}) (Again -r2 can be \textcolor{teal}{Tolast}. 
-\end{itemize} 
-\begin{note} 
-Note 
-When setting values to a submatrix the the the values given in input matrix 
-are put into the outputmatrix in row order, and the shape of the input and output matrices need 
-not be the same. An error occurs only if input and output contain different number of 
-elements. 
-\end{note} 
-\singlespacing 
-\begin{example}[getset]Get or set submatrices\\ 
-\label{getset} 
-\noindent A=\textcolor{VioletRed}{matrix}(3,4,\textcolor{blue}{do->});\\ 
-\textcolor{teal}{B}=A(1,-2,3,-4);\\ 
-A(1,-2,3,-4)=\textcolor{teal}{B}+3;\\ 
-A(1,-2,3,-4,\textcolor{blue}{sum->})=-5;\\ 
-A(1,-2,3,-4,\textcolor{blue}{sum->}2)=A(2,-3,1,-2);\\ 
-C=A({1,3},{4...2});\\ 
-H=\textcolor{VioletRed}{matrix}(4,4,\textcolor{blue}{diag->},\textcolor{blue}{do->}3);\\ 
-H(3,-4,\textcolor{blue}{diag->})=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(4,7));\\ 
-row=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(2.5,3.6))\\ 
-col=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{values->}(1,3.5,2))\\ 
-matr=\textcolor{VioletRed}{matrix}(4,5,\textcolor{blue}{do->});\\ 
-c=matr({2,3},{1,3,2});\\ 
-c=matr(row,col);\\ 
-\end{example} 
-\vspace{-7mm} \rule{5cm}{0.1pt} 
-\onehalfspacing 
-\begin{note} 
-When giving range, the lower and upper limit can be equal. 
-\end{note} 
-\begin{note} 
-It was earlier not possible to mix \textcolor{teal}{ILIST} range and contiguous range. Now they can be mixed. 
-\end{note} 
-\begin{note} 
-Giving rows or columsn with matrices is introduced in version October 1, 2023. 
-\end{note} 
 \subsection{\textcolor{VioletRed}{getelem}(): extracting information from an object}\index{getelem()} 
 \label{getelem0} 
 The origin of this function is the function which was used in previous versions 
@@ -2719,7 +2635,7 @@ behave in a special way, \textcolor{VioletRed}{max}() behaves similarly as \text
 \section{Statistical functions for matrices} 
 \label{matrixstat} 
 Functions \textcolor{VioletRed}{mean}(), \textcolor{VioletRed}{sd}(), \textcolor{VioletRed}{var}(), \textcolor{VioletRed}{sum}(), \textcolor{VioletRed}{min}() and \textcolor{VioletRed}{max}() 
-can be used used to compute stastics from a matrix. Let \textcolor{VioletRed}{mean}() here present 
+can be used used to compute statistics from a matrix. Let \textcolor{VioletRed}{mean}() here present 
 any of thes functions. The following rules apply: 
 \begin{itemize} 
 \textcolor{VioletRed}{mean}(VECTOR) computes the mean of the vector, output is \textcolor{teal}{REAL} 
@@ -2728,20 +2644,20 @@ any of thes functions. The following rules apply:
 weigted mean of the vector,weights being in vector wvector. 
 \textcolor{VioletRed}{mean}(\textcolor{teal}{MATRIX},\textcolor{blue}{weight->}wvector) computes the 
 weighted mean of each column, weights being in vector wvector, result is row vector. 
- 
+\textcolor{VioletRed}{mean}(\textcolor{teal}{MATRIX},\textcolor{blue}{any->}) computes the mean of the whole \textcolor{teal}{MATRIX}, output is \textcolor{teal}{REAL} 
 \end{itemize} 
 \subsection{\textcolor{VioletRed}{mean}() Means or weighted means}\index{mean()} 
 \label{mean} 
-See section matrixstat for details 
+	! 
 \subsection{\textcolor{VioletRed}{sd}() Sd's or weighted sd's}\index{sd()} 
 \label{sd} 
-See section matrixstat for details 
+	! 
 \subsection{\textcolor{VioletRed}{var}() Sample variances or weighted variances}\index{var()} 
 \label{var} 
-See section matrixstat for details 
+	! 
 \subsection{\textcolor{VioletRed}{sum}() Sums or weighted sums}\index{sum()} 
 \label{sum} 
-See section matrixstat for details 
+	! 
 \section{ Derivatives \textcolor{VioletRed}{der}()}\index{der()} 
 \label{der} 
 Derivates of a function with respect to any of its arguments can be 
@@ -3318,6 +3234,10 @@ the \textcolor{teal}{MATRIX}.
 The index of object in a \textcolor{teal}{LIST} can be obtained using \textcolor{VioletRed}{index}(). 
 \end{note} 
 \begin{note} 
+The elements of lists can be changed using the new \textcolor{VioletRed}{setpointer}() function 
+indicated with =>. E.g. li(4)=>\textcolor{teal}{x} meand that 4th element will be \textcolor{teal}{x}. 
+\end{note} 
+\begin{note} 
 Versions before March 2023 allowed list arguments which were then expanded. 
 This property is dropped because lists can be included better with @-cosnstruct. 
 \end{note} 
@@ -3357,17 +3277,17 @@ a list having the case names as elements. These case names are actually ordinary
 variables but with the special property that the value of ith element is equal to i. 
 This way the case name tells what is the observation number, which makes it possible to 
 acces a row in data matrix using the case name. Other lists of symbolic constants can be 
-made with list2sym() function, which can pick from the names of varaibles in the list a new \textcolor{teal}{LIST} 
+made with \textcolor{VioletRed}{list2sym}() function, which can pick from the names of varaibles in the list a new \textcolor{teal}{LIST} 
 having this property. The purpose of symbolic constants is give a tag which ca be used to tell 
 that subjects occuring in different parts of the code refer to the same subject. When 
 the symbolic constant is in the case-list of 	a \textcolor{teal}{DATA}, the value of the constant tells in what 
-observation of the \textcolor{teal}{DATA} further properties are defined. The namenum() and namenum\%() functions allow 
+observation of the \textcolor{teal}{DATA} further properties are defined. The \textcolor{VioletRed}{namenum}() and namenum\%() functions allow 
 to maintain also numeric variables in the name of the constant. This way it is not necessary 
 to look these quantitative properties from the \textcolor{teal}{DATA} because this infomation is carried in ther name. 
 This is a handy way to maintain indexes without the need to establish permanent indexes. 
 I will use this property in a forthcoming 
 application where \textbf{Jlp22} is used for optimization of blade settings in saw mills. 
-\subsubsection{list2sym() makes \textcolor{teal}{LIST} of symbolic constants from another \textcolor{teal}{LIST}.} 
+\subsubsection{\textcolor{VioletRed}{list2sym}() makes \textcolor{teal}{LIST} of symbolic constants from another \textcolor{teal}{LIST}.}\index{list2sym()} 
 \label{list2sym} 
 List of symbolic constants is a \textcolor{teal}{LIST} of \textcolor{teal}{REAL} variables where the value of each variable 
 equals the position of the variable in the list. Applications of this will be presented 
@@ -3392,13 +3312,13 @@ are taken to the next '\%' or to the end of name.
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
-See functions namenum() and namenum\%() how to pick numbers from variable names. 
+See functions \textcolor{VioletRed}{namenum}() and namenum\%() how to pick numbers from variable names. 
 \end{note} 
 \singlespacing 
-\begin{example}[list2symex]Example of list2sym()\\ 
+\begin{example}[list2symex]Example of \textcolor{VioletRed}{list2sym}()\\ 
 \label{list2symex} 
 \noindent {\color{ForestGreen}*** Log boxes in a sawmill where boxes are defined with top diameter, length and species.}\\ 
-logdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(T\_log,N\_log),\textcolor{blue}{in->},case->)\\ 
+logdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}N\_log,\textcolor{blue}{in->},\textcolor{blue}{case->})\\ 
 L15\%40\%Spruce,200\\ 
 L15\%43\%Spruce,300\\ 
 L18\%40\%Pine,100\\ 
@@ -3408,19 +3328,19 @@ li=\textcolor{Red}{;list}(logdata\%?);\\
 @li;\\ 
 logdata\%case;\\ 
 {\color{ForestGreen}** Pick after two \%}\\ 
-ili=list2sym(logdata\%case,2);\\ 
+ili=\textcolor{VioletRed}{list2sym}(logdata\%case,2);\\ 
 @ili;\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
-\subsubsection{namenum() and namenum\%() take numbers from object name} 
+\subsubsection{\textcolor{VioletRed}{namenum}() and namenum\%() take numbers from object name}\index{namenum()} 
 \label{namenum} 
 Object names often contain some numbers. These can be 
-picked using namenum() and namenum\%() functions. Probably the function will be used so that the object is 
+picked using \textcolor{VioletRed}{namenum}() and namenum\%() functions. Probably the function will be used so that the object is 
 in an object \textcolor{teal}{LIST}. The are two ways to pick object from \textcolor{teal}{LIST}, either in input programming or either at \textcolor{Red}{sit>} prompt or 
 in \textcolor{teal}{TRANS} object. Usually the numbers are picked from the list of cases in a data 
 with cases. 
-Function namenum() picks the number which is presented with consecutive numbers, while 
+Function \textcolor{VioletRed}{namenum}() picks the number which is presented with consecutive numbers, while 
 namenum\%() picks the numbers from a \textcolor{teal}{REAL} variable. 
 \vspace{0.3cm} 
 \hrule 
@@ -3436,7 +3356,7 @@ namenum\%() picks the numbers from a \textcolor{teal}{REAL} variable.
 \begin{changemargin}{3cm}{0cm} 
 \noindent  There are two cases:\\ 
 The first argument is the object from whose name the number is picked. Then the second argument can be 
-The second argument tells what is the order of the number among numbers (in namenum()) or \textcolor{teal}{REAL} 
+The second argument tells what is the order of the number among numbers (in \textcolor{VioletRed}{namenum}()) or \textcolor{teal}{REAL} 
 variables whose name starts after 
 '\%' ( in Namenum\%() )	of the name. Default is one, i.e. the first 
 number is picked. \\ 
@@ -3445,18 +3365,18 @@ The fist argument is \textcolor{teal}{LIST} and sewcond argument is the element 
 \hrule 
 \vspace{0.2cm} 
 \singlespacing 
-\begin{example}[namenumex]Example of namenum() and namenum\%() in the data decribing the log storage in a sawmill\\ 
+\begin{example}[namenumex]Example of \textcolor{VioletRed}{namenum}() and namenum\%() in the data decribing the log storage in a sawmill\\ 
 \label{namenumex} 
-\noindent logdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(T\_log,N\_log),\textcolor{blue}{in->},case->)\\ 
+\noindent logdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(T\_log,N\_log),\textcolor{blue}{in->},\textcolor{blue}{case->})\\ 
 L15\%40\%Spruce,200\\ 
 L15\%43\%Spruce,300\\ 
 L18\%40\%Pine,100\\ 
 L18\%43\%Spruce,150\\ 
 /                \\ 
-D=namenum(logdata\%case,3,2);\\ 
-D=namenum(@logdata\%case(3),2);\\ 
+D=\textcolor{VioletRed}{namenum}(logdata\%case,3,2);\\ 
+D=\textcolor{VioletRed}{namenum}(@logdata\%case(3),2);\\ 
 logdata\%case;\\ 
-ili=list2sym(logdata\%case,2);\\ 
+ili=\textcolor{VioletRed}{list2sym}(logdata\%case,2);\\ 
 @ili;\\ 
  
 species=namenum\%(logdata\%case,3,2);\\ 
@@ -3545,7 +3465,7 @@ if list is not in \textcolor{teal}{LIST} list.\\
 the matrix through in row order. If valuea is not in \textcolor{teal}{matrixa} \textcolor{VioletRed}{index}() returns zero.\\ 
 \textcolor{VioletRed}{index}(valuea,\textcolor{teal}{matrixa},\textcolor{blue}{any->}) returns the location of the first element which is greater or equal 
 to valuea. 
-\subsection{index\_o() Index of the first argument in the \textcolor{teal}{LIST} of second argument} 
+\subsection{\textcolor{VioletRed}{index\_o}() Index of the first argument in the \textcolor{teal}{LIST} of second argument}\index{index\_o()} 
 \label{index_o} 
 \subsection{\textcolor{VioletRed}{len}() Length of \textcolor{teal}{LIST}, \textcolor{teal}{ILIST} or \textcolor{teal}{MATRIX}}\index{len()} 
 \label{len} 
@@ -3706,10 +3626,12 @@ chracter constant.
 \label{printf} 
 Prints the files associated with the \textcolor{teal}{CHAR} arguments\\ 
 \textcolor{blue}{maxlines->}  tells the maximum number of lines to be printed, default the value of \textcolor{teal}{Maxlines} 
-\subsection{\textcolor{VioletRed}{close}() Closes a file}\index{close()} 
+\subsection{\textcolor{VioletRed}{close}() Closes  files}\index{close()} 
 \label{close} 
-\textcolor{VioletRed}{close}(file) closes an open file where file is either a character constant 
-or character variable associated with a file. 
+\textcolor{VioletRed}{close}(file1,...filen) close open files where file is either a character constant 
+or character variable associated with a file or \textcolor{teal}{REAL}. 
+A \textcolor{teal}{REAL} argument is useful when debuggin information is written directly to a unit indicated 
+with a number. \textcolor{teal}{REAL} argument is naturally made first integer. 
 \begin{note} 
 No open()function is needed. An file is opened when it is first time in \textcolor{VioletRed}{write}() or 
 \textcolor{VioletRed}{print}(\textcolor{blue}{file->}). 
@@ -3993,6 +3915,108 @@ the \textcolor{VioletRed}{data}() function is producing a data matrix as a part 
 object. Matrix elements can be used in arithmetic operations as input or output 
 in similar way as real variables. 
 See Matrix computations. 
+\subsection{Get or set a matrix element or submatrices} 
+\label{getelem} 
+Matrix elements or submatrices can be accessed using the same syntax as 
+accesing \textbf{Jlp22} functions. 
+ 
+One can get or set matrix elements and submatrices as follows. If the expression 
+is on the right side of '=' then \textbf{Jlp22} gets a \textcolor{teal}{REAL} value or submatrix, if the expression 
+is on the left side of '=', the \textbf{Jlp22} sets new values for a matrix element or a submatrix. 
+In the following formulas \textcolor{teal}{C} is a column vector, \textcolor{teal}{R} a row vector, and \textcolor{teal}{M} is 
+a general matrix with m rows and n columns. 
+If \textcolor{teal}{C} is actually \textcolor{teal}{REAL} it can 
+be used as if it would 1 \textcolor{teal}{x} 1 \textcolor{teal}{MATRIX}. This can be useful when working with 
+matrices whose dimensions can vary starting from 1 \textcolor{teal}{x} 1. Symbol \textcolor{teal}{r} refers to 
+row index, \textcolor{teal}{r1} to first row in a row range, \textcolor{teal}{r2} to the last row. The rows and 
+columns can be specifiel using \textcolor{teal}{ILIST} objects \textcolor{teal}{il1} and \textcolor{teal}{il2} to specify noncontiguous ranges. 
+\textcolor{teal}{ILIST} can be 
+specified using \textcolor{VioletRed}{ilist}() function or using {} construction. 
+Similarly columns are indicated  with \textcolor{teal}{c}. It is always legal to refer to 
+vectors by using the \textcolor{teal}{M} formulation and giving \textcolor{teal}{c} with value 1 for column vectors and 
+and \textcolor{teal}{r} with value 1 for row vectors. 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args \tabto{3cm} 0-4 \tabto{5cm}  \textcolor{teal}{REAL} | \textcolor{teal}{ILIST} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent row and column range as explained below. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{diag} \tabto{3cm} N| \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Get or set diagonal elements 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{sum} \tabto{3cm} N|0|1 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  When setting elements, the right side is added to the current elements. If the 
+\textcolor{blue}{sum->} option has argument, the right side is multiplied with the argument when adding to the curretn elements. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+ 
+Row and column ranges can be specified as follows. Both rows and columns can be given 
+in similar way. Assume that submatrix is specified with  \textcolor{teal}{M}(r,c). Then r can 
+be the following constructions. Columns can be defined similarly: 
+\begin{itemize} 
+\item  r1 : a variable or constant for single row. 
+\item r1,-r2 : a range of rows 
+\item r1,Ninf : Rows from row r1 to the last row 
+\item All : All rows 
+\item ili : Rows sepecfied with a \textcolor{teal}{ILIST} object ili defined earlier 
+\item {r1,...,rn} : The \textcolor{teal}{ILIST} object is defined here 
+\item mat : Where mat is a matrix whose all elements (in row order)are made first integers. 
+Nonpositive values are ignored. 
+\end{itemize} 
+ 
+If option \textcolor{blue}{diag->} is present then 
+\begin{itemize} 
+\item  \textcolor{teal}{M}(\textcolor{blue}{diag->}) Get or set the diagonal. If \textcolor{teal}{M} is not square matrix, and error 
+occurs. 
+\item  \textcolor{teal}{M}(r1,-r2,\textcolor{blue}{diag->}) (Again -r2 can be \textcolor{teal}{Tolast}. 
+\end{itemize} 
+\begin{note} 
+Note 
+When setting values to a submatrix the the the values given in input matrix 
+are put into the outputmatrix in row order, and the shape of the input and output matrices need 
+not be the same. An error occurs only if input and output contain different number of 
+elements. 
+\end{note} 
+\singlespacing 
+\begin{example}[getset]Get or set submatrices\\ 
+\label{getset} 
+\noindent A=\textcolor{VioletRed}{matrix}(3,4,\textcolor{blue}{do->});\\ 
+\textcolor{teal}{B}=A(1,-2,3,-4);\\ 
+A(1,-2,3,-4)=\textcolor{teal}{B}+3;\\ 
+A(1,-2,3,-4,\textcolor{blue}{sum->})=-5;\\ 
+A(1,-2,3,-4,\textcolor{blue}{sum->}2)=A(2,-3,1,-2);\\ 
+C=A({1,3},{4...2});\\ 
+H=\textcolor{VioletRed}{matrix}(4,4,\textcolor{blue}{diag->},\textcolor{blue}{do->}3);\\ 
+H(3,-4,\textcolor{blue}{diag->})=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(4,7));\\ 
+row=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(1,3))\\ 
+col=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{values->}(4,3.5,2))\\ 
+C=A(row,col);\\ 
+row(2)=0\\ 
+c=A(row,col);\\ 
+ 
+ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
+\begin{note} 
+When giving range, the lower and upper limit can be equal. 
+\end{note} 
+\begin{note} 
+It was earlier not possible to mix \textcolor{teal}{ILIST} range and contiguous range. Now they can be mixed. 
+\end{note} 
+\begin{note} 
+Giving rows or columsn with matrices is introduced in version October 1, 2023. 
+\end{note} 
 \subsection{\textcolor{VioletRed}{matrix}() Creates \textcolor{teal}{MATRIX}}\index{matrix()} 
 \label{matrix} 
 Function \textcolor{VioletRed}{matrix}() creates a matrix and puts \textcolor{teal}{REAL} values to the elements. Element values 
@@ -4054,13 +4078,13 @@ matrix is generated. Without \textcolor{blue}{diag->}, a partitioned matrix is g
 submatrices equal. In the new version also values given in the input paragraph or in the \textcolor{blue}{in->} file 
 can have names of variables whose values are put into the matrix. The value can be also computed 
 using transformations if the element is put within parenthesis. If values are read from a file, 
-then code-> option must be present telling \textbf{Jlp22} that values can not be read directly. 
+then \textcolor{blue}{code->} option must be present telling \textbf{Jlp22} that values can not be read directly. 
 The same method can be used in \textcolor{VioletRed}{data}() function. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent code  \tabto{3cm} N|0 \tabto{5cm}  \textcolor{teal}{REAL}   \tabto{7cm} 
+\noindent \textcolor{blue}{code}  \tabto{3cm} N|0 \tabto{5cm}  \textcolor{teal}{REAL}   \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  The values given in \textcolor{blue}{in->} file are interpreted and not read directly. 
 \end{changemargin} 
@@ -4357,16 +4381,16 @@ large2=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.m+1.96*s)
 \onehalfspacing 
 \subsection{\textcolor{VioletRed}{mean}() Means or weighted means}\index{mean()} 
 \label{mean} 
-See section matrixstat for details 
+	! 
 \subsection{\textcolor{VioletRed}{sum}() Sums or weighted sums}\index{sum()} 
 \label{sum} 
-See section matrixstat for details 
+	! 
 \subsection{\textcolor{VioletRed}{var}() Sample variances or weighted variances}\index{var()} 
 \label{var} 
-See section matrixstat for details 
+	! 
 \subsection{\textcolor{VioletRed}{sd}() Sd's or weighted sd's}\index{sd()} 
 \label{sd} 
-See section matrixstat for details 
+	! 
 \subsection{\textcolor{VioletRed}{minloc}() Locations of the minimum values}\index{minloc()} 
 \label{minloc} 
 \textcolor{VioletRed}{minloc}(\textcolor{teal}{MATRIX}) generates a row vector containing the locations of the  minimum 
@@ -4383,7 +4407,7 @@ values in each column. \textcolor{VioletRed}{maxloc}(VECTOR) is the \textcolor{t
 the location of the maxim value whether VECTOR is a row vector or column vector. 
 \begin{note} 
 The observation for which a \textcolor{teal}{DATA} variable gets the maximum value can be obtained 
-using maxobs-> option in \textcolor{VioletRed}{stat}() 
+using \textcolor{blue}{maxobs->} option in \textcolor{VioletRed}{stat}() 
 \end{note} 
 \subsection{\textcolor{VioletRed}{cumsum}() Cumulative sums}\index{cumsum()} 
 \label{cumsum} 
@@ -4460,20 +4484,20 @@ When computing reasults into a \textcolor{teal}{MATRIX}, often header row is nee
 \label{matrixborderex} 
 \noindent a=\textcolor{VioletRed}{matrix}(2,3,\textcolor{blue}{do->});\\ 
 \textcolor{teal}{b}=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(2,5));\\ 
-ab=matrixborder(a,\textcolor{blue}{column->}\textcolor{teal}{b});\\ 
+ab=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{column->}\textcolor{teal}{b});\\ 
 c=\textcolor{VioletRed}{matrix}(3,\textcolor{blue}{values->}(4,2,5));\\ 
-ac=matrixborder(a,\textcolor{blue}{row->}c);\\ 
-abc=matrixborder(a,\textcolor{blue}{row->}c,\textcolor{blue}{column->}\textcolor{teal}{b});\\ 
+ac=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{row->}c);\\ 
+abc=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{row->}c,\textcolor{blue}{column->}\textcolor{teal}{b});\\ 
 row=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...\textcolor{teal}{x3})\\ 
 @row=4,2,5\\ 
 col=\textcolor{VioletRed}{list}(c1,c2)\\ 
 @col=2,5\\ 
-ab=matrixborder(a,\textcolor{blue}{column->}col);\\ 
-ac=matrixborder(a,\textcolor{blue}{row->}row);\\ 
-abc=matrixborder(a,\textcolor{blue}{row->}row,\textcolor{blue}{column->}col);\\ 
-ab=matrixborder(a,\textcolor{blue}{column->}(2,5));\\ 
-ac=matrixborder(a,\textcolor{blue}{row->}(4,2,5));\\ 
-abc=matrixborder(a,\textcolor{blue}{row->}(4,2,5),\textcolor{blue}{column->}(2,5));\\ 
+ab=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{column->}col);\\ 
+ac=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{row->}row);\\ 
+abc=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{row->}row,\textcolor{blue}{column->}col);\\ 
+ab=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{column->}(2,5));\\ 
+ac=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{row->}(4,2,5));\\ 
+abc=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{row->}(4,2,5),\textcolor{blue}{column->}(2,5));\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -4517,8 +4541,8 @@ A data object can created using a \textcolor{teal}{TRANS} object
 by creating first data matrix with \textcolor{VioletRed}{matrix}() and then using \textcolor{VioletRed}{newdata}() to 
 create data object. In the new version data values can be obtained from a variable whose name is given or 
 using computation rule within parenthesis. If the data is given in \textcolor{blue}{in->} file, there must be 
-code-> option to indicate that interpretation is needed for getting values. If there is \textcolor{blue}{sparse->} or case-> 
-then code-> is not needed for a file input either. 
+\textcolor{blue}{code->} option to indicate that interpretation is needed for getting values. If there is \textcolor{blue}{sparse->} or \textcolor{blue}{case->} 
+then \textcolor{blue}{code->} is not needed for a file input either. 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
@@ -4560,7 +4584,7 @@ Char giving a Fortran format, e.g. '(4f4.1,1x,f4.3)' \newline
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent case  \tabto{3cm} N|0|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\noindent \textcolor{blue}{case}  \tabto{3cm} N|0|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  The corresponding column in the data gives names of variables used for the cases. 
 The values for the variables will be the case number. If the case variable is Case, the \textcolor{teal}{LIST} output\%Case 
@@ -4792,19 +4816,19 @@ of the observation. After version Dec 20 2022, the name for \textcolor{teal}{DAT
 \end{note} 
  
 \begin{note} 
-The values can be obtained from variables or form code also in \textcolor{VioletRed}{matrix}(), but case-> or \textcolor{blue}{sparse->} are not 
+The values can be obtained from variables or form code also in \textcolor{VioletRed}{matrix}(), but \textcolor{blue}{case->} or \textcolor{blue}{sparse->} are not 
 possible. 
 \end{note} 
  
 \begin{note} 
 In the previous versions \textcolor{teal}{DATA} with case names was generated with \textcolor{VioletRed}{datawcase}() function. 
-This function is not available any more as case-> option does the same thing. The difference is that case-> 
+This function is not available any more as \textcolor{blue}{case->} option does the same thing. The difference is that \textcolor{blue}{case->} 
 varible need not be in the first column and the case column is now part of the \textcolor{teal}{DATA} as earlier only the list 
 containg case names was made. 
 \end{note} 
  
 \begin{note} 
-when case-> or \textcolor{blue}{sparse->} option is present \textcolor{blue}{keep->} will probably mix up \textbf{Jlp22}. 
+when \textcolor{blue}{case->} or \textcolor{blue}{sparse->} option is present \textcolor{blue}{keep->} will probably mix up \textbf{Jlp22}. 
 \end{note} 
  
 \begin{note} 
@@ -4883,7 +4907,7 @@ trup=\textcolor{VioletRed}{trans}()\\
 \textcolor{teal}{x2}\%\textcolor{teal}{y2}=\textcolor{teal}{x2}+\textcolor{teal}{y2}\\ 
 /                                                                                  \\ 
 {\color{ForestGreen}**first variable must be \%nobsw}\\ 
-da\%keep(1)=da\%nobsw\\ 
+da\%keep(1)=>da\%nobsw\\ 
  
 dasub=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{y1},\textcolor{teal}{y2}),\textcolor{blue}{in->},\textcolor{blue}{up->}da,\textcolor{blue}{maketrans->}trup)\\ 
 3,4\\ 
@@ -5003,7 +5027,7 @@ dc\%keep;\\
 dc\%matrix;\\ 
 \textcolor{VioletRed}{delete\_f}('data.bin')\\ 
  
-setdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(set,set\_D),\textcolor{blue}{in->},\textcolor{blue}{sparse->},case->)\\ 
+setdata=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(set,set\_D),\textcolor{blue}{in->},\textcolor{blue}{sparse->},\textcolor{blue}{case->})\\ 
 set1,15,d50x100,2,d22x100,2\\ 
 set2,18,d50x75,4,d20x100,2\\ 
 /                         \\ 
@@ -5120,7 +5144,7 @@ new=\textcolor{VioletRed}{newdata}(data1,matrix1,\textcolor{blue}{read->}(z1,z2)
 \onehalfspacing 
 \subsection{Deleted function for data with cases} 
 \label{datawcase} 
-datawcase is a deleted function. Use \textcolor{VioletRed}{data}() with case->option to get names for cases. 
+datawcase is a deleted function. Use \textcolor{VioletRed}{data}() with \textcolor{blue}{case->}option to get names for cases. 
 \subsection{\textcolor{VioletRed}{exceldata}() \textcolor{teal}{DATA} from an excel file}\index{exceldata()} 
 \label{exceldata} 
 Generates data object from csv data generated with excel. It is assumed that ';' is used as column separator, 
@@ -5553,7 +5577,7 @@ expand is not present and in nobsw\%\%Class if \textcolor{blue}{expand->} is pre
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{obsw} \tabto{3cm} 0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent If there axpnad-> option then vector Class\%\%obsw 
+\noindent If there \textcolor{blue}{expand->} option then vector Class\%\%obsw 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5760,7 +5784,7 @@ if(j_depilog.gt.0)call dotrans(j_depilog,1)
 return 
 \end{verbatim} 
 \color{Black} 
-\subsection{find\_d() makes a \textcolor{teal}{ILIST} of observations satisfying a condition.} 
+\subsection{\textcolor{VioletRed}{find\_d}() makes a \textcolor{teal}{ILIST} of observations satisfying a condition.}\index{find\_d()} 
 \label{find_d} 
 \vspace{0.3cm} 
 \hrule 
@@ -5937,7 +5961,7 @@ then the minima are stored into these variables.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent maxobs  \tabto{3cm} N|0 \tabto{5cm}   \tabto{7cm} 
+\noindent \textcolor{blue}{maxobs}  \tabto{3cm} N|0 \tabto{5cm}   \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Observation where maximum is obtained is stored in var\%maxobs 
 \end{changemargin} 
@@ -6845,7 +6869,7 @@ default is \textcolor{blue}{stop->}(Change\%.lt.0.01.and.\textcolor{teal}{Round}
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent fast\% \tabto{3cm} -1|1 \tabto{5cm}  CODE  \tabto{7cm} 
+\noindent \textcolor{blue}{fast}\% \tabto{3cm} -1|1 \tabto{5cm}  CODE  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  codeoption computing Fast\%. All schedules whose price is larger than Fast\% 
 of the current key schedule. Same variables can be used as for \textcolor{blue}{stop->} and also current Fast\%. 
@@ -7703,19 +7727,13 @@ both bars were plotted. This possibility will be included later.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent Args \tabto{3cm} 1-  \tabto{5cm}  \textcolor{teal}{REAL} | \textcolor{teal}{MATRIX}  \tabto{7cm} 
+\noindent Args \tabto{3cm}  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  The points which are connected: 
-\begin{itemize} 
-\item  \textcolor{teal}{x1},...,xn,\textcolor{teal}{y1},...,yn The \textcolor{teal}{x}-coordinates and \textcolor{teal}{y}-coordinates, 
-\$n \geq 1\$ 
-\item   If there is only one argument which is a 
-matrix object having two rows, then the first row is assumed to give the \textcolor{teal}{x} values 
-and the second row the \textcolor{teal}{y} values. 
-\item   If there are two matrix (vector) arguments, then 
-the first matrix gives the \textcolor{teal}{x}-values and the second matrix gives the \textcolor{teal}{y}-values. 
-It does not matter if arguments are row or column vectors. 
-\end{itemize} 
+\noindent Numeric values given with any combination of numbers, matrices and lists. If there is 
+\textcolor{teal}{x}-> option referring to a \textcolor{teal}{MATRIX}, those valuse give the \textcolor{teal}{x}-coordinates, otherwise 
+first half of values give \textcolor{teal}{x}-values and rest \textcolor{teal}{y}-values. If number of \textcolor{teal}{y}-values is a multiple 
+of \textcolor{teal}{x}-values given in \textcolor{teal}{x}->, then the \textcolor{teal}{x}-values are repeated. 
+ 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7811,7 +7829,7 @@ then with \textcolor{blue}{label->} option one can write text to any point.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{step} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Points taken from matrices are taken at steps given in \textcolor{blue}{step->} 
+\noindent  Points are taken at steps given in \textcolor{blue}{step->} 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7823,7 +7841,7 @@ then with \textcolor{blue}{label->} option one can write text to any point.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent pointsonly \tabto{3cm} N|0 \tabto{5cm}   \tabto{7cm} 
+\noindent \textcolor{blue}{pointsonly} \tabto{3cm} N|0 \tabto{5cm}   \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent Only points are drawn. 
 \end{changemargin} 
@@ -7833,6 +7851,22 @@ then with \textcolor{blue}{label->} option one can write text to any point.
 \noindent \textcolor{blue}{break}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  The line is broken when a \textcolor{teal}{x}-value is smaller than the previous one. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{stop}  \tabto{3cm} 0|1  \tabto{5cm}  CODE  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Code option defining in terms of \$\textcolor{teal}{x}, \$xold,\$\textcolor{teal}{y} and \$yold when 
+a break is generated. For first point \$xold=\$\textcolor{teal}{x} and \$yold=\$\textcolor{teal}{y} 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{filter}  \tabto{3cm} 0|1  \tabto{5cm}  CODE  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Code option defining in terms of \$\textcolor{teal}{x}, \$xold,\$\textcolor{teal}{y} and \$yold when 
+a point is accepted. For first point \$xold=\$\textcolor{teal}{x} and \$yold=\$\textcolor{teal}{y}. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7909,8 +7943,15 @@ figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}reg0(),\textcolor{teal
 /                                                                                              \\ 
 reg2=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{teal}{x2},\textcolor{blue}{trans->}\textcolor{teal}{transa})\\ 
 figyx=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{teal}{transa}(fu),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{color->}Orange,\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{drawline}(\textcolor{VioletRed}{matrix}(6,\textcolor{blue}{do->}),\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{drawline}(1,2,1,2,3,4,3.4,5,\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{drawline}(1,2,1,2,3,4,3.4,5,\textcolor{blue}{break->},\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{drawline}(1,2,3,4,3,4,0,5,\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{drawline}(1,2,3,4,3,4,0,5,\textcolor{blue}{continue->}fcont,\textcolor{blue}{filter->}\$\textcolor{teal}{y}.gt.0)\\ 
+fi=\textcolor{VioletRed}{drawline}(1,2,1,2,3,4,3.4,5,\textcolor{blue}{continue->}fcont,\textcolor{blue}{stop->}\$\textcolor{teal}{x}.lt.\$xold)\\ 
 \textcolor{Red}{;if}(wait)\textcolor{Red}{;pause}\\ 
 \textcolor{Red}{;return}\\ 
+	!                      \\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 

@@ -173,6 +173,7 @@ module jmod
 	integer,parameter::j_fsetoption=1
 	integer,parameter::j_fsgetelem=2
 	integer,parameter::j_fsetelem=3
+	integer,parameter::j_fsetpointer=9
  
  
 	! integer, parameter :: j_nfunctions_ = &
@@ -351,7 +352,7 @@ module jmod
  
  
 	integer, dimension(j_nfunctions_):: j_maxarg_  !=  & !!%%function
-	data j_maxarg_/ 4,9999,5,99999,9999,9999,9999,3,999,&
+	data j_maxarg_/ 4,5,5,99999,9999,9999,9999,3,999,&
 		! 'setoption','getelem','setelem','list2', 'o1_funcs','o2_funcs','o3_funcs','setcodeopt', &  ! 8n
 		!setpointer
 		1,99999,1,1,&
@@ -671,6 +672,7 @@ module jmod
 	integer, dimension(j_maxopenopt) :: j_optioniob
 	integer, dimension(j_maxopenopt) :: j_optionlink
 	integer*2, dimension(2,j_maxopenopt) :: j_optionmoptio
+ 
 	integer, dimension(j_maxopenopt) :: j_optiontot
 	equivalence(j_optiontot,j_optionmoptio)
 	integer,parameter::j_maxopenopt2=10
@@ -2338,8 +2340,8 @@ module jmod
 			integer, intent(in):: ivtext
 		end subroutine !subroutine j_cleartext(ivtext)
  
-		subroutine j_startwrite(narg,arg,isbin,isbin8,nu,lenwrite)
-			integer,intent(in)::narg
+		subroutine j_startwrite(ivfile,ivform,narg,arg,isbin,isbin8,nu,lenwrite)
+			integer,intent(in)::ivfile,ivform,narg
 			integer,dimension(:),intent(in)::arg
 			logical,intent(out)::isbin,isbin8
 			integer,intent(out)::nu,lenwrite
@@ -4143,11 +4145,12 @@ module jmod
  
  
  
-		subroutine j_startfig(iob,io,update,linkxfunc)  !start figure drawing functions
+		subroutine j_startfig(iob,io,update,linkxfunc,xtype)  !start figure drawing functions
 			integer, intent(in) ::iob
 			integer, intent(in) ::io
 			logical,intent(in),optional::update
 			integer,intent(in),optional::linkxfunc
+			integer,intent(in),optional::xtype
 		end subroutine !subroutine startfig(iob,io)
  
  
