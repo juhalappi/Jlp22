@@ -60,8 +60,8 @@ She also maintained the spirit during the black moments. The theory for \textbf{
 \href{run:./lappilempinen.pdf}{Lappi and Lempinen 2014}. 
  
  
-\subsection*{J in Luke} 
-\addcontentsline{toc}{subsection}{J in Luke} 
+\subsection*{\textbf{J} in Luke} 
+\addcontentsline{toc}{subsection}{\textbf{J} in Luke} 
 When working with Reetta, I noticed how terribly dirty the code was. I started to clean the 
 code. 
 In 2015 Metla and 
@@ -171,11 +171,17 @@ Juha Lappi
  
  
  
-After renaming the software to \textbf{Jlp22}, this chapter starts to describe changes in new versions. 
+After renaming the software to \textbf{Jlp22}, this section starts to describe changes in new versions. 
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
-Version 7.10.2023 Bugs in the new submatrix code corrected. When defining a submatrix using matrices to tell 
+ 
+Version 8.10.2023 A bug in the cleaned \textcolor{VioletRed}{drawline}() function corrected which prevented appending of 
+figures. Function \textcolor{VioletRed}{fill}() fills empty cells in a matrix with interpolation. 
+Yesterday was the independence day of \textbf{Jlp22}. Two years ago I got permission to publish 
+and devlop \textbf{Jlp22} freely. 
+ 
+Version 6.10.2023 Bugs in the new submatrix code corrected. When defining a submatrix using matrices to tell 
 what columns and rows are taken, nonpositive values are ignored. This is useful e.g. in the new stemopt-function (to be reported soon) 
 where fixed length matrices are reserved for log dimensions but only as many elments are use 
 as there are logs in a stem. In the new submatrix code, \textcolor{blue}{diag->} is not properlyt tested. 
@@ -466,7 +472,7 @@ and which is generated with jmanual.exe
 \item \href{run:./jlp92.pdf}{jlp92.pdf} \hspace{0.2cm}Manual of old JLP which explains the theory behind the jlp algorithm 
 \item \href{run:./lappilempinen.pdf}{lappilempinen.pdf} \hspace{0.2cm} Paper explaining the theory behing factory optimization. 
 \item \href{run:./hyvonenetal2019.pdf}{hyvonenetal2019.pdf} \hspace{0.2cm} A paper utilizing the factory optimization. 
-\item \href{run:./JLp22development.docx} {Jlp22development.docx} \hspace{0.2cm} not up-to-date manual for developers 
+\item \href{run:./JLp22development.docx} {\textbf{Jlp22}development.docx} \hspace{0.2cm} not up-to-date manual for developers 
 \item \href{run:./fletcher.pdf}{fletcher.pdf} The theory behind the subroutines of Fletcher 
 \end{itemize} 
  
@@ -1747,10 +1753,10 @@ The arithmetic and logical functions return single \textcolor{teal}{REAL} value 
 ! 
 \begin{itemize} 
 \item \textcolor{VioletRed}{sqrt}(\textcolor{teal}{x}) square root, \textcolor{VioletRed}{sqrt}(0) is defined to be 0, negative argument produce error. 
-If {x} is matrix, then an error occurs if any elemet is negative. 
-\item \textcolor{VioletRed}{sqrt2}(\textcolor{teal}{x}) If {x} or an element of {x} is negative then \$\textcolor{VioletRed}{sqrt2}()=-\textcolor{VioletRed}{sqrt}()\$. Actually \textcolor{VioletRed}{sqrt2}() might be a 
+If {\textcolor{teal}{x}} is matrix, then an error occurs if any elemet is negative. 
+\item \textcolor{VioletRed}{sqrt2}(\textcolor{teal}{x}) If {\textcolor{teal}{x}} or an element of {\textcolor{teal}{x}} is negative then \$\textcolor{VioletRed}{sqrt2}()=-\textcolor{VioletRed}{sqrt}()\$. Actually \textcolor{VioletRed}{sqrt2}() might be a 
 useful sigmoidal function in modeling context. 
-\item \textcolor{VioletRed}{exp}(\textcolor{teal}{x}) \$e\$ to power {x}. If {x}>88, then \textbf{Jlp22} produces error in order to avoid system 
+\item \textcolor{VioletRed}{exp}(\textcolor{teal}{x}) \$e\$ to power {\textcolor{teal}{x}}. If {\textcolor{teal}{x}}>88, then \textbf{Jlp22} produces error in order to avoid system 
 crash. 
 \item \textcolor{VioletRed}{log}(\textcolor{teal}{x}) natural logarithm 
 \item \textcolor{VioletRed}{log10}(\textcolor{teal}{x}) base 10 logarithm 
@@ -1803,9 +1809,9 @@ Inverse trigonometric functions. In \textcolor{VioletRed}{asin}(), etc,  argumen
 \item \textcolor{VioletRed}{nint}(\textcolor{teal}{x},modulo) returns modulo*\textcolor{VioletRed}{nint}(\textcolor{teal}{x}/modulo) ,e.g.\textcolor{VioletRed}{nint}(48,5)=50; \textcolor{VioletRed}{nint}(47,5)=45; 
 \item \textcolor{VioletRed}{int}(\textcolor{teal}{x}) integer value obtained by truncation 
 \item \textcolor{VioletRed}{int}(\textcolor{teal}{x},modulo) returns modulo*\textcolor{VioletRed}{int}(\textcolor{teal}{x}/modulo), e.g. \textcolor{VioletRed}{int}(48,5)=45 
-\item \textcolor{VioletRed}{ceiling}(\textcolor{teal}{x}) smallest integer greater than or equal to {x}. 
+\item \textcolor{VioletRed}{ceiling}(\textcolor{teal}{x}) smallest integer greater than or equal to {\textcolor{teal}{x}}. 
 \item \textcolor{VioletRed}{ceiling}(\textcolor{teal}{x},modulo) returns modulo*\textcolor{VioletRed}{ceiling}(\textcolor{teal}{x}/modulo), e.g. \textcolor{VioletRed}{ceiling}(47,5)=50. 
-\item \textcolor{VioletRed}{floor}(\textcolor{teal}{x}) greatest integer smaller than or equal to {x}. 
+\item \textcolor{VioletRed}{floor}(\textcolor{teal}{x}) greatest integer smaller than or equal to {\textcolor{teal}{x}}. 
 \item \textcolor{VioletRed}{floor}(\textcolor{teal}{x},modulo) returns modulo*\textcolor{VioletRed}{floor}(\textcolor{teal}{x}/modulo), e.g. \textcolor{VioletRed}{floor}(47,5)=45. 
 \end{itemize} 
 \subsection{\textcolor{VioletRed}{min}() and \textcolor{VioletRed}{max}()}\index{min()max()} 
@@ -3170,7 +3176,7 @@ The following list functions are available
 \label{listo} 
 An object list is a list of named \textbf{Jlp22} object. See Shortcuts for implicit object 
 lists and List functions for more details. Object lists can be used also as 
-pointers to objects, see e.g. the selector option of the simulate() function. 
+pointers to objects. 
 \subsection{\textcolor{VioletRed}{list}() Creates \textcolor{teal}{LIST}}\index{list()} 
 \label{list} 
 \vspace{0.3cm} 
@@ -3537,10 +3543,10 @@ is the same as \textcolor{teal}{LIST} object which can be used in matrix computa
 \singlespacing 
 \begin{example}[ilistex]ILIST examples\\ 
 \label{ilistex} 
-\noindent {1,4,5};\\ 
-{4...1};\\ 
+\noindent \{1,4,5\};\\ 
+\{4...1\};\\ 
 A=\textcolor{VioletRed}{matrix}(4,4)\\ 
-A({1,4},{3})=7;\\ 
+A(\{1,4\},\{3\})=7;\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -3995,7 +4001,7 @@ elements.
 A(1,-2,3,-4)=\textcolor{teal}{B}+3;\\ 
 A(1,-2,3,-4,\textcolor{blue}{sum->})=-5;\\ 
 A(1,-2,3,-4,\textcolor{blue}{sum->}2)=A(2,-3,1,-2);\\ 
-C=A({1,3},{4...2});\\ 
+C=A(\{1,3\},\{4...2\});\\ 
 H=\textcolor{VioletRed}{matrix}(4,4,\textcolor{blue}{diag->},\textcolor{blue}{do->}3);\\ 
 H(3,-4,\textcolor{blue}{diag->})=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(4,7));\\ 
 row=\textcolor{VioletRed}{matrix}(2,\textcolor{blue}{values->}(1,3))\\ 
@@ -4498,6 +4504,60 @@ abc=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{row->}row,\textcolor{
 ab=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{column->}(2,5));\\ 
 ac=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{row->}(4,2,5));\\ 
 abc=\textcolor{VioletRed}{matrixborder}(a,\textcolor{blue}{row->}(4,2,5),\textcolor{blue}{column->}(2,5));\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
+\subsection{\textcolor{VioletRed}{fill}() fills empty (zero) cells in a matrix}\index{fill()} 
+\label{fill} 
+Currently \textcolor{VioletRed}{fill}() uses linear interpolation to fill rows or columns. 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output \tabto{3cm} 0| 1 \tabto{5cm}   \textcolor{teal}{MATRIX} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The filled matrix. If output is not given, argument is filled. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args  \tabto{3cm} 1 \tabto{5cm}   \textcolor{teal}{MATRIX} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  input 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{row}  \tabto{3cm}   \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent rows are filled using linear interpolation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{column}  \tabto{3cm}   \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent columns are filled using linear interpolation 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+It is simple to extent to more complicated methods, e.g. to use bilinear 
+interpolation 
+\end{note} 
+\begin{note} 
+It is implicitly assumed that distances between rows or columns are equal, i.e., 
+the row or column indexes are used as the \textcolor{teal}{x}-values. 
+It would be simple to add possiblity to give as arguments vectors which define 
+the distances. 
+\end{note} 
+\singlespacing 
+\begin{example}[fillex]\\ 
+\label{fillex} 
+\noindent a=\textcolor{VioletRed}{matrix}(4,5,\textcolor{blue}{do->});\\ 
+a(2,\{1,3\})=0\\ 
+a;\\ 
+\textcolor{teal}{b}=\textcolor{VioletRed}{fill}(a,\textcolor{blue}{row->});\\ 
+\textcolor{teal}{b}=\textcolor{VioletRed}{fill}(a,\textcolor{blue}{column->});\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -8353,7 +8413,7 @@ DOI =  http://dx.doi.org/10.1080/02827581.2014.886714
  
 \bibitem{gnu} 
 Thomas Williams, Thomas and Kelley, Colin (2022), 
-\emph{gnuplot 5.5}, 
+\emph{\textcolor{teal}{gnuplot} 5.5}, 
 url = http://\textcolor{teal}{gnuplot}.info/docs\_5.5/ 
  
  

@@ -345,6 +345,7 @@ subsection maxloc maxloc() location of maximum value
 subsection cumsum cumsum(): cumulative sum
 subsection corrmatrix corramtrix() correlation matrix from variance matrix
 subsection matrixborder matrixborder() puts header values on top and/or left
+subsection fill
 !
 !section dataf Data functions
 section datahead

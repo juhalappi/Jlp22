@@ -17881,7 +17881,7 @@ recursive subroutine j_parser(input,ivteku,ivtext)
  
 		call teku(lisetpointer,j_fsetpointer)
 		node(3)=j_fsetpointer
-	!	write(6,*)'setpointer'
+		!	write(6,*)'setpointer'
 	endif !if(setpointer)  16091
 	!ntek=ntekuf(2)
 	call teku(nteku+1,0)
@@ -18390,14 +18390,14 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 		!write(6,*)'<567lopw',ial,lopw
 		!if(ial.gt.lopw-20)write(6,*)winput(ial:lopw)
 		do while(ial.lt.lopw)
-			write(16,*)'ial ',ial,winput(1:lopw)
+			!	write(16,*)'ial ',ial,winput(1:lopw)
 			do jii=ial-1,1,-1
 				if(winput(jii:jii).eq.','.or.winput(jii:jii).eq.'(')goto 178
 			enddo !jii=ial-1,1,-1  16605
 			write(6,*)'illegal ->',ial,lopw,winput(1:lopw)
 			j_err=.true.;return
 178				iopt=j_isin(winput(jii+1:ial-1),j_options,j_noptions)
-			write(16,*)'iopt',iopt
+		!	write(16,*)'iopt',iopt
 			if(iopt.le.0)then
 				write(6,*)winput(jii+1:ial-1),' is not an option'
 				if(winput(jii+1:ial-1).eq.'input')then
@@ -18413,42 +18413,42 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 			endif !if(iopt.le.0)  16612
 			chii=j_chi5(iopt,1)
 			lec=len_trim(chii)
-			write(16,*)'iopt',iopt,j_options(iopt)
+			!	write(16,*)'iopt',iopt,j_options(iopt)
 			lop=j_nextlim(winput,ial+2,lopw,',)(')
 			ial2=min(lopw,ial+2)
 			ial3=min(lopw,ial+3)
 			!ial4=min(lopw,ial+4)
-			write(16,*)'lop ',lop,' lopw',lopw, 'ial ',ial,winput(1:ial+2)
+			!	write(16,*)'lop ',lop,' lopw',lopw, 'ial ',ial,winput(1:ial+2)
 			if(winput(ial2:ial3).eq.'()')then
-				write(16,*)'llflf'
+				!		write(16,*)'llflf'
 				winput=winput(1:jii)//'setoption('//chii(1:lec)//winput(ial3:lopw)
 				!	write(6,*)'winp,',winput
 			elseif(winput(ial2:ial2).eq.'(')then
 				ir=j_nextrp(winput,ial2,lopw)
 				winput=winput(1:jii)//'setoption('//chii(1:lec)//','//&
 					winput(ial3:lopw)
-				write(16,*)'aw1',chii(1:lec),'*',winput(ial+3:lopw)
+				!	write(16,*)'aw1',chii(1:lec),'*',winput(ial+3:lopw)
 			elseif(winput(ial2:ial2).eq.',')then !if(winput(ial+2:ial+2).eq.'(')then
 				winput=winput(1:jii)//'setoption('//chii(1:lec)//')'//&
 					winput(ial2:lopw)
-				write(16,*)'aw2',chii(1:lec),'*',winput(ial+2:lopw)
+				!	write(16,*)'aw2',chii(1:lec),'*',winput(ial+2:lopw)
 			elseif(winput(lop:lop).eq.')'.and.lop.eq.ial+2)then !if(winput(ial+2:ial+2).eq.'(')then
 				winput=winput(1:jii)//'setoption('//chii(1:lec)//')'//&
 					winput(lop:lopw)
-				write(16,*)'aw3 ',chii(1:lec),'*',winput(lop:lopw)
+				!	write(16,*)'aw3 ',chii(1:lec),'*',winput(lop:lopw)
 			elseif(winput(lop:lop).eq.'(')then !if(winput(ial+2:ial+2).eq.'(')then
 				loo=lop-ial-2
 				iper=j_nextlim(winput(ial2:lop-1),1,loo,'+-*/')
 				!	write(6,*)winput(1:len_trim(winput))
-				write(16,*)'iper',iper,loo,winput(ial+2:lop-1),loo
+				!	write(16,*)'iper',iper,loo,winput(ial+2:lop-1),loo
 				if(iper.lt.loo)then
-					write(6,*) 'illegal option ',j_options(iopt)
+					!		write(6,*) 'illegal option ',j_options(iopt)
 					j_err=.true.;return
 				endif !if(iper.lt.loo)  16655
 				ir=j_nextrp(winput,lop,lopw)
 				winput=winput(1:jii)//'setoption('//chii(1:lec)//','//&
 					winput(ial2:ir)//')'//winput(ir+1:lopw)
-				write(16,*)'aw4 ',chii(1:lec),'*',	winput(ial+2:ir)
+				!	write(16,*)'aw4 ',chii(1:lec),'*',	winput(ial+2:ir)
 			else !if(winput(ial+2:ial+2).eq.'(')then
 				iop3=index(winput(ial+2:lop-1),'->')
 				if(iop3.gt.0)then
@@ -18464,17 +18464,17 @@ recursive subroutine j_parser(input,ivteku,ivtext)
 				! write(6,*)'option ', j_options(1:leno),' not properly formulated'
 				! j_err=.true.;return
 				! endif !if(winput(lop:lop).ne.','.and.winput(lop:lop).ne.')'.and..  15843
-				write(16,*)'jfjfjf'
+				!	write(16,*)'jfjfjf'
 				winput=winput(1:jii)//'setoption('//chii(1:lec)//','//&
 					winput(ial+2:lop-1)//')'//winput(lop:lopw)
  
  
 			endif !if(winput(ial2:ial3).eq.'()')  16633
 			lopw=len_trim(winput)
-			write(16,*)'winp**',lopw,winput(1:lopw)
+			!		write(16,*)'winp**',lopw,winput(1:lopw)
 			ial=j_nextword(winput,jii+10+lec,lopw,'->')
 		enddo !while(ial.lt.lopw)  16603
-		write(16,*)'<222>',lopw, winput(1:lopw)
+		!	write(16,*)'<222>',lopw, winput(1:lopw)
  
 	end subroutine !subroutine getoptions()
  

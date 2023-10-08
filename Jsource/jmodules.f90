@@ -77,7 +77,7 @@ module jmod
 	integer, parameter :: j_nftex=2  !text
 	integer, parameter :: j_nffile=8  !file
 	integer, parameter :: j_nfio=7  ! io
-	integer, parameter :: j_nfmatr=20  !matrix
+	integer, parameter :: j_nfmatr=21  !matrix
 	integer, parameter :: j_nfdata=14  !data functions
 	integer, parameter :: j_nfstat=13  !stat
 	integer, parameter :: j_nfjlp=21 !jlp
@@ -240,7 +240,7 @@ module jmod
  
 		!! Matrices
 		'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
-		'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder',  & !20
+		'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder','fill',  & !21
  
 		!! Data functions
 		'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !13
@@ -318,9 +318,9 @@ module jmod
 		3,2,0,0,1,1,1,&
 		! 'read','write','print','ask','askc','printresult','printresult2', & ! 7 j_fbio
  
-		0,4*1,2,12*1,1,1,&
+		0,4*1,2,12*1,1,1,1,&
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
-		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix', 'matrixborder', & !20
+		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix', 'matrixborder','fill', & !21
  
 		0,0,0,2,2,0,1,0,0,0,0,1,0,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
@@ -400,9 +400,9 @@ module jmod
 		9999,9999,9999,1,1,9999,999999,&
 		! 'read','write','print','ask','askc','printresult','printresult2', & ! 6 j_fbio
  
-		4,4*1,2,12*1,1,1,&
+		4,4*1,2,12*1,1,1,1,&
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
-		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder'& ! 20
+		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder','fill',& ! 21
  
 		0,999,0,2,2,1,9999,1,0,0,999,1,0,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10

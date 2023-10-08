@@ -2031,6 +2031,16 @@ endif
 		le2=le2+2
 		goto 100
 	endif !if(icom.lt.le.and.(j.ge.icom0.and.j.lt.icom.or.j.gt.icom.a   1706
+	if(isex.and.line(j:j).eq.'{')then
+		line2(le2+1:le2+2)='\{'
+		le2=le2+2
+		goto 100
+	endif !if(icom.lt.le.and.(j.ge.icom0.and.j.lt.icom.or.j.gt.icom.a   1706
+	if(isex.and.line(j:j).eq.'}')then
+		line2(le2+1:le2+2)='\}'
+		le2=le2+2
+		goto 100
+	endif !if(icom.lt.le.and.(j.ge.icom0.and.j.lt.icom.or.j.gt.icom.a   1706
 	! if(j.eq.icom0)then
 		! if(j.gt.1)then
 			! if(line(j-1:j-1).eq.'\')then
@@ -2333,8 +2343,8 @@ end function nonblank !function nonblank(inp,ial,lop)
  
 subroutine words(inp,ial0,le,nwords,ifirst,ilast,iss)
 	character*(*) inp
-	character*23 limit
-	integer,parameter::nl=23
+	character*25 limit
+	integer,parameter::nl=25
 	logical islimit
 	logical iss
 	integer ::ifirst(1:*),ilast(1:*)
@@ -2342,7 +2352,7 @@ subroutine words(inp,ial0,le,nwords,ifirst,ilast,iss)
 	!write(6,*)'<1>',ial0,le,inp(ial0:le)
 !p=index(inp(ial0:le),'theta'.gt.0
 	limit(1:22)=' ,():!&-+/#@".<>=~\%$*'
-	limit(23:23)="'"
+	limit(23:25)="'{}"
 	nwords=0
 	islimit=.false.
 	ial=ial0

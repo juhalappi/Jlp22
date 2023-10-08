@@ -125,11 +125,17 @@
 
 
 
-!After renaming the software to Jlp22, this chapter starts to describe changes in new versions.
+!After renaming the software to Jlp22, this section starts to describe changes in new versions.
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
-! Version 7.10.2023 Bugs in the new submatrix code corrected. When defining a submatrix using matrices to tell 
+
+!Version 8.10.2023 A bug in the cleaned drawline() function corrected which prevented appending of 
+!figures. Function fill() fills empty cells in a matrix with interpolation.
+!Yesterday was the independence day of Jlp22. Two years ago I got permission to publish
+! and devlop Jlp22 freely.
+
+! Version 6.10.2023 Bugs in the new submatrix code corrected. When defining a submatrix using matrices to tell 
 ! what columns and rows are taken, nonpositive values are ignored. This is useful e.g. in the new stemopt-function (to be reported soon)
 ! where fixed length matrices are reserved for log dimensions but only as many elments are use
 ! as there are logs in a stem. In the new submatrix code, diag-> is not properlyt tested.
@@ -1261,7 +1267,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 !Section listo Object lists
 ! An object list is a list of named Jlp22 object. See Shortcuts for implicit object 
 ! lists and List functions for more details. Object lists can be used also as 
-! pointers to objects, see e.g. the selector option of the simulate() function.
+! pointers to objects.
 !endsection
 
 
