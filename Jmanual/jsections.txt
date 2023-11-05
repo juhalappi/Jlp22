@@ -43,7 +43,8 @@
 !xrange&0-4&REAL& Range for the x-variable. If there are now arguments Jlp22 tries to
 !find variables var%min and var%max which where computed with stat() with options min->
 !and max->. If there is need to define a smaller range for computing the values as wished
-! for the x-axes, then  
+! for the x-axes, then the figure is first for the range given in xrange-> and then the new
+! range can be given in show() or drawline() without arguments.
 !endmacro
 
 
@@ -129,6 +130,17 @@
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
+
+!Version 5. 11. 2023. Functions stemopt and stemcurve are reported. Stemopt can be used to optimize bucking or to write
+! all possible bucking schedules to the disk to be used in linear programming. I will soon
+! publish a paper based on this function. Function stemcurve defines a STEMCURVE object which can be used 
+! to compute diameter at any height, height of any diameter or volume between two heights. The options of drawline() are finetuned. Points not passing filter-> are dropped.
+!Points rejected with reject-> are dropped and the line is broken. When giving xrange-> or yrange-> 
+!in figures $ means that gnuplot determined the upper or lower limit. Extension of interpolate() reported.
+!Function fill() is updated so that if cells cannot be filled with the chosen direction,
+!the direction is changed. Removing the last continuation character by starting the next
+! line with '<<' is reported in the manual, and not only here. When reading a matrix from the input paragraph can be now
+!separated with commas or spaces, and continuation to the nex line is indicated with ending comma.
 
 !Version 8.10.2023 A bug in the cleaned drawline() function corrected which prevented appending of 
 !figures. Function fill() fills empty cells in a matrix with interpolation.
@@ -286,7 +298,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 !  Similarly the variable
 ! telling how many children that observation has in the lower level 
 ! is now always datab%nobsw and it must be the 
-! first varaible in the list of variables. If the first variable is %nobsw, then its name is automatically
+! first variable in the list of variables. If the first variable is %nobsw, then its name is automatically
 ! changed into the proper form. This new legislation was necessary to keep the new multilevel 
 !datas in order.
 
@@ -901,7 +913,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 ! endsection
 
 !Section afterinstall After install restart
-!After editing the environmental varaible Path, the computer mus be restarted.
+!After editing the environmental variable Path, the computer mus be restarted.
 !endsection
 	
 	! Section runex Running examples
@@ -1354,7 +1366,11 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 ! '(', '=' or with '>', then the next record is interpreted as a continuation record and
 ! the continuation character is kept as a part of the input
 ! line. Tf a record ends with ',' and the next record starts also with ',', only one ',' is obtained. If a line ends with '>{}>', then
-! the nex line is also continuation line, and  '>{}>' is ignored. All continuation
+! the nex line is also continuation line, and  '>{}>' is ignored. 
+! A continuation character can be removed with starting nex tline with 
+!'<<'. This is useful when using ;do-loops to generate
+! an input line and last comm needs to be replaced with right parenthesi.
+!All continuation
 ! records together form one input line. In previous version input programming functions operated on input lines
 ! but now they operate on recors. One input record can contain 4096 characters, and an input line can contain also 4096 characters
 ! (this can be increased if needed).
@@ -3084,8 +3100,9 @@ a call to function assone()
 
 
 
-! Section spline Splines, stem splines,  and volume functions
-! There are several spline functions.
+! Section spline Stems: stem curves and optimization of bucking
+! There are several functions for describing stems. Stemopt can optimize bucking
+! and generate data for linear programming problems which optimize sawing blade settings etc.
 !endsection
 
 !Section bit Bit functions

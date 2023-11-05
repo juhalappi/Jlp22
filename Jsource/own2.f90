@@ -101,7 +101,8 @@ subroutine o2_example(iob,io)
 	call  j_startfunction(iob,io,0,narg,arg,ivout)
 	write(6,*)'o2_example: there were ',narg, ' arguments'
 	do i=1,narg
-		write(6,*)j_object_name(arg(i),15),' type ',j_otypes( j_otype(arg(i)))
+		call j_getname(arg(i))
+		write(6,*)j_oname(1:j_loname),' type ',j_otypes( j_otype(arg(i)))
 	enddo !i=1,narg    103
 	call j_printname('output was ',ivout,' ')
  

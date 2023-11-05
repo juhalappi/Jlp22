@@ -430,14 +430,15 @@ subsection drawline drawline(): line through points, used also for labels
 !subsection show show(): showing a FIGURE object, possibly with updated paramters
 subsection plot3d plot3d() 3d plot 
 !
-section spline Splines, stem splines,  and volume functions
+section spline Stem curves, splines, stem splines, volume functions
 
 subsection tautspline tautspline()
 subsection stemspline stemspline()
 subsection stempolar stempolar(): stem curve in polar coorniates
-subsection stemcurve 
 subsection laasvol laasvol() volume function of Laasasenaho
 subsection laaspoly laaspoly() polynomial stem curve of Laasasenaho
+subsection stemcurve
+subsection stemopt
 !subsection integrate integrate()
 !
 	

@@ -52,9 +52,13 @@ module jmod
 	! 360 deg = 2 pi rad ;; deg = 2 pi/360 rad =  pi/180 rad
 	! 360 deg = 2 pi rad ;; rad =360/(2*p) rad = 180/pi rad
 	double precision,parameter::j_pi=3.14159265358979323
+	double precision,parameter::j_pi1200=   0.0026179939508438d0  !Pi/1200 needed in cone
+	double precision,parameter::j_pi4= 0.007853981852531433d0  !Pi/4
+ 
 	double precision,parameter::j_0=0.d0
 	double precision,parameter::j_1=1.d0
-	integer*8  ::j_18=1,j_08=0
+	integer*8,parameter  ::j_18=1,j_08=0
+	integer*8,parameter   ::j_108=10000000000_8
 	double precision,parameter::j_m1=-1.d0
 	double precision,parameter::j_deg=j_pi/180.d0 !100.d0  !korjaa  j_deg makes degrees to radians
 	double precision,parameter::j_todeg=180.d0/j_pi !korjaa !makes radians to degrees
@@ -83,7 +87,7 @@ module jmod
 	integer, parameter :: j_nfjlp=21 !jlp
 	integer, parameter :: j_nfsimu=6 !
 	integer, parameter :: j_nffig=6 !
-	integer, parameter :: j_nfspli=8 ! tautspline..
+	integer, parameter :: j_nfspli=9 ! tautspline..
 	integer, parameter :: j_nfbit=7 !
 	integer, parameter :: j_nfmisc=10!
  
@@ -261,7 +265,7 @@ module jmod
 		'plotyx','draw','drawclass', 'drawline','show', 'plot3d',& ! 6
  
 		!! Splines, stem splines,  and volume functions
-		'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt', & ! 8
+		'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt', 'cumvol',& ! 9
  
 		!! Bit function
 		'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
@@ -341,8 +345,8 @@ module jmod
 		0,0,1,0,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
-		1,2,2,2,2,2,0,8,&     !calle,lmin,lmax,dmin,gam,b
-		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt,  & ! 6
+		1,2,2,2,2,2,0,5,1,&     !calle,lmin,lmax,dmin,gam,b
+		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt, 'cumvol', & ! 6
  
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
@@ -422,8 +426,8 @@ module jmod
 		2,0,1,9999,1,1,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', & ! 5
  
-		1,2,2,2,2,2,9999,8, & !calle,lmin,lmax,dmin,gam,b
-		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',stemopt  & ! 8
+		1,2,2,2,2,2,9999,6,3, & !calle,lmin,lmax,dmin,gam,b
+		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',stemopt,'cumvol',  & ! 9
  
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
@@ -462,7 +466,7 @@ module jmod
 	integer,dimension(j_nnamedfuncarg):: j_needsnamed
  
 	!free options free$
-	parameter (j_noptions_=227) !!!option number of j_ options
+	parameter (j_noptions_=228) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 		'extraup','extra','mean', 'min','max',& ! 1-10
@@ -487,7 +491,7 @@ module jmod
 		'tailtofirst','tailtolast','cumulative','time','missing','clean','factgroup','dpivot','int','pullout',&
 		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist',&
 		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange','param','code','case', &
-		'maxobs','pointsonly','obj','seq','fast','write'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
+		'maxobs','pointsonly','obj','seq','fast','write','down'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -526,7 +530,7 @@ module jmod
 	parameter (j_mbasis=204,j_mcondition=205,j_mfastdif=206,j_mmarksize=207,j_mkeepopen=208)
 	parameter (j_mperiodvars=209,j_mup=210,j_mmaxiter=211,j_milist=212,j_mnrowtot=213,j_mshowdomain=214)
 	parameter (j_mknn=215,j_mnewup=216,j_mxfunc=217,j_mxfuncrange=218,j_mparam=219,j_mcode=220,j_mcase=221)
-	parameter (j_mmaxobs=222,j_mpointsonly=223,j_mobj=224,j_mseq=225,j_mfast=226,j_mwrite=227)
+	parameter (j_mmaxobs=222,j_mpointsonly=223,j_mobj=224,j_mseq=225,j_mfast=226,j_mwrite=227,j_mdown=228)
 	integer,parameter :: j_nnamedoptarg=53
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
  
@@ -592,8 +596,9 @@ module jmod
  
 	integer :: j_nu
 	!	logical :: j_wdollar
-	logical ::j_ismakelist
-	integer j_makelistvar,j_makelist,j_makelistnvar
+	!	logical ::j_ismakelist
+	!	integer j_makelistnvar
+	!	integer, dimension(:),pointer ::j_makelist
 	integer,dimension(:),allocatable::j_fromvarvector
 	integer, dimension(:), pointer :: j_fromvar
  
@@ -948,8 +953,8 @@ module jmod
  
  
 	integer ::j_nread
-	integer j_ivcase,j_caseread,j_ivcaselist
- 
+	integer j_ivcase,j_ivcaselist
+	logical j_iscase
 	logical ::j_eof
 	double precision,dimension(400)::j_tempv,j_tempv2,j_tempv3,j_tempv4
 	integer,parameter::j_lenwrite=500
@@ -972,8 +977,9 @@ module jmod
 	logical j_gpshow
 	logical j_gpcontinue
 	integer j_gpset
-	character*60 j_gptitle,j_gpxlabel,j_gpylabel
  
+	character*60 j_gptitle,j_gpxlabel,j_gpylabel,j_gpoldfile
+	integer::j_gpleold=0
 	integer j_gplenline
 	character*60 j_gplabel
 	character*80 p_domainname
@@ -1202,6 +1208,8 @@ module jmod
 	character*8 j_ch8,j_ch8b
 	parameter(j_incnu=31)
 	integer::j_ninc=1
+	integer:: j_ninlines !lines in in->paragraph
+ 
  
 	!	integer :: j_nul(-1:j_mxinc)
 	logical :: j_incin=.false.
@@ -1449,6 +1457,7 @@ module jmod
 	logical*1,dimension(:),allocatable::p_rejects
 	integer p_ivxmat,p_ivrejects
 	integer p_nunits,p_lx0,p_ndom,p_ivdomain,p_nrow,p_nrowtot  !p_nrow0= number of contraints
+	integer*8 ::p_nrow8
 	integer p_row0
 	integer p_ndiv
 	integer p_lopp
@@ -2209,18 +2218,26 @@ module jmod
 		! integer function j_iounit(iv) !gets unit associate with iv
 		! integer,intent(in) ::iv
 		! end function !integer function j_iounit(iv)
-		function j_getin(iob,io,inclines,needed,ivform,lines)  !get in-> file
+		function j_getin(iob,io,ivform,lines,needslines)  !get in-> file
 			integer,intent(in)::iob,io
-			integer*8,intent(out)::inclines
-			!	integer,intent(out)::exit
-			logical,optional,intent(in)::needed
 			integer,intent(out),optional::ivform
-			integer,intent(out),optional::lines
- 
- 
+			integer*8,intent(out),optional::lines
+			!	integer,intent(out)::exit
+			logical,optional,intent(in)::needslines
 		end function
+		! function j_getin(iob,io,lines,needed,ivform)  !get in-> file
+		! integer,intent(in)::iob,io
+		! integer*8,optional,intent(out)::lines
+		! !	integer,intent(out)::exit
+		! logical,optional,intent(in)::needed
+		! integer,intent(out),optional::ivform
+		! !		integer,intent(out),optional::lines
+ 
+ 
+		! end function
  
 		function j_lenpara(isinpu)
+ 
 			logical,optional,intent(out)::isinpu
  
 		end function j_lenpara
@@ -2474,29 +2491,29 @@ module jmod
  
 		!20150812(arg1<->arg2) oli: 		subroutine defdata(name,iv,ivmat,ivkeep,ivcases,ivprolog,ivmaketrans,ivtrans,&
  
-		integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point,temp)
-			integer, intent(in):: iv,itype
-			integer,intent(in) ::ndim1,ndim2
-			character*(*), intent(in):: name
-			logical,intent(in),optional:: single
-			logical,intent(in),optional:: nod
-			integer,intent(in),optional::rowtot
-			double precision,dimension(:),optional,intent(out),pointer::point
-			double precision,dimension(:),optional,allocatable::temp
-		end function !subroutine j_defmatrix(iv,na
+		! integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point,temp)
+		! integer, intent(in):: iv,itype
+		! integer,intent(in) ::ndim1,ndim2
+		! character*(*), intent(in):: name
+		! logical,intent(in),optional:: single
+		! logical,intent(in),optional:: nod
+		! integer,intent(in),optional::rowtot
+		! double precision,dimension(:),optional,intent(out),pointer::point
+		! double precision,dimension(:),optional,allocatable::temp
+		! end function !subroutine j_defmatrix(iv,na
+ 
+		!	subroutine j_defmatdim(ivmat,nrows,ncols)
+		!		integer,intent(in)::ivmat,nrows,ncols
+		!	end subroutine
  
 		subroutine j_defmatdim(ivmat,nrows,ncols)
-			integer,intent(in)::ivmat,nrows,ncols
-		end subroutine
- 
-		subroutine j_defmatdim8(ivmat,nrows8,ncols8)
 			integer,intent(in)::ivmat
-			integer*8,intent(in)::nrows8,ncols8
+			integer*8,intent(in)::nrows,ncols
 		end subroutine
  
  
  
-		integer	function j_defmatrix8(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point,temp)
+		integer	function j_defmatrix(iv,name,ndim1,ndim2,itype,single,nod,rowtot,point,temp)
 			integer, intent(in):: iv,itype
 			integer*8,intent(in) ::ndim1,ndim2
 			character*(*), intent(in):: name
@@ -3110,6 +3127,17 @@ module jmod
 			double precision, intent(in)::xa,ya
 		end function
  
+		double precision function j_cone(d1,d2,h)
+			double precision,intent(in):: d1,d2,h
+			!volume of cut cone d1,d2 are top diamters in centimters
+			! h is length in decimeters
+			!result is in litres
+ 
+		end function
+		!real function j_bilin(xa,xy,za,zy,aa,ay,ya,yy,x,z)
+ 
+ 
+ 
 		double precision function j_sqrtt(x)
 			double precision, intent(in):: x
 		end function !real function j_sqrtt(x)
@@ -3637,8 +3665,9 @@ module jmod
 		subroutine j_stopj()
 		end subroutine !subroutine j_stopj()
  
-		subroutine j_closeunit(nu)
+		subroutine j_closeunit(nu,delete)
 			integer, intent(in):: nu
+			logical,optional,intent(in)::delete
 		end subroutine !subroutine j_closeunit(nu)
  
 		!20150812(arg1<->arg2) oli: 		!defchar(name,iv,ivout) : define a character variable
@@ -3808,11 +3837,12 @@ module jmod
 		end subroutine !subroutine j_asschar2(ivin,ivout)
  
 		!getinput(prompt,inprint) : gets next input line
-		subroutine j_getinput(prompt,inprint,nul0t,single)
+		subroutine j_getinput(prompt,inprint,nul0t,single,noclean)
 			character*(*), intent(in):: prompt
 			integer, intent(in),optional:: inprint
 			integer,intent(in),optional :: nul0t !at what value of nul(0) returns
 			logical,intent(in),optional::single
+			logical,intent(in),optional::noclean
 		end subroutine !subroutine j_getinput(prompt,inprint,nul0t)
  
 		subroutine j_getinput0(prompt,inprint,nul0t,single)
@@ -3986,15 +4016,23 @@ module jmod
 		!		integer,intent(in)::iob,io
 		!	end subroutine
  
-		subroutine j_readfrominp(vect,nvar)
+		subroutine j_readfrominp(vect,nvar,code)
 			double precision,dimension(:),intent(out)::vect
-			integer,intent(out)::nvar
+			integer,intent(in)::nvar
+			logical, intent(in),optional::code
 		end subroutine
  
-		subroutine j_readvector(vect,nvar)
+		subroutine j_readvector(nu,ivform,vect,nvar)
+			integer,intent(in)::nu,ivform
 			double precision,dimension(:),intent(out)::vect
-			integer,intent(out):: nvar
+			integer*8,intent(in):: nvar
 		end subroutine
+ 
+		double precision function j_readcode(inp,ial,lop)
+			character*(*) ::inp
+			integer,intent(in)::lop
+			integer ::ial
+		end function
  
 		subroutine j_objectname(iv,name,le)
 			integer,intent(in):: iv  !object index
@@ -4053,16 +4091,16 @@ module jmod
  
 		subroutine j_allocated(dvec,len)
 			double precision,dimension(:),intent(inout), allocatable::dvec
-			integer,intent(in) :: len
-		end subroutine
-		subroutine j_allocated8(dvec,len)
-			double precision,dimension(:),intent(inout), allocatable::dvec
 			integer*8,intent(in) :: len
 		end subroutine
+		! subroutine j_allocated8(dvec,len)
+		! double precision,dimension(:),intent(inout), allocatable::dvec
+		! integer*8,intent(in) :: len
+		! end subroutine
  
 		subroutine j_allocates(rvec,len)
 			real,dimension(:),intent(inout), allocatable::rvec
-			integer,intent(in) :: len
+			integer*8,intent(in) :: len
 		end subroutine
  
 		subroutine j_checki(ivec,iel)
