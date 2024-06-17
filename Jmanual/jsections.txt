@@ -21,7 +21,7 @@
 ! data & N|1- & DATA &	DATA object. Default last DATA defined.
 !from&N|1&REAL& First observation used.
 !until&N|1&REAL& Last observation used.
-!trans&N|1&TRANS& TRANS computed fro each observation
+!trans&N|1&TRANS& TRANS computed for each observation
 !epilog&N|1&TRANS &TRANS computed after going through data.
 !endmacro
 
@@ -68,11 +68,11 @@
 !Macro figure
 ! append&N | 0 & & The graph is appended to an existing FIGURE. If the output is does not exist 
 ! beforehand or it is not a FIGURE, then the figure is (and not error) is generated.
-! continue&N|0 & & Often sequentila figures are made using include files. It would be diffuct
+! continue&N|0 & & Often sequential figures are made using include files. It would be difficult
 ! to keep track of the figures if Jlp22 continues the Jlp22 script. Thus the default is that
 ! after plotting the figure, Jlp22 excutes pause() function. The user can
 ! give any commands during the pause. Typing <return>, the exceution continues. Typing 'e' or 'end',
-! an error is generated, and the control returns to sit> promt. If the function
+! an artificial error is generated, and the control returns to sit> promt. If the function
 ! contains continue-> option, pause() is not generated.
 ! xlabel & N | 1&CHAR & Label for x-axes. Default is the name of the x-variable.
 ! ylabel & N | 1&CHAR & Label for y-axes. Default is the name of the x-variable.
@@ -102,7 +102,7 @@
 ! can be computed from data using stat() funtion with options min-> and max->.
 ! append&N | 0 & & The graph is appended to an existing FIGURE. If the output is does not exist 
 ! beforehand or it is not a FIGURE, then the figure is (and not error) is generated.
-! continue&N|0 & & Often sequentila figures are made using include files. It would be diffuct
+! continue&N|0 & & Often sequentila figures are made using include files. It would be difficult
 ! to keep track of the figures if Jlp22 continues the Jlp22 script. Thus the default is that
 ! after plotting the figure, Jlp22 excutes pause() function. The user can
 ! give any commands during the pause. Typing <return>, the exceution continues. Typing 'e' or 'end',
@@ -130,6 +130,41 @@
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.inc.
+
+!Version 17.6, 2024 Github folder Stem contains data and the script needed to compute results in paper: Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
+! Economy Using Prices for Sawn Wood and
+! Chips in Reference Bucking' to be  published within few days in Open Journal of forestry. 
+! I'm now puclishing this version in a slightly premature phase to make the computations possible repeating the figures
+! of the paper. 
+! The script file shows several
+! examples of graphics option not yet fully reported here. The optimization algorithm is
+! rewritten and the flow of control is now clearer. Preparations for a completely new, simpler and more efficient, algorithm for the factory optimization are made.
+! The previous version contained several ad-hoc fixes for cases where rounding errors caused problems.
+! I have dropped these fixes and want to rebuild the handling of these cases. So this version may not be
+! as stable as the previous, and I hope that users will send reports of possible problems. In one simple problem with
+! very large data, the current solution is 0.8% smaller than the optimal one. I will fix this soon.
+! I have cleaned the handling of several inputs and outputs in one line. The old obsolte code is not yet dropped
+! from the parser. New function vector() can be used to define a vector directly from the arguments of the function.
+! I have  Sections in an include file starting with label like ;labelA: and
+! ending with ;return will be called hereafter 'macros'. It is a convenient practice to
+! define a CHAR object with name labelA which can be used as a shortcut for calling the macro.
+! There is now a function macro() which can be used to make such CHAR objects. 
+! macro(labelA,labelb,labelC) will make such CHAR objects and will tell at what line the label is.
+! !Objects can now be protected from being deleted using protect() function. Function
+! macro() protects its arguments. I added protection because I often redefined macro names.
+!protection can be removed with unprotect().
+! Input programming command ;now is reported. Data structures of figures are made simpler.
+! Earlier I tried to collect figure elements directy in the right order as text. Now
+!the elements are saved in the order they appear either text or numbers.
+! When showing a figure, it is easy to
+! to go the through the components of the figure several times and pick them into the script file of gnuplot 
+! int right order.
+!The new structures allow taking all gnuplot properties into use. Figures consisting of several
+! subplots can now be made with show() function. It is possible drawline() can direct gnuplot to read x and y values diresctly form a file.
+!CHAR objects can now be used as vectors of CHAR elements. Defining e.g. words=('word 1,word 2,word3'), then word=words(2,',')
+! returns second word in words. 
+!stemopt() has new code option weight-> which can determine how the value of sawn wood coming from a log
+! depend on the top diameter of the log. 
 
 !Version 5. 11. 2023. Functions stemopt and stemcurve are reported. Stemopt can be used to optimize bucking or to write
 ! all possible bucking schedules to the disk to be used in linear programming. I will soon
@@ -383,7 +418,9 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  ! and none of them was eventually interested to get the software published.
  
  !I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017.
- ! I was not informed of the decision. Later Luke rejected explicitly any cooperation
+ ! I was not informed of the decision. Later I found and corrected a bug in the factory 
+ ! optimization. When I wrote to Luke that I will not send the bug correction without an explicit
+ ! co-operation agreement, Luke rejected explicitly cooperation
  ! in the publication or in the development of 
  ! the software.
  
@@ -401,7 +438,8 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  ! I was told in Olavinlinna that there has actually been no disagreement
 ! between me and Luke in this process.
  ! As I could not accept the interpretation that I had fighted six and half years against wind mills, 
- ! I described in previous versions some details of the process. This kept my bitterness
+ ! I described in previous versions some details of the process and listed all the
+ ! leaders who participated in the process. This kept my bitterness
 ! alive which was unfortunate for my peace of mind and also because
 ! I knew well how pathetic old bitter men are. After some recent rounds of opposite argumentation, the research director
 ! called me in January 12 2023 and admitted that Luke did not handle the opening and publication properly
@@ -854,6 +892,18 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 ! \item makefile\_release\hspace{0.2cm} makefile for making release version Jlp22r.exe
 !\end{itemize}
 
+!\item\textbf{Stem} \hspace{0.2cm}  Material needed in the paper
+!Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
+! Economy Using Prices for Sawn Wood and
+! Chips in Reference Bucking' to be  published within few days in Open Journal of forestry. 
+!\begin{itemize}
+!\item stem.inc \hspace{0.2cm}Include file for doing computations in paper
+! \item MANTY.TXT \hspace{0.2cm}Scots pine data provided by Luke.
+! \item kuusip.asc \hspace{0.2cm}Norway spruce data provided by Luke.
+! \item koivul2.asc \hspace{0.2cm} Birch data provided by Luke.
+
+!\end{itemize}
+
 
 !\end{itemize}
  
@@ -1144,7 +1194,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 !endheader
 !endsection
 
-!Section delete delete_o() :deleting objects 
+!Section deleteold delete_o() :deleting objects 
 ! When an object with a given name is created, the name cannot be removed. With 
 ! delete_0() function one can free all memory allocated for data structures needed 
 ! by general objects:
@@ -2213,8 +2263,8 @@ $$=300
 !endheader
 
  ! \begin{itemize}
-! \item .eq. == equal to
-! \item .ne. <> not equal
+! \item .eq. == equal to ,works also for CHAR
+! \item .ne. <> not equal ,works aslo fro CHAR
 ! \item .gt. > greater than
 ! \item .ge. >= greater or equal
 ! \item .lt. < less than
@@ -2670,54 +2720,8 @@ a call to function assone()
 !placed into different files.
 !endsection
 
-!Section show show(), show->  and continue->
-!By default, plotting functions plots (shows) FIGs immediately. When the final figure
-!consists of several subfigures, it is convenient to prevent plotting using show->0.
-! In developing scripts, it is convenient to switch with show->. This can be done by giving
-! option in form show->showfig, then the ploting can be controlled with REAL showfig.
 
-!Withing show() it is possible to define or redefine xlabel->, ylabel->,title->,
-!xrange-> and yrange->
-
-!By default Jlp22 generates pause() after showing a FIG. During pause(), the user can give
-! any commands. If the user types 'e', then Jlp22 generates a error condition causing return to
-!to sit>.
-
-
-! It is possible to collect a FIG first (e.g. using loops), and 
-! show then the FIG using show() function. The argument of show() can be
-!  either a FIG or the name of the .jfig file withing apostrohes.
- ! Thus it is possible
- ! to edit the file using gnuplot capabilities.
- !endheader
  
- ! Ex showex Example of show()
-	! fi=draw(func->sqrt2(x),x->x,xrange->(-50,50),continue->fcont)
-	! show(fi,xrange->(-60,60),xlabel->'NEWX]Times Roman,16[',ylabel->'NEWY]Courier,10[',continue->fcont)
-	! show(fi,axes->10,continue->fcont)
-	! show(fi,axes->01,continue->fcont)
-	! show(fi,axes->00,continue->fcont)
-	! Window='400,800'
-	! show(fi,continue->fcont)
-	! Window='700,700'
-	! fi=drawline(1,10,3,1,color->Red,continue->fcont)
-	!*** The line is not visible
-	! show(fi,xrange->(1.1,11),continue->fcont)
-	! dat=data(read->(x,y),in->)
-	! 1,4
-	! 2,6
-	! 3,2
-	! 5,1
-	! /
-	! stat()
-	! *** gnuplot hides points at border
-	! fi=plotyx(y,x,continue->fcont)  
-	! ** The ranges needs to be adjusted manually 
-	! show(fi,xrange->(0,6),yrange->(0,7),continue->fcont)
- 
-	! endex
- 
- !endsection
  !Section axes axes-> tells what axes are drawn
  ! axes-> option works as follows
 ! \begin{itemize}
@@ -3132,6 +3136,13 @@ a call to function assone()
    ! Hoganson, H.M. and Rose, D.W.  (1984),
     ! \emph{A simulation approach for optimal timber management scheduling}
    ! Forest Science, 30:220-238
+	 
+	 ! \bibitem{stem} 
+   ! Lappi, J.  (2024),
+    ! \emph{From Finnish Assortment Pricing to Market
+! Economy Using Prices for Sawn Wood and
+! Chips in Reference Bucking }
+   ! Open Journal of forestry (in print)
 	  
  ! \bibitem{dtran}Hoganson, H.M. and Kapple,  D.C. (1991),
     ! \emph{DTRAN version 1.0. A multi-market timber supply model. Users’ guide}

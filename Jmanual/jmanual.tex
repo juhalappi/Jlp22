@@ -76,7 +76,9 @@ leaders of Luke were involved,
 and none of them was eventually interested to get the software published. 
  
 I retired in February 2017.  Research director Johanna Buchert signed the opening decision 30. 8. 2017. 
-I was not informed of the decision. Later Luke rejected explicitly any cooperation 
+I was not informed of the decision. Later I found and corrected a bug in the factory 
+optimization. When I wrote to Luke that I will not send the bug correction without an explicit 
+co-operation agreement, Luke rejected explicitly cooperation 
 in the publication or in the development of 
 the software. 
  
@@ -94,7 +96,8 @@ was not necessary as Reetta adviced me how to use Github.
 I was told in Olavinlinna that there has actually been no disagreement 
 between me and Luke in this process. 
 As I could not accept the interpretation that I had fighted six and half years against wind mills, 
-I described in previous versions some details of the process. This kept my bitterness 
+I described in previous versions some details of the process and listed all the 
+leaders who participated in the process. This kept my bitterness 
 alive which was unfortunate for my peace of mind and also because 
 I knew well how pathetic old bitter men are. After some recent rounds of opposite argumentation, the research director 
 called me in January 12 2023 and admitted that Luke did not handle the opening and publication properly 
@@ -175,6 +178,40 @@ After renaming the software to \textbf{Jlp22}, this section starts to describe c
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.inc. 
+ 
+Version 17.6, 2024 Github folder Stem contains data and the script needed to compute results in paper: Juha Lappi (2024) 'From Finnish Assortment Pricing to Market 
+Economy Using Prices for Sawn Wood and 
+Chips in Reference Bucking' to be  published within few days in Open Journal of forestry. 
+I'm now puclishing this version in a slightly premature phase to make the computations possible repeating the figures 
+of the paper. 
+The script file shows several 
+examples of graphics option not yet fully reported here. The optimization algorithm is 
+rewritten and the flow of control is now clearer. Preparations for a completely new, simpler and more efficient, algorithm for the factory optimization are made. 
+The previous version contained several ad-hoc fixes for cases where rounding errors caused problems. 
+I have dropped these fixes and want to rebuild the handling of these cases. So this version may not be 
+as stable as the previous, and I hope that users will send reports of possible problems. In one simple problem with 
+very large data, the current solution is 0.8\% smaller than the optimal one. I will fix this soon. 
+I have cleaned the handling of several inputs and outputs in one line. The old obsolte code is not yet dropped 
+from the parser. New function \textcolor{VioletRed}{vector}() can be used to define a vector directly from the arguments of the function. 
+I have  Sections in an include file starting with label like ;labelA: and 
+ending with \textcolor{Red}{;return} will be called hereafter 'macros'. It is a convenient practice to 
+define a \textcolor{teal}{CHAR} object with name labelA which can be used as a shortcut for calling the macro. 
+There is now a function \textcolor{VioletRed}{macro}() which can be used to make such \textcolor{teal}{CHAR} objects. 
+\textcolor{VioletRed}{macro}(labelA,labelb,labelC) will make such \textcolor{teal}{CHAR} objects and will tell at what line the label is. 
+\textcolor{VioletRed}{macro}() protects its arguments. I added protection because I often redefined macro names. 
+protection can be removed with \textcolor{VioletRed}{unprotect}(). 
+Input programming command \textcolor{Red}{;now} is reported. \textcolor{teal}{Data} structures of figures are made simpler. 
+Earlier I tried to collect figure elements directy in the right order as text. Now 
+the elements are saved in the order they appear either text or numbers. 
+When showing a figure, it is easy to 
+to go the through the components of the figure several times and pick them into the script file of \textcolor{teal}{gnuplot} 
+int right order. 
+The new structures allow taking all \textcolor{teal}{gnuplot} properties into use. Figures consisting of several 
+subplots can now be made with \textcolor{VioletRed}{show}() function. It is possible \textcolor{VioletRed}{drawline}() can direct \textcolor{teal}{gnuplot} to read \textcolor{teal}{x} and \textcolor{teal}{y} values diresctly form a file. 
+\textcolor{teal}{CHAR} objects can now be used as vectors of \textcolor{teal}{CHAR} elements. Defining e.g. words=('word 1,word 2,word3'), then word=words(2,',') 
+returns second word in words. 
+\textcolor{VioletRed}{stemopt}() has new code option \textcolor{blue}{weight->} which can determine how the value of sawn wood coming from a log 
+depend on the top diameter of the log. 
  
 Version 5. 11. 2023. Functions stemopt and stemcurve are reported. Stemopt can be used to optimize bucking or to write 
 all possible bucking schedules to the disk to be used in linear programming. I will soon 
@@ -518,6 +555,18 @@ in addition to files in Source (such files which are not precompiled are put in 
 \begin{itemize} 
 \item makefile\_debug \hspace{0.2cm}makefile for making debug version \textbf{Jlp22}.exe 
 \item makefile\_release\hspace{0.2cm} makefile for making release version \textbf{Jlp22}r.exe 
+\end{itemize} 
+ 
+\item\textbf{Stem} \hspace{0.2cm}  Material needed in the paper 
+Juha Lappi (2024) 'From Finnish Assortment Pricing to Market 
+Economy Using Prices for Sawn Wood and 
+Chips in Reference Bucking' to be  published within few days in Open Journal of forestry. 
+\begin{itemize} 
+\item stem.inc \hspace{0.2cm}Include file for doing computations in paper 
+\item MANTY.\textcolor{teal}{TXT} \hspace{0.2cm}Scots pine data provided by Luke. 
+\item kuusip.asc \hspace{0.2cm}Norway spruce data provided by Luke. 
+\item koivul2.asc \hspace{0.2cm} Birch data provided by Luke. 
+ 
 \end{itemize} 
  
  
@@ -919,6 +968,22 @@ file;\\
 \begin{note} 
 The adress line can contain comment starting with '!'. 
 \end{note} 
+\subsection{\textcolor{VioletRed}{macro}() makes shortcuts for macros}\index{macro()} 
+\label{macro} 
+Sections in an include file starting with label like ;labelA: and 
+ending with \textcolor{Red}{;return} are called 'macros'. It is a convenient practice to 
+define a \textcolor{teal}{CHAR} object with name labelA which can be used as a shortcut for calling the macro. 
+Function \textcolor{VioletRed}{macro}()  can be used to make such \textcolor{teal}{CHAR} objects. 
+If the function has output then the function will make a \textcolor{teal}{LIST} for these \textcolor{teal}{CHAR} variables. 
+The function tells at what lines the labels are or that such label does not exist. 
+No error is generated when the lable does not exist. An error results if the macro 
+will be called before it is defined. 
+\begin{note} 
+The function is reported here in the input programming section, even if the 
+function is in fact an ordinary \textbf{Jlp22} function. It does not in any way modify 
+the input going to the parser. Thats why the name of the function does not contain 
+semicolon. It can be called within \textcolor{teal}{TRANS} object, even if I cannot see when ti might be useful. 
+\end{note} 
 \subsection{\textcolor{Red}{;goto}()}\index{;goto} 
 \label{inpugoto} 
 Go to different adress in \textcolor{Red}{;incl}() file. 
@@ -1088,6 +1153,12 @@ with command shortcut.
 \end{itemize} 
 \subsection{\textcolor{Red}{;where} the current line in \textcolor{Red}{;incl} -files}\index{;where;incl} 
 \label{inpuwhere} 
+\subsection{\textcolor{Red}{;now}() is done immediately}\index{;now} 
+\label{inpunow} 
+If an include file contains \textcolor{Red}{;now}(   ) then the code is 
+done immediately. This is usefulin \textcolor{VioletRed}{trans}() and \textcolor{VioletRed}{problem}() when 
+the input programming commands \textcolor{Red}{;do} or \textcolor{Red}{;if} need further changes. 
+Examples will be given in factory optimization later. 
 \subsection{Objects with common part of name} 
 \label{inpusubobj} 
 There are two ways to acces objects having common part in name. These methods are especially useful 
@@ -1705,7 +1776,7 @@ files having those names.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\noindent  \textcolor{teal}{TRANS} computed for each observation 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -2082,13 +2153,30 @@ cttt='ttt'\\
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
 \subsection{\textcolor{VioletRed}{delete\_o}() Deletes objects}\index{delete\_o()} 
-\label{delete_o} 
+\label{deleteo} 
 The function \textcolor{VioletRed}{delete\_o}() deletes all the argument objects, which means that the 
 associated allocated vectors are deallocated, and the object will be \textcolor{teal}{REAL}. 
 \begin{note} 
 Note that \textcolor{VioletRed}{delete\_o}() is actually needed only for matrices, because objects 
-can be deleted with Object=0. When Object is a matrix, then Object=0 puts all elements 
-into zero. 
+can be deleted with obj1,...,objn=0=0 When Object is a matrix, then Object=0 puts all elements 
+into zero 
+\end{note} 
+\begin{note} 
+One can see how much memory each object is using \textcolor{VioletRed}{print}(\textcolor{teal}{Names}). 
+\end{note} 
+\begin{note} 
+Deleting a compound object deletes also such 
+subobjects which have no meaning when the main object is deleted. But e.g. if a 
+data object is deleted then the as-sociated transformation object is not 
+deleted as the transformation can be used independently. 
+\end{note} 
+\begin{note} 
+Files can be deleted with \textcolor{VioletRed}{delete\_f}(file). See IO-functions for 
+details. 
+\end{note} 
+\begin{note} 
+If the user has defined own new compound objects in the open source 
+\textbf{Jlp22} software she/he needs to define the associated delete function. 
 \end{note} 
 \singlespacing 
 \begin{example}[deleteoex]Delete object\\ 
@@ -2100,6 +2188,14 @@ a,b;\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
+\subsection{\textcolor{VioletRed}{protect}() protects object from being deleted}\index{protect()} 
+\label{protect} 
+Function \textcolor{VioletRed}{protect}() protects argument objects from being deleted. They can be modified 
+but not deleted with j\_del() function which is used before object is defined to be non \textcolor{teal}{REAL}. 
+function \textcolor{VioletRed}{macro}() protects its arguments. 
+\subsection{\textcolor{VioletRed}{unprotect}() unprotects ptotected objects.}\index{unprotect()} 
+\label{unprotect} 
+ 
 \subsection{\textcolor{VioletRed}{exist\_o}(): does an object exist}\index{exist\_o()} 
 \label{existo} 
 looks whether an object with the name given in 
@@ -3506,7 +3602,7 @@ the matrix through in row order. If valuea is not in \textcolor{teal}{matrixa} \
 \textcolor{VioletRed}{index}(valuea,\textcolor{teal}{matrixa},\textcolor{blue}{any->}) returns the location of the first element which is greater or equal 
 to valuea. 
 \subsection{\textcolor{VioletRed}{index\_o}() Index of the first argument in the \textcolor{teal}{LIST} of second argument}\index{index\_o()} 
-\label{index_o} 
+\label{indexo} 
 \subsection{\textcolor{VioletRed}{len}() Length of \textcolor{teal}{LIST}, \textcolor{teal}{ILIST} or \textcolor{teal}{MATRIX}}\index{len()} 
 \label{len} 
 \textcolor{VioletRed}{len}(\textcolor{teal}{arg})  Lenghts for the following argument types 
@@ -3645,7 +3741,7 @@ the character constant  argument exists.
 In the previous versions of \textbf{Jlp22} same function was used for files and objects. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{delete\_f}() Deletes files}\index{delete\_f()} 
-\label{delete_f} 
+\label{deletef} 
 The function \textcolor{VioletRed}{delete\_f}() deletes all files having the names given in the arguments. 
 The arguments can be character constants or character variables associated with character 
 constants. After deleting a file whose name is given in character variable, the variable still refers to the same 
@@ -3797,6 +3893,8 @@ Print values of variables or information about objects.//
 Arguments: 
 arg1,…,argn 
 Options: 
+from&0|1&\textcolor{teal}{REAL}& this option tells that the argumets give the object indices, not their names. 
+this is useful when debuging problems realted to temporary objects. 
 maxlines&-1|1&\textcolor{teal}{REAL}& the maximum number of lines printed for matrices, default 100. 
 any& -1|0 && if the argument is the name of a text file, then \textcolor{blue}{any->} indicates that 
 the file is read to the end and the number  of lines is put into variable \textcolor{teal}{Accepted}. 
@@ -4921,6 +5019,14 @@ If there is no argument, one code line is read in.
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
+If there is no \textcolor{blue}{keep->} option and there is \textcolor{blue}{maketrans->} then the outputvariables 
+are put to the keep variables if hte name of output does not start with \$. If the output is not a \textcolor{teal}{REAL} variable, then this causes trouble. 
+This can be handled using \textcolor{blue}{keep->} but it is simpler to start the name of output with \$. 
+For instance if variables \textcolor{teal}{x1}...x5 need to be multiplied with 10, the this can be ahndeld as follows. 
+Make before \textcolor{VioletRed}{data}() list \$li=\textcolor{VioletRed}{list}(\textcolor{teal}{x1}...x5). Then the maketrans-transformation can have 
+\$li=10*\$li, and \$li will not be among keep variables. 
+\end{note} 
+\begin{note} 
 there are both header and code lines, they are read in the same order as 
 the options are. 
 \end{note} 
@@ -5368,7 +5474,7 @@ In versions before 20.12.2022 \textcolor{blue}{nobsw->} obtion was needed to tel
 of subdata -observations under the current upper level observation. When I made the data format for storing 
 schedules having the tree structure efficiently, everything became too complicated when allowing any 
 freedom with respect to the nobsw-variable. Thus the nobsw variable in \textcolor{teal}{DATA} subdata has 
-name subdat\%nosw and it must be the first variable among the keep-variables of the \textcolor{teal}{DATA}. 
+name updat\%nosw and it must be the first variable among the keep-variables of the \textcolor{teal}{DATA}. 
 \end{note} 
  
 \begin{note} 
@@ -5920,7 +6026,7 @@ return
 \end{verbatim} 
 \color{Black} 
 \subsection{\textcolor{VioletRed}{find\_d}() makes a \textcolor{teal}{ILIST} of observations satisfying a condition.}\index{find\_d()} 
-\label{find_d} 
+\label{findd} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
@@ -6048,7 +6154,7 @@ the default is all variables in the data (all variables in the data matrix plus 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\noindent  \textcolor{teal}{TRANS} computed for each observation 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6065,6 +6171,13 @@ the default is all variables in the data (all variables in the data matrix plus 
 \noindent 	data objects , see section Common options for default! weight 	gives the weight of each observations if weighted means and variances ar 
 transformation or it can be a variable in the data object 
 See \vref{comoptions} for more details. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{missing} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  With \textcolor{blue}{missing->}, values greater or 1.7e19 are interpred as missing values. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6179,7 +6292,8 @@ as sd/\textcolor{VioletRed}{sqrt}(number of observations)
 \end{note} 
 \begin{note} 
 If the value of a variable is greater than or equal to 1.7e19, 
-then that observation is rejected when computing statistics for that variable. 
+then that observation is rejected when computing statistics for that variable, if option 
+\textcolor{blue}{missing->} is present. 
 \end{note} 
 \begin{note} 
 When making several analyses with several transformations, it is often convenient 
@@ -6257,7 +6371,7 @@ individually or given as a \textcolor{teal}{LIST}.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\noindent  \textcolor{teal}{TRANS} computed for each observation 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6354,7 +6468,7 @@ individually or given as a \textcolor{teal}{LIST}.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\noindent  \textcolor{teal}{TRANS} computed for each observation 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6501,7 +6615,7 @@ Variables for which class means are computed. If there are no arguments, code op
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\noindent  \textcolor{teal}{TRANS} computed for each observation 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6988,7 +7102,7 @@ printing. Default level is 1.
 \noindent  \textcolor{blue}{debug->} sets debugging on at start \textcolor{blue}{debug->}value sets debugging on when pivot=value, 
 After the debugging pivot, \textbf{Jlp22} generates \textcolor{VioletRed}{pause}() and during the pause the user can do any computations. Before 
 the pause some additional matrices are generated in addition to matrices which are used 
-the computations. 
+the computations. NOT WORKS THIS WAY NOW 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7045,6 +7159,16 @@ The default is \textcolor{blue}{refac->}1000.
 \noindent \textcolor{blue}{tole} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  \textcolor{blue}{tole->}value tells that the default tolerances are multiplied with the value. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{matrix} \tabto{3cm} -1-1 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Tells that matrix output\%xmattot is generated which the 
+\textcolor{teal}{x}-data for all rows in order as the algorithm sees it, i.e., takes domains 
+into account. Works only when doamins are present as without domains 
+output\%xmat shows the \textcolor{teal}{x}-data. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -7107,7 +7231,7 @@ npv\#0==max\\
 {\color{ForestGreen}**Domain definitions:}\\ 
 {\color{ForestGreen}**there can be several domain definitions on a row}\\ 
 {\color{ForestGreen}** one domain definition is:}\\ 
-{\color{ForestGreen}**    a logical statement in terms of stand variable}\\ 
+{\color{ForestGreen}**    a logical statement in terms of stand variables}\\ 
 {\color{ForestGreen}**    a stand variable whose nonzero value implies that the domain applies}\\ 
 {\color{ForestGreen}**    All  indicates all stands.}\\ 
 {\color{ForestGreen}** before first domain definition row the default Domain is All}\\ 
@@ -7266,7 +7390,9 @@ jlpzb=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{problem->}probzb,\textcolor{b
 {\color{ForestGreen}**The matrices needed to use jlpz without problem-> can be obtained from a problem as follows}\\ 
 \textcolor{teal}{jlpcoefa}=\textcolor{VioletRed}{jlpcoef}(\textcolor{teal}{probza})\\ 
 jlpcoefalist=\textcolor{Red}{;list}(\textcolor{teal}{jlpcoefa}\%?);\\ 
-\textcolor{teal}{jlpza}=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{zmatrix->}\textcolor{teal}{jlpcoefa}\%matrix,\textcolor{blue}{rhs->}\textcolor{teal}{jlpcoefa}\%rhs,\textcolor{blue}{rhs2->}\textcolor{teal}{jlpcoefa}\%rhs2,\textcolor{blue}{min->}\textcolor{teal}{jlpcoefa}\%obj)\\ 
+\textcolor{teal}{jlpza}=\textcolor{VioletRed}{jlpz}(\textcolor{blue}{zmatrix->}\textcolor{teal}{jlpcoefa}\%matrix,\textcolor{blue}{rhs->}\textcolor{teal}{jlpcoefa}\%rhs,\textcolor{blue}{rhs2->}\textcolor{teal}{jlpcoefa}\%rhs2,\textcolor{blue}{min->}\textcolor{teal}{jlpcoefa}\%objrow)\\ 
+li=\textcolor{Red}{;list}(\textcolor{teal}{jlpza}\%?);\\ 
+\textcolor{teal}{jlpza}\%zvalues,\textcolor{teal}{jlpza}\%rows,\textcolor{teal}{jlpza}\%shprice,\textcolor{teal}{jlpza}\%rows,\textcolor{teal}{jlpza}\%obj;\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -7286,27 +7412,73 @@ Preparing figures, it is useful to make three separate input sections into an in
 In the first section all matrices and datas are done. The second section uses the graphics 
 functions to put necessary lines and points to the figures. 
 The third section makes first working copies of the figures and adds labels and modifies axes if needed. 
-\subsection{\textcolor{VioletRed}{show}(), \textcolor{blue}{show->}  and \textcolor{blue}{continue->}}\index{show()} 
+\subsection{\textcolor{VioletRed}{show}() Plots \textcolor{teal}{FIG} object}\index{show()} 
 \label{show} 
-By default, plotting functions plots (shows) FIGs immediately. When the final figure 
-consists of several subfigures, it is convenient to prevent plotting using \textcolor{blue}{show->}0. 
+An figure stored in a figure object or in \textcolor{teal}{gnuplot} file can be plotted with \textcolor{VioletRed}{show}(). 
+By default, plotting functions plot (show) FIGs immediately. When the final figure 
+consists of several subfigures, it is convenient to prevent plotting of different 
+phases of the figure development using \textcolor{blue}{show->}0 in the graphics functions. 
 In developing scripts, it is convenient to switch with \textcolor{blue}{show->}. This can be done by giving 
-option in form \textcolor{blue}{show->}showfig, then the ploting can be controlled with \textcolor{teal}{REAL} showfig. 
- 
-Withing \textcolor{VioletRed}{show}() it is possible to define or redefine \textcolor{blue}{xlabel->}, \textcolor{blue}{ylabel->},\textcolor{blue}{title->}, 
-\textcolor{blue}{xrange->} and \textcolor{blue}{yrange->} 
- 
-By default \textbf{Jlp22} generates \textcolor{VioletRed}{pause}() after showing a \textcolor{teal}{FIG}. During \textcolor{VioletRed}{pause}(), the user can give 
-any commands. If the user types 'e', then \textbf{Jlp22} generates a error condition causing return to 
-to \textcolor{Red}{sit>}. 
- 
- 
-It is possible to collect a \textcolor{teal}{FIG} first (e.g. using loops), and 
-show then the \textcolor{teal}{FIG} using \textcolor{VioletRed}{show}() function. The argument of \textcolor{VioletRed}{show}() can be 
-either a \textcolor{teal}{FIG} or the name of the .jfig file withing apostrohes. 
-Thus it is possible 
-to edit the file using \textcolor{teal}{gnuplot} capabilities. 
- 
+option in form \textcolor{blue}{show->}showfig, then the ploting can be controlled with \textcolor{teal}{REAL} showfig. If the 
+argument is FIGURE, the 
+parameters of the figure can be changed in \textcolor{VioletRed}{show}() using \textcolor{blue}{xlabel->}, \textcolor{blue}{ylabel->},\textcolor{blue}{title->}, 
+\textcolor{blue}{xrange->} and \textcolor{blue}{yrange->}. If \textcolor{VioletRed}{show}() has option \textcolor{blue}{show->}0, 
+it is possible to change parameters and not yet plot the figure. This is useful 
+e.g. when using multiplot of \textcolor{teal}{gnuplot} to combine several figures. 
+\textbf{Jlp22} sends figures to gnupolt using text files. 
+These files can be edited and then sent to \textcolor{teal}{gnuplot} using \textcolor{VioletRed}{show}(). As quite many \textcolor{teal}{gnuplot} properties 
+are implemented in \textbf{Jlp22}, it is not necessary to edit the files often. 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output \tabto{3cm} N|1 \tabto{5cm}     \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent If plot with several subfigures is made, the name of the file of \textcolor{teal}{gnuplot} commands 
+is the name of output extended with '.jfig'. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args  \tabto{3cm}  1-70 \tabto{5cm}   FIGURE | \textcolor{teal}{CHAR}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  With one argumnet, it can be a figure object or the name of the file containg \textcolor{teal}{gnuplot} commands. 
+With several arguments a multiplot consisting os subplots is made. 
+@@figure 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{multiplot} \tabto{3cm} 0|1 \tabto{5cm}  \textcolor{teal}{CHAR} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{gnuplot} settings defining the multiplot. Several \textcolor{teal}{gnuplot} commands can be given by 
+separting them with semicolon. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{xrange} \tabto{3cm} 0- \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  gives the margins of the subplots, in form left margin, 
+right margin. Value -1 indicates that \textcolor{teal}{gnuplot} uses its default. Defaults are alo used if 
+there are less than 2*number of subplots  -values. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{yrange}  \tabto{3cm} 0-  \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Bottom and upper margins. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+You may wish to use show also if you cnange the window size by giving new value for 
+\textcolor{teal}{Window} \textcolor{teal}{CHAR} variable. \textcolor{teal}{Window} and \textcolor{teal}{Terminal} are not part of figure objects. Their values 
+are looked when showing figures. 
+\end{note} 
+\begin{note} 
+Example of multiplots are given shortly. 
+\end{note} 
 \singlespacing 
 \begin{example}[showex]Example of \textcolor{VioletRed}{show}()\\ 
 \label{showex} 
@@ -7332,7 +7504,6 @@ dat=\textcolor{VioletRed}{data}(\textcolor{blue}{read->}(\textcolor{teal}{x},\te
 fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{blue}{continue->}fcont)\\ 
 {\color{ForestGreen}** The ranges needs to be adjusted manually}\\ 
 \textcolor{VioletRed}{show}(fi,\textcolor{blue}{xrange->}(0,6),\textcolor{blue}{yrange->}(0,7),\textcolor{blue}{continue->}fcont)\\ 
- 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -7450,11 +7621,11 @@ beforehand or it is not a FIGURE, then the figure is (and not error) is generate
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{continue} \tabto{3cm} N|0  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Often sequentila figures are made using include files. It would be diffuct 
+\noindent  Often sequential figures are made using include files. It would be difficult 
 to keep track of the figures if \textbf{Jlp22} continues the \textbf{Jlp22} script. Thus the default is that 
 after plotting the figure, \textbf{Jlp22} excutes \textcolor{VioletRed}{pause}() function. The user can 
 give any commands during the pause. Typing <return>, the exceution continues. Typing 'e' or 'end', 
-an error is generated, and the control returns to \textcolor{Red}{sit>} promt. If the function 
+an artificial error is generated, and the control returns to \textcolor{Red}{sit>} promt. If the function 
 contains \textcolor{blue}{continue->} option, \textcolor{VioletRed}{pause}() is not generated. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -7529,6 +7700,22 @@ mark types of \textcolor{teal}{gnuplot}. The mark can be given also as \textcolo
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{blue}{marksize}  \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The size of the mark, deafault 1 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{buffer}  \tabto{3cm} N |1  \tabto{5cm}  \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If a coordinate minimum or maximum is integer, gnplot can make 
+axes so that the border points are not properly visible. If there is \textcolor{blue}{buffer->} 
+option the border points are shifted slightly so that gnplot puts axes further apart. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{func} \tabto{3cm}  N | 1  \tabto{5cm}   CODE  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent   Code option telling how the \textcolor{teal}{y}-variable is computed. 
@@ -7539,6 +7726,15 @@ mark types of \textcolor{teal}{gnuplot}. The mark can be given also as \textcolo
 \noindent \textcolor{blue}{xfunc} \tabto{3cm}  N | 1  \tabto{5cm}   CODE  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent   Code option telling how the \textcolor{teal}{x}-variable is computed. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{buffer}  \tabto{3cm}  N|0|1 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If the data contains integer values at the borders of the ranges which \textcolor{teal}{gnuplot} 
+these may not be visible. Giving \textcolor{blue}{buffer->}, \textbf{Jlp22} adds or subtracts a small number to the border 
+points which force gnplot to move borders further apart. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -7604,7 +7800,9 @@ borderlines.
 \end{note} 
 \subsection{\textcolor{VioletRed}{draw}() Draws a function}\index{draw()} 
 \label{draw} 
-\textcolor{VioletRed}{draw}() draws a function. 
+\textcolor{VioletRed}{draw}() draws a function. There are three types of curves: (1) ordinary \textcolor{teal}{y}-\textcolor{teal}{x} curves, (2) plane 
+curves where a variable is stepped and both \textcolor{teal}{y} and \textcolor{teal}{x} are computed from the stepped variable, and (3) 
+polar curves where angle is stepped and radius is computed possibly as a function of the angle. 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
@@ -7615,38 +7813,47 @@ borderlines.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{teal}{x} \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Variable which is stepped before computing the value of \textcolor{blue}{func->} in ordinary curves. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent u \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Variable which is stepped in plane and polar curves. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{func} \tabto{3cm}  N | 1  \tabto{5cm}   CODE  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent   Code option telling how the \textcolor{teal}{y}-variable is computed. 
+\noindent   Code option telling how the \textcolor{teal}{y}-variable is computed in ordinary curves or how 
+\textcolor{teal}{y} is computed in plane curves or radius is computed in polar curves. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{xfunc} \tabto{3cm}  N | 1  \tabto{5cm}   CDE  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent   Code option telling how the \textcolor{teal}{x}-axes variable is computed from the \textcolor{teal}{x}-variable. 
+\noindent   Code option telling how the \textcolor{teal}{x}-axes variable is computed from the u-variable 
+in plane curves. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{xfuncrange}  \tabto{3cm} N|2 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\noindent urange  \tabto{3cm} N|2 \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Ranges for the \textcolor{teal}{x}-axes when \textcolor{blue}{xfunc->} is present and xrange is used for 
-the stepping of the \textcolor{teal}{x}->  variable. 
+\noindent  Ranges for u in plane curves and polear curves 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{points} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent Number of equal distance points used in \textcolor{blue}{xrange->} 
-\end{changemargin} 
-\vspace{0.3cm} 
-\hrule 
-\vspace{0.3cm} 
-\noindent \textcolor{teal}{x} \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
-\begin{changemargin}{3cm}{0cm} 
-\noindent Variable which is stepped before computing the value of \textcolor{blue}{func->}. 
+\noindent Number of equal distance points used in either xrange or urange 
+ 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7672,7 +7879,7 @@ range can be given in \textcolor{VioletRed}{show}() or \textcolor{VioletRed}{dra
 \noindent \textcolor{blue}{mark}  \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL} | \textcolor{teal}{CHAR}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  The mark used in the plot. 
-Numeric values refer to. 
+Numeric values refer to 15 
 mark types of \textcolor{teal}{gnuplot}. The mark can be given also as \textcolor{teal}{CHAR} varible or constant. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -7687,15 +7894,17 @@ mark types of \textcolor{teal}{gnuplot}. The mark can be given also as \textcolo
 \singlespacing 
 \begin{example}[drawex]Example of \textcolor{VioletRed}{draw}()\\ 
 \label{drawex} 
-\noindent fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{cos}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
+\noindent fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->})\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{cos}(\textcolor{teal}{x}),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{append->})\\ 
 {\color{ForestGreen}** Circle}\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{sin}(u),\textcolor{blue}{xfunc->}\textcolor{VioletRed}{cos}(u),\textcolor{teal}{x}->u,\textcolor{blue}{xrange->}(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}3,u->u,urange->(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{continue->})\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}4,u->u,urange->(0,2*\textcolor{teal}{Pi}),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{axes->}0,\textcolor{blue}{continue->}fcont)\\ 
+ 
 {\color{ForestGreen}**Spiral with too few points}\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(0.1*u*\textcolor{VioletRed}{sin}(u)),\textcolor{blue}{xfunc->}(0.1*u*\textcolor{VioletRed}{cos}(u)),\textcolor{teal}{x}->u,\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(0.1*u*\textcolor{VioletRed}{sin}(u)),\textcolor{blue}{xfunc->}(0.1*u*\textcolor{VioletRed}{cos}(u)),u->u,urange->(0,100),\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{continue->}fcont)\\ 
 {\color{ForestGreen}**Spiral with more points}\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(0.1*u*\textcolor{VioletRed}{sin}(u)),\textcolor{blue}{xfunc->}(0.1*u*\textcolor{VioletRed}{cos}(u)),\textcolor{teal}{x}->u,\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{points->}500,\\ 
-\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}Orange,\textcolor{blue}{width->}2)\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(0.1*u*\textcolor{VioletRed}{sin}(u)),\textcolor{blue}{xfunc->}(0.1*u*\textcolor{VioletRed}{cos}(u)),u->u,urange->(0,100),\textcolor{blue}{points->}500,\\ 
+\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}Orange,\textcolor{blue}{width->}2,\textcolor{blue}{axes->}0)\\ 
 \textcolor{Red}{;if}(\textcolor{VioletRed}{type}(figyx).ne.FIGURE)plotyxex\\ 
 \textcolor{VioletRed}{show}(figyx,\textcolor{blue}{continue->}fcont)\\ 
 reg0=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},\textcolor{teal}{x})\\ 
@@ -7781,7 +7990,7 @@ If there is also \textcolor{blue}{mean->} or \textcolor{blue}{se->} option then 
 around mean. If both \textcolor{blue}{se->} error and \textcolor{blue}{sd->} are present, then the se error bars and 
 sd error bars can have different color and width. If \textcolor{blue}{color->} and/or \textcolor{blue}{width->} has two 
 arguments, the first argument refers to \textcolor{blue}{sd->} error bars, and the second argument refers to 
-\textcolor{blue}{se->} error bars. Using \textcolor{blue}{width->}(1,2) gives nice looking error bars. 
+\textcolor{blue}{se->} error bars. Using \textcolor{blue}{width->}(1,2) or \textcolor{blue}{width->}(2,4) gives nice looking error bars. 
  
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -7845,7 +8054,7 @@ reg=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},\textcolor{teal}{x})\,{\colo
 fi=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{blue}{continue->}fcont)\\ 
 fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{x}\%min,\textcolor{teal}{x}\%max,reg(\textcolor{teal}{x}\%min),reg(\textcolor{teal}{x}\%max),\textcolor{blue}{width->}3,\textcolor{blue}{color->}\textcolor{teal}{Cyan},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\\ 
 cl=\textcolor{VioletRed}{classify}(\textcolor{teal}{Resid},\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{classes->}5)\\ 
-fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{se->},\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{width->}(2,1))\\ 
+fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{se->},\textcolor{blue}{continue->}fcont,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{width->}(2,4))\\ 
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{continue->}fcont)\\ 
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{var->},\textcolor{blue}{continue->}fcont)\\ 
 {\color{ForestGreen}** x-values were equally distributed due to data construction}\\ 
@@ -7891,11 +8100,11 @@ beforehand or it is not a FIGURE, then the figure is (and not error) is generate
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{continue} \tabto{3cm} N|0  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Often sequentila figures are made using include files. It would be diffuct 
+\noindent  Often sequential figures are made using include files. It would be difficult 
 to keep track of the figures if \textbf{Jlp22} continues the \textbf{Jlp22} script. Thus the default is that 
 after plotting the figure, \textbf{Jlp22} excutes \textcolor{VioletRed}{pause}() function. The user can 
 give any commands during the pause. Typing <return>, the exceution continues. Typing 'e' or 'end', 
-an error is generated, and the control returns to \textcolor{Red}{sit>} promt. If the function 
+an artificial error is generated, and the control returns to \textcolor{Red}{sit>} promt. If the function 
 contains \textcolor{blue}{continue->} option, \textcolor{VioletRed}{pause}() is not generated. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -7973,13 +8182,14 @@ then with \textcolor{blue}{label->} option one can write text to any point.
 \noindent \textcolor{blue}{step} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Points are taken at steps given in \textcolor{blue}{step->} 
+ 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{mark}  \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL} | \textcolor{teal}{CHAR}  \tabto{7cm} 
+\noindent \textcolor{blue}{points}  \tabto{3cm} N|0|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  The mark used in the plot. 
+\noindent In addtion to lines, also points are plotted. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -8014,17 +8224,10 @@ a point is rejected and a break generated. For first point \$xold=\$\textcolor{t
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{set}  \tabto{3cm}  N|1  \tabto{5cm}   \textcolor{teal}{REAL}<6  \tabto{7cm} 
+\noindent \textcolor{blue}{mark}  \tabto{3cm}  N | 1  \tabto{5cm}   \textcolor{teal}{REAL} | \textcolor{teal}{CHAR}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Set to which lines are put. If the option is not present, 
-then a separate \textcolor{teal}{gnuplot} plot command with possible color and width information 
-is generated for each \textcolor{VioletRed}{drawline}() and data points are stored 
-in file \textcolor{teal}{fi}.jfi0, i.e. the same file used by \textcolor{VioletRed}{plotyx}(). 
-If set is given e.g as \textcolor{blue}{set->}3, then it is possible to plot a large number of lines 
-with the same width and color. The data points are stored into file \textcolor{teal}{fi}.jfi3. This is 
-useful e.g. when drawing figures showing transportation of timber to factories 
-for huge number of sample plots. 
-Numeric values refer to \textcolor{teal}{gnuplot} mark types. 
+\noindent  The mark used in the plot. 
+Numeric values refer to \textcolor{teal}{gnuplot} mark types between 1-75. 
 The mark can be given also as \textcolor{teal}{CHAR} varible or constant. 
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -8040,6 +8243,14 @@ The mark can be given also as \textcolor{teal}{CHAR} varible or constant.
 \noindent \textcolor{blue}{label} \tabto{3cm}  N |1  \tabto{5cm}  \textcolor{teal}{CHAR}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Text plotted to the end of line. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{in}  \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{CHAR}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Name of file from which coordinatee values are read. Each line contains 
+the \textcolor{teal}{x}-coordinate and \textcolor{teal}{y}-coordinate. An empty line means that there is a break in the line. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -8058,6 +8269,13 @@ A useful tactic to add labels to a figure \textcolor{teal}{fi} and fine tune the
 add	a section into the include file where the figure is copied into a working figure \textcolor{teal}{fi0} 
 using \textcolor{teal}{fi0}=\textcolor{teal}{fi}. Then the finetuning the figure can be done using this section 
 without the need to start making the figure several times using the grpahics functions. 
+\end{note} 
+\begin{note} 
+The file given in \textcolor{blue}{in->} option is read directly by \textcolor{teal}{gnuplot}. Binary formats are includes as needed. 
+\end{note} 
+\begin{note} 
+If the label extends the xrange of the figure, the \textcolor{teal}{gnuplot} does not extend xrange, 
+it must be extended explicitly. 
 \end{note} 
 \singlespacing 
 \begin{example}[drawlineex]Example of \textcolor{VioletRed}{drawline}()\\ 
@@ -8239,21 +8457,21 @@ and the stem above sawlogs is used for pulp up to a diameter limit dmin.
 The stem curve is feeded 
 in the form produced by a harvester, i.e., in one dm steps. It is possible that 
 the stem vector does not go up to diameter dmin as can be in harvester data. The function can predict 
-the volume up to dmin. This will be reported soon. 
-Possible bucking schedules are generated using bucking parameters which limit the possible 
-buckings. The function selects the optimal schedule maximizing the objective given in the 
-codeoption \textcolor{blue}{obj->}. 
-The function can write all possible schedules into the disk if there is option \textcolor{blue}{write->}. 
-If option \textcolor{blue}{any->} is not present, a bucking scedule is not accepted, if it would be possible 
-to make one more log with length Lmin and top diamter Dmin. 
-The function requires a codeoption \textcolor{blue}{func->} which determines in terms of the top 
-diameter which proportion of the top cross sectional area goes to sawn wood, or 
-equivalently what is the proportion of sawn wood volumes of the volume of the log cylinder. 
-In a recent study I have used \textcolor{blue}{func->}(1-bf*gam**Dtop), where gam=0.97487124 and 
-bf=0.63217650. 
+the volume up to dmin. The function is utilized results in paper: Juha Lappi (2024) 'From Finnish Assortment Pricing to Market 
+Economy Using Prices for Sawn Wood and 
+Chips in Reference Bucking' to be  published withid few days in Open Journal of forestry. 
+The github folder stem contains the data and script needed for the paper. The method is described 
+in the paper. Link to the paper is published soon here. This description for the function is not 
+yet checked. 
+The function can have two codeoptions which can tell that certain schedules are not accpeted\\ 
+\textcolor{blue}{filter->} tells what schedules are accpted. This codeoption is computed when all logs os a schedule 
+has been generated. It can utilize all the output objects of the function.\\ 
+\textcolor{blue}{reject->} tells what logs are rejected. Its arguments can be Dtop and Len, where Dtop is the 
+top diameter of the current log, used aslo in \textcolor{blue}{func->} and \textcolor{blue}{weight->}, and len is the length of the 
+log, which must be already between lmin and Lmax\\ 
 A call of function looks like:\\ 
-u=\textcolor{VioletRed}{stemopt}(Lmin,Lmax,Dmin,dmin,dee,iobs,\textcolor{blue}{func->}(1-bf*gam**Dtop),\textcolor{blue}{obj->}U\%saw)\\ 
-where iobs can be missing if dee is vector instead of matrix of sveral rows\\ 
+u=\textcolor{VioletRed}{stemopt}(Lmin,Lmax,Dmin,dmin,dee,iobs,\textcolor{blue}{func->}"Func",\textcolor{blue}{weight->}"Weight")\\ 
+where iobs can be missing if dee is vector instead of matrix of several rows\\ 
 Lmin = the minimum saw log length in dm\\ 
 Lmax = the maximum log length in dm\\ 
 Dmin = the minimum top diamter of log\\ 
@@ -8282,6 +8500,10 @@ u\%outc = total volume of chips coming between bark and log cylinder pulp bark\\
  
 u\%saw = total volume of sawn wood computed by multiplying volume of each cylinder multiplied\\ 
 with the value of \textcolor{blue}{func->} option for the top diameter\\ 
+ 
+u\%sawu = value-weighted volume of sawn wood, obtained by multiplying 
+u\%saw with the value of \textcolor{blue}{weight->}\\ 
+ 
 u\%chip = u\%logv-u\%saw=u\%inc+u\%outc\\ 
 u\%pulp = u\%com-u\%log  the volume of the pulp part\\ 
 u\%comlen = the length of the commercial part\\ 
@@ -8593,6 +8815,13 @@ Numerical Analysis Report NA/170.
 Hoganson, H.M. and Rose, D.W.  (1984), 
 \emph{A simulation approach for optimal timber management scheduling} 
 Forest Science, 30:220-238 
+ 
+\bibitem{stem} 
+Lappi, \textbf{J}.  (2024), 
+\emph{From Finnish Assortment Pricing to Market 
+Economy Using Prices for Sawn Wood and 
+Chips in Reference Bucking } 
+Open Journal of forestry (in print) 
  
 \bibitem{dtran}Hoganson, H.M. and Kapple,  D.C. (1991), 
 \emph{DTRAN version 1.0. A multi-market timber supply model. Users’ guide} 

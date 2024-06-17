@@ -780,7 +780,9 @@ subroutine readfile()
 	if(inmodule)then
  
 		!	if(write4)write(2,'(a)')inp(1:letot)
- 
+   	! iji=index(inp(1:le),'j_')
+			! if(iji.gt.0)write(17,*)iji,linein,inp(1:le)
+			
 		if(nopremod)then
 			if(write4)write(2,'(a)')inp(1:letot)
 			goto 30
@@ -1188,9 +1190,16 @@ subroutine subwords()
 	integer ipf,ial,ip
 	logical pm
 	logical inhipsu
+	
+	
+			
+	!		endif
+	
+	
 	pm=.false.
 	!		write(3,*)'subw le ',le,letot
 	!	if(pm)write(6,*)'<3mw',linein,inp(1:le)
+	
 	if(le.le.2)return
 	!	write(6,*)'modulewords ',modulewords
 	!	write(19,*)nfiles,linein,nused
@@ -1274,8 +1283,8 @@ ploop:		do ip=1,nprefix
 				endif !if(moduleword(j)(1:lenmoduleword(j)).eq.inp(ipf:k-1))   1135
  
 			enddo loop2 !p2:		do j=1,modulewords   1132
+			
 		
-	
 			
 			write(6,*)'prefix word ',inp(ipf:k-1),' not in modules????????????',nused,' nused'
 			write(6,*)'line ',linein,k-ipf.ne.lenmoduleword(j),k-ipf,lenmoduleword(j)

@@ -6,12 +6,12 @@ It can solve ordinary LP problems where the problems are defined either in matri
 form or text files. The forest planning problems have a special structure which Jlp22 utilizes
 very efficiently using the generalized upper bound technique. The LP problems can 
 include factories, i.e. transportation costs to factories, factor capacities and 
-utility models for products. Thus Jlp22 can be used to optimize simultaneosly forest 
-management and forest industry. Just now the factory optimization is under complete rewriting,
- and thus it is not usable. The transformation language of Jlp22 is well fitted 
+utility models for products. . Thus Jlp22 can be used to optimize simultaneosly forest 
+management and forest industry. A complete new algoritm for factory optimization is under implementation and is not yet available,
+ The transformation language of Jlp22 is well fitted 
 for defining forest simulators which can simulate treatment schedules both using
 stand level and tree level data. The scripting language is quite fast. There are over 
-220 build in functions in Jlp22, which can be parsed into integer vectors
+250 build in functions in Jlp22, which can be parsed into integer vectors
 which are fast to interpret. The user can
  add her own Fortran functions, own object types ans own options, which can be used
  in similar way as Jlp22 functions, objects and options. A speciality is the input programming,
@@ -43,6 +43,10 @@ Jpre  Source code for the precompiler.
 Jsource Source code for Jlp22 before precompilation
 
 Source2 Sorce code after precompilation. Users can compile and link the exe files for Jlp22 from these files
+
+Stem Data and script used in paper: Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
+Economy Using Prices for Sawn Wood and Chips in Reference Bucking' to be  published within
+ few days in Open Journal of forestry.
 
 Further information can be obtained from juha.lappi.sjk@gmail.com
 

@@ -2346,6 +2346,7 @@ c     write(nout,*)'column perm',(ll(lc+ij),ij=1,m1)
 c     write(nout,*)'s =',(aa(ns+ij),ij=1,n)
 c     write(nout,*)'t =',(aa(nt+ij),ij=1,n)
 c     write(nout,*)'u =',(aa(nu+ij),ij=1,n)
+c p = leaving q entering
       e(p)=0.D0
       do i=1,nm
         if(e(i).gt.0.D0)then
@@ -2367,7 +2368,7 @@ c     e(q)=max(emin,abs(eq))
 c  refactorize L
       
 C C if(nout.ne.0)then
-C C write(nout,*)'***REFAC,nup,nfreq,n,m1',nup,nfreq,n,m1
+		write(16,*)'***REFAC,nup,nfreq,n,m1',nup,nfreq,n,m1
 C C end if
 
        
@@ -2395,6 +2396,7 @@ C C end if
           ll(lc+m1)=q
           ll(li+q)=m1
         else
+C  residual enters				
           iq=ll(li+q)
           m1p=m1+1
           ll(iq)=ll(m1p)
@@ -2402,13 +2404,14 @@ C C end if
           ll(m1p)=q
           ll(li+q)=m1p
         endif
-       !  write(19,*)'**refactor,nup,mp,mq',nup,mp,mq
+   !      write(16,*)'**refactor,nup,mp,mq',nup,mp,mq
         call re_factor(n,nm,a,la,aa,aa(ns1),aa(nt1),ll,ll(lc1),ll(li1))
 *       if(nout.gt.0)write(16,*)'aft refactor,nup,mp,mq',nup,mp,mq
       else
 c  update L
         nup=nup+1
         if(p.le.n)then
+c    residual leaves				
           if(m1.eq.mxm1)then
             ifail=7
             return
@@ -2439,6 +2442,10 @@ c             write(nout,*)'m0 + m1 = mxm1:  re-centre triangle'
         call c_flma(n,a,la,p,aa,ll,ll(lc1),ll(li1))
     1   continue
         if(q.le.n)then
+c residual enters 	m1 basic variables	refactoring when m1.eq.0 does not work
+c added by Juha Lappi
+					if(m1.eq.0)nup=0
+c					write(16,*)'clearnup',m1
           call r_flma(n,a,la,q,aa,ll,ll(lc1),ll(li1))
         else
           m1=m1+1
@@ -2608,8 +2615,10 @@ c******** The following routines are internal to denseL.f **************
       common/mxm1c/mxm1
       common/epsc/eps,tol,emin
       if(nout.ne.0)write(nout,*)'re_factor,m1',m1
+	!		 write(6,*)'re_factor,m1',m1,nup,nfreq
       nup=0
       if(m1.eq.0)return
+
       m0=(mxm1-m1)/2
       mm0=m0*(m0+1)/2
 c     write(nout,*)'row perm',(lr(ij),ij=1,n)
@@ -2977,6 +2986,7 @@ c         endif
       common/epsc/eps,tol,emin
       common/factorc/m0,m1,mm0,mm,mp,mq
       REAL*8 l11
+c residual enters
 c     write(nout,*)'r_flma: p =',p
       pr=li(p)
       if(pr.gt.m1)then
@@ -3697,7 +3707,7 @@ c    *  write(nout,*)'error in steepest edge coefficients =',emax
      *  lc,lc1,li,li1,lm,lm1,lp,lp1,lq,lq1,lr,lr1,ls,ls1,lt,lt1
       common/factorc/m1,m2,mp,mq,lastr,irow
       common/noutc/nout
-!      write(6,*)'***refactor'
+!  write(6,*)'***refactor'
 !       read(5,*)iperk
       m=nm-n
       call re_order(n,nm,a,la(1),la(la(0)),ll,ll(lc1),ll(li1),

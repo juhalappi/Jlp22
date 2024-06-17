@@ -50,6 +50,7 @@ subsection inpuprog
 subsection inpuad
 subsection inpureplace
 subsection incl
+subsection macro
 subsection inpugoto
 subsection inpudo
 subsection inpuif
@@ -59,6 +60,7 @@ subsection inpudif
 subsection inpupause
 subsection inpureturn 
 subsection inpuwhere
+subsection inpunow
 subsection inpusubobj
 subsubsection inpusub1
 subsubsection inpusub2
@@ -128,7 +130,9 @@ subsection exit
 section objects  Functions for handling objects
 subsection copy
 subsection type 
-subsection delete_o delete_o()
+subsection deleteo delete_o()
+subsection protect
+subsection unprotect
 subsection existo  exist_o()
 subsection name name()
 
@@ -287,7 +291,7 @@ subsection inpusub2b
 subsection merge
 subsection difference
 subsection index
-subsection index_o
+subsection indexo
 !!subsection index_v
 subsection len
 subsection ilist
@@ -302,7 +306,7 @@ subsection txt txt()
 section file File handling
 
 subsection existf
-subsection delete_f
+subsection deletef
 subsection printf
 subsection close
 subsection showdir
@@ -361,7 +365,7 @@ subsection nobs nobs(): number of observations
 subsection classvector classvector(): extracting information from grouped data 
 subsection values values(): getting different values of a variable in DATA
 subsection transdata transdata() going through data and computing tranformations
-subsection find_d find_d()
+subsection findd find_d()
 subsection fromdata
 
 section statistics Statistical functions

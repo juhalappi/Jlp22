@@ -32,10 +32,10 @@ program j_manual
 	use objmod
 	use jmod, only: j_nfunctions_,j_noptions_,j_functions,j_options,j_maxarg_,j_minarg_
 	integer,parameter ::maxsections=1000
-	integer,parameter :: maxmacros=200  !common options
+	integer,parameter :: maxmacros=200  !common optio ns
 	integer,parameter :: maxfuncs0=100 !per section
 	integer,parameter :: maxfuncs=1000 !all together
-	integer,parameter::maxhead=2000 !lines per header
+	integer,parameter::maxhead=2000 !lines per h ea der
 	integer,parameter::maxsec=1000 !lines per sectio
 	integer,parameter::maxlfunc=10000 !lines per function
 	integer,parameter::maxex=10000 !examples
@@ -123,6 +123,7 @@ program j_manual
 	logical ::open20=.false.
 	logical::p=.false.
 	character*10,dimension(30)::inpuf
+	logical ::isopen,isexist
 
 	integer ::linfile
 	integer::ninpuf=0
@@ -299,15 +300,18 @@ integer:: niter
 		goto 100
  
 	elseif(index(line(1:le),'outfile').gt.0)then
-		!write(6,*)'deleting ',line(ifirst(2):le)
-		! read(5,*)ii
-	!	if(open20)close(20)
 		
-	!	open20=.true.
 		if(line(le-3:le).eq.'.inc')then
-			open(19,file=line(ifirst(2):le),status='REPLACE',action='WRITE')
+			write(6,*)'opening ',line(ifirst(2):le)
+		open(19,file=line(ifirst(2):le),status='REPLACE',action='WRITE')
+		inquire(unit=19,opened=isopen)
+		!write(6,*)'isopen ',isopen
+	
+		!inquire(file=line(ifirst(2):le),exist=isexist)
+	!	write(6,*)'isexist ',isexist
 			call writeincl()
 			close(19)
+			
 			goto 100
 		else
 		open(20,file=line(ifirst(2):le),status='REPLACE',action='WRITE')
@@ -354,6 +358,9 @@ integer:: niter
 	99 write(6,*)'line ',nl,' in ',infile(1:linfile), ' first character ',ch,' is not !'
 	contains
 	subroutine writeincl()
+	character*80 exline0
+	character*1 eline
+	integer lexline
 		write(6,*)'writing ',nexample, ' examples as include file jexamples.inc'
 		write(19,*)'** this file contains ',nexample,' examples of using Jlp22'
 		write(19,'(a)')'** launch Jlp22 in the command promt in the folder of this file '
@@ -363,21 +370,39 @@ integer:: niter
 		write(19,'(a)')'** if you want to pause after each figure answer to second question with 1'
 		write(19,'(a)')'** if not, answer with <return>'
 
-		
+		eline=','
 		
 		write(19,'(a)')'exfile=thisfile()'
- 
- 
-		write(19,'(a)')"current=';incl(exfile,from->current)'"
+	write(19,'(a)')"AGAIN=';incl("//'"'//'exfile'//'"'//")'"
+	write(19,*)'examples=macro('
+	exline0='current,ALL,'
+	lexline=12
+	idone=0
+write(6,'(a)')"current=';incl(exfile,from->current)'"
 		do ine=1,nexample
 			lef=len_trim(exfile(ine))
- 
-			write(6,*)ine, exlabel(ine)(1:lexlabel(ine)),' from ',exfile(ine),' line ',exline(ine)
-			write(19,'(a)')exlabel(ine)(1:lexlabel(ine))//"=';incl(exfile,from->"// &
-				exlabel(ine)(1:lexlabel(ine))//")'"
-		enddo !ine=1,nexample    316
-		write(19,'(a)')"AGAIN=';incl(exfile)'"
-		write(19,'(a)')"ALL=';incl(exfile,from->ALL)'"
+			if(ine.eq.nexample)eline=')'
+			if(lexline+lef.le.79)then
+			
+			 exline0(lexline+1:lexline+lef)=exlabel(ine)(1:lexlabel(ine))//eline
+			 lexline=lexline+lef+1
+			 
+			 if(ine.eq.nexample)write(19,*)exline0(1:lexline)
+			else
+		
+			write(19,*)exline0(1:lexline)
+			exline0=exlabel(ine)(1:lexlabel(ine))//eline
+			lexline=lef+1
+			 if(ine.eq.nexample)write(19,*)exline0(1:lexline)
+		endif
+		enddo
+	
+	!		write(6,*)ine, exlabel(ine)(1:lexlabel(ine)),' from ',exfile(ine),' line ',exline(ine)
+	!		write(19,'(a)')exlabel(ine)(1:lexlabel(ine))//"=';incl(exfile,from->"// &
+	!			exlabel(ine)(1:lexlabel(ine))//")'"
+	!	enddo !ine=1,nexample    316
+	!	write(19,'(a)')"AGAIN=';incl(exfile)'"
+	!	write(19,'(a)')"ALL=';incl(exfile,from->ALL)'"
 		!		write(19,'(a)')"ask(fcont,q->'continue after each figure(1/0)>')"
 		!		write(19,'(a)')';if(wait);pause'
 		write(19,'(a)')"ask(wait,q->'pause after each example(1/0)>')"
@@ -438,11 +463,12 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 			!	write(19,'(a)')' '
 			!	write(19,'(a)')';'//exlabel(ine)(1:lexlabel(ine))//':'
 			write(19,'(a)')exlabel(ine)(1:lexlabel(ine))
+			write(6,'(a)')exlabel(ine)(1:lexlabel(ine))
  
 		enddo !ine=1,nexample    350
 		write(19,'(a)')';return'
- 
- 
+		close(19)
+
  
 	end subroutine
  
@@ -459,11 +485,11 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 		if(index(line(1:le),';return').gt.0)then
 			goto 999
 			isend=.false.
-		endif !if(index(line(1:le),';return').gt.0)    370
+		endif !if(index(line(1:le),';return ').gt.0)    370
 		! iret=index(line,'inpureturn')
 		! if(iret.gt.0)write(6,*)'le ',le,'/'//line(1:le)//'/'
 		call words(line,1,le,nwords,ifirst,ilast,iss)  !
-		!	if(iret.gt.0)write(6,*)nwords,ifirst(1:nwords),ilast(1:nwords),'/'//line(ifirst(2):ilast(2))//'/'
+		!	if(iret.gt.0)write(6,*)nwords,ifirst(1:nwords),ilast(1:nw ords),'/'//line(ifirst(2):ilast(2))//'/'
  
 		do isec=1,nsection
  
@@ -1306,7 +1332,7 @@ write(19,'(a)')'** and put text ;current: before the the name of the example , a
 		if(line(ifirst(1):ilast(1)).eq.'Note'.and.nocomment)then
 		write(6,*)ifirst(1),ilast(1),line(ifirst(1):ilast(1))
 			if(line(ilast(1)+1:ilast(1)+1).eq.'#')then
-				write(6,*)'hellurei ',line(ifirst(1):ilast(1)+1)
+		!		write(6,*)'hellurei ',line(ifirst(1):ilast(1)+1)
 				line(ilast(1)+1:ilast(1)+1)=' '
 			else
 			isnote=.true.

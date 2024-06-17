@@ -5,13 +5,15 @@ FC = gfortran
 # flags for debugging or for maximum performance, comment as necessary
 # FCFLAGS = -ggdb -O0 -pg -fcheck=all -g -fbacktrace      -pg produces gmon.out
 
-FCFLAGS = -ggdb -O0 -fcheck=all -g -fbacktrace -fmax-errors=6 
+FCFLAGS = -ggdb -O0 -fcheck=all -g -fbacktrace  -fmax-errors=6 
+#-Wuninitialized -O2
 
 #FCFLAGS = -ggdb -O0 -fbounds-check  -pg -fcheck=all -g -fbacktrace 
 #FCFLAGS = -ggdb -O0 -fbounds-check  -pg -fcheck=all -g -Wall 
 # note Wall produces all kinds of warnings ,should be checked which are relevant 
 # flags forall (e.g. look for system .mod files, required in gfortran)
 # FCFLAGS += -I/usr/include
+FCFLAGS += -I/c:/jlp22
 
 # List of executables to be built within the package
 PROGRAMS = jlp22.exe

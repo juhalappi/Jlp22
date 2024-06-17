@@ -10,7 +10,7 @@ FCFLAGS = -ggdb -O0 -fcheck=all -g -fbacktrace -fmax-errors=6 -fdec
 # note Wall produces all kinds of warnings ,should be checked which are relevant 
 # flags forall (e.g. look for system .mod files, required in gfortran)
 # FCFLAGS += -I/usr/include
- FCFLAGS += -I/c:/jlp22
+# FCFLAGS += -I/c:/jlp22/jmanual
 
 # List of executables to be built within the package
 PROGRAMS = jmanual.exe
@@ -18,20 +18,20 @@ PROGRAMS = jmanual.exe
 # "make" builds all
 all: $(PROGRAMS)
 
-jmanual.exe : c:\jlp22\jmodules.o\
-		 c:\jlp22\own1mod_2.o\
-		 c:\jlp22\own2mod_2.o\
-		 c:\jlp22\own3mod_2.o\
+jmanual.exe : jmodules.o\
+		 own1mod_2.o\
+		 own2mod_2.o\
+		 own3mod_2.o\
 		jmanual.o
 
 #gfortran -c foo.f90 -I$PATH_TO_MOD_FILE
 
 
 	$(FC) $(FCFLAGS) -o jmanual.exe \
-		c:\jlp22\jmodules.o\
-		 c:\jlp22\own1mod_2.o\
-		 c:\jlp22\own2mod_2.o\
-		 c:\jlp22\own3mod_2.o\
+		jmodules.o\
+		own1mod_2.o\
+		own2mod_2.o\
+		 own3mod_2.o\
 		 jmanual.o
 
 
@@ -41,7 +41,7 @@ jmanual.exe : c:\jlp22\jmodules.o\
 #own1_2.o : jmodules.o
 #own2_2.o : jmodules.o
 #own3_2.o : jmodules.o
-jmanual.o:  c:\jlp22\jmodules.o c:\jlp22\own1mod_2.o c:\jlp22\own2mod_2.o c:\jlp22\own3mod_2.o
+jmanual.o:  jmodules.o own1mod_2.o own2mod_2.o own3mod_2.o
 
 
 # General rule for building prog from prog.o; $^ (GNU extension) is

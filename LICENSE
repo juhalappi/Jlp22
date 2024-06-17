@@ -1,5 +1,5 @@
 Jlp22 
-Jlp22 was earlier called J but as there is a J programming language, the name is changed 281.11.2022 into Jlp22
+Jlp22 was earlier called J but as there is a J programming language, the name is changed 28.11.2022 into Jlp22
 
 Copyright (C) 2022 Juha Lappi and Natural Resources Institute Finland
 
@@ -32,12 +32,12 @@ been obtained from other sources and have the following license conditions:
 From De Boor
 subroutine tautsp used in j_function tautspline
 from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
-No license restrictions known
+No license restrictions known. De Boor has been consulted.
 Distribution:  http://pages.cs.wisc.edu/~deboor/pgs/tautsp.f
 
 real function ppvalu used in J function value
 from Carl de Boor (1978) A practical guide to splines. Springer, New York, p.310-314
-No license restrictions known
+No license restrictions known.
 Distribution: http://pages.cs.wisc.edu/~deboor/pgs/tautsp.f
 
 subroutine interv , used in function ppvalue
@@ -50,7 +50,7 @@ Distribution : www.netlib.org/lapack
 License : http://www.netlib.org/lapack/LICENSE.txt
 
 
-Juha Lappi has the copyright to the precompiler and Latex generation 
+Juha Lappi has the copyright to the precompiler and Latex and example script generation 
 codes found in folders Jpre and Jmanual.
  These codes are distributed under the license MIT.
  
