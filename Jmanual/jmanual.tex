@@ -177,7 +177,12 @@ Juha Lappi
 After renaming the software to \textbf{Jlp22}, this section starts to describe changes in new versions. 
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
-jexamples.inc. 
+jexamples.txt. 
+ 
+Version 8.8. A bug in making active set was corrected. This bug caused that some schedules which should be 
+in the active set were not there. Windows has the strange property that when files with .inc -extension 
+is changed, the system does not change the date of change properly. Thus the name of jexamples.inc was changed 
+into jexamples.txt. It is recommended that users do not use .inc extension for included files. 
  
 Version 17.6, 2024 Github folder Stem contains data and the script needed to compute results in paper: Juha Lappi (2024) 'From Finnish Assortment Pricing to Market 
 Economy Using Prices for Sawn Wood and 
@@ -501,7 +506,7 @@ problem and its solution.
 \item jlp22r.exe \hspace{0.2cm} Release version of \textbf{Jlp22}. If the release version crashes, 
 use the debug version to get more information of the cause. 
 \item jmanual.exe \hspace{0.2cm} makes the latex code file  \href{run:./jmanual.tex}{jmanual.tex} and 
-the example file \href{run:./jexamples.inc}{jexamples.inc}. 
+the example file \href{run:./jexamples.txt}{jexamples.txt}. 
 \item jpre.exe \hspace{0.2cm} the precompiler which generates the code 
 for accessing variables in modules, makes indentations and gives better error messages 
 for mixed do-loops and if-then structures than Gfortran. 
@@ -513,9 +518,9 @@ libwinpthread-1.dll which must be available in the path. e.g., in the same folde
 \begin{itemize} 
 \item \textbf{Jlp22}.pdf \hspace{0.2cm} This user's guide made with Latex using Overleaf \url{http://www.overleaf.com}. 
  
-\item \href{run:./jexamples.inc }{jexamples.inc} \hspace{0.2cm}include file which can be used to run all examples in the manual 
+\item \href{run:./jexamples.txt }{jexamples.txt} \hspace{0.2cm}include file which can be used to run all examples in the manual 
 and which is generated with jmanual.exe 
-\item \href{run:./cdat.txt}{cdat.txt} \hspace{0.2cm}example unit data file for small \textcolor{VioletRed}{jlp}() example in jexample.inc. 
+\item \href{run:./cdat.txt}{cdat.txt} \hspace{0.2cm}example unit data file for small \textcolor{VioletRed}{jlp}() example in jexample.txt. 
 \item xdat.txt\hspace{0.2cm}example schedule file for small \textcolor{VioletRed}{jlp}() example 
 \item \href{run:./jlp92.pdf}{jlp92.pdf} \hspace{0.2cm}Manual of old JLP which explains the theory behind the jlp algorithm 
 \item \href{run:./lappilempinen.pdf}{lappilempinen.pdf} \hspace{0.2cm} Paper explaining the theory behing factory optimization. 
@@ -527,7 +532,7 @@ and which is generated with jmanual.exe
 \item \textbf{Jmanual} \hspace{0.2cm} Source files for making Latex code for 
 the manual and the include file for running examples 
 \begin{itemize} 
-\item jmanual.f90 \hspace{0.2cm}source for making the Latex code and jexamples.inc 
+\item jmanual.f90 \hspace{0.2cm}source for making the Latex code and jexamples.txt 
 \item jmanual.tex \hspace{0.2cm}Latex code generated with jmanual.exe 
 \item jsections.txt \hspace{0.2cm}describes manual sections not in source files 
 \item jsections2.txt \hspace{0.2cm}tells in what order sections found in jsections.txt 
@@ -562,7 +567,7 @@ Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
 Economy Using Prices for Sawn Wood and 
 Chips in Reference Bucking' to be  published within few days in Open Journal of forestry. 
 \begin{itemize} 
-\item stem.inc \hspace{0.2cm}Include file for doing computations in paper 
+\item stem.txt \hspace{0.2cm}Include file for doing computations in paper 
 \item MANTY.\textcolor{teal}{TXT} \hspace{0.2cm}Scots pine data provided by Luke. 
 \item kuusip.asc \hspace{0.2cm}Norway spruce data provided by Luke. 
 \item koivul2.asc \hspace{0.2cm} Birch data provided by Luke. 
@@ -650,7 +655,7 @@ with licence :\\
 \section{Running examples} 
 \label{runex} 
  
-If you plan to edit the example file, copy jexamples.inc and jlp22.pdf  from jdocdemo folder into the Jtest folder. 
+If you plan to edit the example file, copy jexamples.txt and jlp22.pdf  from jdocdemo folder into the Jtest folder. 
 It is not wise to start 
 working in the Jdocdemo folder, because if you load a new version of \textbf{Jlp22} in a similar way into Jgit folder 
 and allow the computer replace existing folders with the same name, 
@@ -668,7 +673,7 @@ If you would like that when starting \textbf{Jlp22} in this folder, \textbf{Jlp2
 make file j.par to folder jtest and write 
 to it 
  
-\textcolor{Red}{;incl}(jexamples.inc) 
+\textcolor{Red}{;incl}(jexamples.txt) 
  
 It is possible to write to the first line of j.par 
  
@@ -678,9 +683,9 @@ which would mean that \textbf{Jlp22} would generate intially 3000 named objects.
  
  
 Then start \textbf{Jlp22} by giving command \textbf{Jlp22} at the command prompt. 
-If you have not done j.par file, write at the \textcolor{Red}{sit>} prompt:  \textcolor{Red}{;incl}(jexamples.inc). 
-Alternatively you can diretly start in the jexamples.inc by launching \textbf{Jlp22} by\\ 
-\textbf{Jlp22} jexamples.inc 
+If you have not done j.par file, write at the \textcolor{Red}{sit>} prompt:  \textcolor{Red}{;incl}(jexamples.txt). 
+Alternatively you can diretly start in the jexamples.txt by launching \textbf{Jlp22} by\\ 
+\textbf{Jlp22} jexamples.txt 
  
 \textbf{Jlp22} will then print all shortcuts available. You can run examples one by one by giving example shortcuts 
 individually, or you can run all examples by shortcut ALL. If you give shortcut ALL, \textbf{Jlp22} asks whether 
@@ -690,7 +695,7 @@ This can be prevented by pressing <return> when \textbf{Jlp22} asks value for fp
 at any point by putting label ';current:' to any point after label ;ALL: and giving shortcut 
 'current'. This is also handy when examples have errors which break the execution. If the errors are made 
 intentionally to demonstrate error situations, the interruption of excution after these intentional errors are 
-prevented so that the jexamples.inc have command \textcolor{teal}{Continue}=1 before the intentional error. Theafter the normal 
+prevented so that the jexamples.txt have command \textcolor{teal}{Continue}=1 before the intentional error. Theafter the normal 
 error handling is put on by command \textcolor{teal}{Continue}=0. 
  
 It is useful to keep the manual open and follow simultaneously the manual and the execution of examples. 
@@ -763,7 +768,7 @@ a=\textcolor{VioletRed}{log}(\textcolor{teal}{b})\\
 \label{short} 
 Command shortcuts are defined by defining character variables. When entering the 
 name of a character variable at \textcolor{Red}{sit>} prompt or from an include file, \textbf{Jlp22} excutes the command. 
-The command can be either input programming command or one-line command. The file jexamples.inc 
+The command can be either input programming command or one-line command. The file jexamples.txt 
 shows an useful way to organize shortcuts and include files. 
 \singlespacing 
 \begin{example}[shortex]Example of using shortcuts and include files\\ 
@@ -2014,10 +2019,10 @@ variable \textcolor{teal}{Maxlines}, which is overruled with maxlines option in 
 \label{interactive} 
 In the interactive operation, \textbf{Jlp22} may first read commands from the 
 default \textcolor{Red}{;incl} -file or from the file specified when starting the software,e.g. using\\ 
-\textbf{Jlp22} myincl.inc \\ 
+\textbf{Jlp22} myincl.txt \\ 
 or with the release version 
-\textbf{Jlp22}r myinc.inc\\ 
-where myinc.inc is the file giving the initial commands. If command 'end' is read, then the program exites. 
+\textbf{Jlp22}r myinc.txt\\ 
+where myinc.txt is the file giving the initial commands. If command 'end' is read, then the program exites. 
 But after reading an \textcolor{Red}{;incl}-file to the end or up to \textcolor{Red}{;return}, or after encountering an error, the \textbf{Jlp22} starts 
 to read commands from the console using '\textcolor{Red}{sit>}' -prompt, where the user can give 
 operation commands or new \textcolor{Red}{;incl} -command or 'end'. 
@@ -2068,7 +2073,7 @@ It is useful to organize
 the project sript into one script file, which conatians swections starting with a lable and ending 
 with \textcolor{Red}{;return}. 
 I think that it is more difficult to have several script files. 
-The example file jexamples.inc is a good example of a script file. 
+The example file jexamples.txt is a good example of a script file. 
 different versions of the same script file are stored in different names, it is useful to have 
 as first line something like 
 this=\textcolor{VioletRed}{thisfile}()\\ 
@@ -2117,7 +2122,7 @@ give new values for \textcolor{teal}{Debugtrans} and \textcolor{teal}{Debugconso
 What happens when an error is encountered is dependent on the value of variable \textcolor{teal}{Continue}. If \textcolor{teal}{Continue} has 
 value 0 (the default case), the control comes into \textcolor{Red}{sit>} prompt when an real error occurs or if an atrficial 
 error condition is generated with \textcolor{VioletRed}{errexit}(). If \textcolor{teal}{Continue} has value 1 then the computation continues in 
-the same script file where the error occured. This property is used in file jexamples.inc to demonstrate 
+the same script file where the error occured. This property is used in file jexamples.txt to demonstrate 
 possible error conditions so that the computation continues as if no error had occured. 
  
  
@@ -4360,6 +4365,12 @@ matrixa;\\
 instead of writing c=\textcolor{VioletRed}{inverse}(a)*\textcolor{teal}{b}, it is faster and more accurate to 
 write c=\textcolor{VioletRed}{solve}(a,\textcolor{teal}{b}) 
 \end{note} 
+\subsection{Makes a column vector of \textcolor{teal}{REAL} arguments.} 
+\label{vector} 
+\subsection{Reversers order of matrix element} 
+\label{flip} 
+Reversers the order matrix elements. If there is no output, the reordering happens in place. 
+Remember that \textbf{Jlp22} stores matrices in row order. 
 \subsection{\textcolor{VioletRed}{solve}() Solves a linear equation A*\textcolor{teal}{x}=\textcolor{teal}{b}}\index{solve()} 
 \label{solve} 
 A linear matrix equation A*\textcolor{teal}{x}=\textcolor{teal}{b} can be solved for \textcolor{teal}{x} with code\\ 
@@ -5343,6 +5354,11 @@ memory.
 If a \textcolor{teal}{DATA} has a link to an upper level \textcolor{teal}{DATA} obtained with \textcolor{VioletRed}{linkdata}() without 
 output, the the upper level \textcolor{teal}{DATA} is not included. You can make a link to an upper level data 
 using \textcolor{VioletRed}{linkdata}() for the \textcolor{teal}{DATA} produced with \textcolor{VioletRed}{newdata}() 
+\end{note} 
+\begin{note} 
+If observations are dropped using \textcolor{blue}{filter->} or \textcolor{blue}{reject->} and there is \textcolor{blue}{maketrans->}, then 
+the maketerans trasformation get the initial obsevation from variable \textcolor{teal}{Record} and the new 
+observation number from varaiable \textcolor{teal}{Obs} 
 \end{note} 
 \begin{note} 
 It is not yet possible to drop variables. 
@@ -8678,7 +8694,7 @@ behaves similarly as in the following case.
 version writes then more information than the release version. It is important that \textbf{Jlp22} is 
 used in the commend prompt, so that it does not just disappear. 
 \item \textbf{Jlp22} recognizes in lower level subroutines that something is wrong, but the 
-lower level subroutine does not know waht is the reason. Thwe \textbf{Jlp22} prints an error message 
+lower level subroutine does not know what is the reason. Then \textbf{Jlp22} prints an error message 
 starting with *j*. Even if the user recognizes that she was guilty, thes cases should be reported 
 so that detection of user errors can be improved. 
 \end{itemize} 
@@ -8760,7 +8776,7 @@ write.\textcolor{VioletRed}{table}(mydat,file=paste(wd,"/mydat.txt",sep=""))\\
 \subsection{Calling \textbf{Jlp22}-scripts from R} 
 \label{Rcalls} 
 File JR\_0.0.tar.gz in the folder J\_R contains R tarball for taking \textbf{Jlp22}  subroutines into R. 
-With R command JR(”testr.inc”) the example jp problem can be solved from R. 
+With R command JR(”testr.txt”) the example jp problem can be solved from R. 
 Later lauri Mehtat\"alo will develop this co-operation further so that R can directly access also 
 matrices in the \textbf{Jlp22} memory. 
 For further information contact lauri.mehtatalo@luke.fi 

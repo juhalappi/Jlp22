@@ -81,7 +81,7 @@ module jmod
 	integer, parameter :: j_nftex=3  !text and char
 	integer, parameter :: j_nffile=8  !file
 	integer, parameter :: j_nfio=7  ! io
-	integer, parameter :: j_nfmatr=22  !matrix
+	integer, parameter :: j_nfmatr=23  !matrix
 	integer, parameter :: j_nfdata=14  !data functions
 	integer, parameter :: j_nfstat=13  !stat
 	integer, parameter :: j_nfjlp=22 !jlp
@@ -245,7 +245,7 @@ module jmod
 		!! Matrices
 		'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder', &
-		'fill', 'vector',& !22
+		'fill', 'vector','flip',& !23
  
 		!! Data functions
 		'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !13
@@ -323,10 +323,10 @@ module jmod
 		3,2,0,0,1,1,1,&
 		! 'read','write','print','ask','askc','printresult','printresult2', & ! 7 j_fbio
  
-		0,4*1,2,12*1,1,1,1,1,&
+		0,4*1,2,12*1,1,1,1,1,1,&
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix', 'matrixborder',
-		! 'fill','vector', & !21
+		! 'fill','vector','flip', & !21
  
 		0,0,0,2,2,0,1,0,0,0,0,1,0,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
@@ -391,7 +391,7 @@ module jmod
 		0,2,1,2,2,2,1,&
 		! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
  
-		7,4,4,&
+		9999,4,4,&
 		! 'interpolate','plane','bilin', & !3
  
 		99999,9999,2,2,2,1,99999,2,2,2,2,&
@@ -406,10 +406,10 @@ module jmod
 		9999,9999,9999,1,1,9999,999999,&
 		! 'read','write','print','ask','askc','printresult','printresult2', & ! 6 j_fbio
  
-		4,4*1,2,12*1,1,1,1,9999,&
+		4,4*1,2,12*1,1,1,1,9999,1,&
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder',
-		! 'fill','vector',& ! 21
+		! 'fill','vector','flip',& ! 21
  
 		0,999,0,2,2,1,9999,1,0,0,999,1,0,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
@@ -1371,6 +1371,7 @@ module jmod
  
  
  
+	integer p_iob
 	real*8 p_apu  !
 	real*8 p_valiter
 	double precision p_fastdif
@@ -1414,6 +1415,7 @@ module jmod
 	! working rhs, i.e. xps subtracted, see 6.28 p. 110
 	real*8, dimension(:),pointer::p_rhsw
 	real*8, dimension(:),pointer::p_vc
+	real*8, dimension(:),allocatable::p_vcold
 	double precision,allocatable,dimension(:)::p_r,p_r0
 	integer p_ivx,p_ivb,p_ivrhscur,p_ivrhsw,p_ivvc
 	real*8, dimension(:),pointer::p_rhs,p_rhs2
@@ -2134,6 +2136,8 @@ module jmod
 	logical p_fast  ! is the fast option used
 	logical p_fastnow ! is the use of active schedules on for the current round
 	logical p_fastmake  ! is the active set made
+	integer p_faststart !unit where making active set starts
+ 
 	integer :: p_fastusedsame !  how many rounds the same set of active schedules has been used
 	integer ::p_fastusesame ! how many rounds the same set of active schedules will be used
 	logical*1,dimension(:),allocatable :: p_fastreject !tells which schedules are not in the active set

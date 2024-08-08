@@ -129,7 +129,12 @@
 !After renaming the software to Jlp22, this section starts to describe changes in new versions.
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
-! jexamples.inc.
+! jexamples.txt.
+
+!Version 8.8. A bug in making active set was corrected. This bug caused that some schedules which should be
+! in the active set were not there. Windows has the strange property that when files with .inc -extension
+!  is changed, the system does not change the date of change properly. Thus the name of jexamples.inc was changed
+! into jexamples.txt. It is recommended that users do not use .inc extension for included files. 
 
 !Version 17.6, 2024 Github folder Stem contains data and the script needed to compute results in paper: Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
 ! Economy Using Prices for Sawn Wood and
@@ -646,7 +651,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 ! argument into a function. There tow groups of options, ordinaryy options and code options.
 ! Ordinalry options treansmit either object names or numeric values into a function.
 ! code options contain a short peice of code which is computed several times form within the function.
-! E.g. func->sin(x) can tells the draw() function waht is the function to be drawn. If 
+! E.g. func->sin(x) can tells the draw() function what is the function to be drawn. If 
 ! computation of the codeoption rquires several lines, then thes lines can be 
 ! packed into a transformation object. E.g. if ]tr] computes the value of ]res[ REAL object, 
 ! then the func->tr(]res[) is used to tell how the function value is computed.
@@ -797,7 +802,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 ! \end{itemize}
 !endlatex
  ! A user of Jlp22 needs only input programming and Jlp22 functions, but understanding of 
- ! the other properties may help to understand waht is going on in a Jlp22 session.
+ ! the other properties may help to understand what is going on in a Jlp22 session.
 !endsection
 
 !Section git  Loading Jlp22 from Github 
@@ -836,7 +841,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 !\item jlp22r.exe \hspace{0.2cm} Release version of Jlp22. If the release version crashes,
 !    use the debug version to get more information of the cause.
 ! \item jmanual.exe \hspace{0.2cm} makes the latex code file  \href{run:./jmanual.tex}{jmanual.tex} and
-!    the example file \href{run:./jexamples.inc}{jexamples.inc}.
+!    the example file \href{run:./jexamples.txt}{jexamples.txt}.
 ! \item jpre.exe \hspace{0.2cm} the precompiler which generates the code 
 !   for accessing variables in modules, makes indentations and gives better error messages
 !   for mixed do-loops and if-then structures than Gfortran.
@@ -848,9 +853,9 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 !\begin{itemize}
 ! \item Jlp22.pdf \hspace{0.2cm} This user's guide made with Latex using Overleaf \url{http://www.overleaf.com}. 
 
-! \item \href{run:./jexamples.inc }{jexamples.inc} \hspace{0.2cm}include file which can be used to run all examples in the manual
+! \item \href{run:./jexamples.txt }{jexamples.txt} \hspace{0.2cm}include file which can be used to run all examples in the manual
 !   and which is generated with jmanual.exe
-!\item \href{run:./cdat.txt}{cdat.txt} \hspace{0.2cm}example unit data file for small jlp() example in jexample.inc. 
+!\item \href{run:./cdat.txt}{cdat.txt} \hspace{0.2cm}example unit data file for small jlp() example in jexample.txt. 
 !\item xdat.txt\hspace{0.2cm}example schedule file for small jlp() example
 ! \item \href{run:./jlp92.pdf}{jlp92.pdf} \hspace{0.2cm}Manual of old JLP which explains the theory behind the jlp algorithm
 ! \item \href{run:./lappilempinen.pdf}{lappilempinen.pdf} \hspace{0.2cm} Paper explaining the theory behing factory optimization.
@@ -862,7 +867,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 !\item \textbf{Jmanual} \hspace{0.2cm} Source files for making Latex code for 
 ! the manual and the include file for running examples
 !\begin{itemize}
-! \item jmanual.f90 \hspace{0.2cm}source for making the Latex code and jexamples.inc
+! \item jmanual.f90 \hspace{0.2cm}source for making the Latex code and jexamples.txt
 ! \item jmanual.tex \hspace{0.2cm}Latex code generated with jmanual.exe
 ! \item jsections.txt \hspace{0.2cm}describes manual sections not in source files
 ! \item jsections2.txt \hspace{0.2cm}tells in what order sections found in jsections.txt 
@@ -897,7 +902,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 ! Economy Using Prices for Sawn Wood and
 ! Chips in Reference Bucking' to be  published within few days in Open Journal of forestry. 
 !\begin{itemize}
-!\item stem.inc \hspace{0.2cm}Include file for doing computations in paper
+!\item stem.txt \hspace{0.2cm}Include file for doing computations in paper
 ! \item MANTY.TXT \hspace{0.2cm}Scots pine data provided by Luke.
 ! \item kuusip.asc \hspace{0.2cm}Norway spruce data provided by Luke.
 ! \item koivul2.asc \hspace{0.2cm} Birch data provided by Luke.
@@ -931,7 +936,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  !Section start Install
  !This section tells how to install Jlp22, gnuplot and Rscript from Jlp22
 ! so that the user can start
-!  running the examples in file jexamples.inc.
+!  running the examples in file jexamples.txt.
  !endsection
  
  !Section install Install
@@ -968,7 +973,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 	
 	! Section runex Running examples
 	
-	! If you plan to edit the example file, copy jexamples.inc and jlp22.pdf  from jdocdemo folder into the Jtest folder. 
+	! If you plan to edit the example file, copy jexamples.txt and jlp22.pdf  from jdocdemo folder into the Jtest folder. 
  ! It is not wise to start 
  ! working in the Jdocdemo folder, because if you load a new version of Jlp22 in a similar way into Jgit folder
  ! and allow the computer replace existing folders with the same name,
@@ -986,7 +991,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  ! make file j.par to folder jtest and write
   ! to it
 	
-	! ;incl(jexamples.inc)
+	! ;incl(jexamples.txt)
  
  ! It is possible to write to the first line of j.par 
  
@@ -996,9 +1001,9 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  
  
 	! Then start Jlp22 by giving command Jlp22 at the command prompt.
-	! If you have not done j.par file, write at the sit> prompt:  ;incl(jexamples.inc).
-	! Alternatively you can diretly start in the jexamples.inc by launching Jlp22 by\\
-!  Jlp22 jexamples.inc	
+	! If you have not done j.par file, write at the sit> prompt:  ;incl(jexamples.txt).
+	! Alternatively you can diretly start in the jexamples.txt by launching Jlp22 by\\
+!  Jlp22 jexamples.txt	
 	
 	! Jlp22 will then print all shortcuts available. You can run examples one by one by giving example shortcuts
 ! individually, or you can run all examples by shortcut ALL. If you give shortcut ALL, Jlp22 asks whether
@@ -1008,7 +1013,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 ! at any point by putting label ';current:' to any point after label ;ALL: and giving shortcut
 ! 'current'. This is also handy when examples have errors which break the execution. If the errors are made 
 ! intentionally to demonstrate error situations, the interruption of excution after these intentional errors are
-! prevented so that the jexamples.inc have command Continue=1 before the intentional error. Theafter the normal
+! prevented so that the jexamples.txt have command Continue=1 before the intentional error. Theafter the normal
 ! error handling is put on by command Continue=0.
 
 ! It is useful to keep the manual open and follow simultaneously the manual and the execution of examples.
@@ -1490,7 +1495,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 !Section short Shortcuts
 !Command shortcuts are defined by defining character variables. When entering the 
 ! name of a character variable at sit> prompt or from an include file, Jlp22 excutes the command.
-!The command can be either input programming command or one-line command. The file jexamples.inc
+!The command can be either input programming command or one-line command. The file jexamples.txt
 !shows an useful way to organize shortcuts and include files.
 !endheader
 !Ex shortex Example of using shortcuts and include files
@@ -2884,10 +2889,10 @@ a call to function assone()
 !Section interactive Interactive operation
 ! In the interactive operation, Jlp22 may first read commands from the
 ! default ;incl -file or from the file specified when starting the software,e.g. using\\
-! Jlp22 myincl.inc \\
+! Jlp22 myincl.txt \\
 ! or with the release version
-! Jlp22r myinc.inc\\
-! where myinc.inc is the file giving the initial commands. If command 'end' is read, then the program exites.
+! Jlp22r myinc.txt\\
+! where myinc.txt is the file giving the initial commands. If command 'end' is read, then the program exites.
 ! But after reading an ;incl-file to the end or up to ;return, or after encountering an error, the Jlp22 starts
 ! to read commands from the console using 'sit>' -prompt, where the user can give 
 ! operation commands or new ;incl -command or 'end'.
@@ -2911,7 +2916,7 @@ a call to function assone()
 ! the project sript into one script file, which conatians swections starting with a lable and ending
 ! with ;return. 
 ! I think that it is more difficult to have several script files.
- ! The example file jexamples.inc is a good example of a script file.
+ ! The example file jexamples.txt is a good example of a script file.
 ! !The script files should start with shortcuts for each section. If it is possible that 
 ! different versions of the same script file are stored in different names, it is useful to have
  ! as first line something like
@@ -2961,7 +2966,7 @@ a call to function assone()
  ! What happens when an error is encountered is dependent on the value of variable ]Continue[. If ]Continue[ has
  ! value 0 (the default case), the control comes into sit> prompt when an real error occurs or if an atrficial 
  ! error condition is generated with errexit(). If ]Continue[ has value 1 then the computation continues in
- ! the same script file where the error occured. This property is used in file jexamples.inc to demonstrate 
+ ! the same script file where the error occured. This property is used in file jexamples.txt to demonstrate 
  ! possible error conditions so that the computation continues as if no error had occured.
 
  
@@ -2982,7 +2987,7 @@ a call to function assone()
 !Now everything what needs to written at sit> after the first
 !;incl() are the shortcuts. If adding section task3 then
 !add the shortcut here, then write shortcuts A and T3 at sit>.
-!The file jexamples.inc which comes with the manual and which is generated
+!The file jexamples.txt which comes with the manual and which is generated
 ! with the jmanual program shows an examle.
 
 
@@ -3057,7 +3062,7 @@ a call to function assone()
 
 !Section  Rcalls Calling Jlp22-scripts from R
 ! File JR\_0.0.tar.gz in the folder J\_R contains R tarball for taking Jlp22  subroutines into R.
-! With R command JR(”testr.inc”) the example jp problem can be solved from R.
+! With R command JR(”testr.txt”) the example jp problem can be solved from R.
 ! Later lauri Mehtat\"alo will develop this co-operation further so that R can directly access also 
 ! matrices in the Jlp22 memory.
 !For further information contact lauri.mehtatalo@luke.fi
@@ -3343,7 +3348,7 @@ a call to function assone()
 ! version writes then more information than the release version. It is important that Jlp22 is
 ! used in the commend prompt, so that it does not just disappear.
 ! \item Jlp22 recognizes in lower level subroutines that something is wrong, but the 
-! lower level subroutine does not know waht is the reason. Thwe Jlp22 prints an error message
+! lower level subroutine does not know what is the reason. Then Jlp22 prints an error message
 ! starting with *j*. Even if the user recognizes that she was guilty, thes cases should be reported
 ! so that detection of user errors can be improved.
 ! \end{itemize}

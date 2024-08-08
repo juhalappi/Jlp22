@@ -2,7 +2,7 @@
 ! This is published using MIT licence
 ! this program can be used  to generate file jmanual.tex which can be used to generate the
 ! PDF -manual (together with jmain.text)
-! The program lso generates the scrip file jexamples.inc which can be used to run all examples in the manual
+! The program lso generates the scrip file jexamples.txt which can be used to run all examples in the manual
 ! The program is using two input files, in adition to the source code file jutilities.f90, j.f90 and jlp.f90. jections.txt and jsections2.txt.
 ! The manual consists of sections which are defined either in the source files or in the
 !  file jections.txt. The file jsections2.txt defines in which order the sections are put into the manual
@@ -301,7 +301,7 @@ integer:: niter
  
 	elseif(index(line(1:le),'outfile').gt.0)then
 		
-		if(line(le-3:le).eq.'.inc')then
+		if(line(le-3:le).eq.'.txt')then
 			write(6,*)'opening ',line(ifirst(2):le)
 		open(19,file=line(ifirst(2):le),status='REPLACE',action='WRITE')
 		inquire(unit=19,opened=isopen)
@@ -317,7 +317,7 @@ integer:: niter
 		open(20,file=line(ifirst(2):le),status='REPLACE',action='WRITE')
 		call writeoutput()
 		stop 'here' 
-		endif !if(line(le-3:le).eq.'.inc')    265
+		endif !if(line(le-3:le).eq.'.txt')    265
 		
 	!	write(6,*)'goto100'
 		!	goto 100
@@ -361,10 +361,10 @@ integer:: niter
 	character*80 exline0
 	character*1 eline
 	integer lexline
-		write(6,*)'writing ',nexample, ' examples as include file jexamples.inc'
+		write(6,*)'writing ',nexample, ' examples as include file jexamples.txt'
 		write(19,*)'** this file contains ',nexample,' examples of using Jlp22'
 		write(19,'(a)')'** launch Jlp22 in the command promt in the folder of this file '
-		write(19,'(a)')'** using: Jlp22 jexamples.inc'
+		write(19,'(a)')'** using: Jlp22 jexamples.txt'
 		write(19,'(a)')'** if you want to pause after each example answer to first question with 1'
 		write(19,'(a)')'** if not, answer with <return>'
 		write(19,'(a)')'** if you want to pause after each figure answer to second question with 1'

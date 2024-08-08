@@ -1,4 +1,4 @@
-! Copyright Juha Lappi 17.6 2024 
+
 
 !** fig2 can be made by giving Jlp22 command fig2 ,etc
 *** all figures can be done giving command all

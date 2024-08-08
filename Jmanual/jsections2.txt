@@ -2,7 +2,7 @@ infile jsections.txt
 infile c:/jlp22/jutilities.f90
 infile c:/jlp22/j.f90
 infile c:/jlp22/jlp.f90
-outfile jexamples.inc
+outfile jexamples.txt
 
 !!;return
 
@@ -334,6 +334,8 @@ subsection nrows nrows()
 subsection ncols ncols()
 subsection t t() transpose
 subsection inverse inverse()
+subsection vector vector()
+subsection flip flip()
 subsection solve solve(): solving a linear equation
 subsection qr qr() qr decomposionn for stying linear dependencies
 subsection eigen eigen() computing eigen values and eigen vectors 

@@ -2368,7 +2368,7 @@ c     e(q)=max(emin,abs(eq))
 c  refactorize L
       
 C C if(nout.ne.0)then
-		write(16,*)'***REFAC,nup,nfreq,n,m1',nup,nfreq,n,m1
+C		write(16,*)'***REFAC,nup,nfreq,n,m1',nup,nfreq,n,m1
 C C end if
 
        
