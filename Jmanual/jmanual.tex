@@ -178,8 +178,14 @@ After renaming the software to \textbf{Jlp22}, this section starts to describe c
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.txt. 
- 
-Version 8.8. A bug in making active set was corrected. This bug caused that some schedules which should be 
+Version *.8  Paper Juha Lappi (2024) 'From Finnish Assortment Pricing to Market 
+Economy Using Prices for Sawn Wood and 
+Chips in Reference Bucking' is now available at DOI: 10.4236/ojf.2024.143015 
+A video in Finnish is available at 
+https://youtu.be/v5yRttf6qHM 
+Version 6.11.2024. Some bugs are corrected and some additions made. it is not tested whether all exaples can be run. 
+This version is put into Github so that Reetta can start testing with newest version. 
+Version 8.8.2024 A bug in making active set was corrected. This bug caused that some schedules which should be 
 in the active set were not there. Windows has the strange property that when files with .inc -extension 
 is changed, the system does not change the date of change properly. Thus the name of jexamples.inc was changed 
 into jexamples.txt. It is recommended that users do not use .inc extension for included files. 
@@ -2910,10 +2916,10 @@ to generate random numbers with \textcolor{VioletRed}{random}() function.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent Args  \tabto{3cm} 0-2  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
+\noindent Args  \tabto{3cm} 1-3  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{Arg1} is the mean (default 0), \textcolor{teal}{Arg2} is the standard deviation 
-(default 1). If sd is given, the mean must be given explicitly as teh first argument. 
+\noindent  \textcolor{teal}{Arg1} is the argument),\textcolor{teal}{Arg2} is the mean (default 0), \textcolor{teal}{Arg3} is the standard deviation 
+(default 1). If sd is given, the mean must be given explicitly as the second argument. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -3619,6 +3625,7 @@ to valuea.
  
 \item  \textcolor{teal}{arg} is \textcolor{teal}{LIST} => len=the number of elements in \textcolor{teal}{LIST} 
 \item  \textcolor{teal}{arg} is \textcolor{teal}{ILIST} => len=the number of elements in \textcolor{teal}{ILIST} 
+\item  \textcolor{teal}{arg} is STEMCURVE => len=the number of height diamter pairs 
 \end{itemize} 
 If \textcolor{teal}{arg} does not have a legal type for \textcolor{VioletRed}{len}(), then \textcolor{VioletRed}{len}(\textcolor{teal}{arg})=-1 if \textcolor{VioletRed}{len}() has 
 option \textcolor{blue}{any->}, otherwise an error is produced. 
@@ -3926,10 +3933,10 @@ named \textbf{Jlp22} objects. The printing format is dependent on the object typ
 \begin{note} 
 \textcolor{VioletRed}{print}() function can be executed for the output of a \textbf{Jlp22} command 
 by writing ';' or ';;' at the end of the line. The excution of implied \textcolor{VioletRed}{print}() 
-is dependent on the value of \textcolor{teal}{printresult}. If \textcolor{teal}{printresult} =0, 
-then the output is not printed, If \textcolor{teal}{printresult} =1, then ';' is 
-causing printing, if \textcolor{teal}{printresult} =2 then only ';;'-outputs are 
-printed, and if \textcolor{teal}{printresult} =3, then both ';' and ';;' outputs are printed. 
+is dependent on the value of \textcolor{teal}{Printresult}. If \textcolor{teal}{Printresult} =0, 
+then the output is not printed, If \textcolor{teal}{Printresult} =1, then ';' is 
+causing printing, if \textcolor{teal}{Printresult} =2 then only ';;'-outputs are 
+printed, and if \textcolor{teal}{Printresult} =3, then both ';' and ';;' outputs are printed. 
 \end{note} 
 \begin{note} 
 it was earlier to print a file using this function, but now function Print\_f must be 
@@ -4365,11 +4372,11 @@ matrixa;\\
 instead of writing c=\textcolor{VioletRed}{inverse}(a)*\textcolor{teal}{b}, it is faster and more accurate to 
 write c=\textcolor{VioletRed}{solve}(a,\textcolor{teal}{b}) 
 \end{note} 
-\subsection{Makes a column vector of \textcolor{teal}{REAL} arguments.} 
+\subsection{\textcolor{VioletRed}{vector}() Makes a column vector of \textcolor{teal}{REAL} arguments.}\index{vector()} 
 \label{vector} 
-\subsection{Reversers order of matrix element} 
+\subsection{flip() Reversers order of matrix element} 
 \label{flip} 
-Reversers the order matrix elements. If there is no output, the reordering happens in place. 
+flip reverses the order matrix elements. If there is no output, the reordering happens in place. 
 Remember that \textbf{Jlp22} stores matrices in row order. 
 \subsection{\textcolor{VioletRed}{solve}() Solves a linear equation A*\textcolor{teal}{x}=\textcolor{teal}{b}}\index{solve()} 
 \label{solve} 
@@ -5982,7 +5989,7 @@ owners or regions found in data.
 \subsection{\textcolor{VioletRed}{transdata}() Own computations for \textcolor{teal}{DATA}}\index{transdata()} 
 \label{transdata} 
 \textcolor{VioletRed}{transdata}() is useful when all necassy computions are put into a \textcolor{teal}{TRANS} 
-, and a \textcolor{teal}{DATA} is gone through obsevation by observation. 
+, and a \textcolor{teal}{DATA} is gone through obsevation by observation or for editing old data. 
 This is useful e.g. when simulating harvesting schdules using a simulator which is defined 
 as an ordinary \textcolor{teal}{TRANS}. The whole function is written below to indicate 
 how users' own functions dealing with \textcolor{teal}{DATA} could be developped. 
@@ -6012,7 +6019,14 @@ how users' own functions dealing with \textcolor{teal}{DATA} could be developped
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{TRANS} computed fro each observation 
+\noindent  \textcolor{teal}{TRANS} computed for each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{maketrans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed for each observation and thereafter the values of variables are put into data matrix. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6654,6 +6668,13 @@ Variables for which class means are computed. If there are no arguments, code op
 \begin{changemargin}{3cm}{0cm} 
 \noindent  minimum number of observation in a class, obtained by merging classes. Does 
 not work if \textcolor{teal}{z}-> is given 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{any} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Indicates that each value of the \textcolor{teal}{x}-variables forms a separate class. 
  
 \end{changemargin} 
 \vspace{0.3cm} 
@@ -6662,17 +6683,25 @@ not work if \textcolor{teal}{z}-> is given
 \noindent \textcolor{blue}{xrange} \tabto{3cm}  -1|0|2 \tabto{5cm}  Real \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Defines the range of \textcolor{teal}{x} variable. If \textcolor{blue}{xrange->} is given without 
-arguments and \textbf{Jlp22} variables \textcolor{teal}{x}\%min and \textcolor{teal}{x}\%max exist, they are used, and 
-if they do not exist an error occurs. Note that these variables can be 
-generate with \textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->}). Either xtrange-> or \textcolor{blue}{any->} must be presente. 
+arguments or is not given then variables \textcolor{teal}{x}\%min and \textcolor{teal}{x}\%max are used if they exist. If they do not exist an error occurs. 
+Note that these variables can be 
+generate with \textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->}). 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{any} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
+\noindent \textcolor{blue}{min}  \tabto{3cm}  -1|0|1  \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent Indicates that each value of the \textcolor{teal}{x}-variables foms a separate class. 
-either \textcolor{blue}{xrange->} or nay-> must be present. 
+\noindent  \textcolor{blue}{min->} indicates that row vector Output\%min is generated. First elements 
+tell teh class wise minimums, and the last element the total minimum. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{max}  \tabto{3cm}  -1|0|1  \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{blue}{min->} indicates that row vector Output\%max is generated. First elements 
+tell the class wise maximums, and the last element the total maximum. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -8075,7 +8104,7 @@ fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{sd->},\textcolor{blue}{c
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{var->},\textcolor{blue}{continue->}fcont)\\ 
 {\color{ForestGreen}** x-values were equally distributed due to data construction}\\ 
 fi=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{histogram->},\textcolor{blue}{area->},\textcolor{blue}{continue->}fcont)\\ 
-fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{pdf}(0,\textcolor{VioletRed}{rmse}(reg)),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\,{\color{ForestGreen}! xrange comes from stat()}\\ 
+fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{pdf}(\textcolor{teal}{x},0,\textcolor{VioletRed}{rmse}(reg)),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->},\textcolor{blue}{append->},\textcolor{blue}{continue->}fcont)\,{\color{ForestGreen}! xrange comes from stat()}\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
@@ -8267,6 +8296,20 @@ The mark can be given also as \textcolor{teal}{CHAR} varible or constant.
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Name of file from which coordinatee values are read. Each line contains 
 the \textcolor{teal}{x}-coordinate and \textcolor{teal}{y}-coordinate. An empty line means that there is a break in the line. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{sort} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Option indicates taht \textcolor{teal}{x}-values are sorted in increasing order. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} |1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{x}-\textcolor{teal}{y} pairs are process only up the number given in the option. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -8274,6 +8317,9 @@ the \textcolor{teal}{x}-coordinate and \textcolor{teal}{y}-coordinate. An empty 
 Both  fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{x},\textcolor{teal}{y},\textcolor{blue}{mark->}'*',\textcolor{blue}{append->}) and fi=\textcolor{VioletRed}{drawline}(\textcolor{teal}{x},\textcolor{teal}{y},\textcolor{blue}{label->}'*',\textcolor{blue}{append->}) can 
 be used to put the mark into a figure, but mark is centered at the point but 
 for a label \textcolor{teal}{x} and \textcolor{teal}{y} give the upper-left coordiantes. 
+\end{note} 
+\begin{note} 
+If \textcolor{teal}{x}-values are sorted, the same figure would ppear if \textcolor{teal}{x}-values would be sorted in decreasing order. 
 \end{note} 
 \begin{note} 
 Using \textcolor{VioletRed}{drawline}() without arguments and with \textcolor{blue}{append->} and with \textcolor{blue}{xlabel->},\textcolor{blue}{ylabel->}, 
@@ -8455,6 +8501,7 @@ cause error. After defining the stemcurve, it can be used as follows:\\
 stem(h)= diameter in cm at height h in dm.\\ 
 stem(-d) = height in dm of diameter d in cm\\ 
 stem(h1,h2)= the volume in litres between heights h1 and h2\\ 
+the number of used height diameter pairs can be obtained with \textcolor{VioletRed}{len}() 
 For examples of stemcurve, see manual for \textcolor{VioletRed}{stemopt}(). 
 \begin{note} 
 In harvester data having diameters at one dm steps, the function can be called as follows. 
@@ -8465,7 +8512,6 @@ stem=\textcolor{VioletRed}{stemcurve}(hoo,dh)\\
 The location of last diameter in dh can be found:\\ 
 lastd=\textcolor{VioletRed}{find}(dh,\textcolor{blue}{filter->}\$.le.0)-1; 
 \end{note} 
- 
 \subsection{\textcolor{VioletRed}{stemopt}() optimizes bucking or writes bucking schedules}\index{stemopt()} 
 \label{stemopt} 
 The function can be used to compute optimal log lengths when tree stems are cut into sawlogs and 

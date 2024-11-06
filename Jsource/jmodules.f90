@@ -87,7 +87,7 @@ module jmod
 	integer, parameter :: j_nfjlp=22 !jlp
 	integer, parameter :: j_nfsimu=6 !
 	integer, parameter :: j_nffig=8!   figures
-	integer, parameter :: j_nfspli=9 ! tautspline..
+	integer, parameter :: j_nfspli=10 ! tautspline..
 	integer, parameter :: j_nfbit=7 !
 	integer, parameter :: j_nfmisc=11!
  
@@ -137,6 +137,7 @@ module jmod
 	! 'log','log10','exp','sin','sind','cos','cosd','tan','tand','cotan', & !d indicates degree argument
 	! 'cotand','asin','asind','acos','acosd','atan','atand','acotan','acotand','sinh', &
 	! 'cosh','tanh', 'mod','fraction', & !34
+	integer,parameter::j_ftrans=j_fbtrans+1
 	integer,parameter::j_fsqrt=j_fbarit+9
 	integer,parameter::j_fsqrt2=j_fbarit+10
 	integer,parameter::j_flog=j_fbarit+11
@@ -266,7 +267,7 @@ module jmod
 		'plotyx','draw','drawclass', 'drawline','show', 'plot3d','gnuplot','tics',& ! 8
  
 		!! Splines, stem splines,  and volume functions
-		'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt', 'cumvol',& ! 9
+		'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt', 'cumvol','polar',& ! 10
  
 		!! Bit function
 		'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
@@ -328,9 +329,9 @@ module jmod
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix', 'matrixborder',
 		! 'fill','vector','flip', & !21
  
-		0,0,0,2,2,0,1,0,0,0,0,1,0,0,&
+		0,0,0,2,2,0,0,0,0,0,0,1,0,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
-		!linkdata2,splitdata,partdata
+		!linkdata2,splitdata,partdata,editdata
  
 		0,1,1,1,1,1,2,1,1,2,  0,0,1,&
 		! 'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
@@ -347,7 +348,7 @@ module jmod
 		0,0,1,0,1,1,1,2,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', gnuplot,tics& ! 6
  
-		1,2,2,2,2,2,0,5,1,&     !calle,lmin,lmax,dmin,gam,b
+		1,2,2,2,2,2,0,5,1,1,&     !calle,lmin,lmax,dmin,gam,b
 		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt, 'cumvol', & ! 6
  
 		2,1,1,1,0,2,1,&
@@ -385,7 +386,7 @@ module jmod
 		99,1,1,1,9999,&
 		! 'der','gamma','loggamma','logistic','npv', & !5
  
-		2,3,3,3,1,&
+		3,3,3,3,1,&
 		! 'pdf','cdf','bin','negbin', 'density' ,&  !4
  
 		0,2,1,2,2,2,1,&
@@ -429,7 +430,7 @@ module jmod
 		2,0,1,9999,50,1,1,9999,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d','gnuplot' ,tics& ! 8
  
-		1,2,2,2,2,2,9999,6,3, & !calle,lmin,lmax,dmin,gam,b
+		1,2,2,2,2,2,9999,6,3,9999, & !calle,lmin,lmax,dmin,gam,b
 		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',stemopt,'cumvol',  & ! 9
  
 		2,1,1,1,0,2,1,&
@@ -469,7 +470,7 @@ module jmod
 	integer,dimension(j_nnamedfuncarg):: j_needsnamed
  
 	!free options free$
-	parameter (j_noptions_=239) !!!option number of j_ options
+	parameter (j_noptions_=240) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 		'extraup','extra','mean', 'min','max',& ! 1-10
@@ -495,7 +496,7 @@ module jmod
 		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist',&
 		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange','param','code','case', &
 		'maxobs','pointsonly','obj','seq','fast','write','down','buffer','multiplot',&
-		'npoints','unset','notset','xtics','ytics','logs','to','u','urange'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
+		'npoints','unset','notset','xtics','ytics','logs','to','u','urange','tan'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -536,7 +537,7 @@ module jmod
 	parameter (j_mknn=215,j_mnewup=216,j_mxfunc=217,j_mxfuncrange=218,j_mparam=219,j_mcode=220,j_mcase=221)
 	parameter (j_mmaxobs=222,j_mpointsonly=223,j_mobj=224,j_mseq=225,j_mfast=226,j_mwrite=227,j_mdown=228)
 	parameter (j_mbuffer=229,j_mmultiplot=230,j_mnpoints=231,j_munset=232,j_mnotset=233,j_mxtics=234,j_mytics=235)
-	parameter (j_mlogs=236,j_mto=237,j_mu=238,j_murange=239)
+	parameter (j_mlogs=236,j_mto=237,j_mu=238,j_murange=239,j_mtan=240)
 	integer,parameter :: j_nnamedoptarg=55
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
  

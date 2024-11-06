@@ -130,8 +130,14 @@
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.txt.
-
-!Version 8.8. A bug in making active set was corrected. This bug caused that some schedules which should be
+!Version *.8  Paper Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
+! Economy Using Prices for Sawn Wood and
+! Chips in Reference Bucking' is now available at DOI: 10.4236/ojf.2024.143015
+! A video in Finnish is available at 
+! https://youtu.be/v5yRttf6qHM
+!Version 6.11.2024. Some bugs are corrected and some additions made. it is not tested whether all exaples can be run.
+! This version is put into Github so that Reetta can start testing with newest version.
+!Version 8.8.2024 A bug in making active set was corrected. This bug caused that some schedules which should be
 ! in the active set were not there. Windows has the strange property that when files with .inc -extension
 !  is changed, the system does not change the date of change properly. Thus the name of jexamples.inc was changed
 ! into jexamples.txt. It is recommended that users do not use .inc extension for included files. 
