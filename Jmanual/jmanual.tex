@@ -80,7 +80,8 @@ I was not informed of the decision. Later I found and corrected a bug in the fac
 optimization. When I wrote to Luke that I will not send the bug correction without an explicit 
 co-operation agreement, Luke rejected explicitly cooperation 
 in the publication or in the development of 
-the software. 
+the software. This meant e.g. that Luke planned to publish the manual where I would be the 
+first author without my involvement. 
  
 When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke. 
 The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall 
@@ -96,7 +97,7 @@ was not necessary as Reetta adviced me how to use Github.
 I was told in Olavinlinna that there has actually been no disagreement 
 between me and Luke in this process. 
 As I could not accept the interpretation that I had fighted six and half years against wind mills, 
-I described in previous versions some details of the process and listed all the 
+I described in previous versions some details of the process and listed all the ten 
 leaders who participated in the process. This kept my bitterness 
 alive which was unfortunate for my peace of mind and also because 
 I knew well how pathetic old bitter men are. After some recent rounds of opposite argumentation, the research director 
@@ -178,11 +179,21 @@ After renaming the software to \textbf{Jlp22}, this section starts to describe c
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.txt. 
-Version *.8  Paper Juha Lappi (2024) 'From Finnish Assortment Pricing to Market 
+Version March 30, 2025   Paper Juha Lappi (2024) 'From Finnish Assortment Pricing to Market 
 Economy Using Prices for Sawn Wood and 
 Chips in Reference Bucking' is now available at DOI: 10.4236/ojf.2024.143015 
-A video in Finnish is available at 
-https://youtu.be/v5yRttf6qHM 
+github.com/juhalappi/jlp22  contains scripts for doing all computations of the paper. I have not 
+tested if everything works with the new version. 
+A dangerous property of matrix computations is removed. If A was a matrix, then code A=7 put 
+each element of A equal to 7. Now A=7 means that A is made \textcolor{teal}{REAL} object with value 7. Using 
+A=0 can be used instead \textcolor{VioletRed}{delete\_o}(A) which was needed before to make a \textcolor{teal}{MATRIX} object \textcolor{teal}{REAL}. All 
+elements can be made equal to 7 with code A()=7. If \textcolor{teal}{x} is \textcolor{teal}{REAL}, then the value can be used also with 
+\textcolor{teal}{x}(1) ,and the value can be set using \textcolor{teal}{x}(1)= or \textcolor{teal}{x}(1,1)=.This is useful when working with matrices 
+with varying sizes, including matrix with one element. The new version has function bspline() wich allows 
+to use bspile basis functions as regressor variables in linear regression. The manual now describes 
+now function \textcolor{VioletRed}{nonlin}() for nonlinear regression and function \textcolor{VioletRed}{varcomp}() which can be used to 
+compute variance and covariance components. 
+ 
 Version 6.11.2024. Some bugs are corrected and some additions made. it is not tested whether all exaples can be run. 
 This version is put into Github so that Reetta can start testing with newest version. 
 Version 8.8.2024 A bug in making active set was corrected. This bug caused that some schedules which should be 
@@ -192,7 +203,7 @@ into jexamples.txt. It is recommended that users do not use .inc extension for i
  
 Version 17.6, 2024 Github folder Stem contains data and the script needed to compute results in paper: Juha Lappi (2024) 'From Finnish Assortment Pricing to Market 
 Economy Using Prices for Sawn Wood and 
-Chips in Reference Bucking' to be  published within few days in Open Journal of forestry. 
+Chips in Reference Bucking'.  to be  published within few days in Open Journal of forestry. 
 I'm now puclishing this version in a slightly premature phase to make the computations possible repeating the figures 
 of the paper. 
 The script file shows several 
@@ -2766,6 +2777,7 @@ Functions \textcolor{VioletRed}{mean}(), \textcolor{VioletRed}{sd}(), \textcolor
 can be used used to compute statistics from a matrix. Let \textcolor{VioletRed}{mean}() here present 
 any of thes functions. The following rules apply: 
 \begin{itemize} 
+If argument is \textcolor{teal}{REAL} then mean and sum are eqaul to the argument, ans sd and var are zero. 
 \textcolor{VioletRed}{mean}(VECTOR) computes the mean of the vector, output is \textcolor{teal}{REAL} 
 \textcolor{VioletRed}{mean}(\textcolor{teal}{MATRIX}) computes the mean of the each column. \textcolor{teal}{Result} is row vector. 
 \textcolor{VioletRed}{mean}(VECTOR,\textcolor{blue}{weight->}wvector) computes the 
@@ -3119,7 +3131,7 @@ rm=\textcolor{VioletRed}{rann}()\\
 rm(1,-5);\\ 
 \textcolor{VioletRed}{print}(\textcolor{VioletRed}{mean}(rm),\textcolor{VioletRed}{sd}(rm),\textcolor{VioletRed}{min}(rm),\textcolor{VioletRed}{max}(rm))\\ 
 \textcolor{teal}{Continue}=1\,{\color{ForestGreen}!an error}\\ 
-large=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.2),any)\\ 
+large=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.2),\textcolor{blue}{any->})\\ 
 \textcolor{teal}{Continue}=0\\ 
 large=\textcolor{VioletRed}{find}(rm,\textcolor{blue}{filter->}(\$.ge.2),\textcolor{blue}{any->})\\ 
 100*\textcolor{VioletRed}{nrows}(large)/\textcolor{VioletRed}{nrows}(rm);\\ 
@@ -3644,7 +3656,7 @@ Generates a list of integers which can be used as indexes.
 \vspace{0.3cm} 
 \noindent Args \tabto{3cm}  0-  \tabto{5cm}  \textcolor{teal}{REAL}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Values to be put into \textcolor{teal}{ILIST}, or the dimesion 
+\noindent  Values to be put into \textcolor{teal}{ILIST}, or the dimension 
 of the \textcolor{teal}{ILIST} when values are given in \textcolor{blue}{values->},  or variables whose indeces 
 in in the data are put into the \textcolor{teal}{ILIST}. 
 \end{changemargin} 
@@ -3667,7 +3679,7 @@ in in the data are put into the \textcolor{teal}{ILIST}.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{values}  \tabto{3cm} N|1- \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Values to be put into \textcolor{teal}{ILIST} when dimesnion is determined as the 
+\noindent  Values to be put into \textcolor{teal}{ILIST} when dimension is determined as the 
 only argument 
 \end {changemargin} 
 \hrule 
@@ -4131,6 +4143,10 @@ occurs.
 \item  \textcolor{teal}{M}(r1,-r2,\textcolor{blue}{diag->}) (Again -r2 can be \textcolor{teal}{Tolast}. 
 \end{itemize} 
 \begin{note} 
+After the first version in 2025 all elements of a \textcolor{teal}{MATRIX} can be se using A()= value. 
+Earlier this could be done using A=value. Now A=value makes A into \textcolor{teal}{REAL}. 
+\end{note} 
+\begin{note} 
 Note 
 When setting values to a submatrix the the the values given in input matrix 
 are put into the outputmatrix in row order, and the shape of the input and output matrices need 
@@ -4372,7 +4388,7 @@ matrixa;\\
 instead of writing c=\textcolor{VioletRed}{inverse}(a)*\textcolor{teal}{b}, it is faster and more accurate to 
 write c=\textcolor{VioletRed}{solve}(a,\textcolor{teal}{b}) 
 \end{note} 
-\subsection{\textcolor{VioletRed}{vector}() Makes a column vector of \textcolor{teal}{REAL} arguments.}\index{vector()} 
+\subsection{\textcolor{VioletRed}{vector}() Makes a column vector of arguments which can be \textcolor{teal}{REAL} or \textcolor{teal}{MATRIX} or \textcolor{teal}{LIST}.}\index{vector()} 
 \label{vector} 
 \subsection{flip() Reversers order of matrix element} 
 \label{flip} 
@@ -4589,7 +4605,7 @@ using \textcolor{blue}{maxobs->} option in \textcolor{VioletRed}{stat}()
 \end{note} 
 \subsection{\textcolor{VioletRed}{cumsum}() Cumulative sums}\index{cumsum()} 
 \label{cumsum} 
-\textcolor{VioletRed}{cumsum}(\textcolor{teal}{MATRIX}) generates a \textcolor{teal}{MATRIX} with the same dimesnions as the argument, 
+\textcolor{VioletRed}{cumsum}(\textcolor{teal}{MATRIX}) generates a \textcolor{teal}{MATRIX} with the same dimensions as the argument, 
 and puts the cumulative sums of the columsn into the output matrix. 
 \begin{note} 
 If the argument is vector, the cumsum makes a vector having the same 
@@ -4598,7 +4614,7 @@ form as the argument.
 \subsection{\textcolor{VioletRed}{corrmatrix}() Correlation matrix from variance-covariance matrix}\index{corrmatrix()} 
 \label{corrmatrix} 
 This simple function is sometimes needed. The function does not test wether the input matrix is symmetric. 
-Negative diagonal eleemnt produces error, value zero correaltion 9,99. 
+Negative diagonal element produces error, value zero correaltion 9,99. 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
@@ -4624,6 +4640,64 @@ Negative diagonal eleemnt produces error, value zero correaltion 9,99.
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
+\begin{note} 
+Output can be the same as input. 
+\end{note} 
+\subsection{covmatrix() Covariance matrix from correlation matrix} 
+\label{covmatrix} 
+This is inverse function of \textcolor{VioletRed}{corrmatrix}() making covariance matrix from correlation 
+matrix and either variances and standard deviations. 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output \tabto{3cm}  1 \tabto{5cm}   \textcolor{teal}{MATRIX} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  matrix having variances on the diagonal 
+and covariances elsewhere 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args  \tabto{3cm} 1 \tabto{5cm}   \textcolor{teal}{MATRIX} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  symmetric correlation matrix. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{sd} \tabto{3cm} N|1  \tabto{5cm}   \textcolor{teal}{MATRIX}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Vector of standard deviations 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{var} \tabto{3cm} N|1  \tabto{5cm}  \textcolor{teal}{MATRIX} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Vector of variances. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+Either \textcolor{blue}{sd->} or \textcolor{blue}{var->} is required 
+\end{note} 
+\begin{note} 
+Correlations greater than 1 are turned into 1 and correaltions less than -1 
+are turned into -1 
+\end{note} 
+\begin{note} 
+symmetry of the correaltion matrix is not tested 
+\end{note} 
+\begin{note} 
+The diagonal of the correlation matrix is ignored. 
+\end{note} 
+\begin{note} 
+Output can be the same as the input 
+\end{note} 
+\begin{note} 
+\textcolor{blue}{sd->} and \textcolor{blue}{var->} require \textcolor{teal}{MATRIX} argument. Numeric values can be given 
+using \textcolor{blue}{sd->}\textcolor{VioletRed}{vector}(1,3,4) 
+\end{note} 
 \subsection{matrixborder) puts row above a \textcolor{teal}{MATRIX} or column on the left} 
 \label{matrixborder} 
 When computing reasults into a \textcolor{teal}{MATRIX}, often header row is needed on top and/or on left. 
@@ -5342,6 +5416,14 @@ matrices.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{blue}{extra} \tabto{3cm} 0-999 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  extra variables put into the data, e.g., \textcolor{teal}{Regf} and \textcolor{teal}{Resid} which will be 
+updated automatically after regf() or \textcolor{VioletRed}{nonlin}(). 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{time} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  If \textcolor{blue}{time->} is present, the cpu-time and total time in function are printed 
@@ -5354,6 +5436,20 @@ matrices.
 \noindent  If present, then the new data matrix is made sequentially so that used data 
 matrices are deleted. This takes more time, but may be needed if there is shortage of 
 memory. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{filter} \tabto{3cm} 1 \tabto{5cm}  Code \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent The condition used to accept observations into the new data. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{reject} \tabto{3cm} 1 \tabto{5cm}  Code \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent The condition used to rject observations from the new data. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -5804,6 +5900,13 @@ data object generated.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed for each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{expand} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent If \textcolor{blue}{expand->} is present then the lengths output vectors are equal 
@@ -5833,8 +5936,8 @@ Class\%\%last if \textcolor{blue}{expand->} is present and Class\%lastobject if 
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{nobsw} \tabto{3cm} 0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent The number of observations in class is stored in vector nobsw\%Class if 
-expand is not present and in nobsw\%\%Class if \textcolor{blue}{expand->} is present 
+\noindent The number of observations in class is stored in vector Class\%nobsw if 
+expand is not present and in Class\%\%nobsw if \textcolor{blue}{expand->} is present 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5857,10 +5960,10 @@ Ext be denote the extension.
 \noindent \textcolor{blue}{mean} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent The class means are stored in the vectors \newline 
-\textcolor{teal}{Arg}\#Class\%\%mean with \textcolor{blue}{expand->} and without \textcolor{blue}{ext->}\newline 
-\textcolor{teal}{Arg}\#Class\%\%meanExt with \textcolor{blue}{expand->} and with \textcolor{blue}{ext->} are \newline 
-\textcolor{teal}{Arg}\#Class\%mean without \textcolor{blue}{expand->} and without \textcolor{blue}{ext->} \newline 
-\textcolor{teal}{Arg}\#Class\%meanExt without \textcolor{blue}{expand->} and with \textcolor{blue}{ext->} 
+Arg[Class]\%\%mean with \textcolor{blue}{expand->} and without \textcolor{blue}{ext->}\newline 
+Arg[Class]\%\%meanExt with \textcolor{blue}{expand->} and with \textcolor{blue}{ext->} are \newline 
+Arg[Class]\%mean without \textcolor{blue}{expand->} and without \textcolor{blue}{ext->} \newline 
+Arg[Class]\%meanExt without \textcolor{blue}{expand->} and with \textcolor{blue}{ext->} 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -5889,6 +5992,13 @@ Ext be denote the extension.
 \noindent \textcolor{blue}{max} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Class maximums are computed to max vectors. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{w} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Deviations from the class means are computed to w vectors. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -5989,7 +6099,8 @@ owners or regions found in data.
 \subsection{\textcolor{VioletRed}{transdata}() Own computations for \textcolor{teal}{DATA}}\index{transdata()} 
 \label{transdata} 
 \textcolor{VioletRed}{transdata}() is useful when all necassy computions are put into a \textcolor{teal}{TRANS} 
-, and a \textcolor{teal}{DATA} is gone through obsevation by observation or for editing old data. 
+, and a \textcolor{teal}{DATA} is gone through obsevation by observation. It is possible to store 
+selected variables into the data matrix. 
 This is useful e.g. when simulating harvesting schdules using a simulator which is defined 
 as an ordinary \textcolor{teal}{TRANS}. The whole function is written below to indicate 
 how users' own functions dealing with \textcolor{teal}{DATA} could be developped. 
@@ -6024,9 +6135,9 @@ how users' own functions dealing with \textcolor{teal}{DATA} could be developped
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent \textcolor{blue}{maketrans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\noindent \textcolor{blue}{keep} \tabto{3cm} N|1-  \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  \textcolor{teal}{TRANS} computed for each observation and thereafter the values of variables are put into data matrix. 
+\noindent  Variables in the data matrix whose values are changed 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6037,7 +6148,11 @@ how users' own functions dealing with \textcolor{teal}{DATA} could be developped
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
- 
+\begin{note} 
+Before March 2025 the function contained option maketrans which could make nonintended 
+changes in the data matrix as new values of all output variables were put in to the  data matrix if the 
+variables were there already. Now \textcolor{blue}{keep->} specifies waht variables are changed in the data matrix 
+\end{note} 
 \color{Green} 
 \begin{verbatim} 
 subroutine transdata(iob,io) 
@@ -6260,6 +6375,13 @@ then the minima are stored into these variables.
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
+\noindent \textcolor{blue}{rmse}  \tabto{3cm} -1,99 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  rmses are stored 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
 \noindent \textcolor{blue}{sd}  \tabto{3cm} -1,99 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  standard deviations are stored 
@@ -6455,14 +6577,14 @@ co=\textcolor{VioletRed}{cov}(dat\%keep);\\
 \textcolor{VioletRed}{corr}(1) works similarly as \textcolor{VioletRed}{cov}() 
 \subsection{\textcolor{VioletRed}{regr}() Linear regression}\index{regr()} 
 \label{regr} 
-Ordinary or stepwise linear regrwession can be computed using \textcolor{VioletRed}{regr}(). 
+Ordinary or stepwise linear regression can be computed using \textcolor{VioletRed}{regr}(). 
  
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent output \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{REGR} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  sRegression object.. 
+\noindent  Regression object.. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6536,7 +6658,7 @@ the variance-covariance matrix of the coeffcient estimates.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{corr} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  if vcorr-> is present \textcolor{VioletRed}{regr}() generated matrix ]output\%corr[ for 
+\noindent  if \textcolor{blue}{corr->} is present \textcolor{VioletRed}{regr}() generated matrix ]output\%corr[ for 
 the correlation matrix of the coeffcient estimates. Standard deviations 
 are put to the diagonal. 
 \end{changemargin} 
@@ -6547,13 +6669,31 @@ are put to the diagonal.
 \begin{changemargin}{3cm}{0cm} 
 \noindent The variance of the residual error is proportional to the function 
 given in this codeoption. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{extra} \tabto{3cm}  \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If option is given, then the values of the regression function are not stored in to the data matrix columns 
+\textcolor{teal}{Regf} and \textcolor{teal}{Resid} even if these are present. This allows making several new regressions for the residuals of 
+an earlier regression. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{any} \tabto{3cm} -1|1 \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If data contains \textcolor{teal}{Regf} and \textcolor{teal}{Resid} then these variables are computed into data matrix also for 
+observations rejected due to \textcolor{blue}{filter->} or \textcolor{blue}{reject->} (and not due to missing values indicated 
+by absolute value greater or eqaul to .1.7d18). 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
 If the \textcolor{teal}{DATA} contains variables Regr and \textcolor{teal}{Resid}, then the values of 
 the regression function and residuals are put into these columns. Space for these e 
-coluns cab reserved with \textcolor{blue}{extra->} option in \textcolor{VioletRed}{data}() or in \textcolor{VioletRed}{newdata}() 
+coluns can reserved with \textcolor{blue}{extra->} option in \textcolor{VioletRed}{data}() or in \textcolor{VioletRed}{newdata}() 
 \end{note} 
 \begin{note} 
 If \textcolor{teal}{re} is the output of the \textcolor{VioletRed}{regr}() then function re() can be used to compute 
@@ -6561,27 +6701,516 @@ the value of the regression function. re() can contain from zero arguments up to
 total number of arguments as arguments. The rest of arguments get 
 the value they happen to have at the moment when the function is called. 
 \end{note} 
+\begin{note} 
+Even if the correlation matrix of parameter estimated would be singular, 
+e.g. due to a corelation one, the estimation may succeed if the intercept is not 
+included in the model directly or implicitly. This is not generally known. 
+\end{note} 
 Information from the \textcolor{teal}{REGR} object can be obtained with the following functions. 
 let \textcolor{teal}{re} be the name of the \textcolor{teal}{REGR} object. 
 \begin{itemize} 
-\item   \textcolor{VioletRed}{coef}(\textcolor{teal}{re},xvar) = coefficient of variable xvar 
+\item   \textcolor{VioletRed}{coef}(\textcolor{teal}{re},xvar) = coefficient of variable xvar. If xvar is 
+All, the vector of coefficients is produced 
 \item   \textcolor{VioletRed}{coef}(\textcolor{teal}{re},xvar,\textcolor{blue}{any->}) = returns zero if the variable is dropped from 
 the equation in the stepwise procedure of 
 due to linear dependencies. 
 \item  \textcolor{VioletRed}{coef}(\textcolor{teal}{re},1) or \textcolor{VioletRed}{coef}(]re(,\$1) returns the intercept 
-\item  \textcolor{VioletRed}{se}(\textcolor{teal}{re},xvar) standard error of a coeffcient 
+\item  \textcolor{VioletRed}{se}(\textcolor{teal}{re},xvar) standard error of a coefficient. If xvar is All, 
+vector of all se's is produced. 
 \item  \textcolor{VioletRed}{mse}(\textcolor{teal}{re}) MSE of the regression 
 \item  \textcolor{VioletRed}{rmse}(\textcolor{teal}{re}) RMSE of the regression 
 \item 	\textcolor{VioletRed}{r2}(\textcolor{teal}{re}) adjusted R2. If the intercept is not present this can be negative. 
 \item 	\textcolor{VioletRed}{nobs}(\textcolor{teal}{re}) number of observations used 
 \item 	\textcolor{VioletRed}{len}(\textcolor{teal}{re}) number of independent variables (including intercept) used 
 \end{itemize} 
+\subsection{bspline() Definiton of bspline} 
+\label{bspline} 
+The function makes a BSPLINE object which can generate bspline basis functions. The bspline basis functions 
+are generated by giving output(\textcolor{teal}{x}), where \textcolor{teal}{x} is the argument wich must be between the first and last knot (icnlusive). 
+The bspline functions can be used as regressor arguments of \textcolor{VioletRed}{regr}() by including 
+@output\%list to the argument list. \textcolor{blue}{noint->} option must be included. 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent output \tabto{3cm} 1 \tabto{5cm}  BSPLINE \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  BSPLINE object. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{arg} \tabto{3cm}  3-N \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Knots of the bspline. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Degree \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  degree of the spline. Default is 2, maximum is 3. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+If the same value is repeated, the continuity is dropped with one, 
+i.e., cubic spline does not have continuous second derivative, second degree spline will not have continuous derivative at this knot 
+First degree spline will not be continuous. 
+\end{note} 
+\begin{note} 
+If the same value is repeated, the continuity is dropped with one, 
+i.e., cubic spline does not have continuous second derivative, second degree spline will not have continuous derivative at this knot 
+First degree spline will not be continuous. 
+\end{note} 
+\begin{note} 
+The basis functions add up to one, which means that the intercept is implicitly included in the model, 
+Thus the \textcolor{VioletRed}{regr}() function needs to have \textcolor{blue}{noint->} option. If there are more than one bplines as 
+arguments some functions must be dropped in a way to be explained later. 
+\end{note} 
+\begin{note} 
+If there are knot sections which do not contain any data points, no error occurs, but \textbf{Jlp22} 
+tells that some regressors are always zero and are dropped automatically. 
+\end{note} 
+\singlespacing 
+\begin{example}[bsplineex]x\\ 
+\label{bsplineex} 
+\noindent \textcolor{teal}{Window}='400,400'\\ 
+font=\,']Arial,12['\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(10*\textcolor{teal}{x}/(15+2*\textcolor{teal}{x}+0.5*\textcolor{teal}{x}*\textcolor{teal}{x})+5+2*(\textcolor{teal}{x}.gt.40)),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{append->},\textcolor{blue}{color->}\textcolor{teal}{Green},\textcolor{blue}{width->}2,\textcolor{blue}{sho 
+ 
+xm=\textcolor{VioletRed}{matrix}(100,\textcolor{blue}{do->})\\ 
+tr=\textcolor{VioletRed}{trans}()\\ 
+f=(10*\textcolor{teal}{x}/(15+2*\textcolor{teal}{x}+0.5*\textcolor{teal}{x}*\textcolor{teal}{x})+5+2*(\textcolor{teal}{x}.gt.40))\\ 
+\textcolor{teal}{y}=f+\textcolor{VioletRed}{rann}(0,0.3)\\ 
+/                                                       \\ 
+dat=\textcolor{VioletRed}{newdata}(xm,\textcolor{blue}{read->}\textcolor{teal}{x},\textcolor{blue}{maketrans->}tr)\\ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->})\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{blue}{show->}0,\textcolor{blue}{append->})\\ 
+cl=\textcolor{VioletRed}{classify}(\textcolor{teal}{y},\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{dx->}5)\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{append->},\textcolor{blue}{width->}2,\textcolor{blue}{show->}0)\\ 
+fig2=\textcolor{teal}{fig}\\ 
+bs=bspline(0,5,15,40,100)\\ 
+tr=\textcolor{VioletRed}{trans}()\\ 
+bs(\textcolor{teal}{x})\\ 
+xge40=\textcolor{teal}{x}.gt.40\\ 
+\textcolor{VioletRed}{if}(done)f=re()\\ 
+/                                    \\ 
+done=0\\ 
+re=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},@bs\%list,xge40,\textcolor{blue}{noint->},\textcolor{blue}{trans->}tr)\\ 
+done=1\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}tr(f),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{append->},\textcolor{blue}{show->}0,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{width->}2)\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{drawline}(45,55,6.4,6.4,\textcolor{blue}{color->}\textcolor{teal}{Green},\textcolor{blue}{width->}2,\textcolor{blue}{append->},\textcolor{blue}{show->}0,\textcolor{blue}{label->}'\,true"font"')\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{drawline}(45,55,6.1,6.1,\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{width->}2,\textcolor{blue}{append->},\textcolor{blue}{show->}0,\textcolor{blue}{label->}'\,classified"font"')\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{drawline}(45,55,5.8,5.8,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{width->}2,\textcolor{blue}{append->},\textcolor{blue}{show->}0,\textcolor{blue}{label->}'\,estimated"font"')\\ 
+\textcolor{VioletRed}{show}(\textcolor{teal}{fig},\textcolor{blue}{xlabel->}'\textcolor{teal}{x}"font"',\textcolor{blue}{title->}'Smooth\,bspline\,+\,jump"font"',\textcolor{blue}{continue->}fcont)\\ 
+{\color{ForestGreen}!***spline is not continuous at 40}\\ 
+bs2=bspline(0,5,15,40,40,40,100)\\ 
+tr2=\textcolor{VioletRed}{trans}()\\ 
+bs2(\textcolor{teal}{x})\\ 
+\textcolor{VioletRed}{if}(done)f=re2()\\ 
+/                                     \\ 
+done=0\\ 
+re2=\textcolor{VioletRed}{regr}(\textcolor{teal}{y},@bs2\%list,\textcolor{blue}{noint->},\textcolor{blue}{trans->}tr2)\\ 
+done=1\\ 
+fig2=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}tr2(f),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{append->},\textcolor{blue}{show->}0,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{width->}2)\\ 
+fig2=\textcolor{VioletRed}{drawline}(45,55,6.4,6.4,\textcolor{blue}{color->}\textcolor{teal}{Green},\textcolor{blue}{width->}2,\textcolor{blue}{append->},\textcolor{blue}{show->}0,\textcolor{blue}{label->}'\,true"font"')\\ 
+fig2=\textcolor{VioletRed}{drawline}(45,55,6.1,6.1,\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{width->}2,\textcolor{blue}{append->},\textcolor{blue}{show->}0,\textcolor{blue}{label->}'\,classified"font"')\\ 
+fig2=\textcolor{VioletRed}{drawline}(45,55,5.8,5.8,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{width->}2,\textcolor{blue}{append->},\textcolor{blue}{show->}0,\textcolor{blue}{label->}'\,estimated"font"')\\ 
+\textcolor{VioletRed}{show}(fig2,\textcolor{blue}{xlabel->}'\textcolor{teal}{x}"font"',\textcolor{blue}{title->}'Bpline\,not\,continuous\,at\,40"font"',\textcolor{blue}{continue->}fcont)\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \subsection{\textcolor{VioletRed}{nonlin}() Nonlinear regression}\index{nonlin()} 
 \label{nonlin} 
-To be raported later, see old manual 
+ 
+Ordinary least squares regression with modified Gauss-Newton method can be computed using \textcolor{VioletRed}{nonlin}(). 
+ 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent output \tabto{3cm} 1 \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Name used to name associated objects generated. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{arg} \tabto{3cm}  2 \tabto{5cm}  REALV \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{y}-variable and name of the function in \textcolor{teal}{TRANS} given in \textcolor{blue}{trans->} 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{par} \tabto{3cm} 1-  \tabto{5cm}  REALV \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  parameters of the function. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{initial} \tabto{3cm} -1|\#of par \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Initial values of parameters. Default the current values. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{parmin} \tabto{3cm} -1|\#of par \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Optional minimum values of parameters. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{parmax} \tabto{3cm} -1|\#of par \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Optional maximum values of parameters. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{from} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  First observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Last observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed for each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{epilog} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \textcolor{teal}{TRANS} computed after going through data. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{variance} \tabto{3cm} 1|0 \tabto{5cm}  CODE \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If present the value of the code option gives the assumed 
+residual variance for each observation. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{missing} \tabto{3cm}  \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent If present then observations having \textcolor{teal}{y}-value greater than or eqaul to 1.7e19 are rejected. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{step} \tabto{3cm} -1|1  \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Initial step length. Default 1. 
+intercept is not considered. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{maxiter} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Maximum number of iterations, default 100. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{slow} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Criterion for stopping iterations due to slow improvement, default -0.1. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{tole} \tabto{3cm} -1|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Tolerance for checkking improvement, deafault 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{var} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  if \textcolor{blue}{var->} is present \textcolor{VioletRed}{nonlin}() generated matrix ]output\%var[ for 
+the variance-covariance matrix of the coeffcient estimates. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{corr} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  if \textcolor{blue}{corr->} is present \textcolor{VioletRed}{nonlin}() generated matrix ]output\%corr[ for 
+the correlation matrix of the coefficient estimates. Standard deviations 
+are put to the diagonal. 
+ 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{extra} \tabto{3cm}  \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If option is given, then the values of the regression function are not stored in to the data matrix columns 
+\textcolor{teal}{Regf} and \textcolor{teal}{Resid} even if these are present. This allows making several new regressions for the residuals of 
+an earlier regression. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{any} \tabto{3cm} -1|1 \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If data contains \textcolor{teal}{Regf} and \textcolor{teal}{Resid} then these variables are computed into data matrix also for 
+observations rejected due to \textcolor{blue}{filter->} or \textcolor{blue}{reject->} (and not due to missing values indicated 
+by absolute value greater or eqaul to .1.7d18). 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{loglike} \tabto{3cm} -1|1 \tabto{5cm}  CODE \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Log likelihood function whose value is printed but not otherwise utlized. 
+The user can use it to make loglikelihood tests manually. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+The transforamtion given in \textcolor{blue}{trans->} needs to have two consecutive rows \\ 
+\textcolor{VioletRed}{der}(par1,...,parn)\\ 
+f= function\_definition\\ 
+All the parameters given in \textcolor{blue}{par->} need to be included in \textcolor{VioletRed}{der}(), but \textcolor{VioletRed}{der}() can include also 
+other parameters. Thus it possible to estimate a closely overparameterized model in phases 
+just modifying \textcolor{blue}{par->} 
+\end{note} 
+\begin{note} 
+\textcolor{VioletRed}{der}(par1,...,parn) before f= produces derivative variables f\par1, ..., f\parn whose 
+behavior can be studies using the transformation given in \textcolor{blue}{trans->} 
+\end{note} 
+\begin{note} 
+Even if the correlation matrix of parameter estimated would be singular, 
+e.g. due to a corelation one, the estimation may succeed if the intercept is not 
+included in the model directly or implicitly. This is not generally known. 
+\end{note} 
+\begin{note} 
+If the \textcolor{teal}{DATA} contains variables Regr and \textcolor{teal}{Resid}, then the values of 
+the regression function and residuals are put into these columns. Space for these e 
+coluns can reserved with \textcolor{blue}{extra->} option in \textcolor{VioletRed}{data}() or in \textcolor{VioletRed}{newdata}() 
+\end{note} 
+\begin{note} 
+\textcolor{blue}{step->} needs to be given only if the the deafult value one produces arithmetic errors or 
+illogical values for the function. When the iterations is started properly, the step length 
+will be reduced according to the modified Gauss-Newton method if the current step lenght 
+produces increasing RMSE in the linear regression with respect the derivatives. 
+ 
+\end{note} 
+\begin{note} 
+If p is the probability of a binary variable and \textcolor{teal}{y} is the observed valu, either 1 or 0, 
+then \textcolor{blue}{loglike->}(\textcolor{teal}{y}*\textcolor{VioletRed}{log}(p)+(1-\textcolor{teal}{y})*\textcolor{VioletRed}{log}(1-p)) could be used. 
+\end{note} 
+\singlespacing 
+\begin{example}[nonlinex]\\ 
+\label{nonlinex} 
+\noindent {\color{ForestGreen}***generate vector 1...100}\\ 
+xm=\textcolor{VioletRed}{matrix}(100,\textcolor{blue}{do->})\\ 
+tr=\textcolor{VioletRed}{trans}()\\ 
+f=10*\textcolor{teal}{x}/(\textcolor{teal}{x}+5)-6\\ 
+\textcolor{teal}{y}=f+\textcolor{VioletRed}{rann}(0,2)\\ 
+/                                                     \\ 
+dat=\textcolor{VioletRed}{newdata}(xm,\textcolor{blue}{read->}\textcolor{teal}{x},\textcolor{blue}{maketrans->}tr)\\ 
+	!                                                                                                                \\ 
+\textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blue}{max->})\\ 
+\textcolor{teal}{x}\%min,\textcolor{teal}{x}\%max;\,\,{\color{ForestGreen}!these are utilized in classify}\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{plotyx}(\textcolor{teal}{y},\textcolor{teal}{x},\textcolor{blue}{show->}0)\\ 
+cl=\textcolor{VioletRed}{classify}(\textcolor{teal}{y},\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{dx->}5)\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{drawclass}(cl,\textcolor{blue}{se->},\textcolor{blue}{sd->},\textcolor{blue}{color->}\textcolor{teal}{Blue},\textcolor{blue}{append->},\textcolor{blue}{show->}0)\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(10*\textcolor{teal}{x}/(\textcolor{teal}{x}+5)-6),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{append->},\textcolor{blue}{width->}2,\textcolor{blue}{show->}0)<\\ 
+ 
+tr=\textcolor{VioletRed}{trans}()\\ 
+\textcolor{VioletRed}{der}(a,\textcolor{teal}{b},c)\\ 
+f=a*\textcolor{teal}{x}/(\textcolor{teal}{x}+\textcolor{teal}{b})-c\\ 
+/                                                                  \\ 
+a,\textcolor{teal}{b},c=6,3,-3\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(a*\textcolor{teal}{x}/(\textcolor{teal}{x}+\textcolor{teal}{b})-c),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{append->},\textcolor{blue}{width->}2,\textcolor{blue}{color->}\textcolor{teal}{Green},\textcolor{blue}{show->}0)\\ 
+nl=\textcolor{VioletRed}{nonlin}(\textcolor{teal}{y},f,\textcolor{blue}{trans->}tr,\textcolor{blue}{corr->},\textcolor{blue}{var->},\textcolor{blue}{par->}(a,\textcolor{teal}{b},c))\\ 
+nl\%corr;\\ 
+nl\%var;\\ 
+\textcolor{teal}{fig}=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}(a*\textcolor{teal}{x}/(\textcolor{teal}{x}+\textcolor{teal}{b})-c),\textcolor{teal}{x}->\textcolor{teal}{x},\textcolor{blue}{xrange->}(0,100),\textcolor{blue}{append->},\textcolor{blue}{width->}2,\textcolor{blue}{color->}\textcolor{teal}{Red},\textcolor{blue}{show->}0)\\ 
+\textcolor{teal}{Window}='500,500'\\ 
+font=']Arial,12['\\ 
+\textcolor{VioletRed}{show}(\textcolor{teal}{fig},\textcolor{blue}{xlabel->}'\textcolor{teal}{x}"font"',\textcolor{blue}{ylabel->}'f"font"',\textcolor{blue}{title->}'Estimation\,of\,rectangular\,hyperbola"font"')\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
+ 
+ 
 \subsection{\textcolor{VioletRed}{varcomp}() Variance and covariance components}\index{varcomp()} 
 \label{varcomp} 
-TO BE RAPORTED LATER, see old manual 
+ 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent output \tabto{3cm} 1 \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Name used to name associated output object 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{arg} \tabto{3cm}  -1- \tabto{5cm}  REALV \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  variables analyzed 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{class} \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Class variable. Class changes when varaible gets different value. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1-  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{from} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  First observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{until} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Last observation used. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{trans} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{TRANS} computed for each observation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{epilog} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{TRANS}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent \textcolor{teal}{TRANS} computed after going through data. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{cov} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  if \textcolor{blue}{cov->} is present \textcolor{VioletRed}{varcomp}() generates matrix ]output\%varb[ for 
+the variance-covariance matrix of the random class effects and ]output\%varw[ covariance matrix 
+for within-class effects. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{corr} \tabto{3cm} -1|0 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  if \textcolor{blue}{corr->} is present \textcolor{VioletRed}{varcomp}() generates matrix ]output\%corrb[ for 
+the correaltion matrix of the random class effects and ]output\%corrww[ correaltion matrix 
+for within-class effects. Standard deviations 
+are put to the diagonal. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{func} \tabto{3cm} -1|1 \tabto{5cm}  CODE \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If there are no arguments, the variance components are computed for the variable 
+generated with \textcolor{blue}{func->}. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+Using \textcolor{VioletRed}{eigen}() for the generated variance matrices, we can do principal component analysis both for 
+the between class and within class variance matrices. Sere the example. 
+\end{note} 
+\singlespacing 
+\begin{example}[varcompex]Variance components\\ 
+\label{varcompex} 
+\noindent classes=50\\ 
+bef=\textcolor{VioletRed}{matrix}(classes,4)\\ 
+col=\textcolor{VioletRed}{matrix}(classes)\\ 
+col=\textcolor{VioletRed}{rann}()\\ 
+bef(All,1)=col\\ 
+col=\textcolor{VioletRed}{rann}()\\ 
+bef(All,2)=0.2*bef(All,1)+1.3*col\\ 
+col=\textcolor{VioletRed}{rann}()\\ 
+bef(All,3)=0.1*bef(All,1)+0.3*bef(All,2)+0.2*col\\ 
+col=\textcolor{VioletRed}{rann}()\\ 
+bef(All,4)=0.3*bef(All,3)+0.8*col\\ 
+\textcolor{VioletRed}{mean}(bef);\\ 
+\textcolor{VioletRed}{sd}(bef);\\ 
+nobw=\textcolor{VioletRed}{matrix}(classes)\\ 
+tr=\textcolor{VioletRed}{trans}()\\ 
+\textcolor{VioletRed}{do}(i,1,classes)\\ 
+nobw(i)=\textcolor{VioletRed}{int}(\textcolor{VioletRed}{max}(\textcolor{VioletRed}{rann}(5,2),1))\\ 
+\textcolor{VioletRed}{enddo}\\ 
+/                           \\ 
+\textcolor{VioletRed}{call}(tr)\\ 
+nobtot=\textcolor{VioletRed}{sum}(nobw);\\ 
+datm=\textcolor{VioletRed}{matrix}(nobtot,5)\\ 
+tr=\textcolor{VioletRed}{trans}()\\ 
+iob=0\\ 
+\textcolor{VioletRed}{do}(i,1,classes)\\ 
+ 
+\textcolor{VioletRed}{do}(j,1,nobw(i))\\ 
+iob=iob+1\\ 
+datm(iob,1)=i\\ 
+e1=0.5*\textcolor{VioletRed}{rann}()\\ 
+datm(iob,2)=bef(i,1)+e1\\ 
+e2=0.4*e1+0.2*\textcolor{VioletRed}{rann}()\\ 
+datm(iob,3)=bef(i,2)+e2\\ 
+e3=0.1*e1+0.2*e2+0.2*\textcolor{VioletRed}{rann}()\\ 
+datm(iob,4)=bef(i,3)+e3\\ 
+e4=0.1*e1+0.2*e2+0.1*e3+0.2*\textcolor{VioletRed}{rann}()\\ 
+datm(iob,5)=bef(i,4)+e4\\ 
+\textcolor{VioletRed}{enddo}\\ 
+\textcolor{VioletRed}{enddo}\\ 
+/                           \\ 
+\textcolor{VioletRed}{call}(tr)\\ 
+dat=\textcolor{VioletRed}{newdata}(datm,\textcolor{blue}{read->}(stand,\textcolor{teal}{y1}...y4))\\ 
+\textcolor{VioletRed}{stat}()\\ 
+vc=\textcolor{VioletRed}{varcomp}(\textcolor{teal}{y1}...y4,\textcolor{blue}{class->}stand,\textcolor{blue}{cov->},\textcolor{blue}{corr->})\\ 
+vclist=\textcolor{Red}{;list}(vc\%?);\\ 
+@vclist;\\ 
+eib=\textcolor{VioletRed}{eigen}(vc\%varb)\\ 
+eib\%values;\\ 
+eib\%matrix;\\ 
+eiw=\textcolor{VioletRed}{eigen}(vc\%varw)\\ 
+eiw\%values;\\ 
+eiw\%matrix;\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \subsection{\textcolor{VioletRed}{classify}() Group means, variances and standard deviations}\index{classify()} 
 \label{classify} 
 Classifies data with respect to one or two variables, get class 
@@ -6693,7 +7322,7 @@ generate with \textcolor{VioletRed}{stat}(\textcolor{blue}{min->},\textcolor{blu
 \noindent \textcolor{blue}{min}  \tabto{3cm}  -1|0|1  \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  \textcolor{blue}{min->} indicates that row vector Output\%min is generated. First elements 
-tell teh class wise minimums, and the last element the total minimum. 
+tell the class wise minimums, and the last element the total minimum. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -6726,7 +7355,14 @@ tell the class wise maximums, and the last element the total maximum.
 divided into 7 classes. 
 \textcolor{blue}{minobs->} minimum number of observations in one class. Classes are merged so that this can 
 be obtained. Does not work if \textcolor{teal}{z}-> is present. 
-	! 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{err}  \tabto{3cm}  \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  If \textcolor{blue}{err->} is present, classisyy interprets that the classified variable is residual an print 
+and stores variables cl\%bias, cl\%RMSEadj, and  cl\%RMSE 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -7905,7 +8541,7 @@ in plane curves.
 \vspace{0.3cm} 
 \noindent \textcolor{blue}{xrange} \tabto{3cm} 0-4 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  Range for the \textcolor{teal}{x}-variable. If there are now arguments \textbf{Jlp22} tries to 
+\noindent  Range for the \textcolor{teal}{x}-variable. If the option does not exist or there are no arguments \textbf{Jlp22} tries to 
 find variables var\%min and var\%max which where computed with \textcolor{VioletRed}{stat}() with options \textcolor{blue}{min->} 
 and \textcolor{blue}{max->}. If there is need to define a smaller range for computing the values as wished 
 for the \textcolor{teal}{x}-axes, then the figure is first made for the range given in \textcolor{blue}{xrange->} and then the new 

@@ -130,11 +130,22 @@
 ! The corrections of errors are not described in detail. The first version of Jlp22 contains so many new properties that also old users 
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.txt.
-!Version *.8  Paper Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
+
+!Version March 30, 2025   Paper Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
 ! Economy Using Prices for Sawn Wood and
 ! Chips in Reference Bucking' is now available at DOI: 10.4236/ojf.2024.143015
-! A video in Finnish is available at 
-! https://youtu.be/v5yRttf6qHM
+! github.com/juhalappi/jlp22  contains scripts for doing all computations of the paper. I have not
+! tested if everything works with the new version.
+! A dangerous property of matrix computations is removed. If A was a matrix, then code A=7 put
+! each element of A equal to 7. Now A=7 means that A is made REAL object with value 7. Using 
+! A=0 can be used instead delete_o(A) which was needed before to make a MATRIX object REAL. All 
+! elements can be made equal to 7 with code A()=7. If x is REAL, then the value can be used also with
+! x(1) ,and the value can be set using x(1)= or x(1,1)=.This is useful when working with matrices 
+! with varying sizes, including matrix with one element. The new version has function bspline() wich allows 
+!to use bspile basis functions as regressor variables in linear regression. The manual now describes
+! now function nonlin() for nonlinear regression and function varcomp() which can be used to
+! compute variance and covariance components.
+
 !Version 6.11.2024. Some bugs are corrected and some additions made. it is not tested whether all exaples can be run.
 ! This version is put into Github so that Reetta can start testing with newest version.
 !Version 8.8.2024 A bug in making active set was corrected. This bug caused that some schedules which should be
@@ -144,7 +155,7 @@
 
 !Version 17.6, 2024 Github folder Stem contains data and the script needed to compute results in paper: Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
 ! Economy Using Prices for Sawn Wood and
-! Chips in Reference Bucking' to be  published within few days in Open Journal of forestry. 
+! Chips in Reference Bucking'.  to be  published within few days in Open Journal of forestry. 
 ! I'm now puclishing this version in a slightly premature phase to make the computations possible repeating the figures
 ! of the paper. 
 ! The script file shows several
@@ -433,7 +444,8 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  ! optimization. When I wrote to Luke that I will not send the bug correction without an explicit
  ! co-operation agreement, Luke rejected explicitly cooperation
  ! in the publication or in the development of 
- ! the software.
+ ! the software. This meant e.g. that Luke planned to publish the manual where I would be the 
+ ! first author without my involvement.
  
  !When Lauri Mehtätalo became a professor in Luke, he was able to mediate negotiations between me and Luke.
  ! The co-operation agreement was signed 7.10. 2021, in the 100 years celebration of NFI in  Kings Hall
@@ -449,7 +461,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  ! I was told in Olavinlinna that there has actually been no disagreement
 ! between me and Luke in this process.
  ! As I could not accept the interpretation that I had fighted six and half years against wind mills, 
- ! I described in previous versions some details of the process and listed all the
+ ! I described in previous versions some details of the process and listed all the ten
  ! leaders who participated in the process. This kept my bitterness
 ! alive which was unfortunate for my peace of mind and also because
 ! I knew well how pathetic old bitter men are. After some recent rounds of opposite argumentation, the research director
@@ -1213,12 +1225,13 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
 ! After deleting an object, the name refers to a real variable (which is 
 ! initialized by the delete_o() function into zero).
 !endheader
-!Note  Other objects except matrices can equivalently be deleted by giving 
+!Note  Objects  can equivalently be deleted by giving 
 ! command
 ! obj1,...,objn = 0
 ! This is because the output objects of any functions are first deleted before 
 ! defining them anew. Usually an object is automatically deleted if the object 
-! name is as an output object for other functions.
+! name is as an output object for other functions. This workes now also for MATRIX objects.
+! All elements of a MATRIX can be set to a value using A()= x, where x is REAL.
 !endnote
 !Note One can see how much memory each object is using print(Names).
 !endnote
@@ -2075,7 +2088,7 @@ $$=300
 ! plotyx(H,D,continue->fcont) !arguments of the function are variables
 ! h=matrix(5,5);
 !h=rann();
-!g=matrix(5,do->5);
+!g=matrix(5,5,do->5);
 ! c = inverse(h+t(g)); ! The argument can be intermediate result from matrix computations.
 !endex
 ! endsection

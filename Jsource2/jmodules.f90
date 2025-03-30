@@ -70,33 +70,35 @@ module jmod
 	integer, parameter :: j_nfspec=9
 	integer, parameter :: j_nfobj=6
 	integer, parameter :: j_nftrans=5
-	integer, parameter :: j_nfloop=18
-	integer, parameter :: j_nfoper=19
+	integer, parameter :: j_nfloop=18  !38
+	integer, parameter :: j_nfoper=19  !57
 	integer, parameter :: j_nfarit=34
 	integer, parameter :: j_nfarit2=5
-	integer, parameter :: j_nfdist=5  !distributions
+	integer, parameter :: j_nfdist=6  !distributions
 	integer, parameter :: j_nfran=7  !random
 	integer, parameter :: j_nfinter=3 !interpola
 	integer, parameter :: j_nflist=11  !list function
 	integer, parameter :: j_nftex=3  !text and char
 	integer, parameter :: j_nffile=8  !file
 	integer, parameter :: j_nfio=7  ! io
-	integer, parameter :: j_nfmatr=23  !matrix
+	integer, parameter :: j_nfmatr=24  !matrix
 	integer, parameter :: j_nfdata=14  !data functions
 	integer, parameter :: j_nfstat=13  !stat
 	integer, parameter :: j_nfjlp=22 !jlp
 	integer, parameter :: j_nfsimu=6 !
 	integer, parameter :: j_nffig=8!   figures
-	integer, parameter :: j_nfspli=10 ! tautspline..
+	integer, parameter :: j_nfspli=11 ! tautspline..
 	integer, parameter :: j_nfbit=7 !
 	integer, parameter :: j_nfmisc=11!
- 
+	!if(iv.gt.fboper.and.iv.le.j_fboper+7.and.node(nn-1).gt.j_fboper+7.and.node(nn-1).lt.j_fboper+19
+	!	if(iv.ge.39.and.iv.lt.46.and.node(nn-1).ge.46.and.node(nn-1).le.54)then     !hmult  .eq.
+	!							write(6,*)'*order of matehematical and logical operations is unclear, use parenthesis'
 	integer, parameter :: j_fbspec=0   !basis
-	integer, parameter :: j_fbobj=j_fbspec+j_nfspec
-	integer, parameter :: j_fbtrans=j_fbobj+j_nfobj
-	integer, parameter :: j_fbloop=j_fbtrans+j_nftrans
-	integer, parameter :: j_fboper=j_fbloop+j_nfloop
-	integer, parameter :: j_fbarit=j_fboper+j_nfoper
+	integer, parameter :: j_fbobj=j_fbspec+j_nfspec  !9
+	integer, parameter :: j_fbtrans=j_fbobj+j_nfobj  !15
+	integer, parameter :: j_fbloop=j_fbtrans+j_nftrans !20
+	integer, parameter :: j_fboper=j_fbloop+j_nfloop  !38
+	integer, parameter :: j_fbarit=j_fboper+j_nfoper  !
 	integer, parameter :: j_fbarit2=j_fbarit+j_nfarit
 	integer, parameter :: j_fbdist=j_fbarit2+j_nfarit2
 	integer, parameter :: j_fbran=j_fbdist+j_nfdist
@@ -223,7 +225,7 @@ module jmod
 		'der','gamma','loggamma','logistic','npv', & !5
  
 		! Probability distributions
-		'pdf','cdf','bin','negbin','density', &  !5
+		'pdf','cdf','bin','negbin','density','kolmo', &  !5
  
 		!Random numbers
 		'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select','random', & !6
@@ -246,7 +248,7 @@ module jmod
 		!! Matrices
 		'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder', &
-		'fill', 'vector','flip',& !23
+		'fill', 'vector','flip','covmatrix',& !24
  
 		!! Data functions
 		'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !13
@@ -268,7 +270,7 @@ module jmod
  
 		!! Splines, stem splines,  and volume functions
 		'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt', 'cumvol','polar',& ! 10
- 
+		'bspline',&
 		!! Bit function
 		'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
  
@@ -303,8 +305,8 @@ module jmod
 		1,1,1,1,2,&
 		! 'der','gamma','loggamma','logistic','npv', & !5
  
-		1,1,2,2,0,&
-		! 'pdf','cdf','bin','negbin', 'density' ,&  !4
+		1,1,2,2,0,2,&
+		! 'pdf','cdf','bin','negbin', 'density' ,'kolmo',&  !4
  
 		0,0,0,1,2,1,1,&
 		! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
@@ -324,10 +326,10 @@ module jmod
 		3,2,0,0,1,1,1,&
 		! 'read','write','print','ask','askc','printresult','printresult2', & ! 7 j_fbio
  
-		0,4*1,2,12*1,1,1,1,1,1,&
+		0,4*1,2,12*1,1,1,1,1,1,1,&
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix', 'matrixborder',
-		! 'fill','vector','flip', & !21
+		! 'fill','vector','flip','covmatrix', & !21
  
 		0,0,0,2,2,0,0,0,0,0,0,1,0,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
@@ -348,8 +350,10 @@ module jmod
 		0,0,1,0,1,1,1,2,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d', gnuplot,tics& ! 6
  
-		1,2,2,2,2,2,0,5,1,1,&     !calle,lmin,lmax,dmin,gam,b
-		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt, 'cumvol', & ! 6
+		1,2,2,2,2,1,0,5,1,1,&
+		!'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve','stemopt, 'cumvol', & ! 10
+		1, &
+		!bspline
  
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
@@ -386,8 +390,8 @@ module jmod
 		99,1,1,1,9999,&
 		! 'der','gamma','loggamma','logistic','npv', & !5
  
-		3,3,3,3,1,&
-		! 'pdf','cdf','bin','negbin', 'density' ,&  !4
+		3,3,3,3,1,2,&
+		! 'pdf','cdf','bin','negbin', 'density' ,'kolmo',&  !4
  
 		0,2,1,2,2,2,1,&
 		! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
@@ -407,10 +411,10 @@ module jmod
 		9999,9999,9999,1,1,9999,999999,&
 		! 'read','write','print','ask','askc','printresult','printresult2', & ! 6 j_fbio
  
-		4,4*1,2,12*1,1,1,1,9999,1,&
+		4,4*1,2,12*1,1,1,1,9999,1,1,&
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder',
-		! 'fill','vector','flip',& ! 21
+		! 'fill','vector','flip','covmatrix',& ! 24
  
 		0,999,0,2,2,1,9999,1,0,0,999,1,0,0,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
@@ -430,8 +434,10 @@ module jmod
 		2,0,1,9999,50,1,1,9999,&
 		! 'plotyx','draw','drawclass', 'drawline','show','plot3d','gnuplot' ,tics& ! 8
  
-		1,2,2,2,2,2,9999,6,3,9999, & !calle,lmin,lmax,dmin,gam,b
-		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',stemopt,'cumvol',  & ! 9
+		1,2,2,2,2,999999,9999,6,3,9999,& !calle,lmin,lmax,dmin,gam,b
+		! 'tautspline','stemspline','stempolar','laasvol','laaspoly','integrate','stemcurve',stemopt,'cumvol',  & ! 11
+		99999,  &
+		!bspline
  
 		2,1,1,1,0,2,1,&
 		! 'setbits','clearbits','getbit','getbitch','bitmatrix','setvalue','closures', & ! 7
@@ -443,7 +449,7 @@ module jmod
  
  
  
-	!20140602 namedobjarg
+	!20140602 namedobjargxx+?+bv
 	integer,parameter::j_ninout=1
 	character*(j_lenfunction), dimension(j_ninout)::j_inout
 	data j_inout/'putlist('/
@@ -462,7 +468,7 @@ module jmod
 	! 'tracetest','corr','cov','exist','eigen','getmatrix','xkf','envelope','varcomp','loadmatrix',& ! 51-60
 	! 'storematrix',	'utf8','classvector','newdata'/ !61-
  
-	! integer,parameter ::  j_nunknownfuncarg=2 !!%%function functions which can have
+	! integer,parameter ::  j_nunknownfuncarg=2 !!%function functions which can have
 	! ! ! !                              unknown objects as arguments
  
 	! integer, dimension(j_nunknownfuncarg)::j_unknownfuncarg
@@ -470,7 +476,7 @@ module jmod
 	integer,dimension(j_nnamedfuncarg):: j_needsnamed
  
 	!free options free$
-	parameter (j_noptions_=240) !!!option number of j_ options
+	parameter (j_noptions_=241) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 		'extraup','extra','mean', 'min','max',& ! 1-10
@@ -496,7 +502,8 @@ module jmod
 		'basis','condition','fastdif','marksize','keepopen','periodvars','up','maxiter','ilist',&
 		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange','param','code','case', &
 		'maxobs','pointsonly','obj','seq','fast','write','down','buffer','multiplot',&
-		'npoints','unset','notset','xtics','ytics','logs','to','u','urange','tan'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
+		'npoints','unset','notset','xtics','ytics','logs','to','u','urange','tan', &
+		'maxcorr'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -538,6 +545,7 @@ module jmod
 	parameter (j_mmaxobs=222,j_mpointsonly=223,j_mobj=224,j_mseq=225,j_mfast=226,j_mwrite=227,j_mdown=228)
 	parameter (j_mbuffer=229,j_mmultiplot=230,j_mnpoints=231,j_munset=232,j_mnotset=233,j_mxtics=234,j_mytics=235)
 	parameter (j_mlogs=236,j_mto=237,j_mu=238,j_murange=239,j_mtan=240)
+	parameter (j_mmaxcorr=241)
 	integer,parameter :: j_nnamedoptarg=55
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
  
@@ -563,13 +571,13 @@ module jmod
 		/
  
 	!object types
-	integer, parameter :: j_notypes= 26 !!!objecttypes
+	integer, parameter :: j_notypes= 27 !!!objecttypes
  
 	character*(j_lenobjecttype), dimension (1:j_notypes)::j_otypes !=(/ &
 	data j_otypes/ & !%%objecttypes
 		'REAL','CHAR','SEQ','LIST','MATRIX','MATRIXS','TRANS','TABLE','LISTI','TXT', & !1-10
 		'STEMSPLINE','TEXT','DATA','PROB','FIG','SMOOTH','STECURVE','REGR','BITMATRIX','PIECEWISE',& !11-20
-		'STEMOPT','REAL2','free','LAASPOLY','TAUTSPLINE','NEIGTABLE'/
+		'STEMOPT','REAL2','free','LAASPOLY','TAUTSPLINE','NEIGTABLE','BSPLINE'/
  
 	integer, dimension (1:j_notypes)::j_lotypes
  
@@ -703,7 +711,7 @@ module jmod
 	parameter (j_iplist2=3)  !r
 	parameter(j_iplist=4 )    ! type for variable lists
 	parameter(j_ipmatrix=5 )     !matrix
-	parameter(j_ipmatrixs=6)  !singel precsion matrix
+	parameter(j_ipmatrixs=6)  !single precision matrix
 	parameter (j_matreg=1,j_matclass=2,j_matdiag=3,j_matfreq=4,j_matseq=5,j_mati=6)
  
 	!parameter(j_IPRANDOM=6 )     ! random number generator coefficients
@@ -728,6 +736,7 @@ module jmod
 	parameter (j_iplaaspoly=24)
 	parameter (j_iptautspline=25)
 	parameter (j_ipneigtable=26)
+	parameter (j_ipbspline=27)
  
 	!!module filemod
 	parameter (j_mxunits=23) !max number of units simultaneosuly open
@@ -915,9 +924,10 @@ module jmod
 	integer,parameter::j_ivincfilenames=81
 	integer,parameter::j_ivinvector=82
 	integer,parameter::j_ivoutlist=83
+	integer,parameter::j_ivbar=84
 	!integer,parameter::j_ivincfiles=82
 	!integer,parameter::j_ivvarfor=81
-	integer,parameter::j_predefined=83
+	integer,parameter::j_predefined=84
  
 	integer ::p_fastmakes
  
@@ -1147,7 +1157,7 @@ module jmod
 	integer, dimension(:),allocatable::j_traceline,j_traceiv,j_traceii
 	integer,parameter::j_txtlen=160
 	character*160,dimension(:),allocatable::j_temptxt
-	double precision,dimension(:),allocatable::j_tempvector
+	!	double precision,dimension(:),allocatable::j_tempvector
 	double precision,dimension(:),allocatable::j_tempvector2
 	real,dimension(:),allocatable::j_tempvectors
 	integer,dimension(:),allocatable::j_itempvector,j_itempvector2,j_itempvector3
@@ -2621,10 +2631,10 @@ module jmod
 			integer,optional,intent(out)::nval
 		end subroutine !subroutine j_startfunction(iob,io,iptype,expand,narg,arg,ivout)
  
-		subroutine j_command(commandline,passoptions) !execute single !!function from within other function (!!basic)
+		subroutine j_command(commandline,passoptions,noprint) !execute single !!function from within other function (!!basic)
  
 			character*(*), intent(in):: commandline
-			logical, optional ::   passoptions   ! are options passed through this J-command
+			logical, optional ::   passoptions,noprint   ! are options passed through this J-command
 		end subroutine !subroutine j_command(commandline)
  
 		! subroutine j_getcommandbuf(ivcommandbuf)
@@ -3725,6 +3735,7 @@ module jmod
 			integer,optional,dimension(:), intent(in):: list
 			integer,optional,dimension(:), intent(in):: listold
 			integer,optional, intent(in):: nres
+			!		integer,optional,dimension(:), intent(in):: extra
 			logical,optional,intent(in)::expand
 			integer,optional,intent(in)::ivin
 			logical,optional,intent(in)::ilist !make ilist object
@@ -3847,10 +3858,10 @@ module jmod
 		end function !function j_inlist3(i,list,list0)
  
 		!putlist0(i,list) : put i into list, no bound checking
-		function j_putlistobject(ivlist,single,list0,list,ivin,ignored,append)
+		function j_putlistobject(ivlist,single,list,ivin,ignored,append)
 			integer,intent(in)::ivlist
 			integer,optional,intent(in)::single
-			integer,optional,intent(in)::list0
+			!	integer,optional,intent(in)::list0
 			integer,dimension(:),optional,target,intent(in)::list
 			integer,optional,intent(in)::ivin  !list object
 			logical,optional,intent(in)::ignored  !list object
@@ -4027,8 +4038,9 @@ module jmod
 		end function !logical function j_ischarconst(iv)
  
 		!isconst(name) : 0 =is not, -1 looks like but is not
-		function j_isconst(name)
+		function j_isconst(name,next)
 			character*(*), intent(in):: name
+			character*1,optional,intent(in)::next
 			!	logical, optional,intent(in)::silent
 		end function !function j_isconst(name)
  
@@ -4065,6 +4077,14 @@ module jmod
 			integer*8,optional :: nobssub
  
 		end function j_isupdata
+ 
+		subroutine j_getbspline(get,imat,narg1,ivarg)
+			!makes a list from character variable inp which contains the names of objects separated with commas			character*(*), intent(in):: name
+			logical,intent(in)::get
+			integer,intent(in)::narg1,ivarg,imat
+ 
+			!		integer, intent(out):: ivout
+		end subroutine j_getbspline
  
  
  

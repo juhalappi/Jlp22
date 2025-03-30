@@ -6,6 +6,7 @@ FC = gfortran
 # FCFLAGS = -ggdb -O0 -pg -fcheck=all -g -fbacktrace      -pg produces gmon.out
 
 FCFLAGS = -ggdb -O0 -fcheck=all -g -fbacktrace  -fmax-errors=6 
+#-fsanitize=address,undefined
 #-Wuninitialized -O2
 
 #FCFLAGS = -ggdb -O0 -fbounds-check  -pg -fcheck=all -g -fbacktrace 

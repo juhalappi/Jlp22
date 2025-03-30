@@ -349,7 +349,8 @@ subsection sd sd() standard deviation of matrix elements
 subsection minloc minloc() location of minimum value
 subsection maxloc maxloc() location of maximum value 
 subsection cumsum cumsum(): cumulative sum
-subsection corrmatrix corramtrix() correlation matrix from variance matrix
+subsection corrmatrix corrmatrix() correlation matrix from variance matrix
+subsection covmatrix covmatrix() Covariance matrix from correaltion matrix
 subsection matrixborder matrixborder() puts header values on top and/or left
 subsection fill
 !
@@ -376,6 +377,7 @@ subsection stat stat():computing minimums, maximums, means and standard deviatio
 subsection cov cov(): covariance MATRIX
 subsection corr corr(): correlation MATRIX
 subsection regr regr(): linear regression, also stepwise linear regression, produces REGR object
+subsection bspline bspline() Bsplines
 !!subsection mse mse(): mse of a REGR-object
 !!subsection rmse rmse(): rmse of a REGR object
 !!subsection coef coef(): coefficient of variable in REGR object
