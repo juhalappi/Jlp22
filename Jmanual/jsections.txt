@@ -131,6 +131,17 @@
 !should look at the manual. All the examples of the manual should now go through using ALL in running
 ! jexamples.txt.
 
+!Version October 13, 2025
+! Function addtodata() can add new columns to data matrix. This is handy when new columns can done using 
+!matrix operations instead by computing observation by observation. Function kolmo() can compute Kolmogorov-Smirnov statistic after
+! using classify) function to compute class frequencies. An unjustified error asking to use parenthesis to specify
+! order of logical and arithmetic aoperations is corrected.
+! If a command at command prompt is give in form output==  , then the output is protected,
+! and it can be changed only after unprotecting it with unprotect() function.
+!This may not work for all functions.
+! Function monotone() makes picewise linear function monotone. Some addtional protection against user errors is done,
+! and some bugs are corrected.
+
 !Version March 30, 2025   Paper Juha Lappi (2024) 'From Finnish Assortment Pricing to Market
 ! Economy Using Prices for Sawn Wood and
 ! Chips in Reference Bucking' is now available at DOI: 10.4236/ojf.2024.143015
@@ -461,7 +472,7 @@ to be printed is a TRANS object, the trasformation is computed. The objective in
  ! I was told in Olavinlinna that there has actually been no disagreement
 ! between me and Luke in this process.
  ! As I could not accept the interpretation that I had fighted six and half years against wind mills, 
- ! I described in previous versions some details of the process and listed all the ten
+ ! I described in previous versions some details of the process and listed all the 
  ! leaders who participated in the process. This kept my bitterness
 ! alive which was unfortunate for my peace of mind and also because
 ! I knew well how pathetic old bitter men are. After some recent rounds of opposite argumentation, the research director
@@ -1844,6 +1855,12 @@ $$=300
 ! stored then the output is a compound object. An objects to which there is a link, is called a subobject.
 ! Objects without such links are called side objects. For instance linear programming function jlp()
 ! does not produce any object with name ]Output[ just several side objects. 
+
+!\item If a code line is in form \\
+! Output== ...\\
+!Then the output will be protected and it's value cannot be changed without
+! unprotecting it using unprotect() function. This is handy for defining objects
+!which are used as parameters or constants. Thius May not yet work for all functions.
 
 ! \item The expression \\
 ! func()\\

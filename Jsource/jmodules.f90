@@ -77,13 +77,13 @@ module jmod
 	integer, parameter :: j_nfdist=6  !distributions
 	integer, parameter :: j_nfran=7  !random
 	integer, parameter :: j_nfinter=3 !interpola
-	integer, parameter :: j_nflist=11  !list function
+	integer, parameter :: j_nflist=12  !list function
 	integer, parameter :: j_nftex=3  !text and char
 	integer, parameter :: j_nffile=8  !file
 	integer, parameter :: j_nfio=7  ! io
-	integer, parameter :: j_nfmatr=24  !matrix
-	integer, parameter :: j_nfdata=14  !data functions
-	integer, parameter :: j_nfstat=13  !stat
+	integer, parameter :: j_nfmatr=25  !matrix
+	integer, parameter :: j_nfdata=15  !data functions
+	integer, parameter :: j_nfstat=14  !stat
 	integer, parameter :: j_nfjlp=22 !jlp
 	integer, parameter :: j_nfsimu=6 !
 	integer, parameter :: j_nffig=8!   figures
@@ -128,6 +128,8 @@ module jmod
 	! 'GT','NOT','AND','OR','EQV','NEQV','POWER', & !19
  
 	!inout functions
+	integer,parameter::j_fprotect=j_fbobj+5
+	integer,parameter::j_funprotect=j_fbobj+6
 	integer,parameter::j_fputlist=j_fblist+8
  
 	!Arithmetic and logical operations after converting to the polish notation
@@ -234,7 +236,8 @@ module jmod
 		'interpolate','plane','bilin', & !3
  
 		!!! List functions
-		'list','merge','difference','index','index_o','len','ilist','putlist','table','fromlist','list2sym',& ! 11
+		'list','merge','difference','index','index_o','len','ilist','putlist','table','fromlist',&
+		'list2sym','intersection', &! 12
  
 		!! text and character
 		'text','txt','char', & !3  text is old txt new
@@ -248,14 +251,15 @@ module jmod
 		!! Matrices
 		'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder', &
-		'fill', 'vector','flip','covmatrix',& !24
+		'fill', 'vector','flip','covmatrix','monotone',& !25
  
 		!! Data functions
 		'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !13
-		'joindata','splitdata','partdata','find_d',&
+		'joindata','splitdata','partdata','find_d','addtodata',&  !15
+ 
 		!! Statistical functions
 		'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
-		'varcomp', 'classify', 'class', & !13
+		'varcomp', 'classify', 'class', 'fractile',& !14
  
 		!! Linear programming
 		'problem','jlp','weights','unit','schedcum','schedw','weight','partweights','partunit','partschedcum', &
@@ -311,11 +315,12 @@ module jmod
 		0,0,0,1,2,1,1,&
 		! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
  
-		2,4,4,&
+		2,11,10,&
 		! 'interpolate','plane','bilin', & !3
  
-		0,1,2,1,1,1,1,2,2,2,2,&
-		! 'list','merge','difference','index','index_o','len','ilist','putlist','table','fromlist','list2sym',& ! 10
+		0,1,2,2,1,1,1,2,2,2,2,2,&
+		! 'list','merge','difference','index','index_o','len','ilist','putlist','table','fromlist',
+		! 'list2sym','intersection' & ! 12
  
 		0,0,1, &
 		! 'text','txt','char', & !2  text is old txt new
@@ -326,18 +331,18 @@ module jmod
 		3,2,0,0,1,1,1,&
 		! 'read','write','print','ask','askc','printresult','printresult2', & ! 7 j_fbio
  
-		0,4*1,2,12*1,1,1,1,1,1,1,&
+		0,4*1,2,12*1,1,1,1,1,1,1,1,&
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix', 'matrixborder',
-		! 'fill','vector','flip','covmatrix', & !21
+		! 'fill','vector','flip','covmatrix','monotone',	& !25
  
-		0,0,0,2,2,0,0,0,0,0,0,1,0,0,&
+		0,0,0,2,2,0,0,0,0,0,0,1,0,0,1,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
-		!linkdata2,splitdata,partdata,editdata
+		!'joindata','splitdata','partdata','find_d','addtodata'
  
-		0,1,1,1,1,1,2,1,1,2,  0,0,1,&
+		0,1,1,1,1,1,1,1,1,2,  0,0,1,2,&
 		! 'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
-		! 'varcomp', 'classify', 'class', & !13
+		! 'varcomp', 'classify', 'class', 'fractile',& !14
  
 		0,0,0,4*1,0,10*1,2,0,1,0,&
 		! 'problem','jlp','weights','unit','schedcum','schedw','weight','partweights','partunit','partschedcum', &
@@ -396,11 +401,12 @@ module jmod
 		0,2,1,2,2,2,1,&
 		! 'ran', 'rann', 'ranpoi', 'ranbin', 'rannegbin','select', 'random',& !6
  
-		9999,4,4,&
+		9999,11,10,&
 		! 'interpolate','plane','bilin', & !3
  
-		99999,9999,2,2,2,1,99999,2,2,2,2,&
-		! 'list','merge','difference','index','index_o','len','ilist','putlist','table','fromlist','list2sym',& ! 10
+		99999,9999,2,2,2,1,99999,2,2,2,2,2,&
+		! 'list','merge','difference','index','index_o','len','ilist','putlist','table','fromlist',
+		! 'list2sym','intersection',& ! 10
  
 		0,0,2, &
 		! 'text','txt','char', & !2  text is old txt new
@@ -411,17 +417,18 @@ module jmod
 		9999,9999,9999,1,1,9999,999999,&
 		! 'read','write','print','ask','askc','printresult','printresult2', & ! 6 j_fbio
  
-		4,4*1,2,12*1,1,1,1,9999,1,1,&
+		4,4*1,2,12*1,1,1,1,9999,1,1,999999,&
 		! 'matrix','nrows','ncols','t','inverse','solve', 'qr','eigen','sort','envelope', &
 		! 'find','mean','sum','var','sd','minloc','maxloc','cumsum','corrmatrix','matrixborder',
-		! 'fill','vector','flip','covmatrix',& ! 24
+		! 'fill','vector','flip','covmatrix','monotone',& ! 25
  
-		0,999,0,2,2,1,9999,1,0,0,999,1,0,0,&
+		0,999,0,2,2,1,9999,1,0,0,999,1,0,0,9999,&
 		! 'data','newdata','exceldata','linkdata','getobs','nobs', 'classvector','values', 'transdata','datawcase',& !10
-		!joindata,splitdata,partdata
-		9999,99999,99999,99999,1,1,2,1,2,2,  99999,99999,1,&
+		!'joindata','splitdata','partdata','find_d','addtodata'
+ 
+		9999,99999,99999,99999,1,1,2,1,2,2,  99999,99999,1,999,&
 		! 'stat','cov','corr', 'regr','mse','rmse','coef','r2','se','nonlin', &
-		! 'varcomp', 'classify', 'class', & !13
+		! 'varcomp', 'classify', 'class','fractile, & !14
  
 		0,0,0,4*1,0,11*1,0,1,0,&
 		! 'problem','jlp','weights','unit','schedcum','schedw','weight','partweights','partunit','partschedcum', &
@@ -476,7 +483,7 @@ module jmod
 	integer,dimension(j_nnamedfuncarg):: j_needsnamed
  
 	!free options free$
-	parameter (j_noptions_=241) !!!option number of j_ options
+	parameter (j_noptions_=243) !!!option number of j_ options
 	character*(j_lenoption) :: j_options(j_noptions_) !!!option names of options
 	data j_options/'read','in','form','values','data','maketrans','trans', &
 		'extraup','extra','mean', 'min','max',& ! 1-10
@@ -503,7 +510,7 @@ module jmod
 		'nrowtot','showdomain','knn','newup','xfunc','xfuncrange','param','code','case', &
 		'maxobs','pointsonly','obj','seq','fast','write','down','buffer','multiplot',&
 		'npoints','unset','notset','xtics','ytics','logs','to','u','urange','tan', &
-		'maxcorr'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
+		'maxcorr','hrange','strict'/ !171 - !j_mrfhead=168,j_mrfcode=169,j_mrfuphead=170
  
 	!index for each option corresponds to j_options(j_noptions_) above %%option
 	parameter (j_mread=1,j_min=2,j_mform=3,j_mvalues=4,j_mdata=5,j_mmaketrans=6,j_mtrans=7)
@@ -545,7 +552,7 @@ module jmod
 	parameter (j_mmaxobs=222,j_mpointsonly=223,j_mobj=224,j_mseq=225,j_mfast=226,j_mwrite=227,j_mdown=228)
 	parameter (j_mbuffer=229,j_mmultiplot=230,j_mnpoints=231,j_munset=232,j_mnotset=233,j_mxtics=234,j_mytics=235)
 	parameter (j_mlogs=236,j_mto=237,j_mu=238,j_murange=239,j_mtan=240)
-	parameter (j_mmaxcorr=241)
+	parameter (j_mmaxcorr=241,j_mhrange=242,j_mstrict=243)
 	integer,parameter :: j_nnamedoptarg=55
 	character*(j_lenoption), dimension(j_nnamedoptarg)::j_namedoptarg
  
@@ -577,7 +584,7 @@ module jmod
 	data j_otypes/ & !%%objecttypes
 		'REAL','CHAR','SEQ','LIST','MATRIX','MATRIXS','TRANS','TABLE','LISTI','TXT', & !1-10
 		'STEMSPLINE','TEXT','DATA','PROB','FIG','SMOOTH','STECURVE','REGR','BITMATRIX','PIECEWISE',& !11-20
-		'STEMOPT','REAL2','free','LAASPOLY','TAUTSPLINE','NEIGTABLE','BSPLINE'/
+		'STEMOPT','REAL2','POINTER','LAASPOLY','TAUTSPLINE','NEIGTABLE','BSPLINE'/
  
 	integer, dimension (1:j_notypes)::j_lotypes
  
@@ -608,7 +615,7 @@ module jmod
 	integer,dimension(:),allocatable::j_sparsen,j_sparsekeep
 	double precision,dimension(:),allocatable::j_sparseval
 	integer j_nsparseval
- 
+	logical ::j_ingetobs=.false.
  
 	integer :: j_nu
 	!	logical :: j_wdollar
@@ -732,7 +739,7 @@ module jmod
 	parameter (j_ippiecewise=20)
 	parameter (j_ipstemopt=21)
 	parameter (j_ipreal2=22)
-	parameter (j_iptraceset=23)
+	parameter (j_ippointer=23)
 	parameter (j_iplaaspoly=24)
 	parameter (j_iptautspline=25)
 	parameter (j_ipneigtable=26)
@@ -799,6 +806,7 @@ module jmod
 	integer,parameter ::j_mxrecursion=100
 	integer,dimension(j_mxrecursion)::j_curline
 	integer ::j_recursion=0
+ 
  
 	! integer ivdebug  ! ??
  
@@ -1010,7 +1018,9 @@ module jmod
 	integer,parameter ::j_gpsett=1
 	integer,parameter:: j_gpunsett=2
 	integer,parameter ::j_gpplot=3
+	!	integer::j_gpnplots
 	integer,parameter::j_gplabel=4
+	character*6::j_gpdbl='$d    '
  
 	! integer,parameter :: j_gpgnu=5
 	! integer,parameter ::j_gptitle=6
@@ -1198,9 +1208,9 @@ module jmod
 	integer::j_dnkeep,j_divkeep,j_dimatup,j_divkeepup,j_dnkeepup,j_divnobsw
 	!integer::j_dnkeep,j_divkeep,j_dimatup,j_divkeepup,j_dnkeepup,j_divnobsw
 	integer::j_divobsup,j_divobsw,j_divobs,j_diob,j_dobsup
-	logical::j_disup,j_distrans,j_disreject,j_disfilter,j_disprint=.false.
+	logical::j_disup,j_distrans,j_disreject,j_disfilter
 	integer*8::j_dfrom,j_duntil,j_diba,j_dibaup,j_dnextobs
-	integer ::j_dprint,j_depilog
+	integer ::j_depilog
 	integer,dimension(:),pointer::j_dkeep,j_dkeepup
 	double precision, dimension(:),pointer::j_dmatup,j_dmat
 	logical :: j_isnobs=.false.
@@ -2571,8 +2581,8 @@ module jmod
 			integer,intent(in)::io
 		end subroutine !subroutine j_copy(iob,io)
 		subroutine j_copy2(irg,iout)   !makes a copy of an object
-			integer,intent(in)::irg
-			integer,intent(out)::iout
+			integer,intent(in)::irg,iout
+			!		integer,intent(out)::iout
 		end subroutine !subroutine j_copy(iob,io)
  
 		subroutine j_move(irg,iout)   ! uses move_alloc to move an object to ither name
@@ -2932,6 +2942,7 @@ module jmod
  
 			integer, intent(in):: iv
 			character*(*), intent(in):: text
+			!	integer,intent(in),optional::nb
  
 		end subroutine !subroutine j_puttext(iv,text)
  
@@ -3458,8 +3469,9 @@ module jmod
 			character*(*),intent(in)::tag
 		end subroutine
  
-		subroutine j_gpfigoption(iob,io,ivfig)
+		subroutine j_gpfigoption(iob,io,ivfig,setxrange)
 			integer, intent(in)::iob,io,ivfig
+			logical, intent(in)::setxrange
 		end subroutine
  
 		subroutine j_figshowoption(iob,io,ivfig)
@@ -3632,9 +3644,10 @@ module jmod
 			integer, intent(in):: iob,io, mopt
 		end function !function j_igetopt(iob,mopt)
  
-		logical function j_isoption(iob,io,mopt,default) ! %o
+		logical function j_isoption(iob,io,mopt,default,ival) ! %o
 			integer, intent(in):: iob,io, mopt
 			logical, intent(in),optional:: default
+			integer, intent(out),optional:: ival
 		end function !function j_igetopt(iob,mopt)
  
  
@@ -4524,6 +4537,12 @@ module jmod
 			integer,optional,intent(out)::lenn
 		end subroutine j_putd !subroutine j_putr(rvec,iel,val)
  
+		subroutine j_addtodata(ivdata,new,newvar)
+			integer::ivdata
+			integer,intent(in)::new
+			integer,intent(in),dimension(new)::newvar
+ 
+		end subroutine j_addtodata
  
  
 		subroutine j_arg2val(arg,narg,val,nval)

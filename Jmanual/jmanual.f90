@@ -1844,8 +1844,8 @@ subroutine colors(firsto,inpuf,ninpuf,line,le,line2,nwords,ifirst,ilast,tabs,iso
 				line(ile1:ile1).eq.';'.or.line(ile1:ile1).eq.'='.or.line(ile1:ile1).eq.'+').and.ile1.lt.limi)exit
 					
 			enddo
-			write(6,*)'le,ile1',le,ile1
-			write(6,*)line(1:ile1)
+!			write(6,*)'le,ile1',le,ile1
+!			write(6,*)line(1:ile1)
 		else
 		ile1=0
 		endif

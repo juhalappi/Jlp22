@@ -97,7 +97,7 @@ was not necessary as Reetta adviced me how to use Github.
 I was told in Olavinlinna that there has actually been no disagreement 
 between me and Luke in this process. 
 As I could not accept the interpretation that I had fighted six and half years against wind mills, 
-I described in previous versions some details of the process and listed all the ten 
+I described in previous versions some details of the process and listed all the 
 leaders who participated in the process. This kept my bitterness 
 alive which was unfortunate for my peace of mind and also because 
 I knew well how pathetic old bitter men are. After some recent rounds of opposite argumentation, the research director 
@@ -179,6 +179,18 @@ After renaming the software to \textbf{Jlp22}, this section starts to describe c
 The corrections of errors are not described in detail. The first version of \textbf{Jlp22} contains so many new properties that also old users 
 should look at the manual. All the examples of the manual should now go through using ALL in running 
 jexamples.txt. 
+ 
+Version October 13, 2025 
+Function addtodata() can add new columns to data matrix. This is handy when new columns can done using 
+matrix operations instead by computing observation by observation. Function kolmo() can compute Kolmogorov-Smirnov statistic after 
+using classify) function to compute class frequencies. An unjustified error asking to use parenthesis to specify 
+order of logical and arithmetic aoperations is corrected. 
+If a command at command prompt is give in form output==  , then the output is protected, 
+and it can be changed only after unprotecting it with \textcolor{VioletRed}{unprotect}() function. 
+This may not work for all functions. 
+Function monotone() makes picewise linear function monotone. Some addtional protection against user errors is done, 
+and some bugs are corrected. 
+ 
 Version March 30, 2025   Paper Juha Lappi (2024) 'From Finnish Assortment Pricing to Market 
 Economy Using Prices for Sawn Wood and 
 Chips in Reference Bucking' is now available at DOI: 10.4236/ojf.2024.143015 
@@ -1607,6 +1619,12 @@ stored then the output is a compound object. An objects to which there is a link
 Objects without such links are called side objects. For instance linear programming function \textcolor{VioletRed}{jlp}() 
 does not produce any object with name \textcolor{teal}{Output} just several side objects. 
  
+\item If a code line is in form \\ 
+Output== ...\\ 
+Then the output will be protected and it's value cannot be changed without 
+unprotecting it using \textcolor{VioletRed}{unprotect}() function. This is handy for defining objects 
+which are used as parameters or constants. Thius May not yet work for all functions. 
+ 
 \item The expression \\ 
 func()\\ 
 is equivalent to\\ 
@@ -2304,7 +2322,7 @@ objects will be printed with semicolns.
 \vspace{0.2cm} 
 \begin{note} 
 Options input->, \textcolor{blue}{local->}, \textcolor{blue}{matrix->}, \textcolor{blue}{arg->}, result->, \textcolor{blue}{source->} of previous 
-versions are obsolte. 
+versions are obsolete. 
 \end{note} 
 \begin{note} 
 The user can intervene the execution from console if the code calls \textcolor{VioletRed}{read}(\$,), 
@@ -3060,6 +3078,28 @@ fi=\textcolor{VioletRed}{drawline}(den,\textcolor{blue}{continue->}fcont)\\
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
 \onehalfspacing 
+\subsection{kolmo() Computes Kolmogorov-Smirnov statistic for comparinh two distributions} 
+\label{kolmo} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output \tabto{3cm}  1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  The Kolmogorov-Smirnov statistic 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args  \tabto{3cm} 2 \tabto{5cm}   \textcolor{teal}{MATRIX} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Two matrices produced with \textcolor{VioletRed}{classify}() function using the same \textcolor{blue}{xrange->} and \textcolor{blue}{dx->} 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+\textcolor{blue}{xrange->} needs not to be given in \textcolor{VioletRed}{classify}() if the range can be obtained from var\%min and var\%max computed 
+by \textcolor{VioletRed}{stat}() using \textcolor{blue}{min->} and \textcolor{blue}{max->} options. 
+\end{note} 
 \section{Random number generators} 
 \label{randomgen} 
 Random number generators are taken from Ranlib library of Netlib. 
@@ -3238,24 +3278,32 @@ interpretation of the distribution, but it is compatible with interpreting negat
 distribution as a compound gamma-Poisson distribution and it is useful when simulating 
 overdispersed Poisson distributions. 
 \end{note} 
-\subsection{\textcolor{VioletRed}{select}() Random selection}\index{select()} 
+\subsection{\textcolor{VioletRed}{select}() Random selection of k elements out of n without replacement.}\index{select()} 
 \label{select} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent Output \tabto{3cm} 1 \tabto{5cm}  \textcolor{teal}{MATRIX}  \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent column vector with n elements indicating random 
-selection of k 
-elements out of n elements. The selection is without replacement, 
-thus elements of the output are 1 or 0.. 
+\noindent column vector with n elements telling selected elements. 
+without \textcolor{blue}{expand->} the first k elements are the selected ones and 
+last n-k are nonselected elements. If k=n, then output gives elements 
+in random order. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{expand} \tabto{3cm} N|0|1 \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent Without argument, the output will be vector os zeros and ones. 
+An arguments gives the name of an additional output having zeros and ones. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
 \noindent Args \tabto{3cm} 2 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
-\noindent  k=\textcolor{teal}{Arg1} and n=\textcolor{teal}{Arg2}. 
+\noindent  k and n in any order. Smaller is k and larger n. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
@@ -3264,7 +3312,7 @@ thus elements of the output are 1 or 0..
 \label{selectex} 
 \noindent {\color{ForestGreen}** select 500 numbers without replacement from 10000}\\ 
 {\color{ForestGreen}** output is vector of 10000 rows containing 0 or 1}\\ 
-S=\textcolor{VioletRed}{select}(500,10000)\\ 
+S=\textcolor{VioletRed}{select}(500,10000,\textcolor{blue}{expand->})\\ 
 \textcolor{VioletRed}{nrows}(S),\textcolor{VioletRed}{mean}(S),\textcolor{VioletRed}{sum}(S),500/10000;\\ 
 \end{example} 
 \vspace{-7mm} \rule{5cm}{0.1pt} 
@@ -3299,12 +3347,22 @@ Last value is the argument. Intial half of values give \textcolor{teal}{x}-value
 \noindent \textcolor{blue}{q}  \tabto{3cm}  N|1  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  \textcolor{blue}{q->} indicates quadratic interpolation 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{down}  \tabto{3cm}  N|1  \tabto{5cm}   \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{x}-values are in decreasing order. 
 \end {changemargin} 
 \hrule 
 \vspace{0.2cm} 
 \begin{note} 
 The argument \textcolor{teal}{x} need not be within the interval of given \textcolor{teal}{x} values (thus the function also 
 extrapolates). 
+\end{note} 
+\begin{note} 
+See function monotone() how to clean the arguments so that \textcolor{VioletRed}{interpolate}() produces monotone functions. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{plane}() Interpolates an a plane}\index{plane()} 
 \label{plane} 
@@ -4181,7 +4239,7 @@ When giving range, the lower and upper limit can be equal.
 It was earlier not possible to mix \textcolor{teal}{ILIST} range and contiguous range. Now they can be mixed. 
 \end{note} 
 \begin{note} 
-Giving rows or columsn with matrices is introduced in version October 1, 2023. 
+Giving rows or columns with matrices is introduced in version October 1, 2023. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{matrix}() Creates \textcolor{teal}{MATRIX}}\index{matrix()} 
 \label{matrix} 
@@ -4468,6 +4526,58 @@ If there is no output, then the argument matrix is sorted in place.
 The argument can be the data matrix of a data object. The data object will remain a 
 valid data object. 
 \end{note} 
+\subsection{monotone() Makes monotone piecewise linear functions} 
+\label{monotone} 
+Cleans point sequences so that interpolation produces monotone increasing, nondecreasing, decreasing or 
+nonincreasing function 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Output \tabto{3cm}  1 \tabto{5cm}   \textcolor{teal}{MATRIX} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent row vector having first \textcolor{teal}{x}-values and then \textcolor{teal}{y}-values 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args \tabto{3cm}  \tabto{5cm}    \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Even number of numeric values given with any combination of numbers, matrices and lists. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{up} \tabto{3cm} N|1  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Must the \textcolor{teal}{y}-values increase. Default: \textcolor{teal}{y}-values decrease 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent srtict \tabto{3cm} N|1  \tabto{5cm}   \textcolor{teal}{REAL}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Must the \textcolor{teal}{y}-values increase or decrease strictly. Default: YES. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+Without \textcolor{blue}{up->} and strict-> the \textcolor{teal}{y}-values must decrese strictly 
+\end{note} 
+\begin{note} 
+If the inverse of the piecewise linear function is needed, strict->0 cannot be used. 
+\end{note} 
+\singlespacing 
+\begin{example}[monotoneex]Example of monotone()\\ 
+\label{monotoneex} 
+\noindent pl=monotone(1,2,3,20,15,5);\\ 
+pl=monotone(1,2,3,20,25,5);\\ 
+pl=monotone(1,2,3,20,25,30);\\ 
+pl=monotone(1,2,3,20,25,30,\textcolor{blue}{up->});\\ 
+pl=monotone(1,2,3,20,20,30,\textcolor{blue}{up->},strict->0);\\ 
+pl=monotone(1,2,3,20,20,30,\textcolor{blue}{up->});\\ 
+\end{example} 
+\vspace{-7mm} \rule{5cm}{0.1pt} 
+\onehalfspacing 
 \subsection{\textcolor{VioletRed}{envelope}() Convex hull of point}\index{envelope()} 
 \label{envelope} 
 \vspace{0.3cm} 
@@ -4594,6 +4704,9 @@ the location of the minimum value. Thus the VECTOR can also be a row vector.
 The observation for which a \textcolor{teal}{DATA} variable gets minimum value can be obtained 
 using \textcolor{blue}{minobs->} option in \textcolor{VioletRed}{stat}(). 
 \end{note} 
+\begin{note} 
+If argument is \textcolor{teal}{REAL}, function returns 1 
+\end{note} 
 \subsection{\textcolor{VioletRed}{maxloc}() Locations of the minimum values}\index{maxloc()} 
 \label{maxloc} 
 \textcolor{VioletRed}{maxloc}(\textcolor{teal}{MATRIX}) generates a row vector containing the locations of the  minimum 
@@ -4603,10 +4716,13 @@ the location of the maxim value whether VECTOR is a row vector or column vector.
 The observation for which a \textcolor{teal}{DATA} variable gets the maximum value can be obtained 
 using \textcolor{blue}{maxobs->} option in \textcolor{VioletRed}{stat}() 
 \end{note} 
+\begin{note} 
+If argument is \textcolor{teal}{REAL}, function returns 1 
+\end{note} 
 \subsection{\textcolor{VioletRed}{cumsum}() Cumulative sums}\index{cumsum()} 
 \label{cumsum} 
 \textcolor{VioletRed}{cumsum}(\textcolor{teal}{MATRIX}) generates a \textcolor{teal}{MATRIX} with the same dimensions as the argument, 
-and puts the cumulative sums of the columsn into the output matrix. 
+and puts the cumulative sums of the columns into the output matrix. 
 \begin{note} 
 If the argument is vector, the cumsum makes a vector having the same 
 form as the argument. 
@@ -5511,7 +5627,7 @@ Generates data object from csv data generated with excel. It is assumed that ';'
 and first is the header line generated with excel and containing column names. 
 The second line contains information for \textbf{Jlp22} how to read the data. 
 First the first line is copied and pasted as the second line. To the beginning of the second line is put 
-'@\#'. Then each entry separated by ';' is edited as follows. If the column is just ignored, then 
+'\#\#'. Then each entry separated by ';' is edited as follows. If the column is just ignored, then 
 put '!' to the beginning of the entry. If all characters in the column are read in as 
 a numeric variable, change the name to accpetable variable name in \textbf{J}. 
 If the column is read in but it is just used as an input variable for 
@@ -5858,7 +5974,10 @@ executed.
 \label{nobs} 
 \textcolor{VioletRed}{nobs}(\textcolor{teal}{DATA}) returns the number of rows in the data matrix of \textcolor{teal}{DATA}// 
 \textcolor{VioletRed}{nobs}(\textcolor{teal}{REGR}) returns the number of observations used to compute 
-the regression with \textcolor{VioletRed}{regr}(). 
+the regression with \textcolor{VioletRed}{regr}().// 
+\textcolor{VioletRed}{nobs}(cl) where cl is a matrix produced with \textcolor{VioletRed}{classify}() produces a row 
+vector containing nonzero class frequences. This works together with 
+\textcolor{VioletRed}{mean}(cl),\textcolor{VioletRed}{mean}(cl,\textcolor{teal}{x}->), \textcolor{VioletRed}{sd}(cl) and \textcolor{VioletRed}{var}(cl) 
 \subsection{\textcolor{VioletRed}{classvector}() Vectors from grouped \textcolor{teal}{DATA}}\index{classvector()} 
 \label{classvector} 
 Function classvector computes vectors from data which extract information from grouped 
@@ -6219,6 +6338,56 @@ return
 \begin{note} 
 Function \textcolor{VioletRed}{find}() can be used to search all or first elements of a vector 
 satifying a condition. 
+\end{note} 
+\subsection{addtodata() adds ne columns to the matrix of \textcolor{teal}{DATA} object.} 
+\label{addtodata} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent Args  \tabto{3cm} 1- \tabto{5cm}   \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  variable names added to data 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{data}  \tabto{3cm}  N|1  \tabto{5cm}   \textcolor{teal}{DATA}  \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent 	\textcolor{teal}{DATA} object. Default last \textcolor{teal}{DATA} defined. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{seq}  \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  the added variables need to become consecutive column in data matrix. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
+\begin{note} 
+If any of the added variables is not \textcolor{teal}{REAL}, and error occurs. The variables can 
+be made real using var=0ca 
+\end{note} 
+\begin{note} 
+if a varaible is already in the data, this is told and nothing is done for this variable. 
+\end{note} 
+\begin{note} 
+This function is handy when new columns can done using 
+matrix operations instead by computing variables observation by observation. For instance if \textcolor{teal}{DATA} dat contains column for \textcolor{teal}{Regf} 
+the \textcolor{VioletRed}{regr}() and \textcolor{VioletRed}{nonlin}() compute the values of the regression function into this column. These values 
+can be put into data matrix into column Reg0 using \\ 
+addtodata(Reg0,\textcolor{blue}{data->}dat)\\ 
+dat(Reg0)=dat(\textcolor{teal}{Regf})\\ 
+similarly for \textcolor{teal}{Resid}. 
+\end{note} 
+\begin{note} 
+If columns for \textcolor{teal}{Regf} and \textcolor{teal}{Resid} are not put´into \textcolor{teal}{DATA} when making the data, these can be added later 
+using addtodata() 
+\end{note} 
+\begin{note} 
+Option \textcolor{blue}{seq->} is useful control if variables \textcolor{teal}{x1},...x10 are taken into vector vec using\\ 
+vec=dat\%\textcolor{VioletRed}{matrix}(\textcolor{teal}{Obs},link+1,-(link+10))\\ 
+where link=\textcolor{VioletRed}{index}(\textcolor{teal}{x1},dat\%keep). 
 \end{note} 
 \subsection{Taking data from data matrix} 
 \label{fromdata} 
@@ -6693,7 +6862,7 @@ by absolute value greater or eqaul to .1.7d18).
 \begin{note} 
 If the \textcolor{teal}{DATA} contains variables Regr and \textcolor{teal}{Resid}, then the values of 
 the regression function and residuals are put into these columns. Space for these e 
-coluns can reserved with \textcolor{blue}{extra->} option in \textcolor{VioletRed}{data}() or in \textcolor{VioletRed}{newdata}() 
+columns can reserved with \textcolor{blue}{extra->} option in \textcolor{VioletRed}{data}() or in \textcolor{VioletRed}{newdata}() 
 \end{note} 
 \begin{note} 
 If \textcolor{teal}{re} is the output of the \textcolor{VioletRed}{regr}() then function re() can be used to compute 
@@ -6710,7 +6879,7 @@ Information from the \textcolor{teal}{REGR} object can be obtained with the foll
 let \textcolor{teal}{re} be the name of the \textcolor{teal}{REGR} object. 
 \begin{itemize} 
 \item   \textcolor{VioletRed}{coef}(\textcolor{teal}{re},xvar) = coefficient of variable xvar. If xvar is 
-All, the vector of coefficients is produced 
+All or there is no xvar, the vector of coefficients is produced 
 \item   \textcolor{VioletRed}{coef}(\textcolor{teal}{re},xvar,\textcolor{blue}{any->}) = returns zero if the variable is dropped from 
 the equation in the stepwise procedure of 
 due to linear dependencies. 
@@ -6746,7 +6915,7 @@ The bspline functions can be used as regressor arguments of \textcolor{VioletRed
 \vspace{0.3cm} 
 \hrule 
 \vspace{0.3cm} 
-\noindent Degree \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\noindent \textcolor{blue}{degree} \tabto{3cm} N|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  degree of the spline. Default is 2, maximum is 3. 
 \end {changemargin} 
@@ -8673,6 +8842,7 @@ sd error bars can have different color and width. If \textcolor{blue}{color->} a
 arguments, the first argument refers to \textcolor{blue}{sd->} error bars, and the second argument refers to 
 \textcolor{blue}{se->} error bars. Using \textcolor{blue}{width->}(1,2) or \textcolor{blue}{width->}(2,4) gives nice looking error bars. 
  
+ 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -8680,6 +8850,14 @@ arguments, the first argument refers to \textcolor{blue}{sd->} error bars, and t
 \noindent \textcolor{blue}{mean}  \tabto{3cm}  N | 0  \tabto{5cm}    \tabto{7cm} 
 \begin{changemargin}{3cm}{0cm} 
 \noindent  Class mean are drawn. Has effect only together with \textcolor{blue}{sd->}. 
+\end{changemargin} 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{dx}  \tabto{3cm} N|1  \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  \textcolor{teal}{x}-values are shifted horizontally with value given. Useful when overlying several figures with the same 
+with the same \textcolor{teal}{x}-axes and with \textcolor{blue}{se->} or \textcolor{blue}{sd->} error bars. 
 \end{changemargin} 
 \vspace{0.3cm} 
 \hrule 
@@ -8746,7 +8924,11 @@ fi=\textcolor{VioletRed}{draw}(\textcolor{blue}{func->}\textcolor{VioletRed}{pdf
 \onehalfspacing 
 \begin{note} 
 In previous versions of \textbf{Jlp22} if \textcolor{blue}{se->} and \textcolor{blue}{sd->} were both present, the error 
-both bars were plotted. This possibility will be included later. 
+both bars were plotted. This possibility may be included later. Now this can be done with two drawclass calls, 
+one with \textcolor{blue}{mean->} and \textcolor{blue}{sd->}, the other with \textcolor{blue}{se->}. 
+\end{note} 
+\begin{note} 
+In \textcolor{VioletRed}{classify}(), option \textcolor{blue}{dx->} has different meaning as the class width. 
 \end{note} 
 \subsection{\textcolor{VioletRed}{drawline}() Draws a polygon through points.}\index{drawline()} 
 \label{drawline} 
@@ -9139,6 +9321,16 @@ stem(-d) = height in dm of diameter d in cm\\
 stem(h1,h2)= the volume in litres between heights h1 and h2\\ 
 the number of used height diameter pairs can be obtained with \textcolor{VioletRed}{len}() 
 For examples of stemcurve, see manual for \textcolor{VioletRed}{stemopt}(). 
+\vspace{0.3cm} 
+\hrule 
+\vspace{0.3cm} 
+\noindent \textcolor{blue}{test} \tabto{3cm} 0|1 \tabto{5cm}  \textcolor{teal}{REAL} \tabto{7cm} 
+\begin{changemargin}{3cm}{0cm} 
+\noindent  Logical option if present indicates that when going upwards such point 
+are ignored whose diameter is larger than the current largest diameter. 
+\end {changemargin} 
+\hrule 
+\vspace{0.2cm} 
 \begin{note} 
 In harvester data having diameters at one dm steps, the function can be called as follows. 
 Let the diameters stored in vector dh having length 350. Make first vector of heights:\\ 

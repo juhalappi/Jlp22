@@ -262,6 +262,7 @@ subsection cdf cdf()
 subsection bin bin()
 subsection negbin negbin()
 subsection density density()
+subsection kolmo kolmo()
 !
 section randomgen Random numbers 
 
@@ -340,6 +341,7 @@ subsection solve solve(): solving a linear equation
 subsection qr qr() qr decomposionn for stying linear dependencies
 subsection eigen eigen() computing eigen values and eigen vectors 
 subsection sort sort() sorting a matrix
+subsection monotone monotone() monotone piecewise linear function
 subsection envelope envelope() computing convex envelope around points
 subsection find find() find matrix elements
 subsection mean mean() mean of a column vector or mean od all matrix elements
@@ -369,6 +371,7 @@ subsection classvector classvector(): extracting information from grouped data
 subsection values values(): getting different values of a variable in DATA
 subsection transdata transdata() going through data and computing tranformations
 subsection findd find_d()
+subsection addtodata addtodata()
 subsection fromdata
 
 section statistics Statistical functions
